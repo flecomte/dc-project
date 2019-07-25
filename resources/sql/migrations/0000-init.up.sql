@@ -264,3 +264,13 @@ create table vote_for_comment_on_constitution
     foreign key (target_id) references comment_on_constitution (id),
     foreign key (target_id) references citizen (id)
 ) inherits (vote);
+
+-- Stats
+create table resource_view
+(
+    id            uuid        default uuid_generate_v4() not null primary key,
+    type          regclass                               not null,
+    created_at    timestamptz default now()              not null,
+    created_by_id uuid                                   null references citizen (id),
+    ip            cidr                                   null
+);

@@ -1,3 +1,6 @@
+-- Stats
+drop table if exists resource_view;
+
 -- Extra resources
 drop table if exists follow_article;
 drop table if exists follow_constitution;
