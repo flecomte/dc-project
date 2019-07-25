@@ -1,6 +1,12 @@
-drop trigger generate_version_number_trigger on article;
-drop table article;
-drop function generate_version_number(regclass, uuid);
-drop function set_version_number();
-drop trigger generate_version_number_trigger on constitution;
-drop table constitution;
+-- Article & Contitution
+drop trigger if exists set_constitution_link_trigger on article_on_title;
+drop table if exists article_in_title;
+drop table if exists title;
+drop function if exists set_constitution_link();
+
+drop trigger if exists generate_version_number_trigger on article;
+drop table if exists article;
+drop function if exists generate_version_number(regclass, uuid);
+drop trigger if exists generate_version_number_trigger on constitution;
+drop table if exists constitution;
+drop function if exists set_version_number();
