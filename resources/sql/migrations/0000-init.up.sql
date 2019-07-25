@@ -17,17 +17,32 @@ $$;
 create table article
 (
     id             uuid          default uuid_generate_v4() not null,
+    created_at     timestamptz   default now()              not null,
     version_id     uuid          default uuid_generate_v4() not null,
     version_number int                                      not null,
     title          text                                     not null,
     annonymous     boolean       default false              not null,
     content        text                                     not null,
     description    text,
-    tags           varchar(32)[] default '{}'               not null,
-    created_at     timestamptz   default now()              not null
+    tags           varchar(32)[] default '{}'               not null
 );
 
 CREATE TRIGGER generate_version_number_trigger
     BEFORE INSERT
     ON article
+EXECUTE PROCEDURE set_version_number();
+
+create table constitution
+(
+    id             uuid          default uuid_generate_v4() not null,
+    created_at     timestamptz   default now()              not null,
+    version_id     uuid          default uuid_generate_v4() not null,
+    version_number int                                      not null,
+    title          text                                     not null,
+    annonymous     boolean       default false              not null
+);
+
+CREATE TRIGGER generate_version_number_trigger
+    BEFORE INSERT
+    ON constitution
 EXECUTE PROCEDURE set_version_number();
