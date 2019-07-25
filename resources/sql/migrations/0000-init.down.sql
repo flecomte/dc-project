@@ -1,3 +1,21 @@
+-- Extra resources
+drop table if exists follow_article;
+drop table if exists follow_constitution;
+drop table if exists follow_citizen;
+drop table if exists follow;
+
+drop table if exists vote_for_article;
+drop table if exists vote_for_constitution;
+drop table if exists vote_for_comment_on_article;
+drop table if exists vote_for_comment_on_constitution;
+drop table if exists vote;
+
+drop table if exists comment_on_article;
+drop table if exists comment_on_constitution;
+drop table if exists comment;
+
+drop table if exists extra;
+
 -- Article & Contitution
 drop table if exists article_relations;
 drop trigger if exists set_constitution_link_trigger on article_on_title;
