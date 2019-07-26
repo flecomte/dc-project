@@ -9,4 +9,4 @@ begin
 end;
 $$;
 
--- drop procedure if exists find_user_by_id(inout json);
+-- drop procedure if exists find_user_by_id(uuid, inout json);

@@ -5,7 +5,7 @@ declare
 begin
     select
        case when count(u) = 1
-       then to_json(json_populate_record(null::user_lite, to_json(u)))  -- TODO refactor this !
+       then to_jsonb(u) - 'password'
        else null end
     into resource
     from "user" as u
