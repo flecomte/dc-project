@@ -3,7 +3,7 @@ $$
 declare
     _id alias for id;
 begin
-    select to_json(u) into resource
+    select to_jsonb(u) - 'password' into resource
     from "user" as u
     where u.id = _id;
 end;
