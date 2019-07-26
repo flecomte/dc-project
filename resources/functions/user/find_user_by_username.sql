@@ -1,4 +1,4 @@
-create or replace procedure find_user_by_username(in username text, inout resource json) language plpgsql as
+create or replace function find_user_by_username(in username text, out resource json) language plpgsql as
 $$
 declare
     _username alias for username;
@@ -9,4 +9,4 @@ begin
 end;
 $$;
 
--- drop procedure if exists find_user_by_username(text, inout json);
+-- drop function if exists find_user_by_username(text, out json);

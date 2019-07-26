@@ -1,4 +1,4 @@
-create or replace procedure find_user_by_id(in id uuid, inout resource json) language plpgsql as
+create or replace function find_user_by_id(in id uuid, out resource json) language plpgsql as
 $$
 declare
     _id alias for id;
@@ -9,4 +9,4 @@ begin
 end;
 $$;
 
--- drop procedure if exists find_user_by_id(uuid, inout json);
+-- drop function if exists find_user_by_id(uuid, inout json);
