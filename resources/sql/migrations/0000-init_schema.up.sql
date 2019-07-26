@@ -1,9 +1,5 @@
 -- Users
 create extension if not exists pgcrypto;
--- select *
--- from "user"
--- where username = lower('nick@example.com')
---   and password = crypt('12346', password);
 
 create table "user"
 (
