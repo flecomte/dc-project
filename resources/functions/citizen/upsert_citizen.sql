@@ -21,10 +21,7 @@ begin
         follow_annonymous = excluded.follow_annonymous
     returning id into new_id;
 
-    select to_json(z)
-    into resource
-    from citizen as z
-    where z.id = new_id;
+    select find_citizen_by_id(new_id) into resource;
 end;
 $$;
 

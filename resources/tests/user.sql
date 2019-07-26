@@ -8,7 +8,7 @@ begin
     -- Insert user and check if username and password is correct
     call insert_user(created_user);
     assert created_user->>'username' = 'george', 'username must be george';
-    assert created_user->>'password' is not null, 'password must be generated';
+    assert created_user->>'password' is null, 'password must not be returned';
 
     -- get user by there id and check the username is correct
     select find_user_by_id((created_user->>'id')::uuid) into selected_user;

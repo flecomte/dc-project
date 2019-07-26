@@ -7,7 +7,7 @@ begin
     from (
          select 
             z.*, 
-            find_user_by_id(z.user_id)
+            find_user_by_id(z.user_id) as "user"
          from citizen as z
          where z.id = _id
      ) as t;

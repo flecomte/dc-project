@@ -11,9 +11,7 @@ begin
     from json_populate_record(null::"user", resource)
     returning id into new_id;
 
-    select to_json(u) into resource
-    from "user" as u
-    where u.id = new_id;
+    select find_user_by_id(new_id) into resource;
 end;
 $$;
 

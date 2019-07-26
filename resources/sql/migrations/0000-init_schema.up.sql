@@ -52,13 +52,28 @@ create table moderator
     user_id         uuid                                   not null references "user" (id)
 );
 
--- Article & Contitution
+-- Article & Constitution
 
-create or replace function generate_version_number(tablename regclass, version_id uuid) returns int
+create or replace function generate_version_number(tablename regclass, version_id uuid, out generated_number int)
     language plpgsql as
 $$
+declare
+    _version_id alias for version_id;
 begin
-    return random(); -- TODO
+    if (tablename = 'article'::regclass) then
+        select version_number+1
+        into generated_number
+        from article as t
+        where t.version_id = _version_id
+        order by version_number
+        limit 1;
+    else
+        raise exception '% is not implemented', tablename::text;
+    end if;
+
+    if not found then
+        generated_number := 1;
+    end if;
 end;
 $$;
 
@@ -67,6 +82,7 @@ create or replace function set_version_number() returns trigger
 $$
 begin
     new.version_number = generate_version_number(tg_table_name::regclass, new.version_id);
+    return new;
 end;
 $$;
 
@@ -76,18 +92,20 @@ create table article
     created_at     timestamptz   default now()              not null,
     created_by_id  uuid                                     not null references citizen (id),
     version_id     uuid          default uuid_generate_v4() not null,
-    version_number int                                      not null unique,
+    version_number int                                      not null,
     title          text                                     not null,
     annonymous     boolean       default false              not null,
     content        text                                     not null check ( content != '' ),
     description    text,
-    tags           varchar(32)[] default '{}'               not null
+    tags           varchar(32)[] default '{}'               not null,
+    unique (version_id, version_number)
 );
 
 create trigger generate_version_number_trigger
     before insert
     on article
-execute procedure set_version_number();
+    for each row
+execute function set_version_number();
 
 create table constitution
 (
