@@ -26,11 +26,11 @@ begin
     end;
 
     -- get citizen by id and check the first name
-    call find_citizen_by_id((created_citizen->>'id')::uuid, selected_citizen);
+    select find_citizen_by_id((created_citizen->>'id')::uuid) into selected_citizen;
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
     -- get citizen by user id and check the first name
-    call find_citizen_by_user_id((created_citizen->>'user_id')::uuid, selected_citizen);
+    select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
     -- delete citizen
@@ -38,7 +38,7 @@ begin
     delete from "user" where username = 'george';
 
     -- check if fint by id return null if citizen not exist
-    call find_citizen_by_user_id((created_citizen->>'user_id')::uuid, selected_citizen);
+    select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen is null, format('citizen must be null if not exist, %s', selected_citizen);
 
     raise notice 'citizen test pass';

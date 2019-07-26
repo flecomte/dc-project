@@ -1,12 +1,17 @@
-create or replace procedure find_citizen_by_user_id(in id uuid, inout resource json) language plpgsql as
+create or replace function find_citizen_by_user_id(in user_id uuid, out resource json) language plpgsql as
 $$
 declare
-    _id alias for id;
+    _user_id alias for user_id;
 begin
-    select to_json(z) into resource
-    from citizen as z
-    where z.user_id = _id;
+    select to_json(t) into resource
+    from (
+        select
+            z.*,
+            find_user_by_id(z.user_id)
+        from citizen as z
+        where z.user_id = _user_id
+    ) as t;
 end;
 $$;
 
--- drop procedure if exists find_citizen_by_user_id(uuid, inout json);
+-- drop function if exists find_citizen_by_user_id(uuid, inout json);
