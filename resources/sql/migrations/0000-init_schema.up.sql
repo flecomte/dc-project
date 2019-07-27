@@ -67,6 +67,13 @@ begin
         where t.version_id = _version_id
         order by version_number
         limit 1;
+    elseif tablename = 'constitution'::regclass then
+        select version_number+1
+        into generated_number
+        from constitution as t
+        where t.version_id = _version_id
+        order by version_number
+        limit 1;
     else
         raise exception '% is not implemented', tablename::text;
     end if;
@@ -121,6 +128,7 @@ create table constitution
 create trigger generate_version_number_trigger
     before insert
     on constitution
+    for each row
 execute procedure set_version_number();
 
 create table title
