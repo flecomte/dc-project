@@ -61,14 +61,14 @@ declare
     _version_id alias for version_id;
 begin
     if (tablename = 'article'::regclass) then
-        select version_number+1
+        select version_number + 1
         into generated_number
         from article as t
         where t.version_id = _version_id
         order by version_number
         limit 1;
     elseif tablename = 'constitution'::regclass then
-        select version_number+1
+        select version_number + 1
         into generated_number
         from constitution as t
         where t.version_id = _version_id
@@ -198,6 +198,7 @@ create table follow
 
 create table follow_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references article (id),
     primary key (id)
@@ -205,6 +206,7 @@ create table follow_article
 
 create table follow_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references constitution (id),
     primary key (id)
@@ -212,6 +214,7 @@ create table follow_constitution
 
 create table follow_citizen
 (
+    target_reference regclass default 'citizen'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references citizen (id),
     primary key (id)
