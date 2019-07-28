@@ -161,6 +161,7 @@ begin
         from title as t
         where t.id = new.title_id
     );
+    return new;
 end;
 $$;
 

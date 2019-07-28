@@ -3,12 +3,14 @@ create or replace procedure upsert_constitution(inout resource json)
 $$
 declare
     titles json;
+    _title json;
+    _citizen_id uuid = (resource#>>'{created_by, id}')::uuid;
     new_id uuid;
 begin
     insert into constitution (version_id, created_by_id, title, annonymous)
     select
        version_id,
-       (resource#>>'{created_by, id}')::uuid,
+       _citizen_id,
        title,
        annonymous
     from json_populate_record(null::constitution, resource)
@@ -16,14 +18,13 @@ begin
 
     titles := (resource->>'titles');
 
-    insert into title (created_by_id, name, rank, constitution_id)
-    select
-        coalesce((ti#>>'{created_by, id}')::uuid, (resource#>>'{created_by, id}')::uuid),
-        ti->>'name',
-        row_number() OVER (),
-        new_id
-    from json_array_elements(titles) ti,
-    lateral json_populate_record(null::title, ti);
+    for _title in select json_array_elements(titles) loop
+        if _title#>>'{created_by, id}' is null then
+            _title := jsonb_set(_title::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
+        end if;
+
+        perform create_title_in_constitution(_title, new_id);
+    end loop;
 
     select find_constitution_by_id(new_id) into resource;
 end;
