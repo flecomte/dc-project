@@ -233,6 +233,7 @@ create table comment
 
 create table comment_on_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references article (id),
     foreign key (parent_id) references comment_on_article (id),
@@ -241,6 +242,7 @@ create table comment_on_article
 
 create table comment_on_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references constitution (id),
     foreign key (parent_id) references comment_on_constitution (id),
