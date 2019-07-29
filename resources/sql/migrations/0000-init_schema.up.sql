@@ -193,7 +193,8 @@ create table extra
 create table follow
 (
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (extra);
 
 create table follow_article
@@ -201,7 +202,8 @@ create table follow_article
     target_reference regclass default 'article'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references article (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 create table follow_constitution
@@ -209,7 +211,8 @@ create table follow_constitution
     target_reference regclass default 'constitution'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references constitution (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 create table follow_citizen
@@ -217,7 +220,8 @@ create table follow_citizen
     target_reference regclass default 'citizen'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 

@@ -57,7 +57,7 @@ begin
     assert (select count(*) = 1 from "comment"), 'edit comment must not insert new comment';
     assert (select count(*) = 1 from "comment" where content = 'edited'), 'edit comment must not insert new comment';
 
-    -- delete article and context
+    -- delete comment and context
     delete from "comment";
     delete from article;
     delete from citizen;

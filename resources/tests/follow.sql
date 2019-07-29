@@ -41,10 +41,13 @@ begin
     perform follow('citizen'::regclass, _citizen_id, _citizen_id2);
     assert (select count(*) > 0 from follow), 'follow must be inserted';
 
+    perform follow('citizen'::regclass, _citizen_id, _citizen_id2);
+    assert (select count(*) > 0 from follow), 'follow must be inserted';
+
     perform unfollow('citizen'::regclass, _citizen_id, _citizen_id2);
     assert (select count(*) = 0 from follow), 'follow must be deleted after unfollow';
 
-    -- delete article and context
+    -- delete follow and context
     delete from citizen;
     delete from "user";
 
