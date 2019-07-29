@@ -256,35 +256,44 @@ create table vote
     anonymous boolean default true not null,
     note      int                  not null check ( note >= -1 and note <= 1 ),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (extra);
 
 create table vote_for_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (target_id) references article (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (target_id) references constitution (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_article
 (
+    target_reference regclass default 'comment_on_article'::regclass not null,
     foreign key (target_id) references comment_on_article (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_constitution
 (
-    primary key (id),
+    target_reference regclass default 'comment_on_constitution'::regclass not null,
     foreign key (target_id) references comment_on_constitution (id),
-    foreign key (target_id) references citizen (id)
+    foreign key (citizen_id) references citizen (id),
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 -- Stats
