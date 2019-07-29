@@ -1,9 +1,5 @@
 -- Users
 create extension if not exists pgcrypto;
--- select *
--- from "user"
--- where username = lower('nick@example.com')
---   and password = crypt('12346', password);
 
 create table "user"
 (
@@ -15,19 +11,13 @@ create table "user"
     password   text                                   not null check ( password != '' )
 );
 
-create type "name" as (
-    first_name text,
-    last_name text,
-    civility text
-    );
-
 create table citizen
 (
     id                uuid        default uuid_generate_v4() not null primary key,
     created_at        timestamptz default now()              not null,
-    name              "name"                                 not null check ( name != '' ),
+    name              jsonb                                  not null check ( name ? 'first_name' and name ? 'last_name' ),
     birthday          date                                   not null,
-    user_id           uuid                                   not null references "user" (id),
+    user_id           uuid                                   not null references "user" (id) unique,
     vote_annonymous   boolean     default true               not null,
     follow_annonymous boolean     default true               not null
 );
@@ -62,13 +52,35 @@ create table moderator
     user_id         uuid                                   not null references "user" (id)
 );
 
--- Article & Contitution
+-- Article & Constitution
 
-create or replace function generate_version_number(tablename regclass, version_id uuid) returns int
+create or replace function generate_version_number(tablename regclass, version_id uuid, out generated_number int)
     language plpgsql as
 $$
+declare
+    _version_id alias for version_id;
 begin
-    return random(); -- TODO
+    if (tablename = 'article'::regclass) then
+        select version_number + 1
+        into generated_number
+        from article as t
+        where t.version_id = _version_id
+        order by version_number
+        limit 1;
+    elseif tablename = 'constitution'::regclass then
+        select version_number + 1
+        into generated_number
+        from constitution as t
+        where t.version_id = _version_id
+        order by version_number
+        limit 1;
+    else
+        raise exception '% is not implemented', tablename::text;
+    end if;
+
+    if not found then
+        generated_number := 1;
+    end if;
 end;
 $$;
 
@@ -77,6 +89,7 @@ create or replace function set_version_number() returns trigger
 $$
 begin
     new.version_number = generate_version_number(tg_table_name::regclass, new.version_id);
+    return new;
 end;
 $$;
 
@@ -86,18 +99,20 @@ create table article
     created_at     timestamptz   default now()              not null,
     created_by_id  uuid                                     not null references citizen (id),
     version_id     uuid          default uuid_generate_v4() not null,
-    version_number int                                      not null unique,
+    version_number int                                      not null,
     title          text                                     not null,
     annonymous     boolean       default false              not null,
     content        text                                     not null check ( content != '' ),
     description    text,
-    tags           varchar(32)[] default '{}'               not null
+    tags           varchar(32)[] default '{}'               not null,
+    unique (version_id, version_number)
 );
 
 create trigger generate_version_number_trigger
     before insert
     on article
-execute procedure set_version_number();
+    for each row
+execute function set_version_number();
 
 create table constitution
 (
@@ -113,6 +128,7 @@ create table constitution
 create trigger generate_version_number_trigger
     before insert
     on constitution
+    for each row
 execute procedure set_version_number();
 
 create table title
@@ -145,6 +161,7 @@ begin
         from title as t
         where t.id = new.title_id
     );
+    return new;
 end;
 $$;
 
@@ -176,28 +193,35 @@ create table extra
 create table follow
 (
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (extra);
 
 create table follow_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references article (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 create table follow_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references constitution (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 create table follow_citizen
 (
+    target_reference regclass default 'citizen'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (follow);
 
 
@@ -213,6 +237,7 @@ create table comment
 
 create table comment_on_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references article (id),
     foreign key (parent_id) references comment_on_article (id),
@@ -221,6 +246,7 @@ create table comment_on_article
 
 create table comment_on_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (citizen_id) references citizen (id),
     foreign key (target_id) references constitution (id),
     foreign key (parent_id) references comment_on_constitution (id),
@@ -234,35 +260,44 @@ create table vote
     anonymous boolean default true not null,
     note      int                  not null check ( note >= -1 and note <= 1 ),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (extra);
 
 create table vote_for_article
 (
+    target_reference regclass default 'article'::regclass not null,
     foreign key (target_id) references article (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_constitution
 (
+    target_reference regclass default 'constitution'::regclass not null,
     foreign key (target_id) references constitution (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_article
 (
+    target_reference regclass default 'comment_on_article'::regclass not null,
     foreign key (target_id) references comment_on_article (id),
     foreign key (citizen_id) references citizen (id),
-    primary key (id)
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_constitution
 (
-    primary key (id),
+    target_reference regclass default 'comment_on_constitution'::regclass not null,
     foreign key (target_id) references comment_on_constitution (id),
-    foreign key (target_id) references citizen (id)
+    foreign key (citizen_id) references citizen (id),
+    primary key (id),
+    unique (citizen_id, target_id)
 ) inherits (vote);
 
 -- Stats
