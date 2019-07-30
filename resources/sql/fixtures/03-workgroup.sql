@@ -13,7 +13,7 @@ begin
         z.id
     from (select *, row_number() over () rn from citizen) z;
 
-    insert into citizen_in_workgroup (citizen_id, workgroup)
+    insert into citizen_in_workgroup (citizen_id, workgroup_id)
     select
         z.id,
         w.id
