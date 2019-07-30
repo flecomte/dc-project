@@ -176,6 +176,7 @@ create table article_relations
     target_id     uuid references article check ( source_id != target_id ),
     created_at    timestamptz default now(),
     created_by_id uuid not null references citizen (id),
+    comment       text null,
     primary key (source_id, target_id)
 );
 

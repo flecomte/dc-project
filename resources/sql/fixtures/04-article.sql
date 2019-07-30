@@ -23,11 +23,12 @@ begin
         _tags[(row_number() over () % 5):(row_number() over () % 9)]
     from citizen z;
 
-    insert into article_relations (source_id, target_id, created_by_id)
+    insert into article_relations (source_id, target_id, created_by_id, comment)
     select
         src.id,
         dest.id,
-        src.created_by_id
+        src.created_by_id,
+        'comment' || rn
     from (select *, row_number() over () rn from article, lateral generate_series(1, 5) g) src
     join (select *, row_number() over () +5 rn from article) dest using (rn);
 
