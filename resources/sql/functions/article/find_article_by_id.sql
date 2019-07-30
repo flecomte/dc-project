@@ -16,3 +16,5 @@ end;
 $$;
 
 -- drop function if exists find_article_by_id(uuid, out json);
+
+select find_article_by_id('12fed2f3-2a7d-434b-87e6-5a9895f9d12d')

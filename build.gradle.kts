@@ -4,6 +4,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
+val koinVersion: String by project
+val postgresjson_version: String by project
 
 plugins {
     application
@@ -32,6 +34,8 @@ dependencies {
     compile("io.ktor:ktor-auth:$ktor_version")
     compile("io.ktor:ktor-auth-jwt:$ktor_version")
     compile("io.ktor:ktor-gson:$ktor_version")
+    compile("org.koin:koin-ktor:$koinVersion")
+    compile("fr.postgresjson:postgresjson:$postgresjson_version")
     testCompile("io.ktor:ktor-server-tests:$ktor_version")
 }
 
