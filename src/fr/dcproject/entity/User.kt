@@ -1,7 +1,6 @@
 package fr.dcproject.entity
 
 import fr.postgresjson.entity.*
-import fr.postgresjson.entity.User
 import org.joda.time.DateTime
 import java.util.*
 
@@ -13,5 +12,4 @@ class User(
     override var updatedAt: DateTime?
 ) : UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
-    EntityUpdatedAt by EntityUpdatedAtImp(),
-    User<UUID?>
+    EntityUpdatedAt by EntityUpdatedAtImp()

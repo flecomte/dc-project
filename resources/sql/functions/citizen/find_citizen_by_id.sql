@@ -6,8 +6,7 @@ begin
     select to_json(t) into resource
     from (
          select 
-            z.*, 
-            find_user_by_id(z.user_id) as "user"
+            z.*
          from citizen as z
          where z.id = _id
      ) as t;

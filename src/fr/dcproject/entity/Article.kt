@@ -15,4 +15,4 @@ class Article(
 ):
     UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
-    CreatedBy<User> by EntityCreatedByImp()
+    CreatedBy<Citizen> by EntityCreatedByImp()
