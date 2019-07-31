@@ -16,7 +16,7 @@ begin
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by
         from article as a
-        where title ilike '%'||"search"||'%'
+        where "search" is null or title ilike '%'||"search"||'%'
         order by
         case direction when 'asc' then
             case sort

@@ -65,14 +65,14 @@ begin
         into generated_number
         from article as t
         where t.version_id = _version_id
-        order by version_number
+        order by version_number desc
         limit 1;
     elseif tablename = 'constitution'::regclass then
         select version_number + 1
         into generated_number
         from constitution as t
         where t.version_id = _version_id
-        order by version_number
+        order by version_number desc
         limit 1;
     else
         raise exception '% is not implemented', tablename::text;
