@@ -10,7 +10,7 @@ import kotlin.test.assertEquals
 class ApplicationTest {
     @Test
     fun testRoot() {
-        withTestApplication({ module(testing = true) }) {
+        withTestApplication({ module() }) {
             handleRequest(HttpMethod.Get, "/articles").apply {
                 assertEquals(HttpStatusCode.OK, response.status())
                 assertEquals("todo", response.content)
