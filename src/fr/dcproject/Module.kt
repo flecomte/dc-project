@@ -6,9 +6,10 @@ import org.koin.dsl.module
 import java.io.File
 import fr.dcproject.repository.Article as ArticleRepository
 
+val config = Config()
+
 @KtorExperimentalAPI
 val Module = module {
-    val config = Config()
 
     single { config }
 

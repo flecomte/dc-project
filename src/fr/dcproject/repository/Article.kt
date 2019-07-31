@@ -21,10 +21,17 @@ class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
         }
     }
 
-    fun find(page: Int = 1, limit: Int = 50, sort: String? = null, direction: Direction? = null, search: String? = null): Paginated<ArticleEntity> {
+    fun find(
+        page: Int = 1,
+        limit: Int = 50,
+        sort: String? = null,
+        direction: Direction? = null,
+        search: String? = null
+    ): Paginated<ArticleEntity> {
         return requester
             .getFunction("find_articles")
-            .select(page, limit,
+            .select(
+                page, limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
                 "search" to search

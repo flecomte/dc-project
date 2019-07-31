@@ -38,6 +38,14 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
+    testImplementation("io.ktor:ktor-client-mock:$ktor_version")
+    testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
+    testImplementation("org.koin:koin-test:$koinVersion")
+    testImplementation("io.mockk:mockk:1.9")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
+    testImplementation("org.amshove.kluent:kluent:1.4")
+    testImplementation("io.cucumber:cucumber-java8:4.3.1")
+    testImplementation("io.cucumber:cucumber-junit:4.3.1")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
