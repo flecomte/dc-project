@@ -1,6 +1,3 @@
-import org.jetbrains.kotlin.gradle.dsl.Coroutines
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-
 val ktor_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
@@ -35,6 +32,9 @@ dependencies {
     compile("io.ktor:ktor-auth-jwt:$ktor_version")
     compile("io.ktor:ktor-gson:$ktor_version")
     compile("org.koin:koin-ktor:$koinVersion")
+    compile("io.ktor:ktor-jackson:$ktor_version")
+    compile("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
+    compile("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9")
     compile("fr.postgresjson:postgresjson:$postgresjson_version")
     testCompile("io.ktor:ktor-server-tests:$ktor_version")
 }

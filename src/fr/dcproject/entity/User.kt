@@ -7,7 +7,7 @@ import java.util.*
 
 class User(
     id: UUID?,
-    var username: String,
+    var username: String?,
     var blockedAt: DateTime?,
     override var createdAt: DateTime?,
     override var updatedAt: DateTime?

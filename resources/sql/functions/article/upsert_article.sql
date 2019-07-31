@@ -1,4 +1,4 @@
-create or replace procedure upsert_article(inout resource json)
+create or replace function upsert_article(inout resource json)
     language plpgsql as
 $$
 declare
@@ -6,7 +6,7 @@ declare
 begin
     insert into article (version_id, created_by_id, title, annonymous, content, description, tags)
     select
-       version_id,
+       coalesce(version_id, uuid_generate_v4()),
        (resource#>>'{created_by, id}')::uuid,
        title,
        annonymous,

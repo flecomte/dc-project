@@ -4,11 +4,10 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.EntitiesCollections
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import kotlin.reflect.KClass
 import fr.dcproject.entity.Article as ArticleEntity
 
 class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
-    override val entityName: KClass<fr.dcproject.entity.Article> = ArticleEntity::class
+    override val entityName = ArticleEntity::class
 
     fun findById(id: UUID): ArticleEntity? {
         val function = requester.getFunction("find_article_by_id")
@@ -18,5 +17,13 @@ class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
             }
             else -> e
         }
+    }
+
+    fun upsert(article: ArticleEntity): ArticleEntity? {
+        return requester
+            .getFunction("upsert_article")
+            .selectOne<ArticleEntity>("resource" to article)?.also {
+                EntitiesCollections().set(it)
+            }
     }
 }
