@@ -47,9 +47,3 @@ dependencies {
     testImplementation("io.cucumber:cucumber-java8:4.3.1")
     testImplementation("io.cucumber:cucumber-junit:4.3.1")
 }
-
-kotlin.sourceSets["main"].kotlin.srcDirs("src")
-kotlin.sourceSets["test"].kotlin.srcDirs("test")
-
-sourceSets["main"].resources.srcDirs("resources")
-sourceSets["test"].resources.srcDirs("testresources")
