@@ -4,9 +4,9 @@ Feature: articles routes
     When I send a "GET" request to "/articles"
     Then the response status code should be 200
 
-#  Scenario: The route for get article must response a 200
-#    When I send a "GET" request to "/articles/55a24426-139b-4ee7-b1e2-a3d016d66cc2"
-#    Then the response status code should be 200
+  Scenario: The route for get article must response a 200
+    When I send a "GET" request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
+    Then the response status code should be 200
 
   Scenario: The route for get article must response a 200
     Given I have citizen:

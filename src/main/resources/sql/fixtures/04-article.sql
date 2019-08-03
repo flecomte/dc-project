@@ -12,9 +12,10 @@ begin
     delete from article_relations;
     delete from article;
 
-    insert into article (version_id, created_by_id, title, annonymous, content, description, tags)
+    insert into article (id, version_id, created_by_id, title, annonymous, content, description, tags)
     select
-        uuid_generate_v4(),
+        uuid_in(md5('article'||row_number() over ())::cstring),
+        uuid_in(md5('article_v'||row_number() over ())::cstring),
         z.id,
         'title' || row_number() over (),
         row_number() over () % 3 = 0,

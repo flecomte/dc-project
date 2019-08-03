@@ -39,4 +39,3 @@ drop table if exists citizen_in_workgroup;
 drop table if exists workgroup;
 drop table if exists citizen;
 drop table if exists "user";
-drop type if exists public."name";

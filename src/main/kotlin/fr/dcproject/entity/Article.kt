@@ -4,14 +4,15 @@ import java.util.*
 
 
 class Article(
-    id: UUID?,
-    var versionId: UUID?,
-    var versionNumber: Int?,
+    id: UUID = UUID.randomUUID(),
+    var versionId: UUID = UUID.randomUUID(),
+    var versionNumber: Int? = null,
     var title: String?,
-    var annonymous: Boolean?,
+    var annonymous: Boolean? = true,
     var content: String?,
     var description: String?,
-    var tags: List<String>
+    var tags: List<String> = emptyList(),
+    override var createdBy: Citizen?
 ):
     UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),

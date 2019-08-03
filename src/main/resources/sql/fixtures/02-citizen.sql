@@ -2,8 +2,9 @@ do
 $$
 begin
     delete from citizen;
-    insert into citizen (name, birthday, user_id, vote_annonymous, follow_annonymous)
+    insert into citizen (id, name, birthday, user_id, vote_annonymous, follow_annonymous)
     select
+        uuid_in(md5('citizen'||row_number() over ()::text)::cstring),
         jsonb_build_object(
             'first_name', 'first name' || row_number() over (),
             'last_name', 'LAST NAME' || row_number() over (),

@@ -1,5 +1,7 @@
 do
 $$
+declare
+    article_count int = (select count(*) from article);
 begin
     delete from article_in_title;
     delete from title;
@@ -29,7 +31,7 @@ begin
         ti.id,
         a.id,
         ti.constitution_id
-    from (select *, (row_number() over () % 1005) rn from title, lateral generate_series(1, 3) g) ti
+    from (select *, (row_number() over () % (article_count+7)) rn from title, lateral generate_series(1, 3) g) ti
     join (select *, row_number() over () rn from article) a using (rn);
 
     raise notice 'constitution fixtures done';
