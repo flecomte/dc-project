@@ -46,7 +46,7 @@ class RunCucumberTest: En, KoinTest {
             getFixturesRequester()
                 .getQueries()
                 .sortedBy { it.name }
-                .forEach { it.exec() }
+                .forEach { it.sendQuery() }
             logger?.info("Fixtures Done")
         }
 

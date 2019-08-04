@@ -13,7 +13,7 @@ create table citizen
 (
     id                uuid        default uuid_generate_v4() not null primary key,
     created_at        timestamptz default now()              not null,
-    name              jsonb                                  not null check ( name ? 'first_name' and name ? 'last_name' ),
+    name              jsonb                                  not null check ( name ?? 'first_name' and name ?? 'last_name' ),
     birthday          date                                   not null,
     user_id           uuid                                   not null references "user" (id) unique,
     vote_annonymous   boolean     default true               not null,

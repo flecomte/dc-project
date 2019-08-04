@@ -36,7 +36,7 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9")
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
-    implementation("fr.postgresjson:postgresjson:$postgresjson_version")
+    implementation("fr.postgresjson:postgresjson-jdbc:$postgresjson_version")
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
