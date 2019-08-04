@@ -4,11 +4,13 @@ Feature: articles routes
     When I send a "GET" request to "/articles"
     Then the response status code should be 200
 
-  Scenario: The route for get article must response a 200
+  Scenario: The route for get one article must response a 200 and return article
     When I send a "GET" request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
     Then the response status code should be 200
+    And the response should contain object:
+      | id | 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b |
 
-  Scenario: The route for get article must response a 200
+  Scenario: The route for create article must response a 200 and return object
     Given I have citizen:
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
