@@ -6,6 +6,7 @@ import fr.postgresjson.migration.Migrations
 import io.ktor.util.KtorExperimentalAPI
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
+import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 val config = Config()
 
@@ -21,6 +22,9 @@ val Module = module {
         functionsDirectory = config.sqlFiles.resolve("functions")
     ).createRequester() }
 
+    // create generic declaration
     single { ArticleRepository(get()) }
+    single { ConstitutionRepository(get()) }
+
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 }

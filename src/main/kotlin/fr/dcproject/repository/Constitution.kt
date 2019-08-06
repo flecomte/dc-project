@@ -6,13 +6,13 @@ import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
 import net.pearx.kasechange.toSnakeCase
 import java.util.*
-import fr.dcproject.entity.Article as ArticleEntity
+import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
-    override val entityName = ArticleEntity::class
+class Constitution(override var requester: Requester) : RepositoryI<ConstitutionEntity> {
+    override val entityName = ConstitutionEntity::class
 
-    fun findById(id: UUID): ArticleEntity? {
-        val function = requester.getFunction("find_article_by_id")
+    fun findById(id: UUID): ConstitutionEntity? {
+        val function = requester.getFunction("find_constitution_by_id")
         return function.selectOne("id" to id)
     }
 
@@ -22,9 +22,9 @@ class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
         sort: String? = null,
         direction: Direction? = null,
         search: String? = null
-    ): Paginated<ArticleEntity> {
+    ): Paginated<ConstitutionEntity> {
         return requester
-            .getFunction("find_articles")
+            .getFunction("find_constitutions")
             .select(
                 page, limit,
                 "sort" to sort?.toSnakeCase(),
@@ -33,9 +33,9 @@ class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
             )
     }
 
-    fun upsert(article: ArticleEntity): ArticleEntity? {
+    fun upsert(article: ConstitutionEntity): ConstitutionEntity? {
         return requester
-            .getFunction("upsert_article")
+            .getFunction("upsert_constitution")
             .selectOne("resource" to article)
     }
 }

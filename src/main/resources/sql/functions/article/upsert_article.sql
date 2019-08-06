@@ -17,6 +17,9 @@ begin
     returning id into new_id;
 
     if resource->>'relations' is not null then
+        delete from article_relations
+        where source_id = (resource->>'id')::uuid;
+
         insert into article_relations (source_id, target_id, created_by_id)
         select
             (resource->>'id')::uuid,

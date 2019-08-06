@@ -7,7 +7,10 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import fr.dcproject.entity.Article
+import fr.dcproject.entity.Constitution
 import fr.dcproject.routes.article
+import fr.dcproject.routes.constitution
+import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -23,6 +26,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import java.util.*
 import fr.dcproject.repository.Article as RepositoryArticle
+import fr.dcproject.repository.Constitution as RepositoryConstitution
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
@@ -36,6 +40,7 @@ fun Application.module() {
     }
 
     install(DataConversion) {
+        // TODO move to postgresJson lib
         convert<UUID> {
             decode { values, _ ->
                 values.singleOrNull()?.let { UUID.fromString(it) }
@@ -49,11 +54,20 @@ fun Application.module() {
                 }
             }
         }
+
+        // create generic convert for entityI
         convert<Article> {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
                 get<RepositoryArticle>().findById(id) ?: throw InternalError("Article $values not found")
+            }
+        }
+        convert<Constitution> {
+            decode { values, _ ->
+                val id = values.singleOrNull()?.let { UUID.fromString(it) }
+                    ?: throw InternalError("Cannot convert $values to UUID")
+                get<RepositoryConstitution>().findById(id) ?: throw InternalError("Constitution $values not found")
             }
         }
     }
@@ -84,5 +98,9 @@ fun Application.module() {
 
     install(Routing) {
         article(get())
+        constitution(get())
     }
+
+    // TODO move to postgresJson lib
+    get<Migrations>().run()
 }
