@@ -22,7 +22,7 @@ val Module = module {
         functionsDirectory = config.sqlFiles.resolve("functions")
     ).createRequester() }
 
-    // create generic declaration
+    // TODO: create generic declaration
     single { ArticleRepository(get()) }
     single { ConstitutionRepository(get()) }
 
