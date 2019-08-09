@@ -1,4 +1,4 @@
-create or replace procedure upsert_constitution(inout resource json)
+create or replace function upsert_constitution(inout resource json)
     language plpgsql as
 $$
 declare
@@ -30,4 +30,4 @@ begin
 end;
 $$;
 
--- drop procedure if exists upsert_constitution(inout json);
+-- drop function if exists upsert_constitution(inout json);

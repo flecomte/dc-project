@@ -7,16 +7,18 @@ begin
     delete from title;
     delete from constitution;
 
-    insert into constitution (version_id, created_by_id, title, annonymous)
+    insert into constitution (id, version_id, created_by_id, title, annonymous)
     select
-        uuid_generate_v4(),
+        uuid_in(md5('constitution'||row_number() over ())::cstring),
+        uuid_in(md5('constitution_v'||row_number() over ())::cstring),
         z.id,
         'title' || row_number() over (),
         row_number() over () % 3 = 0
     from citizen z;
 
-    insert into title (created_by_id, name, rank, constitution_id)
+    insert into title (id, created_by_id, name, rank, constitution_id)
     select
+        uuid_in(md5('constitution_title'||row_number() over ())::cstring),
         c.created_by_id,
         'name' || row_number() over (),
         row_number() over (),
@@ -24,8 +26,9 @@ begin
     from constitution c,
     lateral generate_series(1, 5) g;
 
-    insert into article_in_title (created_by_id, rank, title_id, article_id, constitution_id)
+    insert into article_in_title (id, created_by_id, rank, title_id, article_id, constitution_id)
     select
+        uuid_in(md5('article_in_title'||row_number() over ())::cstring),
         ti.created_by_id,
         row_number() over (),
         ti.id,
