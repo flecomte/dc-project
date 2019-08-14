@@ -20,6 +20,7 @@ import org.koin.test.KoinTest
 import org.koin.test.inject
 import org.opentest4j.AssertionFailedError
 import java.util.*
+import kotlin.random.Random
 import kotlin.test.asserter
 import feature.Context.Companion.current as currentContext
 
@@ -27,27 +28,20 @@ class Request: En, KoinTest {
     private val migrations: Migrations  by inject()
     private val requester: Requester  by inject()
     init {
-//        Before { scenario: Scenario ->
-//            migrations.run()
-//        }
-//
-//        After { scenario: Scenario ->
-//            migrations.forceAllDown()
-//        }
-
         When("I have citizen:") { body: DataTable ->
-            val user = User(username = "jaque", plainPassword = "azerty")
-            val data = body.asMap<String, String>(String::class.java, String::class.java)
-            val citizen = Citizen(
-                id = UUID.fromString(data["id"]),
-                name = Citizen.Name(data["firstName"], data["lastName"]),
-                birthday = DateTime.now(),
-                user = user
-            )
+            val user = User(username = "jaque_${Random.nextInt(0, 10000)}", plainPassword = "azerty")
             val test: TestApplicationEngine.() -> Unit = {
                 requester
                     .getFunction("insert_user")
                     .selectOne(user)
+
+                val data = body.asMap<String, String>(String::class.java, String::class.java)
+                val citizen = Citizen(
+                    id = UUID.fromString(data["id"]),
+                    name = Citizen.Name(data["firstName"], data["lastName"]),
+                    birthday = DateTime.now(),
+                    user = user
+                )
                 requester
                     .getFunction("upsert_citizen")
                     .selectOne(citizen)
