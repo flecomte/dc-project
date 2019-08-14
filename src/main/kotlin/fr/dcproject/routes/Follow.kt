@@ -7,6 +7,7 @@ import fr.dcproject.repository.FollowArticleRepository
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.delete
 import io.ktor.locations.post
 import io.ktor.response.respond
 import io.ktor.routing.Route
@@ -27,5 +28,10 @@ fun Route.followArticle(repo: FollowArticleRepository) {
     post<Paths.ArticleFollowRequest> {
         repo.follow(FollowEntity(target = it.article, citizen = currentCitizen))
         call.respond(HttpStatusCode.Created)
+    }
+
+    delete<Paths.ArticleFollowRequest> {
+        repo.unfollow(FollowEntity(target = it.article, citizen = currentCitizen))
+        call.respond(HttpStatusCode.NoContent)
     }
 }

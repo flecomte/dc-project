@@ -21,5 +21,16 @@ open class Follow <T: EntityI<UUID>>(override var requester: Requester): Reposit
                 "citizen_id" to follow.citizen.id
             )
     }
+
+    fun unfollow(follow: FollowEntity<T>) {
+        val reference = follow.target::class.simpleName!!.toLowerCase()
+        requester
+            .getFunction("unfollow")
+            .sendQuery(
+                "reference" to reference,
+                "target_id" to follow.target.id,
+                "citizen_id" to follow.citizen.id
+            )
+    }
 }
 class FollowArticleRepository(override var requester: Requester): Follow<ArticleEntity>(requester)
