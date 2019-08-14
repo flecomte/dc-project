@@ -39,4 +39,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_constitutions(json, int, int);
+-- drop function if exists find_constitutions(text, text, text, int, int);

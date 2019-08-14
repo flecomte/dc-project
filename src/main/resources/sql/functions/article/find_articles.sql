@@ -38,4 +38,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_articles(json, int, int);
+-- drop function if exists find_articles(text, text, text, int, int);
