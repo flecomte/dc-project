@@ -15,7 +15,7 @@ group = "fr.dcproject"
 version = "0.0.1"
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClassName = "io.ktor.server.jetty.EngineMain"
 }
 
 tasks.withType<KotlinCompile> {
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
-    implementation("io.ktor:ktor-server-netty:$ktor_version")
+    implementation("io.ktor:ktor-server-jetty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
     implementation("io.ktor:ktor-locations:$ktor_version")
@@ -45,6 +45,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9")
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
+
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")

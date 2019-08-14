@@ -15,6 +15,7 @@ import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.features.AutoHeadResponse
+import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DataConversion
 import io.ktor.jackson.jackson
@@ -22,8 +23,10 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
+import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
+import org.slf4j.event.Level
 import java.util.*
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Constitution as RepositoryConstitution
@@ -35,8 +38,12 @@ fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 @Suppress("unused") // Referenced in application.conf
 fun Application.module() {
     install(Koin) {
-//        Slf4jLog()
+        Slf4jLog()
         modules(Module)
+    }
+
+    install(CallLogging) {
+        level = Level.INFO
     }
 
     install(DataConversion) {
