@@ -10,6 +10,7 @@ import fr.dcproject.entity.Article
 import fr.dcproject.entity.Constitution
 import fr.dcproject.routes.article
 import fr.dcproject.routes.constitution
+import fr.dcproject.routes.followArticle
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -31,7 +32,7 @@ import java.util.*
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Constitution as RepositoryConstitution
 
-fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
@@ -106,6 +107,7 @@ fun Application.module() {
     install(Routing) {
         article(get())
         constitution(get())
+        followArticle(get())
     }
 
     // TODO move to postgresJson lib

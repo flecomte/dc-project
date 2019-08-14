@@ -1,5 +1,6 @@
 package fr.dcproject
 
+import fr.dcproject.repository.FollowArticleRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -25,6 +26,7 @@ val Module = module {
     // TODO: create generic declaration
     single { ArticleRepository(get()) }
     single { ConstitutionRepository(get()) }
+    single { FollowArticleRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 }
