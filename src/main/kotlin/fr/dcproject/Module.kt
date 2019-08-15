@@ -1,12 +1,14 @@
 package fr.dcproject
 
 import fr.dcproject.repository.FollowArticleRepository
+import fr.dcproject.repository.FollowConstitutionRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
 import io.ktor.util.KtorExperimentalAPI
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
+import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 val config = Config()
@@ -25,6 +27,7 @@ val Module = module {
 
     // TODO: create generic declaration
     single { ArticleRepository(get()) }
+    single { CitizenRepository(get()) }
     single { ConstitutionRepository(get()) }
     single { FollowArticleRepository(get()) }
 

@@ -1,4 +1,5 @@
 import fr.dcproject.entity.Article
+import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.Follow
 import fr.postgresjson.repository.RepositoryI.Direction
@@ -22,4 +23,11 @@ object Paths {
     }
     @Location("/constitutions/{constitution}") class ConstitutionRequest(val constitution: Constitution)
     @Location("/constitutions") class PostConstitutionRequest
+
+
+    @Location("/citizens") class CitizensRequest(page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: Direction? = null, val search: String? = null) {
+        val page: Int = if (page < 1) 1 else page
+        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    }
+    @Location("/citizens/{citizen}") class CitizenRequest(val citizen: Citizen)
 }
