@@ -30,6 +30,7 @@ val Module = module {
     single { CitizenRepository(get()) }
     single { ConstitutionRepository(get()) }
     single { FollowArticleRepository(get()) }
+    single { FollowConstitutionRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 }

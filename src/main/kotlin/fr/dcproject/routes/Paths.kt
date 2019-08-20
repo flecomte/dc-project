@@ -22,6 +22,7 @@ object Paths {
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
     @Location("/constitutions/{constitution}") class ConstitutionRequest(val constitution: Constitution)
+    @Location("/constitutions/{constitution}/follow") class ConstitutionFollowRequest(val constitution: Constitution)
     @Location("/constitutions") class PostConstitutionRequest
 
 

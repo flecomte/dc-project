@@ -6,6 +6,7 @@ import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import kotlin.reflect.KClass
 import fr.dcproject.entity.Article as ArticleEntity
+import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
 open class Follow <T: EntityI<UUID>>(override var requester: Requester): RepositoryI<FollowEntity<T>> {
@@ -34,3 +35,4 @@ open class Follow <T: EntityI<UUID>>(override var requester: Requester): Reposit
     }
 }
 class FollowArticleRepository(override var requester: Requester): Follow<ArticleEntity>(requester)
+class FollowConstitutionRepository(override var requester: Requester): Follow<ConstitutionEntity>(requester)

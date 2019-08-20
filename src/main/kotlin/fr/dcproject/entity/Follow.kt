@@ -9,3 +9,4 @@ class Follow <T: EntityI<UUID>> (
 ): Extra<T>(id, citizen)
 
 typealias FollowArticleEntity = Follow<Article>
+typealias FollowConstitutionEntity = Follow<Constitution>

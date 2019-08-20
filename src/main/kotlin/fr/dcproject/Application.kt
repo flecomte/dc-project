@@ -9,10 +9,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
-import fr.dcproject.routes.article
-import fr.dcproject.routes.citizen
-import fr.dcproject.routes.constitution
-import fr.dcproject.routes.followArticle
+import fr.dcproject.routes.*
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
@@ -121,6 +118,7 @@ fun Application.module() {
         citizen(get())
         constitution(get())
         followArticle(get())
+        followConstitution(get())
     }
 
     // TODO move to postgresJson lib
