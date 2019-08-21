@@ -3,17 +3,18 @@ package fr.dcproject.routes
 import Paths
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
-import fr.dcproject.repository.FollowArticleRepository
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.delete
+import io.ktor.locations.get
 import io.ktor.locations.post
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import org.joda.time.DateTime
 import java.util.*
 import fr.dcproject.entity.Follow as FollowEntity
+import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
 // TODO get current citizen
 val currentCitizen = Citizen(
@@ -33,5 +34,10 @@ fun Route.followArticle(repo: FollowArticleRepository) {
     delete<Paths.ArticleFollowRequest> {
         repo.unfollow(FollowEntity(target = it.article, citizen = currentCitizen))
         call.respond(HttpStatusCode.NoContent)
+    }
+
+    get<Paths.CitizenFollowArticleRequest> {
+        val follows = repo.findByCitizenId(it.citizen)
+        call.respond(follows)
     }
 }

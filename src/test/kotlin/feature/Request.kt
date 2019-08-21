@@ -1,6 +1,7 @@
 package feature
 
 import com.google.gson.Gson
+import com.google.gson.JsonParser
 import cucumber.api.java8.En
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
@@ -21,6 +22,7 @@ import org.koin.test.inject
 import org.opentest4j.AssertionFailedError
 import java.util.*
 import kotlin.random.Random
+import kotlin.test.assertTrue
 import kotlin.test.asserter
 import feature.Context.Companion.current as currentContext
 
@@ -103,14 +105,11 @@ class Request: En, KoinTest {
         And("the response should contain object:") { expected: DataTable ->
             val call: TestApplicationCall = currentContext.call ?: throw AssertionFailedError("No call")
             val p = call.response
-            val response = Gson().fromJson<Map<String, String>>(p.content, Map::class.java)
+            val response = JsonParser().parse(p.content).getAsJsonObject()
 
-            expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, value) ->
-                if (response.containsKey(key)) {
-                    assertEquals(value, response[key])
-                    return@And
-                }
-                asserter.fail("The response not contain $key field")
+            expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
+                assertTrue(response.has(key))
+                assertEquals(valueExpected, response.get(key).asString)
             }
         }
     }

@@ -1,7 +1,6 @@
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
-import fr.dcproject.entity.Follow
 import fr.postgresjson.repository.RepositoryI.Direction
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -31,4 +30,6 @@ object Paths {
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
     @Location("/citizens/{citizen}") class CitizenRequest(val citizen: Citizen)
+    @Location("/citizens/{citizen}/follows/articles") class CitizenFollowArticleRequest(val citizen: Citizen)
+    @Location("/citizens/{citizen}/follows/constitutions") class CitizenFollowConstitutionRequest(val citizen: Citizen)
 }

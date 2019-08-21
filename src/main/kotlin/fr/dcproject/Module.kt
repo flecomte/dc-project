@@ -1,7 +1,5 @@
 package fr.dcproject
 
-import fr.dcproject.repository.FollowArticleRepository
-import fr.dcproject.repository.FollowConstitutionRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -10,6 +8,8 @@ import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
+import fr.dcproject.repository.FollowArticle as FollowArticleRepository
+import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 
 val config = Config()
 
