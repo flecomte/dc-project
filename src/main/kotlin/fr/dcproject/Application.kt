@@ -33,6 +33,7 @@ import java.util.*
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
 import fr.dcproject.repository.Constitution as RepositoryConstitution
+import fr.dcproject.repository.User as UserRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -104,7 +105,9 @@ fun Application.module() {
             verifier(JwtConfig.verifier)
             realm = "dc-project.fr"
             validate {
-                it.payload.getClaim("id").asInt()?.let { get<User>() }
+                it.payload.getClaim("id").asString()?.let { id ->
+                    get<UserRepository>().findById(UUID.fromString(id))
+                }
             }
         }
     }
