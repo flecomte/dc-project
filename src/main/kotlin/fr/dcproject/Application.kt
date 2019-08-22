@@ -9,11 +9,13 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
+import fr.dcproject.entity.User
 import fr.dcproject.routes.*
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.jwt.jwt
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
@@ -93,6 +95,18 @@ fun Application.module() {
     }
 
     install(Authentication) {
+        /**
+         * Setup the JWT authentication to be used in [Routing].
+         * If the token is valid, the corresponding [User] is fetched from the database.
+         * The [User] can then be accessed in each [ApplicationCall].
+         */
+        jwt {
+            verifier(JwtConfig.verifier)
+            realm = "dc-project.fr"
+            validate {
+                it.payload.getClaim("id").asInt()?.let { get<User>() }
+            }
+        }
     }
 
     install(AutoHeadResponse)
@@ -115,6 +129,7 @@ fun Application.module() {
 
     install(Routing) {
         article(get())
+        auth(get())
         citizen(get())
         constitution(get())
         followArticle(get())

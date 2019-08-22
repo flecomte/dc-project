@@ -1,6 +1,7 @@
 package fr.dcproject.entity
 
 import fr.postgresjson.entity.*
+import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.*
 
@@ -11,4 +12,5 @@ class User(
     var plainPassword: String?
 ) : UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
-    EntityUpdatedAt by EntityUpdatedAtImp()
+    EntityUpdatedAt by EntityUpdatedAtImp(),
+    Principal

@@ -10,6 +10,7 @@ import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
+import fr.dcproject.repository.User as UserRepository
 
 val config = Config()
 
@@ -26,6 +27,7 @@ val Module = module {
     ).createRequester() }
 
     // TODO: create generic declaration
+    single { UserRepository(get()) }
     single { ArticleRepository(get()) }
     single { CitizenRepository(get()) }
     single { ConstitutionRepository(get()) }

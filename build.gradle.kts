@@ -5,6 +5,8 @@ val kotlin_version: String by project
 val logback_version: String by project
 val koinVersion: String by project
 val postgresjson_version: String by project
+val jackson_version: String by project
+val cucumber_version: String by project
 
 plugins {
     application
@@ -39,11 +41,13 @@ dependencies {
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
     implementation("io.ktor:ktor-gson:$ktor_version")
+    implementation("io.ktor:ktor-auth-jwt:$ktor_version")
     implementation("org.koin:koin-ktor:$koinVersion")
     implementation("io.ktor:ktor-jackson:$ktor_version")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.9.9")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:2.9.9")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_version")
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
+    implementation("com.auth0:java-jwt:3.8.2")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
@@ -53,6 +57,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.9")
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
     testImplementation("org.amshove.kluent:kluent:1.4")
-    testImplementation("io.cucumber:cucumber-java8:4.3.1")
-    testImplementation("io.cucumber:cucumber-junit:4.3.1")
+    testImplementation("io.cucumber:cucumber-java8:$cucumber_version")
+    testImplementation("io.cucumber:cucumber-junit:$cucumber_version")
 }
