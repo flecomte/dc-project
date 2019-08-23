@@ -11,10 +11,13 @@ import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.User
 import fr.dcproject.routes.*
+import fr.dcproject.security.voter.ArticleVoter
+import fr.dcproject.security.voter.AuthorizationVoter
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
+import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
@@ -95,6 +98,12 @@ fun Application.module() {
     install(Locations) {
     }
 
+    install(AuthorizationVoter) {
+        voters = mutableListOf(
+            ArticleVoter()
+        )
+    }
+
     install(Authentication) {
         /**
          * Setup the JWT authentication to be used in [Routing].
@@ -131,12 +140,14 @@ fun Application.module() {
     }
 
     install(Routing) {
-        article(get())
-        auth(get())
-        citizen(get())
-        constitution(get())
-        followArticle(get())
-        followConstitution(get())
+        authenticate(optional = true) {
+            article(get())
+            auth(get())
+            citizen(get())
+            constitution(get())
+            followArticle(get())
+            followConstitution(get())
+        }
     }
 
     // TODO move to postgresJson lib

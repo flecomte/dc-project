@@ -11,7 +11,7 @@ class Citizen(
     id: UUID = UUID.randomUUID(),
     var name: Name?,
     var birthday: DateTime?,
-    var userId: String? = null,
+    var userId: UUID? = null,
     var voteAnnonymous: Boolean? = null,
     var followAnnonymous: Boolean? = null,
     var user: User?
