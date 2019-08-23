@@ -6,7 +6,8 @@ create table "user"
     updated_at timestamptz default now()              not null check ( updated_at >= created_at ),
     blocked_at timestamptz default null               null,
     username   varchar(64)                            not null check ( username != '' and lower(username) = username) unique,
-    password   text                                   not null check ( password != '' )
+    password   text                                   not null check ( password != '' ),
+    roles      text[]      default '{}'               not null
 );
 
 create table citizen

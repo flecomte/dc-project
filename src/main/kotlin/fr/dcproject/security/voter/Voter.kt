@@ -9,6 +9,7 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
 import io.ktor.util.AttributeKey
 import io.ktor.util.KtorExperimentalAPI
+import io.ktor.util.pipeline.PipelineContext
 
 interface ActionI
 
@@ -39,6 +40,13 @@ fun ApplicationCall.assertCan(action: ActionI, subject: Any? = null) {
         throw UnauthorizedException(action)
     }
 }
+
+fun PipelineContext<Unit, ApplicationCall>.assertCan(action: ActionI, subject: Any? = null) =
+    context.assertCan(action, subject)
+
+fun PipelineContext<Unit, ApplicationCall>.can(action: ActionI, subject: Any? = null) =
+    context.can(action, subject)
+
 fun ApplicationCall.can(action: ActionI, subject: Any? = null): Boolean {
     val voters = attributes[votersAttributeKey]
 
