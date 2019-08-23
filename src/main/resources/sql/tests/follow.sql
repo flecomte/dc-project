@@ -1,8 +1,8 @@
 do
 $$
 declare
-    created_user     json  := '{"username": "george", "plain_password": "azerty"}';
-    created_user2    json  := '{"username": "john", "plain_password": "qwerty"}';
+    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
+    created_user2    json  := '{"username": "john", "plain_password": "qwerty", "roles": ["ROLE_USER"]}';
     _citizen_id      uuid;
     _citizen_id2     uuid;
     created_citizen json := $json$
@@ -31,10 +31,10 @@ begin
     created_citizen2 := jsonb_set(created_citizen2::jsonb, '{user}'::text[], jsonb_build_object('id', created_user2->>'id'), true)::json;
 
     -- insert new citizen for context
-    call upsert_citizen(created_citizen);
+    select upsert_citizen(created_citizen) into created_citizen;
     _citizen_id := created_citizen->>'id';
     -- insert new citizen for context
-    call upsert_citizen(created_citizen2);
+    select upsert_citizen(created_citizen2) into created_citizen2;
     _citizen_id2 := created_citizen2->>'id';
 
 

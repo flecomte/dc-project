@@ -1,7 +1,7 @@
 do
 $$
 declare
-    created_user json := '{"username": "george", "plain_password": "azerty"}';
+    created_user json := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     selected_user json;
     exist_user json;
 begin

@@ -1,8 +1,8 @@
 do
 $$
 declare
-    created_user     json  := '{"username": "george", "plain_password": "azerty"}';
-    created_user2    json  := '{"username": "john", "plain_password": "qwerty"}';
+    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
+    created_user2    json  := '{"username": "john", "plain_password": "qwerty", "roles": ["ROLE_USER"]}';
     _citizen_id      uuid;
     created_citizen json := $json$
     {
@@ -33,12 +33,12 @@ begin
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', created_user->>'id'), true)::json;
 
     -- insert new citizen for context
-    call upsert_citizen(created_citizen);
+    select upsert_citizen(created_citizen) into created_citizen;
     _citizen_id := created_citizen->>'id';
     created_article := jsonb_set(created_article::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_article#>>'{created_by, id}' = _citizen_id::text, format('citizenId in article must be the same as citizen, %s != %s', created_article#>>'{created_by, id}', _citizen_id::text);
     -- upsert article
-    call upsert_article(created_article);
+    select upsert_article(created_article) into created_article;
 
 
     select comment(

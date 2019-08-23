@@ -1,7 +1,7 @@
 do
 $$
 declare
-    created_user     json  := '{"username": "george", "plain_password": "azerty"}';
+    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     _user_id         uuid;
     _citizen_id      uuid;
     created_citizen json := $json$
@@ -43,25 +43,27 @@ declare
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
+    raise notice '%', created_user;
     _user_id := created_user->>'id';
+    raise notice '%', _user_id;
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', _user_id::text), true)::json;
     assert created_citizen#>>'{user, id}' = _user_id::text, format('userId in citizen must be the same as user, %s = %s', created_citizen#>>'{user, id}', _user_id::text);
 
     -- insert new citizen for context
-    call upsert_citizen(created_citizen);
+    select upsert_citizen(created_citizen) into created_citizen;
     _citizen_id := created_citizen->>'id';
     created_article := jsonb_set(created_article::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_article#>>'{created_by, id}' = _citizen_id::text, format('citizenId in article must be the same as citizen, %s != %s', created_article#>>'{created_by, id}', _citizen_id::text);
 
     -- upsert article for context
-    call upsert_article(created_article);
+    select upsert_article(created_article) into created_article;
     assert created_article->>'version_id' is not null, 'version_id should not be null';
 
 
     -- create new constitution
     created_constitution := jsonb_set(created_constitution::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     created_constitution := jsonb_set(created_constitution::jsonb, '{titles, 0, articles}'::text[], jsonb_build_array(jsonb_build_object('id', created_article->>'id')), true)::json;
-    call upsert_constitution(created_constitution);
+    select upsert_constitution(created_constitution) into created_constitution;
     assert (created_constitution->>'version_number')::int = 1, format('version_number must be equal to 1, %s instead', created_constitution->>'version_number');
     assert created_constitution#>>'{titles, 0, name}' = 'titleOne'::text, format('the name of the first title of contitution must be %s, not %s', 'titleOne', created_constitution#>>'{titles, 0, name}');
 

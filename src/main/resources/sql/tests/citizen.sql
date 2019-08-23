@@ -2,7 +2,7 @@ do
 $$
 declare
     wrong_citizen    json;
-    created_user     json  := '{"username": "george", "plain_password": "azerty"}';
+    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     _user_id         uuid;
     created_citizen  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01"}';
     selected_citizen json;
@@ -14,13 +14,13 @@ begin
     assert created_citizen#>>'{user, id}' = _user_id::text, format('userId in citizen must be the same as user, %s = %s', created_citizen#>>'{user, id}', _user_id::text);
 
     -- insert new citizen
-    call upsert_citizen(created_citizen);
+    select upsert_citizen(created_citizen) into created_citizen;
     assert created_citizen->>'birthday' = '2001-01-01'::text, format('birthday of inserted citizen must be the same of the original object, %s != %s', created_citizen->>'birthday', '2001-01-01'::text);
 
     -- insert citizen without first name and test if throw exception
     wrong_citizen := (created_citizen::jsonb - '{name, first_name}'::text[])::json;
     begin
-        call upsert_citizen(wrong_citizen);
+        select upsert_citizen(wrong_citizen) into wrong_citizen;
         assert false, 'upsert_citizen must be throw exception if first_name not exist';
     exception when not_null_violation then
     end;
