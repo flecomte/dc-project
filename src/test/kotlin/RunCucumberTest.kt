@@ -1,25 +1,21 @@
-import cucumber.api.CucumberOptions
-import cucumber.api.Scenario
-import cucumber.api.java8.En
-import cucumber.api.junit.Cucumber
-import feature.Context
+import feature.KtorServerContext
 import fr.dcproject.config
 import fr.dcproject.module
 import fr.dcproject.utils.LoggerDelegate
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
+import io.cucumber.core.api.Scenario
+import io.cucumber.java8.En
+import io.cucumber.junit.Cucumber
+import io.cucumber.junit.CucumberOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.createTestEnvironment
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 import org.koin.test.get
 import org.slf4j.Logger
-import java.util.concurrent.TimeUnit
-import feature.Context.Companion.current as contextCurrent
 
 var unitialized: Boolean = false
 
@@ -29,6 +25,11 @@ var unitialized: Boolean = false
 @CucumberOptions(plugin = ["pretty"])
 class RunCucumberTest: En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
+
+    val ktorContext = KtorServerContext {
+        module()
+    }
+
     init {
         Before(-2) { _: Scenario ->
             if (!unitialized) {
@@ -48,11 +49,11 @@ class RunCucumberTest: En, KoinTest {
             config.database = "test"
             config.username = "test"
             config.password = "test"
-            contextCurrent = Context(TestApplicationEngine(createTestEnvironment()) {}, scenario)
+            ktorContext.start()
         }
 
         After { _: Scenario ->
-            contextCurrent.engine.stop(0L, 0L, TimeUnit.MILLISECONDS)
+            ktorContext.stop()
         }
     }
 

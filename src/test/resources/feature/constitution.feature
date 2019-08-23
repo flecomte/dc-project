@@ -1,11 +1,11 @@
 Feature: constitution routes
 
   Scenario: The route for get constitutions must response a 200
-    When I send a "GET" request to "/constitutions"
+    When I send a GET request to "/constitutions"
     Then the response status code should be 200
 
   Scenario: The route for get one constitution must response a 200 and return constitution
-    When I send a "GET" request to "/constitutions/0ca489a6-ef68-8bd5-2355-5793d4b3d66c"
+    When I send a GET request to "/constitutions/0ca489a6-ef68-8bd5-2355-5793d4b3d66c"
     Then the response status code should be 200
     And the response should contain object:
       | id | 0ca489a6-ef68-8bd5-2355-5793d4b3d66c |
@@ -15,7 +15,7 @@ Feature: constitution routes
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "POST" request to "/constitutions" with body:
+    When I send a POST request to "/constitutions" with body:
     """
     {
        "version_id":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",

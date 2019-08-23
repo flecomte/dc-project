@@ -21,8 +21,7 @@ class Config {
 }
 
 object JwtConfig {
-
-    private const val secret = "zAP5MBA4B4Ijz0MZaS48"
+    const val secret = "zAP5MBA4B4Ijz0MZaS48"
     private const val issuer = "dc-project.fr"
     private const val validityInMs = 36_000_00 * 10 // 10 hours
     // TODO change to RSA512

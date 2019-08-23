@@ -17,7 +17,6 @@ import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.AutoHeadResponse
 import io.ktor.features.CallLogging
@@ -140,6 +139,7 @@ fun Application.module() {
     }
 
     install(Routing) {
+//        trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
             article(get())
             auth(get())

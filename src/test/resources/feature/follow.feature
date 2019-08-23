@@ -6,7 +6,7 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "POST" request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
+    When I send a POST request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
     Then the response status code should be 201
 
   Scenario: The route for get follows of articles must response a 200 and return objects
@@ -14,7 +14,7 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "GET" request to "/citizens/64b7b379-2298-43ec-b428-ba134930cabd/follows/articles"
+    When I send a GET request to "/citizens/64b7b379-2298-43ec-b428-ba134930cabd/follows/articles"
     Then the response status code should be 200
     And the response should contain object:
       | current_page | 1  |
@@ -25,7 +25,7 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "DELETE" request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
+    When I send a DELETE request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
     Then the response status code should be 204
 
   # Constitution
@@ -34,7 +34,7 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "POST" request to "/constitutions/72aa1ee1-4963-eb44-c9e0-5ce6e0f18f00/follow"
+    When I send a POST request to "/constitutions/72aa1ee1-4963-eb44-c9e0-5ce6e0f18f00/follow"
     Then the response status code should be 201
 
   Scenario: The route for get follows of constitutions must response a 200 and return objects
@@ -42,7 +42,7 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "GET" request to "/citizens/64b7b379-2298-43ec-b428-ba134930cabd/follows/constitutions"
+    When I send a GET request to "/citizens/64b7b379-2298-43ec-b428-ba134930cabd/follows/constitutions"
     Then the response status code should be 200
     And the response should contain object:
       | current_page | 1  |
@@ -53,5 +53,5 @@ Feature: follow Article and Constitution
       | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
       | firstName | Jaque                                |
       | lastName  | Dupuis                               |
-    When I send a "DELETE" request to "/constitutions/72aa1ee1-4963-eb44-c9e0-5ce6e0f18f00/follow"
+    When I send a DELETE request to "/constitutions/72aa1ee1-4963-eb44-c9e0-5ce6e0f18f00/follow"
     Then the response status code should be 204
