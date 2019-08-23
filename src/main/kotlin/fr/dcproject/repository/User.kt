@@ -26,6 +26,12 @@ class User(override var requester: Requester) : RepositoryI<UserEntity> {
             ) ?: throw UserNotFound(id)
     }
 
+    fun insert(user: UserEntity): UserEntity? {
+        return requester
+            .getFunction("insert_user")
+            .selectOne("resource" to user)
+    }
+
     class UserNotFound(override val message: String?, override val cause: Throwable?): Throwable(message, cause) {
         constructor(id: UUID): this("No User with ID $id", null)
     }
