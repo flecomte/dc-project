@@ -11,9 +11,10 @@ import fr.dcproject.entity.Citizen as CitizenEntity
 class Citizen(override var requester: Requester) : RepositoryI<CitizenEntity> {
     override val entityName = CitizenEntity::class
 
-    fun findById(id: UUID): CitizenEntity? {
-        val function = requester.getFunction("find_citizen_by_id")
-        return function.selectOne("id" to id)
+    fun findById(id: UUID, withUser: Boolean = false): CitizenEntity? {
+        return requester
+            .getFunction(if (withUser) "find_citizen_by_id_with_user" else "find_citizen_by_id")
+            .selectOne("id" to id)
     }
 
     fun find(
@@ -36,6 +37,12 @@ class Citizen(override var requester: Requester) : RepositoryI<CitizenEntity> {
     fun upsert(citizen: CitizenEntity): CitizenEntity? {
         return requester
             .getFunction("upsert_citizen")
+            .selectOne("resource" to citizen)
+    }
+
+    fun createWithUser(citizen: CitizenEntity): CitizenEntity? {
+        return requester
+            .getFunction("insert_citizen_with_user")
             .selectOne("resource" to citizen)
     }
 }

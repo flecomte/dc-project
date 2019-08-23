@@ -1,11 +1,12 @@
 do
 $$
 declare
-    wrong_citizen    json;
-    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
-    _user_id         uuid;
-    created_citizen  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01"}';
-    selected_citizen json;
+    wrong_citizen              json;
+    created_user               json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
+    _user_id                   uuid;
+    created_citizen            json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01"}';
+    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
+    selected_citizen           json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -16,6 +17,11 @@ begin
     -- insert new citizen
     select upsert_citizen(created_citizen) into created_citizen;
     assert created_citizen->>'birthday' = '2001-01-01'::text, format('birthday of inserted citizen must be the same of the original object, %s != %s', created_citizen->>'birthday', '2001-01-01'::text);
+
+    -- insert new citizen
+    select insert_citizen_with_user(created_citizen_with_user) into created_citizen_with_user;
+    assert created_citizen_with_user->>'birthday' = '2001-01-01'::text, format('birthday of inserted citizen must be the same of the original object, %s != %s', created_citizen->>'birthday', '2001-01-01'::text);
+    assert created_citizen_with_user#>>'{user, username}' = 'george junior', 'username must be george';
 
     -- insert citizen without first name and test if throw exception
     wrong_citizen := (created_citizen::jsonb - '{name, first_name}'::text[])::json;
@@ -34,8 +40,8 @@ begin
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
     -- delete citizen
-    delete from citizen where user_id = _user_id;
-    delete from "user" where username = 'george';
+    delete from citizen;
+    delete from "user";
 
     -- check if fint by id return null if citizen not exist
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
