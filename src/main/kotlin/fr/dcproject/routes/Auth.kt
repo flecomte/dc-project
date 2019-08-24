@@ -12,18 +12,27 @@ import io.ktor.request.receive
 import io.ktor.response.respondText
 import io.ktor.routing.Route
 import io.ktor.util.KtorExperimentalAPI
+import fr.dcproject.entity.Citizen as CitizenEntity
+import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.User as UserRepository
 
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
-fun Route.auth(repo: UserRepository) {
+fun Route.auth(userRepo: UserRepository, citizenRepo: CitizenRepository) {
     post <Paths.LoginRequest> {
         try {
             val credentials = call.receive<UserPasswordCredential>()
-            val user = repo.findByCredentials(credentials) ?: throw BadRequestException("Username not exist or password is wrong")
+            val user = userRepo.findByCredentials(credentials) ?: throw BadRequestException("Username not exist or password is wrong")
             call.respondText(JwtConfig.makeToken(user))
         } catch (e: MismatchedInputException) {
             throw BadRequestException("You must be send name and password to the request")
         }
+    }
+
+    post <Paths.RegisterRequest> {
+        val citizen = call.receive<CitizenEntity>()
+        val created = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
+
+        call.respondText(JwtConfig.makeToken(created))
     }
 }

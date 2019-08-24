@@ -40,7 +40,7 @@ class Citizen(override var requester: Requester) : RepositoryI<CitizenEntity> {
             .selectOne("resource" to citizen)
     }
 
-    fun createWithUser(citizen: CitizenEntity): CitizenEntity? {
+    fun insertWithUser(citizen: CitizenEntity): CitizenEntity? {
         return requester
             .getFunction("insert_citizen_with_user")
             .selectOne("resource" to citizen)

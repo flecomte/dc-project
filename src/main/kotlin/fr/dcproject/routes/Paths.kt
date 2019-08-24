@@ -8,6 +8,7 @@ import io.ktor.locations.Location
 @KtorExperimentalLocationsAPI
 object Paths {
     @Location("/login") class LoginRequest
+    @Location("/register") class RegisterRequest
 
     @Location("/articles") class ArticlesRequest(page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: Direction? = null, val search: String? = null) {
         val page: Int = if (page < 1) 1 else page

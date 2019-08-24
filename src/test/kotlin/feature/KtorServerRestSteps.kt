@@ -9,6 +9,7 @@ import kotlinx.serialization.json.JsonElement
 import kotlinx.serialization.json.JsonPrimitive
 import kotlinx.serialization.parse
 import kotlin.test.assertEquals
+import kotlin.test.assertTrue
 import kotlin.test.fail
 
 @ImplicitReflectionSerializer
@@ -29,6 +30,14 @@ class KtorServerRestSteps : En {
         Then("the JSON should have {int} item(s)") { count: Int ->
             val jsonArray = responseJsonElement as? JsonArray ?: fail("The json response isn't array")
             assertEquals(count, jsonArray.size)
+        }
+
+        Then("the Response should be:") { body: String ->
+            assertEquals(body, response)
+        }
+
+        Then("the Response should contain:") { body: String ->
+            assertTrue(response.contains(body))
         }
     }
 
@@ -52,4 +61,7 @@ class KtorServerRestSteps : En {
 
     private val responseJsonElement: JsonElement
         get() = Json.parse(KtorServerContext.defaultServer.call?.response?.content ?: fail("The response isn't valid JSON"))
+
+    private val response: String
+        get() = KtorServerContext.defaultServer.call?.response?.content ?: fail("The response isn't valid")
 }

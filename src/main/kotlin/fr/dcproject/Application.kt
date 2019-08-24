@@ -145,7 +145,7 @@ fun Application.module() {
 //        trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
             article(get())
-            auth(get())
+            auth(get(), get())
             citizen(get())
             constitution(get())
             followArticle(get())
