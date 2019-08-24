@@ -99,10 +99,10 @@ create table article
     created_by_id  uuid                                     not null references citizen (id),
     version_id     uuid          default uuid_generate_v4() not null,
     version_number int                                      not null,
-    title          text                                     not null,
+    title          text                                     not null check ( length(title) < 128 ),
     annonymous     boolean       default false              not null,
     content        text                                     not null check ( content != '' ),
-    description    text,
+    description    text                                     null check ( description != '' ),
     tags           varchar(32)[] default '{}'               not null,
     unique (version_id, version_number)
 );
@@ -120,7 +120,7 @@ create table constitution
     created_by_id  uuid                                   not null references citizen (id),
     version_id     uuid        default uuid_generate_v4() not null,
     version_number int                                    not null,
-    title          text                                   not null,
+    title          text                                   not null check ( length(title) < 128 ),
     annonymous     boolean     default false              not null
 );
 
@@ -136,7 +136,7 @@ create table title
     created_at      timestamptz default now()              not null,
     created_by_id   uuid                                   not null references citizen (id),
     name            text                                   not null check ( name != '' ),
-    rank            int                                    not null,
+    rank            int                                    not null check ( rank >= 0 ),
     constitution_id uuid                                   not null references constitution (id)
 );
 
@@ -145,7 +145,7 @@ create table article_in_title
     id              uuid        default uuid_generate_v4() not null primary key,
     created_at      timestamptz default now()              not null,
     created_by_id   uuid                                   not null references citizen (id),
-    rank            int                                    not null,
+    rank            int                                    not null check ( rank >= 0 ),
     title_id        uuid                                   not null references title (id),
     article_id      uuid                                   not null references article (id),
     constitution_id uuid                                   not null references constitution (id)
@@ -175,7 +175,7 @@ create table article_relations
     target_id     uuid references article check ( source_id != target_id ),
     created_at    timestamptz default now(),
     created_by_id uuid not null references citizen (id),
-    comment       text null,
+    comment       text null check ( comment != '' ),
     primary key (source_id, target_id)
 );
 
@@ -229,7 +229,7 @@ create table follow_citizen
 create table comment
 (
     updated_at timestamptz default now() not null check ( updated_at >= created_at ),
-    "content"  text                      not null check ( content != '' ),
+    "content"  text                      not null check ( content != '' and length(content) < 4096),
     parent_id  uuid                      null references comment (id),
     foreign key (citizen_id) references citizen (id),
     primary key (id)
