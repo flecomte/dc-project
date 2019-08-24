@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
@@ -16,17 +17,17 @@ import fr.dcproject.security.voter.AuthorizationVoter
 import fr.dcproject.security.voter.CitizenVoter
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
+import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
-import io.ktor.features.AutoHeadResponse
-import io.ktor.features.CallLogging
-import io.ktor.features.ContentNegotiation
-import io.ktor.features.DataConversion
+import io.ktor.features.*
+import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
+import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
 import org.eclipse.jetty.util.log.Slf4jLog
@@ -34,6 +35,7 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.util.*
+import java.util.concurrent.CompletionException
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
 import fr.dcproject.repository.Constitution as RepositoryConstitution
@@ -150,6 +152,18 @@ fun Application.module() {
             constitution(get())
             followArticle(get())
             followConstitution(get())
+        }
+    }
+
+    install(StatusPages) {
+        // TODO move to postgresJson lib
+        exception<CompletionException> { e ->
+            val parent = e.cause?.cause
+            if (parent is GenericDatabaseException) {
+                call.respond(HttpStatusCode.BadRequest, parent.errorMessage.message!!)
+            } else {
+                throw e
+            }
         }
     }
 
