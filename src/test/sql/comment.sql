@@ -26,6 +26,8 @@ declare
     }
     $json$;
     _comment_id uuid;
+    _selected_comments json;
+    _selected_comments_total int;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -41,7 +43,7 @@ begin
     select upsert_article(created_article) into created_article;
 
 
-    select comment(
+    select "comment"(
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
         citizen_id => _citizen_id,
@@ -52,10 +54,16 @@ begin
     perform edit_comment(
         reference => 'article'::regclass,
         id => _comment_id,
-        content => 'edited'::text
+        content => 'edited content'::text
     );
     assert (select count(*) = 1 from "comment"), 'edit comment must not insert new comment';
-    assert (select count(*) = 1 from "comment" where content = 'edited'), 'edit comment must not insert new comment';
+    assert (select count(*) = 1 from "comment" where content = 'edited content'), 'edit comment must not insert new comment';
+
+    select resource, total
+    into _selected_comments, _selected_comments_total
+    from find_comments_by_citizen(_citizen_id);
+    assert (_selected_comments_total = 1), 'the number of comments for this citizen must be 1';
+    assert (_selected_comments#>>'{0,content}' = 'edited content'), 'the content of first comment for this citizen must be "edited content", "' || (_selected_comments#>>'{0,content}') || '" returned';
 
     -- delete comment and context
     delete from "comment";
