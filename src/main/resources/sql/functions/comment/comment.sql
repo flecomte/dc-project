@@ -17,7 +17,7 @@ begin
         values (_citizen_id, _target_id, _content, _parent_id)
         returning comment_on_constitution.id into _id;
     else
-        raise exception '% no implemented', reference::text;
+        raise exception 'comment with target as "%", is no implemented', reference::text;
     end if;
 end;
 $$;

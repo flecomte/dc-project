@@ -167,6 +167,7 @@ $$;
 create trigger set_constitution_link_trigger
     before insert
     on article_in_title
+    for each row
 execute procedure set_constitution_link();
 
 create table article_relations
@@ -228,12 +229,40 @@ create table follow_citizen
 
 create table comment
 (
-    updated_at timestamptz default now() not null check ( updated_at >= created_at ),
-    "content"  text                      not null check ( content != '' and length(content) < 4096),
-    parent_id  uuid                      null references comment (id),
+    updated_at  timestamptz default now() not null check ( updated_at >= created_at ),
+    "content"   text                      not null check ( content != '' and length(content) < 4096),
+    parent_id   uuid                      references comment (id),
+    parents_ids uuid[],
     foreign key (citizen_id) references citizen (id),
     primary key (id)
 ) inherits (extra);
+
+create index comment_parents_ids_idx
+    on comment (parents_ids);
+
+create or replace function set_comment_parents_ids() returns trigger
+    language plpgsql as
+$$
+begin
+    if(new.parent_id is not null) then
+        new.parents_ids = (
+            select com.parents_ids || com.id
+            from "comment" com
+            where com.id = new.parent_id
+        );
+    else
+        new.parents_ids = null;
+    end if;
+
+    return new;
+end;
+$$;
+
+create trigger set_comment_parents_ids_trigger
+    before insert
+    on comment
+    for each row
+execute procedure set_comment_parents_ids();
 
 create table comment_on_article
 (
@@ -244,6 +273,15 @@ create table comment_on_article
     primary key (id)
 ) inherits (comment);
 
+create index comment_on_article_parents_ids_idx
+    on comment_on_article (parents_ids);
+
+create trigger set_comment_on_article_parents_ids_trigger
+    before insert
+    on comment_on_article
+    for each row
+execute procedure set_comment_parents_ids();
+
 create table comment_on_constitution
 (
     target_reference regclass default 'constitution'::regclass not null,
@@ -252,6 +290,15 @@ create table comment_on_constitution
     foreign key (parent_id) references comment_on_constitution (id),
     primary key (id)
 ) inherits (comment);
+
+create index comment_on_constitution_parents_ids_idx
+    on comment_on_constitution (parents_ids);
+
+create trigger set_comment_on_constitution_parents_ids_trigger
+    before insert
+    on comment_on_constitution
+    for each row
+execute procedure set_comment_parents_ids();
 
 
 

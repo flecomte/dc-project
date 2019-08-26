@@ -26,6 +26,8 @@ declare
     }
     $json$;
     _comment_id uuid;
+    _comment_id_response uuid;
+    _comment_id_response2 uuid;
     _selected_comments json;
     _selected_comments_total int;
 begin
@@ -77,6 +79,27 @@ begin
     into _selected_comments, _selected_comments_total
     from find_comments_constitution_by_citizen(_citizen_id);
     assert (_selected_comments_total = 0), 'the number of comments for this citizen must be 0, "' || _selected_comments_total || '" returned';
+
+
+    select "comment"(
+        reference => 'article'::regclass,
+        target_id => (created_article->>'id')::uuid,
+        citizen_id => _citizen_id,
+        content => 'No is not exist'::text,
+        _parent_id => _comment_id::uuid
+    ) into _comment_id_response;
+
+    select "comment"(
+        reference => 'article'::regclass,
+        target_id => (created_article->>'id')::uuid,
+        citizen_id => _citizen_id,
+        content => 'No is not exist'::text,
+        _parent_id => _comment_id_response::uuid
+    ) into _comment_id_response2;
+    assert (select count(*) = 3 from "comment"), 'comment must be inserted';
+    assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
+    assert (select com.parents_ids @> ARRAY[_comment_id_response] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id_response::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
+    assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
 
     -- delete comment and context
     delete from "comment";
