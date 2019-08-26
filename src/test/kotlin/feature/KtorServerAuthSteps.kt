@@ -14,8 +14,9 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 import org.koin.test.inject
 import java.util.*
+import java.util.concurrent.CompletionException
 import kotlin.random.Random
-import fr.dcproject.repository.User as UserRepository
+import fr.dcproject.repository.Citizen as CitizenRepository
 
 class KtorServerAuthSteps: En, KoinTest {
     private val requester: Requester  by inject()
@@ -38,18 +39,52 @@ class KtorServerAuthSteps: En, KoinTest {
                 .selectOne(citizen)
         }
 
-        Given("I am authenticated as an user") {
-            val id = UUID.randomUUID()
+        Given("I am authenticated as {word} {word} with id {string}") { firstName: String, lastName: String, id: String ->
             val jwtAsString: String = JWT.create()
                 .withIssuer("dc-project.fr")
-                .withClaim("id", id.toString())
+                .withClaim("id", id)
                 .sign(Algorithm.HMAC512(JwtConfig.secret))
 
-            val user = User(id = id, username = "user", plainPassword = "azerty")
-            get<UserRepository>().insert(user)
+            val user = User(
+                id = UUID.fromString(id),
+                username = "$firstName-$lastName".toLowerCase(),
+                plainPassword = "azerty"
+            )
+            val citizen = Citizen(
+                id = UUID.fromString(id),
+                name = Citizen.Name(firstName, lastName),
+                birthday = DateTime.now(),
+                user = user
+            )
+
+            try {
+                get<CitizenRepository>().insertWithUser(citizen)
+            } catch (e: CompletionException) {
+                // Nothing
+            }
 
             KtorServerContext.defaultServer.addPreRequestSetup {
                 addHeader(HttpHeaders.Authorization, "Bearer $jwtAsString")
+            }
+        }
+
+        Given("I have citizen {word} {word} with id {string}") { firstName: String, lastName: String, id: String ->
+            val user = User(
+                id = UUID.randomUUID(),
+                username = "$firstName-$lastName".toLowerCase(),
+                plainPassword = "azerty"
+            )
+            val citizen = Citizen(
+                id = UUID.fromString(id),
+                name = Citizen.Name(firstName, lastName),
+                birthday = DateTime.now(),
+                user = user
+            )
+
+            try {
+                get<CitizenRepository>().insertWithUser(citizen)
+            } catch (e: CompletionException) {
+                // Nothing
             }
         }
     }

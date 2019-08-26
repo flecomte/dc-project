@@ -11,10 +11,7 @@ Feature: constitution routes
       | id | 0ca489a6-ef68-8bd5-2355-5793d4b3d66c |
 
   Scenario: The route for create constitution must response a 200 and return object
-    Given I have citizen:
-      | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
-      | firstName | Jaque                                |
-      | lastName  | Dupuis                               |
+    Given I have citizen John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     When I send a POST request to "/constitutions" with body:
     """
     {

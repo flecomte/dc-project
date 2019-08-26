@@ -11,11 +11,7 @@ Feature: articles routes
       | id | 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b |
 
   Scenario: The route for create article must response a 200 and return object
-    Given I have citizen:
-      | id        | 64b7b379-2298-43ec-b428-ba134930cabd |
-      | firstName | Jaque                                |
-      | lastName  | Dupuis                               |
-    And I am authenticated as an user
+    Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     When I send a POST request to "/articles" with body:
     """
     {
