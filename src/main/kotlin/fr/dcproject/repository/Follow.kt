@@ -13,14 +13,14 @@ import fr.dcproject.entity.Follow as FollowEntity
 
 open class Follow <T: UuidEntity>(override var requester: Requester): RepositoryI<FollowEntity<T>> {
     override val entityName = FollowEntity::class as KClass<FollowEntity<T>>
-    open fun findByCitizenId(
+    open fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<FollowEntity<T>> =
-        findByCitizenId(citizen.id ?: error("The citizen must have an id"), page, limit)
+        findByCitizen(citizen.id ?: error("The citizen must have an id"), page, limit)
 
-    open fun findByCitizenId(
+    open fun findByCitizen(
         citizenId: UUID,
         page: Int = 1,
         limit: Int = 50
@@ -57,7 +57,7 @@ open class Follow <T: UuidEntity>(override var requester: Requester): Repository
 }
 
 class FollowArticle (requester: Requester): Follow<ArticleEntity>(requester) {
-    override fun findByCitizenId(
+    override fun findByCitizen(
         citizenId: UUID,
         page: Int,
         limit: Int
@@ -72,7 +72,7 @@ class FollowArticle (requester: Requester): Follow<ArticleEntity>(requester) {
 }
 
 class FollowConstitution (requester: Requester): Follow<ConstitutionEntity>(requester) {
-    override fun findByCitizenId(
+    override fun findByCitizen(
         citizenId: UUID,
         page: Int,
         limit: Int

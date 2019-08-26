@@ -1,18 +1,15 @@
 package fr.dcproject.routes
 
-import Paths
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.delete
-import io.ktor.locations.get
-import io.ktor.locations.post
+import io.ktor.locations.*
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import org.joda.time.DateTime
 import java.util.*
+import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
@@ -25,19 +22,25 @@ val currentCitizen = Citizen(
 )
 
 @KtorExperimentalLocationsAPI
+object FollowArticlePaths {
+    @Location("/articles/{article}/follow") class ArticleFollowRequest(val article: ArticleEntity)
+    @Location("/citizens/{citizen}/follows/articles") class CitizenFollowArticleRequest(val citizen: Citizen)
+}
+
+@KtorExperimentalLocationsAPI
 fun Route.followArticle(repo: FollowArticleRepository) {
-    post<Paths.ArticleFollowRequest> {
+    post<FollowArticlePaths.ArticleFollowRequest> {
         repo.follow(FollowEntity(target = it.article, citizen = currentCitizen))
         call.respond(HttpStatusCode.Created)
     }
 
-    delete<Paths.ArticleFollowRequest> {
+    delete<FollowArticlePaths.ArticleFollowRequest> {
         repo.unfollow(FollowEntity(target = it.article, citizen = currentCitizen))
         call.respond(HttpStatusCode.NoContent)
     }
 
-    get<Paths.CitizenFollowArticleRequest> {
-        val follows = repo.findByCitizenId(it.citizen)
+    get<FollowArticlePaths.CitizenFollowArticleRequest> {
+        val follows = repo.findByCitizen(it.citizen)
         call.respond(follows)
     }
 }

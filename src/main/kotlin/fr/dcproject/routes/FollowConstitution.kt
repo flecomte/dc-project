@@ -1,18 +1,15 @@
 package fr.dcproject.routes
 
-import Paths
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.delete
-import io.ktor.locations.get
-import io.ktor.locations.post
+import io.ktor.locations.*
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import org.joda.time.DateTime
 import java.util.*
+import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 
@@ -25,19 +22,25 @@ val currentCitizen2 = Citizen(
 )
 
 @KtorExperimentalLocationsAPI
+object FollowConstitutionPaths {
+    @Location("/constitutions/{constitution}/follow") class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
+    @Location("/citizens/{citizen}/follows/constitutions") class CitizenFollowConstitutionRequest(val citizen: Citizen)
+}
+
+@KtorExperimentalLocationsAPI
 fun Route.followConstitution(repo: FollowConstitutionRepository) {
-    post<Paths.ConstitutionFollowRequest> {
+    post<FollowConstitutionPaths.ConstitutionFollowRequest> {
         repo.follow(FollowEntity(target = it.constitution, citizen = currentCitizen2))
         call.respond(HttpStatusCode.Created)
     }
 
-    delete<Paths.ConstitutionFollowRequest> {
+    delete<FollowConstitutionPaths.ConstitutionFollowRequest> {
         repo.unfollow(FollowEntity(target = it.constitution, citizen = currentCitizen2))
         call.respond(HttpStatusCode.NoContent)
     }
 
-    get<Paths.CitizenFollowConstitutionRequest> {
-        val follows = repo.findByCitizenId(it.citizen)
+    get<FollowConstitutionPaths.CitizenFollowConstitutionRequest> {
+        val follows = repo.findByCitizen(it.citizen)
         call.respond(follows)
     }
 }
