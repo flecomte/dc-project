@@ -30,6 +30,7 @@ declare
     _comment_id_response2 uuid;
     _selected_comments json;
     _selected_comments_total int;
+    _find_comments_by_target_result json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -85,21 +86,29 @@ begin
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
         citizen_id => _citizen_id,
-        content => 'No is not exist'::text,
-        _parent_id => _comment_id::uuid
+        content => 'God not exist'::text,
+        parent_id => _comment_id::uuid
     ) into _comment_id_response;
 
     select "comment"(
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
         citizen_id => _citizen_id,
-        content => 'No is not exist'::text,
-        _parent_id => _comment_id_response::uuid
+        content => 'are you really sure ?'::text,
+        parent_id => _comment_id_response::uuid
     ) into _comment_id_response2;
     assert (select count(*) = 3 from "comment"), 'comment must be inserted';
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
     assert (select com.parents_ids @> ARRAY[_comment_id_response] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id_response::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
+
+    select resource into _find_comments_by_target_result
+    from find_comments_by_target((created_article->>'id')::uuid);
+    assert json_array_length(_find_comments_by_target_result) = 3,
+        'the result should contain 3 comment, ' || json_array_length(_find_comments_by_target_result) || ' returned';
+    assert (_find_comments_by_target_result#>>'{0,content}') = 'edited content', 'the first content must contain "edited content", "' || (_find_comments_by_target_result#>>'{0,content}') || '" returned';
+    assert (_find_comments_by_target_result#>>'{1,content}') = 'God not exist', 'the second content must contain "God not exist", "' || (_find_comments_by_target_result#>>'{1,content}') || '" returned';
+    assert (_find_comments_by_target_result#>>'{2,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_target_result#>>'{2,content}') || '" returned';
 
     -- delete comment and context
     delete from "comment";
