@@ -31,6 +31,7 @@ declare
     _selected_comments json;
     _selected_comments_total int;
     _find_comments_by_target_result json;
+    _find_comments_by_parent_result json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -109,6 +110,13 @@ begin
     assert (_find_comments_by_target_result#>>'{0,content}') = 'edited content', 'the first content must contain "edited content", "' || (_find_comments_by_target_result#>>'{0,content}') || '" returned';
     assert (_find_comments_by_target_result#>>'{1,content}') = 'God not exist', 'the second content must contain "God not exist", "' || (_find_comments_by_target_result#>>'{1,content}') || '" returned';
     assert (_find_comments_by_target_result#>>'{2,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_target_result#>>'{2,content}') || '" returned';
+
+    select resource into _find_comments_by_parent_result
+    from find_comments_by_parent((_find_comments_by_target_result#>>'{0,id}')::uuid);
+    assert json_array_length(_find_comments_by_parent_result) = 2,
+        'the result should contain 2 comment, ' || json_array_length(_find_comments_by_parent_result) || ' returned';
+    assert (_find_comments_by_parent_result#>>'{0,content}') = 'God not exist', 'the second content must contain "God not exist", "' || (_find_comments_by_parent_result#>>'{0,content}') || '" returned';
+    assert (_find_comments_by_parent_result#>>'{1,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_parent_result#>>'{1,content}') || '" returned';
 
     -- delete comment and context
     delete from "comment";
