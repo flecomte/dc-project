@@ -56,7 +56,7 @@ fun ApplicationCall.can(action: ActionI, subject: Any? = null): Boolean {
 abstract class VoterException(message: String) : Throwable(message)
 class NoVoterException(action: ActionI) : VoterException("No voter found for action '$action'")
 class UnauthorizedException(action: ActionI) : VoterException("Unauthorized for action '$action'")
-class ForbiddenException : Throwable()
+class ForbiddenException(message: String? = null) : Throwable(message)
 
 val ApplicationCall.user get() = authentication.principal<User>()
 
