@@ -18,8 +18,8 @@ object ConstitutionPaths {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
-    @Location("/constitutions/{constitution}") class ConstitutionRequest(val constitution: fr.dcproject.entity.Constitution)
-    @Location("/constitutions/{constitution}/follow") class ConstitutionFollowRequest(val constitution: fr.dcproject.entity.Constitution)
+    @Location("/constitutions/{constitution}") class ConstitutionRequest(val constitution: ConstitutionEntity)
+    @Location("/constitutions/{constitution}/follow") class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
     @Location("/constitutions") class PostConstitutionRequest
 }
 
