@@ -28,7 +28,7 @@ open class Follow <T: UuidEntity>(override var requester: Requester): Repository
         return requester.run {
             getFunction("find_follows_by_citizen")
             .select(page, limit,
-                "citizen_id" to citizenId
+                "created_by_id" to citizenId
             )
         }
     }
@@ -40,7 +40,7 @@ open class Follow <T: UuidEntity>(override var requester: Requester): Repository
             .sendQuery(
                 "reference" to reference,
                 "target_id" to follow.target.id,
-                "citizen_id" to follow.citizen.id
+                "created_by_id" to follow.createdBy?.id
             )
     }
 
@@ -51,7 +51,7 @@ open class Follow <T: UuidEntity>(override var requester: Requester): Repository
             .sendQuery(
                 "reference" to reference,
                 "target_id" to follow.target.id,
-                "citizen_id" to follow.citizen.id
+                "created_by_id" to follow.createdBy?.id
             )
     }
 }
@@ -65,7 +65,7 @@ class FollowArticle (requester: Requester): Follow<ArticleEntity>(requester) {
         return requester.run {
             getFunction("find_follows_article_by_citizen")
                 .select(page, limit,
-                    "citizen_id" to citizenId
+                    "created_by_id" to citizenId
                 )
         }
     }
@@ -80,7 +80,7 @@ class FollowConstitution (requester: Requester): Follow<ConstitutionEntity>(requ
         return requester.run {
             getFunction("find_follows_constitution_by_citizen")
                 .select(page, limit,
-                    "citizen_id" to citizenId
+                    "created_by_id" to citizenId
                 )
         }
     }

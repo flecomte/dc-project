@@ -50,7 +50,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
-        citizen_id => _citizen_id,
+        created_by_id => _citizen_id,
         content => 'Ho my god !'::text
     ) into _comment_id;
     assert (select count(*) = 1 from "comment"), 'comment must be inserted';
@@ -86,7 +86,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
-        citizen_id => _citizen_id,
+        created_by_id => _citizen_id,
         content => 'God not exist'::text,
         parent_id => _comment_id::uuid
     ) into _comment_id_response;
@@ -94,7 +94,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         target_id => (created_article->>'id')::uuid,
-        citizen_id => _citizen_id,
+        created_by_id => _citizen_id,
         content => 'are you really sure ?'::text,
         parent_id => _comment_id_response::uuid
     ) into _comment_id_response2;

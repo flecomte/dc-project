@@ -1,5 +1,5 @@
 create or replace function find_comments_by_citizen(
-    _citizen_id uuid,
+    _created_by_id uuid,
     "limit" int default 50,
     "offset" int default 0,
     out resource json,
@@ -7,15 +7,15 @@ create or replace function find_comments_by_citizen(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from "comment" where citizen_id = _citizen_id)
+    select json_agg(t), (select count(id) from "comment" where created_by_id = _created_by_id)
     into resource, total
     from (
         select
             com.*,
             json_build_object('id', com.target_id) as target,
-            find_citizen_by_id(com.citizen_id) as citizen
+            find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
-        where citizen_id = _citizen_id
+        where created_by_id = _created_by_id
         order by created_at desc,
         com.created_at desc
         limit "limit" offset "offset"

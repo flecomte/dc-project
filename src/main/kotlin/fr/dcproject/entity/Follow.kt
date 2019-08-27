@@ -4,6 +4,6 @@ import java.util.*
 
 class Follow <T: UuidEntity> (
     id: UUID = UUID.randomUUID(),
-    citizen: Citizen,
+    createdBy: Citizen,
     override var target: T
-): Extra<T>(id, citizen)
+): Extra<T>(id, createdBy)

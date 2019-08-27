@@ -12,7 +12,7 @@ class Constitution(
 ):  UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),
-    CreatedBy<Citizen> by EntityCreatedByImp(createdBy) {
+    EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy) {
 
     init{
         titles.forEachIndexed { index, title ->
@@ -28,5 +28,5 @@ class Constitution(
         createdBy: Citizen? = null
     ):  UuidEntity(id),
         EntityCreatedAt by EntityCreatedAtImp(),
-        CreatedBy<Citizen> by EntityCreatedByImp(createdBy)
+        EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy)
 }

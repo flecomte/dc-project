@@ -1,22 +1,20 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.*
 import java.util.*
 
 interface ExtraI <T: EntityI<UUID>>:
     EntityI<UUID>,
-    EntityCreatedAt {
-    var citizen: Citizen
+    EntityCreatedAt,
+    EntityCreatedBy<Citizen>{
     var target: T
 }
 
 abstract class Extra<T: EntityI<UUID>>(
     id: UUID? = UUID.randomUUID(),
-    override var citizen: Citizen
+    createdBy: Citizen
 ):
     ExtraI<T>,
     UuidEntity(id),
-    EntityCreatedAt by EntityCreatedAtImp()
+    EntityCreatedAt by EntityCreatedAtImp(),
+    EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy)

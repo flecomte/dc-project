@@ -36,7 +36,7 @@ Feature: Auth routes
     When I send a POST request to "/login" with body:
     """
     {
-      "name": "username1",
+      "name": "username-1",
       "password": "azerty"
     }
     """

@@ -15,4 +15,4 @@ class Article(
     UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),
-    CreatedBy<Citizen> by EntityCreatedByImp(createdBy)
+    EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy)

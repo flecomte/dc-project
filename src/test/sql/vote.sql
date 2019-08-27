@@ -41,7 +41,7 @@ begin
     perform vote(
         reference => 'article'::regclass,
         _target_id => (created_article->>'id')::uuid,
-        _citizen_id => _citizen_id,
+        _created_by_id => _citizen_id,
         _note => 1
     );
     assert (select count(*) = 1 from vote_for_article), 'vote must be inserted';
@@ -50,7 +50,7 @@ begin
     perform vote(
         reference => 'article'::regclass,
         _target_id => (created_article->>'id')::uuid,
-        _citizen_id => _citizen_id,
+        _created_by_id => _citizen_id,
         _note => -1
     );
     assert (select count(*) = 1 from vote_for_article), 'vote must be inserted';
@@ -60,7 +60,7 @@ begin
         perform vote(
             reference => 'article'::regclass,
             _target_id => (created_article->>'id')::uuid,
-            _citizen_id => _citizen_id,
+            _created_by_id => _citizen_id,
             _note => -10
         );
         assert false, 'vote must be throw exception if note is not -1, 0 or 1';

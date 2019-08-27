@@ -1,5 +1,5 @@
 create or replace function find_follows_article_by_citizen(
-    _citizen_id uuid,
+    _created_by_id uuid,
     "limit" int default 50,
     "offset" int default 0,
     out resource json,
@@ -13,9 +13,9 @@ begin
         select
             f.*,
             find_article_by_id(f.target_id) as target,
-            find_citizen_by_id(f.citizen_id) as citizen
+            find_citizen_by_id(f.created_by_id) as created_by
         from follow as f
-        where citizen_id = _citizen_id
+        where created_by_id = _created_by_id
         order by created_at desc,
         f.created_at desc
         limit "limit" offset "offset"

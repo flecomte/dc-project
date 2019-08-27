@@ -1,5 +1,5 @@
 create or replace function find_comments_constitution_by_citizen(
-    _citizen_id uuid,
+    _created_by_id uuid,
     "limit" int default 50,
     "offset" int default 0,
     out resource json,
@@ -13,9 +13,9 @@ begin
         select
             com.*,
             find_constitution_by_id(com.target_id) as target,
-            find_citizen_by_id(com.citizen_id) as citizen
+            find_citizen_by_id(com.created_by_id) as created_by
         from comment as com
-        where citizen_id = _citizen_id
+        where created_by_id = _created_by_id
         and target_reference = 'constitution'::regclass
         order by created_at desc,
         com.created_at desc

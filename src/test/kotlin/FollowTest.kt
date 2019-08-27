@@ -21,7 +21,7 @@ class FollowTest {
     @Language("JSON")
     private val followJson: String = """{  
        "id":"bae81585-d985-4d7a-9b58-3a13e911688a",
-       "citizen":{  
+       "created_by":{  
           "id":"4a87ad24-187a-46a8-97ab-00b30a24e561",
           "name":{  
              "first_name":"Jaque",
@@ -76,7 +76,7 @@ class FollowTest {
             createdBy = citizen
         )
         val follow = Follow(
-            citizen = citizen,
+            createdBy = citizen,
             target = article
         )
         follow.serialize().contains("""Hello world!""") shouldBe true

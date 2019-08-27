@@ -30,12 +30,12 @@ object FollowArticlePaths {
 @KtorExperimentalLocationsAPI
 fun Route.followArticle(repo: FollowArticleRepository) {
     post<FollowArticlePaths.ArticleFollowRequest> {
-        repo.follow(FollowEntity(target = it.article, citizen = currentCitizen))
+        repo.follow(FollowEntity(target = it.article, createdBy = currentCitizen))
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowArticlePaths.ArticleFollowRequest> {
-        repo.unfollow(FollowEntity(target = it.article, citizen = currentCitizen))
+        repo.unfollow(FollowEntity(target = it.article, createdBy = currentCitizen))
         call.respond(HttpStatusCode.NoContent)
     }
 

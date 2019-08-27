@@ -30,12 +30,12 @@ object FollowConstitutionPaths {
 @KtorExperimentalLocationsAPI
 fun Route.followConstitution(repo: FollowConstitutionRepository) {
     post<FollowConstitutionPaths.ConstitutionFollowRequest> {
-        repo.follow(FollowEntity(target = it.constitution, citizen = currentCitizen2))
+        repo.follow(FollowEntity(target = it.constitution, createdBy = currentCitizen2))
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowConstitutionPaths.ConstitutionFollowRequest> {
-        repo.unfollow(FollowEntity(target = it.constitution, citizen = currentCitizen2))
+        repo.unfollow(FollowEntity(target = it.constitution, createdBy = currentCitizen2))
         call.respond(HttpStatusCode.NoContent)
     }
 

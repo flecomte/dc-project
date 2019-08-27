@@ -15,6 +15,7 @@ import fr.dcproject.routes.*
 import fr.dcproject.security.voter.ArticleVoter
 import fr.dcproject.security.voter.AuthorizationVoter
 import fr.dcproject.security.voter.CitizenVoter
+import fr.dcproject.security.voter.CommentVoter
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -104,7 +105,8 @@ fun Application.module() {
     install(AuthorizationVoter) {
         voters = mutableListOf(
             ArticleVoter(),
-            CitizenVoter()
+            CitizenVoter(),
+            CommentVoter()
         )
     }
 

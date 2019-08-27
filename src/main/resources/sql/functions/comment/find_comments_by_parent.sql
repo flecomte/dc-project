@@ -13,7 +13,7 @@ begin
         select
             com.*,
             json_build_object('id', com.target_id) as target,
-            find_citizen_by_id(com.citizen_id) as citizen
+            find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
         where com.parents_ids @> array[_parent_id]
         order by com.parents_ids nulls first, created_at desc,

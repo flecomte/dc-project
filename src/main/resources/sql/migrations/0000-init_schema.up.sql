@@ -186,43 +186,43 @@ create table extra
 (
     id               uuid        default uuid_generate_v4() not null primary key,
     created_at       timestamptz default now()              not null,
-    citizen_id       uuid                                   not null references citizen (id),
+    created_by_id    uuid                                   not null references citizen (id),
     target_id        uuid                                   not null,
     target_reference regclass                               not null
 );
 
 create table follow
 (
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (extra);
 
 create table follow_article
 (
     target_reference regclass default 'article'::regclass not null,
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references article (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (follow);
 
 create table follow_constitution
 (
     target_reference regclass default 'constitution'::regclass not null,
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references constitution (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (follow);
 
 create table follow_citizen
 (
     target_reference regclass default 'citizen'::regclass not null,
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (follow);
 
 
@@ -231,9 +231,9 @@ create table comment
 (
     updated_at  timestamptz default now() not null check ( updated_at >= created_at ),
     "content"   text                      not null check ( content != '' and length(content) < 4096),
-    parent_id   uuid                      references comment (id),
+    parent_id   uuid references comment (id),
     parents_ids uuid[],
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id)
 ) inherits (extra);
 
@@ -244,7 +244,7 @@ create or replace function set_comment_parents_ids() returns trigger
     language plpgsql as
 $$
 begin
-    if(new.parent_id is not null) then
+    if (new.parent_id is not null) then
         new.parents_ids = (
             select com.parents_ids || com.id
             from "comment" com
@@ -267,7 +267,7 @@ execute procedure set_comment_parents_ids();
 create table comment_on_article
 (
     target_reference regclass default 'article'::regclass not null,
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references article (id),
     foreign key (parent_id) references comment_on_article (id),
     primary key (id)
@@ -285,7 +285,7 @@ execute procedure set_comment_parents_ids();
 create table comment_on_constitution
 (
     target_reference regclass default 'constitution'::regclass not null,
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references constitution (id),
     foreign key (parent_id) references comment_on_constitution (id),
     primary key (id)
@@ -306,45 +306,45 @@ create table vote
 (
     anonymous boolean default true not null,
     note      int                  not null check ( note >= -1 and note <= 1 ),
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (extra);
 
 create table vote_for_article
 (
     target_reference regclass default 'article'::regclass not null,
     foreign key (target_id) references article (id),
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (vote);
 
 create table vote_for_constitution
 (
     target_reference regclass default 'constitution'::regclass not null,
     foreign key (target_id) references constitution (id),
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_article
 (
     target_reference regclass default 'comment_on_article'::regclass not null,
     foreign key (target_id) references comment_on_article (id),
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (vote);
 
 create table vote_for_comment_on_constitution
 (
     target_reference regclass default 'comment_on_constitution'::regclass not null,
     foreign key (target_id) references comment_on_constitution (id),
-    foreign key (citizen_id) references citizen (id),
+    foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (citizen_id, target_id)
+    unique (created_by_id, target_id)
 ) inherits (vote);
 
 -- Stats
