@@ -32,6 +32,7 @@ declare
     _selected_comments_total int;
     _find_comments_by_target_result json;
     _find_comments_by_parent_result json;
+    _find_comments_by_id_result json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -54,6 +55,9 @@ begin
         content => 'Ho my god !'::text
     ) into _comment_id;
     assert (select count(*) = 1 from "comment"), 'comment must be inserted';
+
+    select find_comment_by_id(_comment_id) into _find_comments_by_id_result;
+    assert (_find_comments_by_id_result->>'content' = 'Ho my god !'), 'content of comment must be "Ho my god !"';
 
     perform edit_comment(
         reference => 'article'::regclass,
