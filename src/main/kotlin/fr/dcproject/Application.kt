@@ -18,6 +18,7 @@ import fr.dcproject.security.voter.CitizenVoter
 import fr.dcproject.security.voter.CommentVoter
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -39,6 +40,7 @@ import java.util.*
 import java.util.concurrent.CompletionException
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
+import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
 import fr.dcproject.repository.Constitution as RepositoryConstitution
 import fr.dcproject.repository.User as UserRepository
 
@@ -87,6 +89,14 @@ fun Application.module() {
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
                 get<RepositoryConstitution>().findById(id) ?: throw InternalError("Constitution $values not found")
+            }
+        }
+
+        convert<CommentEntityGeneric> {
+            decode { values, _ ->
+                val id = values.singleOrNull()?.let { UUID.fromString(it) }
+                    ?: throw InternalError("Cannot convert $values to UUID")
+                get<CommentGenericRepository>().findById(id) ?: throw InternalError("Comment $values not found")
             }
         }
 
@@ -154,6 +164,8 @@ fun Application.module() {
             constitution(get())
             followArticle(get())
             followConstitution(get())
+            comment(get())
+            commentArticle(get())
         }
     }
 

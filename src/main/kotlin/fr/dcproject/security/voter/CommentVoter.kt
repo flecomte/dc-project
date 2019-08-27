@@ -1,10 +1,9 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.User
+import fr.dcproject.entity.Comment
 import io.ktor.application.ApplicationCall
 
-class ArticleVoter: Voter {
+class CommentVoter: Voter {
     enum class Action: ActionI {
         CREATE,
         UPDATE,
@@ -13,7 +12,7 @@ class ArticleVoter: Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action || action is CommentVoter.Action) && subject is Article?
+        return action is Action && subject is Comment<*>?
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -26,20 +25,12 @@ class ArticleVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == CommentVoter.Action.CREATE) {
+        if (action == Action.UPDATE && user != null && subject is Comment<*> && user.id == subject.createdBy?.userId) {
             return Vote.GRANTED
         }
 
-        if (action == CommentVoter.Action.VIEW) {
-            return Vote.GRANTED
-        }
-
-        if (action == Action.DELETE && user is User && subject is Article && subject.createdBy?.userId == user.id) {
-            return Vote.GRANTED
-        }
-
-        if (action == Action.UPDATE && user is User && subject is Article && subject.createdBy?.userId == user.id) {
-            return Vote.GRANTED
+        if (action == Action.DELETE) {
+            return Vote.DENIED
         }
 
         return Vote.ABSTAIN

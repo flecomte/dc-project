@@ -7,6 +7,8 @@ import io.ktor.util.KtorExperimentalAPI
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
+import fr.dcproject.repository.CommentArticle as CommentArticleRepository
+import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
@@ -33,6 +35,10 @@ val Module = module {
     single { ConstitutionRepository(get()) }
     single { FollowArticleRepository(get()) }
     single { FollowConstitutionRepository(get()) }
+    single { CommentGenericRepository(get()) }
+    single { CommentArticleRepository(get()) }
+    // TODO implment constitution
+//    single { CommentConstitutionRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 }

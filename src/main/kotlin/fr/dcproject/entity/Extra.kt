@@ -10,7 +10,7 @@ interface ExtraI <T: EntityI<UUID>>:
     var target: T
 }
 
-abstract class Extra<T: EntityI<UUID>>(
+abstract class Extra<T: UuidEntity>(
     id: UUID? = UUID.randomUUID(),
     createdBy: Citizen
 ):

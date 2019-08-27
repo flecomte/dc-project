@@ -9,7 +9,9 @@ begin
     from (
         select
             com.*,
-            json_build_object('id', com.target_id) as target,
+--             TODO use generic object, not article
+--             json_build_object('id', com.target_id) as target,
+            find_article_by_id(com.target_id) as target,
             find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
         where id = _id
