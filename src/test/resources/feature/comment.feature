@@ -26,7 +26,12 @@ Feature: comment Article and Constitution
     Hello boy
     """
     Then the response status code should be 200
-    # TODO check if data is realy edited
+  And the JSON should contain:
+    | content | Hello boy |
+
+  Scenario: The route for get comment must response a 200 and return object
+    When I send a GET request to "/comments/2f01c257-cf20-3466-fb10-a3b8eff12a97"
+    Then the response status code should be 200
   And the JSON should contain:
     | content | Hello boy |
 

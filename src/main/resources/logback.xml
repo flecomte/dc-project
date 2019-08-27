@@ -9,5 +9,6 @@
     </root>
     <logger name="org.eclipse.jetty" level="INFO"/>
     <logger name="com.github.jasync" level="WARN"/>
+    <logger name="fr.postgresjson" level="debug"/>
     <logger name="io.netty" level="INFO"/>
 </configuration>

@@ -38,7 +38,7 @@ fun Route.comment(repo: CommentRepository) {
         assertCan(UPDATE,comment)
 
         comment.content = call.receiveText()
-        repo.edit(comment as fr.dcproject.entity.Comment<UuidEntity>)
+        repo.edit(comment as CommentEntity<UuidEntity>)
 
         call.respond(HttpStatusCode.OK, comment)
     }

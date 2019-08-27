@@ -54,15 +54,16 @@ begin
         created_by_id => _citizen_id,
         content => 'Ho my god !'::text
     ) into _comment_id;
-    assert (select count(*) = 1 from "comment"), 'comment must be inserted';
+    assert (select count(*) = 1 from "comment"), 'comment must be inserted, "' || (select count(*) from "comment") || '" exist';
+    assert (select com.content = 'Ho my god !' from "comment" com), 'the content of comment must be "Ho my god !" instead of "' || (select com.content from "comment" as com) || '"';
 
     select find_comment_by_id(_comment_id) into _find_comments_by_id_result;
     assert (_find_comments_by_id_result->>'content' = 'Ho my god !'), 'content of comment must be "Ho my god !"';
 
     perform edit_comment(
         reference => 'article'::regclass,
-        id => _comment_id,
-        content => 'edited content'::text
+        _id => _comment_id,
+        _content => 'edited content'::text
     );
     assert (select count(*) = 1 from "comment"), 'edit comment must not insert new comment';
     assert (select count(*) = 1 from "comment" where content = 'edited content'), 'edit comment must not insert new comment';
@@ -102,7 +103,7 @@ begin
         content => 'are you really sure ?'::text,
         parent_id => _comment_id_response::uuid
     ) into _comment_id_response2;
-    assert (select count(*) = 3 from "comment"), 'comment must be inserted';
+    assert (select count(*) = 3 from "comment"), 'response must be inserted';
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
     assert (select com.parents_ids @> ARRAY[_comment_id_response] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id_response::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);

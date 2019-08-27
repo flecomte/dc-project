@@ -94,7 +94,7 @@ open class Comment <T: UuidEntity>(override var requester: Requester): Repositor
             .getFunction("edit_comment")
             .sendQuery(
                 "reference" to reference,
-                "id" to comment.target.id,
+                "id" to comment.id,
                 "content" to comment.content
             )
     }
