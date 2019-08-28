@@ -7,12 +7,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
+import fr.dcproject.Env.PROD
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.User
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
+import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -41,10 +43,12 @@ import fr.dcproject.repository.User as UserRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
+enum class Env { PROD, TEST, CUCUMBER }
+
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @Suppress("unused") // Referenced in application.conf
-fun Application.module() {
+fun Application.module(env: Env = PROD) {
     install(Koin) {
         Slf4jLog()
         modules(Module)
@@ -171,5 +175,7 @@ fun Application.module() {
     }
 
     // TODO move to postgresJson lib
-    get<Migrations>().run()
+    if (env == PROD) {
+        get<Migrations>().run()
+    }
 }

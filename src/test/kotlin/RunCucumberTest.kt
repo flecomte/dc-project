@@ -1,4 +1,5 @@
 import feature.KtorServerContext
+import fr.dcproject.Env.CUCUMBER
 import fr.dcproject.config
 import fr.dcproject.module
 import fr.dcproject.utils.LoggerDelegate
@@ -27,7 +28,7 @@ class RunCucumberTest: En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
 
     val ktorContext = KtorServerContext {
-        module()
+        module(CUCUMBER)
     }
 
     init {
@@ -37,7 +38,7 @@ class RunCucumberTest: En, KoinTest {
                 config.username = "test"
                 config.password = "test"
 
-                withTestApplication({ module() }) {
+                withTestApplication({ module(CUCUMBER) }) {
                     migrations()
                     fixtures()
                 }
