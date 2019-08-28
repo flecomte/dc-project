@@ -8,6 +8,7 @@ import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
+import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
@@ -37,8 +38,7 @@ val Module = module {
     single { FollowConstitutionRepository(get()) }
     single { CommentGenericRepository(get()) }
     single { CommentArticleRepository(get()) }
-    // TODO implment constitution
-//    single { CommentConstitutionRepository(get()) }
+    single { CommentConstitutionRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 }

@@ -3,7 +3,6 @@ package fr.dcproject.routes
 import fr.dcproject.security.voter.CommentVoter.Action.UPDATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
-import fr.postgresjson.entity.UuidEntity
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -14,10 +13,8 @@ import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import java.util.*
-import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.repository.CommentGeneric as CommentRepository
 
-typealias CommentEntityGeneric = CommentEntity<UuidEntity>
 @KtorExperimentalLocationsAPI
 object CommentPaths {
     // TODO: change UUID by entity converter
@@ -38,7 +35,7 @@ fun Route.comment(repo: CommentRepository) {
         assertCan(UPDATE,comment)
 
         comment.content = call.receiveText()
-        repo.edit(comment as CommentEntity<UuidEntity>)
+        repo.edit(comment)
 
         call.respond(HttpStatusCode.OK, comment)
     }

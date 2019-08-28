@@ -12,11 +12,7 @@ import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.User
 import fr.dcproject.routes.*
-import fr.dcproject.security.voter.ArticleVoter
-import fr.dcproject.security.voter.AuthorizationVoter
-import fr.dcproject.security.voter.CitizenVoter
-import fr.dcproject.security.voter.CommentVoter
-import fr.postgresjson.migration.Migrations
+import fr.dcproject.security.voter.*
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -40,7 +36,6 @@ import java.util.*
 import java.util.concurrent.CompletionException
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
-import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
 import fr.dcproject.repository.Constitution as RepositoryConstitution
 import fr.dcproject.repository.User as UserRepository
 
@@ -92,14 +87,6 @@ fun Application.module() {
             }
         }
 
-        convert<CommentEntityGeneric> {
-            decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<CommentGenericRepository>().findById(id) ?: throw InternalError("Comment $values not found")
-            }
-        }
-
         convert<Citizen> {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
@@ -115,6 +102,7 @@ fun Application.module() {
     install(AuthorizationVoter) {
         voters = mutableListOf(
             ArticleVoter(),
+            ConstitutionVoter(),
             CitizenVoter(),
             CommentVoter()
         )
@@ -166,6 +154,7 @@ fun Application.module() {
             followConstitution(get())
             comment(get())
             commentArticle(get())
+            commentConstitution(get())
         }
     }
 

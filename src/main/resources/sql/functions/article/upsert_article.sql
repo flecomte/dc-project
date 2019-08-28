@@ -3,16 +3,28 @@ create or replace function upsert_article(inout resource json)
 $$
 declare
     new_id uuid;
+    _id_exist boolean;
 begin
-    insert into article (version_id, created_by_id, title, annonymous, content, description, tags)
+    -- check if version id already exist
+    select count(*) >= 1
+    into _id_exist
+    from article
+    where (resource->>'id')::uuid is not null
+      and id = (resource->>'id')::uuid
+--       and draft = false
+    ;
+
+    insert into article (id, version_id, created_by_id, title, annonymous, content, description, tags)
     select
-       coalesce(version_id, uuid_generate_v4()),
-       (resource#>>'{created_by, id}')::uuid,
-       title,
-       annonymous,
-       content,
-       description,
-       tags
+        case when _id_exist then uuid_generate_v4()
+             else coalesce(id, uuid_generate_v4()) end,
+        coalesce(version_id, uuid_generate_v4()),
+        (resource#>>'{created_by, id}')::uuid,
+        title,
+        annonymous,
+        content,
+        description,
+        tags
     from json_populate_record(null::article, resource)
     returning id into new_id;
 

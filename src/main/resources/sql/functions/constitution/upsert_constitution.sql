@@ -6,9 +6,23 @@ declare
     _title json;
     _citizen_id uuid = (resource#>>'{created_by, id}')::uuid;
     new_id uuid;
+    _id_exist boolean;
 begin
-    insert into constitution (version_id, created_by_id, title, annonymous)
+    -- check if version id already exist
+    select count(*) >= 1
+    into _id_exist
+    from constitution
+    where (resource->>'id')::uuid is not null
+      and id = (resource->>'id')::uuid
+--       and draft = false
+    ;
+
+    raise notice '%', _id_exist;
+
+    insert into constitution (id, version_id, created_by_id, title, annonymous)
     select
+        case when _id_exist then uuid_generate_v4()
+             else coalesce(id, uuid_generate_v4()) end,
        version_id,
        _citizen_id,
        title,

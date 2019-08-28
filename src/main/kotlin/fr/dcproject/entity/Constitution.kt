@@ -7,7 +7,7 @@ class Constitution(
     id: UUID = UUID.randomUUID(),
     var title: String?,
     var annonymous: Boolean?,
-    var titles: List<Title>,
+    var titles: List<Title> = listOf(),
     createdBy: Citizen?
 ):  UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),

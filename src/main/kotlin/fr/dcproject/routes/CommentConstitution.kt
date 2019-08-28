@@ -14,32 +14,32 @@ import io.ktor.locations.post
 import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Comment as CommentEntity
-import fr.dcproject.repository.CommentArticle as CommentArticleRepository
+import fr.dcproject.entity.Constitution as ConstitutionEntity
+import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 
 @KtorExperimentalLocationsAPI
-object CommentArticlePaths {
-    @Location("/articles/{article}/comments") class ArticleCommentRequest(val article: ArticleEntity)
-    @Location("/citizens/{citizen}/comments/articles") class CitizenCommentArticleRequest(val citizen: Citizen)
+object CommentConstitutionPaths {
+    @Location("/constitutions/{constitution}/comments") class ConstitutionCommentRequest(val constitution: ConstitutionEntity)
+    @Location("/citizens/{citizen}/comments/constitutions") class CitizenCommentConstitutionRequest(val citizen: Citizen)
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.commentArticle(repo: CommentArticleRepository) {
-    get<CommentArticlePaths.ArticleCommentRequest> {
-        assertCan(VIEW, it.article)
+fun Route.commentConstitution(repo: CommentConstitutionRepository) {
+    get<CommentConstitutionPaths.ConstitutionCommentRequest> {
+        assertCan(VIEW, it.constitution)
 
-        val comment = repo.findByTarget(it.article)
+        val comment = repo.findByTarget(it.constitution)
 
         call.respond(HttpStatusCode.OK, comment)
     }
 
-    post<CommentArticlePaths.ArticleCommentRequest> {
-        assertCan(CREATE, it.article)
+    post<CommentConstitutionPaths.ConstitutionCommentRequest> {
+        assertCan(CREATE, it.constitution)
 
         val content = call.receiveText()
         val comment = CommentEntity(
-            target = it.article,
+            target = it.constitution,
             createdBy = citizen,
             content = content
         )
@@ -48,7 +48,7 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
         call.respond(HttpStatusCode.Created, comment)
     }
 
-    get<CommentArticlePaths.CitizenCommentArticleRequest> {
+    get<CommentConstitutionPaths.CitizenCommentConstitutionRequest> {
         val comments = repo.findByCitizen(it.citizen)
         call.respond(comments)
     }

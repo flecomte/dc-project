@@ -14,11 +14,7 @@ import fr.dcproject.entity.Constitution as ConstitutionEntity
 abstract class Comment <T: UuidEntity>(override var requester: Requester): RepositoryI<CommentEntity<T>> {
     override val entityName = CommentEntity::class as KClass<CommentEntity<T>>
 
-    open fun findById(id: UUID): CommentEntity<ArticleEntity>? {
-        return requester
-            .getFunction("find_comment_by_id")
-            .selectOne(mapOf("id" to id))
-    }
+    abstract fun findById(id: UUID): CommentEntity<T>?
 
     abstract fun findByCitizen(
         citizen: CitizenEntity,
@@ -81,23 +77,29 @@ abstract class Comment <T: UuidEntity>(override var requester: Requester): Repos
     }
 
     fun edit(comment: CommentEntity<T>) {
-        val reference = comment.target::class.simpleName!!.toLowerCase()
         requester
             .getFunction("edit_comment")
             .sendQuery(
-                "reference" to reference,
                 "id" to comment.id,
                 "content" to comment.content
             )
     }
 }
 
-class CommentGeneric (requester: Requester): Comment<UuidEntity>(requester) {
+class GenericTargetEntity(id: UUID = UUID.randomUUID()): UuidEntity(id)
+
+class CommentGeneric (requester: Requester): Comment<GenericTargetEntity>(requester) {
+    override fun findById(id: UUID): CommentEntity<GenericTargetEntity>? {
+        return requester
+            .getFunction("find_comment_by_id")
+            .selectOne(mapOf("id" to id))
+    }
+
     override fun findByCitizen(
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<UuidEntity>> {
+    ): Paginated<CommentEntity<GenericTargetEntity>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(page, limit,
@@ -108,6 +110,12 @@ class CommentGeneric (requester: Requester): Comment<UuidEntity>(requester) {
 }
 
 class CommentArticle (requester: Requester): Comment<ArticleEntity>(requester) {
+    override fun findById(id: UUID): CommentEntity<ArticleEntity>? {
+        return requester
+            .getFunction("find_comment_by_id")
+            .selectOne(mapOf("id" to id))
+    }
+
     override fun findByCitizen(
         citizen: CitizenEntity,
         page: Int,
@@ -125,6 +133,12 @@ class CommentArticle (requester: Requester): Comment<ArticleEntity>(requester) {
 }
 
 class CommentConstitution (requester: Requester): Comment<ConstitutionEntity>(requester) {
+    override fun findById(id: UUID): CommentEntity<ConstitutionEntity>? {
+        return requester
+            .getFunction("find_comment_by_id")
+            .selectOne(mapOf("id" to id))
+    }
+
     override fun findByCitizen(
         citizen: CitizenEntity,
         page: Int,

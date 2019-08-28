@@ -33,9 +33,9 @@ class Constitution(override var requester: Requester) : RepositoryI<Constitution
             )
     }
 
-    fun upsert(article: ConstitutionEntity): ConstitutionEntity? {
+    fun upsert(constitution: ConstitutionEntity): ConstitutionEntity? {
         return requester
             .getFunction("upsert_constitution")
-            .selectOne("resource" to article)
+            .selectOne("resource" to constitution)
     }
 }
