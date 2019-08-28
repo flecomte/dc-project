@@ -12,7 +12,7 @@ begin
     from (
         select
             com.*,
-            json_build_object('id', com.target_id) as target,
+            find_reference_by_id(com.target_id, com.target_reference) as target,
             find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
         where com.target_id = _target_id
