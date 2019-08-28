@@ -10,7 +10,7 @@ Feature: comment Article and Constitution
     """
     Then the response status code should be 201
 
-  Scenario: The route for get comments of articles must response a 200 and return objects
+  Scenario: The route for get comments of articles for the current citizen must response a 200 and return objects
     Given I have citizen John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     And I have article with id "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
     When I send a GET request to "/citizens/64b7b379-2298-43ec-b428-ba134930cabd/comments/articles"
