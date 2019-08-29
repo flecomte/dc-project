@@ -18,7 +18,7 @@ Feature: Auth routes
     eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.
     """
 
-  Scenario: The route for create citizen must response a 200 and return object
+  Scenario: The route for create citizen must response a 400 and return object
     When I send a POST request to "/register" with body:
     """
     {
