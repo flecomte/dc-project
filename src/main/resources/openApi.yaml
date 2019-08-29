@@ -88,6 +88,50 @@ paths:
                 items:
                   $ref: '#/components/schemas/CitizenResponse'
 
+  /articles:
+    get:
+      summary: Get all articles
+      tags:
+        - article
+      operationId: getArticles
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+      responses:
+        200:
+          description: The Article objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleResponse'
+  /articles/{article}:
+    get:
+      summary: Get all articles
+      tags:
+        - article
+      operationId: getArticles
+      parameters:
+        - name: article
+          in: query
+          required: true
+          description: the ID of article
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: The Article objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleResponse'
 
 components:
   parameters:
@@ -157,10 +201,12 @@ components:
     UuidEntity:
       properties:
         id:
-          type: object
-          properties:
-            id:
-              $ref: '#/components/schemas/UUID'
+          $ref: '#/components/schemas/UUID'
+
+    CreatedBy:
+      properties:
+        created_by:
+          $ref: '#/components/schemas/UuidEntity'
 
     UserBase:
       properties:
@@ -239,6 +285,38 @@ components:
           required: true
           example:
             azerty
+
+    ArticleBase:
+      type: object
+      properties:
+        title:
+          type: string
+          required: true
+        content:
+          type: string
+          required: true
+        descritption:
+          type: string
+          required: true
+        tags:
+          type: array
+          items:
+            type: string
+          required: false
+          default: []
+        annonymous:
+          type: boolean
+          required: false
+          default: true
+    ArticleResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ArticleBase'
+        - $ref: '#/components/schemas/UuidEntity'
+        - $ref: '#/components/schemas/CreatedBy'
+    ArticleRequest:
+       $ref: '#/components/schemas/ArticleBase'
+
 
   requestBodies:
     RegisterRequest:
