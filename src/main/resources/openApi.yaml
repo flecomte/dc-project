@@ -1,0 +1,124 @@
+openapi: 3.0.0
+info:
+  version: '0.1'
+  title: 'DC Project'
+  description: 'A free comunity program for create constitution'
+
+tags:
+  - name: article
+    description: Manage Articles
+
+paths:
+  /register:
+    post:
+      summary: Create account
+      tags:
+        - login
+      operationId: register
+      requestBody:
+        $ref: '#/components/requestBodies/RegisterRequest'
+
+      responses:
+        200:
+          description: User created and JWT returned
+          content:
+            text/plain:
+              example:
+                eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag
+
+components:
+  schemas:
+    UUID:
+      type: string
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+      description: UUID
+      format: uuid
+      example:
+        e74be8e4-6823-47c4-bd1b-789725b2fa8e
+
+    UserBase:
+      properties:
+        username:
+          type: string
+          required: true
+          example:
+            john-doe
+    UserResponse:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+    UserRequest:
+      allOf:
+        - $ref: '#/components/schemas/UserBase'
+        - type: object
+          properties:
+            plain_password:
+              type: string
+              required: true
+              example:
+                azerty
+
+    CitizenRespose:
+      allOf:
+        - $ref: '#/components/schemas/CitizenBase'
+        - type: object
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            user:
+              $ref: '#/components/schemas/UserResponse'
+
+    CitizenBase:
+      type: object
+      properties:
+        name:
+          type: object
+          properties:
+            first_name:
+              type: string
+              required: true
+              example:
+                john
+            last_name:
+              type: string
+              required: true
+              example:
+                Doe
+        birthday:
+          type: string
+          example:
+            1984-12-25
+    CitizenRequest:
+      allOf:
+        - $ref: '#/components/schemas/CitizenBase'
+        - type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/UserRequest'
+
+    RegisterRequest:
+      $ref: '#/components/schemas/CitizenRequest'
+
+  requestBodies:
+    RegisterRequest:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/RegisterRequest'
+        application/xml:
+          schema:
+            $ref: '#/components/schemas/RegisterRequest'
+      description: Register
+      required: true
+
+# Added by API Auto Mocking Plugin
+servers:
+  - description: localhost
+    url: http://localhost:8080
+  - description: production
+    url: http://dc-project.fr
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/flecomte/dc-project/0.1
