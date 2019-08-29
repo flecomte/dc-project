@@ -1,5 +1,6 @@
 package fr.dcproject.routes
 
+import fr.dcproject.citizen
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -34,9 +35,12 @@ fun Route.constitution(repo: ConstitutionRepository) {
         call.respond(it.constitution)
     }
 
-    post<ConstitutionPaths.PostConstitutionRequest>() {
+    post<ConstitutionPaths.PostConstitutionRequest> {
         val constitution = call.receive<ConstitutionEntity>()
+        constitution.createdBy = citizen
+
         repo.upsert(constitution)
+
         call.respond(constitution)
     }
 }
