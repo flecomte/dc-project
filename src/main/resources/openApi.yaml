@@ -109,6 +109,26 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/ArticleResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: Create new Article
+      tags:
+        - article
+      operationId: insertArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleRequest'
+      responses:
+        201:
+          description: Article created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ArticleResponse'
   /articles/{article}:
     get:
       summary: Get all articles
@@ -155,6 +175,8 @@ paths:
                 items:
                   $ref: '#/components/schemas/ConstitutionResponse'
     post:
+      security:
+        - JWTAuth: []
       summary: Create new Constitution
       tags:
         - constitution
@@ -366,18 +388,25 @@ components:
             title:
               type: string
               required: true
+              example:
+                Limit power of press
             content:
               type: string
               required: true
+              example:
+                Lorem upsum...
             descritption:
               type: string
               required: true
+              example:
+                I think is the bether choice
             tags:
               type: array
               items:
                 type: string
               required: false
               default: []
+              example: [power, press]
             annonymous:
               type: boolean
               required: false
@@ -473,7 +502,7 @@ components:
             articles:
               type: array
               items:
-                $ref: '#/components/schemas/ArticleBase'
+                $ref: '#/components/schemas/ArticleResponse'
 
 
 
