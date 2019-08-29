@@ -22,7 +22,7 @@ class CitizenVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == Action.VIEW) {
+        if (action == Action.VIEW && user != null) {
             return Vote.GRANTED
         }
 
