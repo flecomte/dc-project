@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import fr.dcproject.JwtConfig
+import fr.dcproject.entity.User
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
 import io.ktor.features.BadRequestException
@@ -37,6 +38,7 @@ fun Route.auth(userRepo: UserRepository, citizenRepo: CitizenRepository) {
 
     post <AuthPaths.RegisterRequest> {
         val citizen = call.receive<CitizenEntity>()
+        citizen.user?.roles = listOf(User.Roles.ROLE_USER)
         val created = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
 
         call.respondText(JwtConfig.makeToken(created))
