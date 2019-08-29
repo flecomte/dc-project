@@ -1,5 +1,6 @@
 package fr.dcproject.routes
 
+import fr.dcproject.citizen
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -46,7 +47,10 @@ fun Route.article(repo: ArticleRepository) {
         assertCan(CREATE)
 
         val article = call.receive<ArticleEntity>()
+        article.createdBy = citizen
+
         repo.upsert(article)
+
         call.respond(article)
     }
 }
