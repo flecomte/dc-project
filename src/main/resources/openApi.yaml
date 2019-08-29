@@ -208,6 +208,12 @@ components:
         created_by:
           $ref: '#/components/schemas/UuidEntity'
 
+    CreatedAt:
+      properties:
+        created_at:
+          type: string
+          format: 'date-time'
+
     UserBase:
       properties:
         username:
@@ -234,10 +240,10 @@ components:
     CitizenResponse:
       allOf:
         - $ref: '#/components/schemas/CitizenBase'
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/UuidEntity'
         - type: object
           properties:
-            id:
-              $ref: '#/components/schemas/UUID'
             user:
               $ref: '#/components/schemas/UserResponse'
     CitizenBase:
@@ -314,6 +320,7 @@ components:
         - $ref: '#/components/schemas/ArticleBase'
         - $ref: '#/components/schemas/UuidEntity'
         - $ref: '#/components/schemas/CreatedBy'
+        - $ref: '#/components/schemas/CreatedAt'
     ArticleRequest:
        $ref: '#/components/schemas/ArticleBase'
 
