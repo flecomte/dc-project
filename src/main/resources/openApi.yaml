@@ -215,6 +215,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
+  /comments/{comment}:
+    get:
+      summary: Get Comment and children by Comment ID
+      tags:
+        - comment
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Edit existing comment
+      tags:
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+
 
 components:
   parameters:
@@ -294,6 +325,11 @@ components:
     CreatedAt:
       properties:
         created_at:
+          type: string
+          format: 'date-time'
+    UpdatedAt:
+      properties:
+        updated_at:
           type: string
           format: 'date-time'
 
@@ -503,6 +539,40 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ArticleResponse'
+    CommentBase:
+      type: object
+      allOf:
+        - type: object
+          properties:
+            content:
+              type: string
+              required: true
+              example:
+                Lorem ipsum...
+    CommentRequest:
+      allOf:
+        - $ref: '#/components/schemas/CommentBase'
+
+    CommentResponse:
+      allOf:
+        - $ref: '#/components/schemas/CommentBase'
+        - $ref: '#/components/schemas/CreatedBy'
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/UpdatedAt'
+        - type: object
+          properties:
+            parents_ids:
+              type: array
+              required: false
+              items:
+                $ref: '#/components/schemas/UUID'
+            target:
+              $ref: '#/components/schemas/UuidEntity'
+            parent:
+              required: false
+              allOf:
+                - $ref: '#/components/schemas/UUID'
+                - $ref: '#/components/schemas/UUID'
 
 
 
