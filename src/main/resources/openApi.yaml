@@ -64,6 +64,68 @@ paths:
                 $ref: '#/components/schemas/CitizenResponse'
         404:
           description: Citizen not found
+  /citizens:
+    description: Get all citizens
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get all citizens
+      tags:
+        - citizen
+      operationId: getCitizens
+      parameters:
+        - name: page
+          in: query
+          description: The current page
+          example: 1
+          required: false
+          schema:
+            default: 1
+            type: integer
+            minimum: 1
+        - name: limit
+          in: query
+          description: The number of citizen per page
+          example: 50
+          required: false
+          schema:
+            default: 50
+            type: integer
+            minimum: 1
+            maximum: 50
+        - name: sort
+          in: query
+          description: The sort field name
+          example: first_name
+          required: false
+          schema:
+            type: string
+        - name: direction
+          in: query
+          description: The sort direction
+          example: asc
+          required: false
+          schema:
+            type: string
+            default: asc
+            enum: [asc, desc]
+        - name: search
+          in: query
+          description: A text to seach
+          example: John Doe
+          required: false
+          schema:
+            type: string
+      responses:
+        200:
+          description: The Citizen object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenResponse'
+        404:
+          description: Citizen not found
+
 
 components:
   securitySchemes:
@@ -105,6 +167,7 @@ components:
               required: true
               example:
                 azerty
+              format: password
 
     CitizenResponse:
       allOf:
