@@ -133,6 +133,67 @@ paths:
                 items:
                   $ref: '#/components/schemas/ArticleResponse'
 
+  /constitutions:
+    get:
+      summary: Get all constitutions
+      tags:
+        - constitution
+      operationId: getConstitutions
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+      responses:
+        200:
+          description: The Constitution objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ConstitutionResponse'
+    post:
+      summary: Create new Constitution
+      tags:
+        - constitution
+      operationId: insertConstitution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstitutionRequest'
+      responses:
+        201:
+          description: Constitution created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstitutionResponse'
+  /constitutions/{constitution}:
+    get:
+      summary: Get all constitutions
+      tags:
+        - constitution
+      operationId: getConstitutions
+      parameters:
+        - name: constitution
+          in: query
+          required: true
+          description: the ID of constitution
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: The Constitution objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstitutionResponse'
+
 components:
   parameters:
     page:
@@ -214,6 +275,11 @@ components:
           type: string
           format: 'date-time'
 
+    versionId:
+      properties:
+        version_id:
+          $ref: '#/components/schemas/UUID'
+
     UserBase:
       properties:
         username:
@@ -294,26 +360,29 @@ components:
 
     ArticleBase:
       type: object
-      properties:
-        title:
-          type: string
-          required: true
-        content:
-          type: string
-          required: true
-        descritption:
-          type: string
-          required: true
-        tags:
-          type: array
-          items:
-            type: string
-          required: false
-          default: []
-        annonymous:
-          type: boolean
-          required: false
-          default: true
+      allOf:
+        - type: object
+          properties:
+            title:
+              type: string
+              required: true
+            content:
+              type: string
+              required: true
+            descritption:
+              type: string
+              required: true
+            tags:
+              type: array
+              items:
+                type: string
+              required: false
+              default: []
+            annonymous:
+              type: boolean
+              required: false
+              default: true
+        - $ref: '#/components/schemas/versionId'
     ArticleResponse:
       type: object
       allOf:
@@ -323,6 +392,89 @@ components:
         - $ref: '#/components/schemas/CreatedAt'
     ArticleRequest:
        $ref: '#/components/schemas/ArticleBase'
+
+    ConstitutionBase:
+      type: object
+      allOf:
+        - type: object
+          properties:
+            title:
+              type: string
+              required: true
+              example:
+                Constitution for the liberty
+            titles:
+              type: array
+              required: false
+              default: []
+              items:
+                $ref: '#/components/schemas/TitleBase'
+            annonymous:
+              type: boolean
+              required: false
+              default: true
+        - $ref: '#/components/schemas/versionId'
+    ConstitutionResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/ConstitutionBase'
+        - $ref: '#/components/schemas/UuidEntity'
+        - $ref: '#/components/schemas/CreatedBy'
+        - $ref: '#/components/schemas/CreatedAt'
+        - type: object
+          properties:
+            titles:
+              type: array
+              items:
+                $ref: '#/components/schemas/TitleResponse'
+    ConstitutionRequest:
+      allOf:
+        - $ref: '#/components/schemas/ConstitutionBase'
+        - type: object
+          properties:
+            titles:
+              type: array
+              items:
+                $ref: '#/components/schemas/TitleRequest'
+
+    TitleBase:
+      type: object
+      properties:
+        name:
+          type: string
+          required: true
+          example:
+            The liberties
+        rank:
+          type: integer
+          minimum: 0
+          example:
+            0
+    TitleRequest:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TitleBase'
+        - $ref: '#/components/schemas/UuidEntity'
+        - type: object
+          properties:
+            articles:
+              type: array
+              items:
+                $ref: '#/components/schemas/UuidEntity'
+    TitleResponse:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TitleBase'
+        - $ref: '#/components/schemas/UuidEntity'
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/CreatedBy'
+        - type: object
+          properties:
+            articles:
+              type: array
+              items:
+                $ref: '#/components/schemas/ArticleBase'
+
 
 
   requestBodies:
