@@ -742,7 +742,6 @@ components:
       description: Login
       required: true
 
-# Added by API Auto Mocking Plugin
 servers:
   - description: localhost
     url: http://localhost:8080
