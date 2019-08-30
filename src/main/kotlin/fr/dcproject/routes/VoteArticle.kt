@@ -3,6 +3,8 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
 import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest.Content
+import fr.dcproject.security.voter.VoteVoter.Action.CREATE
+import fr.dcproject.security.voter.assertCan
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -27,11 +29,13 @@ object VoteArticlePaths {
 fun Route.voteArticle(repo: VoteArticleRepository) {
     put<VoteArticlePaths.ArticleVoteRequest> {
         val content = call.receive<Content>()
-        repo.vote(VoteEntity(
+        val vote = VoteEntity(
             target = it.article,
             note = content.note,
             createdBy = this.citizen
-        ))
+        )
+        assertCan(CREATE, vote)
+        repo.vote(vote)
         call.respond(HttpStatusCode.Created)
     }
 }

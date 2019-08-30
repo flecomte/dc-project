@@ -1,8 +1,9 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.User
 import io.ktor.application.ApplicationCall
+import fr.dcproject.entity.Constitution as ConstitutionEntity
+import fr.dcproject.entity.Vote as VoteEntity
 
 class ConstitutionVoter: Voter {
     enum class Action: ActionI {
@@ -13,7 +14,7 @@ class ConstitutionVoter: Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action || action is CommentVoter.Action) && subject is Constitution?
+        return (action is Action || action is CommentVoter.Action) && subject is ConstitutionEntity?
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -34,12 +35,26 @@ class ConstitutionVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == Action.DELETE && user is User && subject is Constitution && subject.createdBy?.userId == user.id) {
+        if (action == Action.DELETE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {
             return Vote.GRANTED
         }
 
-        if (action == Action.UPDATE && user is User && subject is Constitution && subject.createdBy?.userId == user.id) {
+        if (action == Action.UPDATE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {
             return Vote.GRANTED
+        }
+
+        if (action == VoteVoter.Action.CREATE && subject is VoteEntity<*>) {
+            val target = subject.target
+            if (target !is ConstitutionEntity) {
+                return Vote.ABSTAIN
+            }
+            if (target.isDeleted()) {
+                return Vote.DENIED
+            }
+        }
+
+        if (action is Action) {
+            return Vote.DENIED
         }
 
         return Vote.ABSTAIN
