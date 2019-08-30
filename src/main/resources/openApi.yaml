@@ -351,6 +351,34 @@ paths:
       responses:
         204:
           description: Return only http status 204 on success
+  /constitutions/{constitution}/follows:
+    parameters:
+      - name: constitution
+        in: path
+        description: The ID of constitution
+        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      security:
+        - JWTAuth: []
+      summary: Follow one constitution
+      tags:
+        - follow
+      responses:
+        201:
+          description: Return only http status 201 on success
+    delete:
+      security:
+        - JWTAuth: []
+      summary: Unfollow one constitution
+      tags:
+        - follow
+      responses:
+        204:
+          description: Return only http status 204 on success
 
 
 components:
