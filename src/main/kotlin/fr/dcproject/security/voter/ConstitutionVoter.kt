@@ -27,14 +27,6 @@ class ConstitutionVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == CommentVoter.Action.CREATE) {
-            return Vote.GRANTED
-        }
-
-        if (action == CommentVoter.Action.VIEW) {
-            return Vote.GRANTED
-        }
-
         if (action == Action.DELETE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {
             return Vote.GRANTED
         }
@@ -43,6 +35,17 @@ class ConstitutionVoter: Voter {
             return Vote.GRANTED
         }
 
+        if (action is CommentVoter.Action) return voteForComment(action)
+        if (action is VoteVoter.Action) return voteForVote(action, subject)
+
+        if (action is Action) {
+            return Vote.DENIED
+        }
+
+        return Vote.ABSTAIN
+    }
+
+    private fun voteForVote(action: VoteVoter.Action, subject: Any?): Vote {
         if (action == VoteVoter.Action.CREATE && subject is VoteEntity<*>) {
             val target = subject.target
             if (target !is ConstitutionEntity) {
@@ -52,9 +55,16 @@ class ConstitutionVoter: Voter {
                 return Vote.DENIED
             }
         }
+        return Vote.ABSTAIN
+    }
 
-        if (action is Action) {
-            return Vote.DENIED
+    private fun voteForComment(action: CommentVoter.Action): Vote {
+        if (action == CommentVoter.Action.CREATE) {
+            return Vote.GRANTED
+        }
+
+        if (action == CommentVoter.Action.VIEW) {
+            return Vote.GRANTED
         }
 
         return Vote.ABSTAIN
