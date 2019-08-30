@@ -32,18 +32,16 @@ class RunCucumberTest: En, KoinTest {
     }
 
     init {
-        Before(-2) { _: Scenario ->
-            if (!unitialized) {
-                config.database = "test"
-                config.username = "test"
-                config.password = "test"
+        if (!unitialized) {
+            config.database = "test"
+            config.username = "test"
+            config.password = "test"
 
-                withTestApplication({ module(CUCUMBER) }) {
-                    migrations()
-                    fixtures()
-                }
-                unitialized = true
+            withTestApplication({ module(CUCUMBER) }) {
+                migrations()
+                fixtures()
             }
+            unitialized = true
         }
 
         Before(-1) { scenario: Scenario ->
