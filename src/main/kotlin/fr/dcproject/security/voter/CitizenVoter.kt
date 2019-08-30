@@ -13,7 +13,9 @@ class CitizenVoter: Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return action is Action && subject is Citizen?
+        return (action is Action)
+               &&
+               (subject is List<*> || subject is Citizen?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -22,8 +24,20 @@ class CitizenVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == Action.VIEW && user != null) {
-            return Vote.GRANTED
+        if (action == Action.VIEW) {
+            if (subject is Citizen) {
+                return if (subject.isDeleted()) Vote.DENIED
+                else Vote.GRANTED
+            }
+            if (subject is List<*>) {
+                subject.forEach {
+                    if (it !is Citizen || it.isDeleted()) {
+                        return Vote.DENIED
+                    }
+                }
+                return Vote.GRANTED
+            }
+            return Vote.DENIED
         }
 
         if (action == Action.DELETE) {

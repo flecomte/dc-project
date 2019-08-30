@@ -1,8 +1,6 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
-import fr.postgresjson.entity.UuidEntity
+ import fr.postgresjson.entity.*
 import java.util.*
 
 open class Comment <T: UuidEntity> (
@@ -14,4 +12,5 @@ open class Comment <T: UuidEntity> (
     var parent: Comment<T>? = null,
     var parentsIds: List<UUID>? = null
 ): Extra<T>(id, createdBy),
-    EntityUpdatedAt by EntityUpdatedAtImp()
+    EntityUpdatedAt by EntityUpdatedAtImp(),
+    EntityDeletedAt by EntityDeletedAtImp()

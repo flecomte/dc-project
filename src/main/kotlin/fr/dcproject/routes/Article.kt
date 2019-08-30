@@ -16,7 +16,6 @@ import io.ktor.routing.Route
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.repository.Article as ArticleRepository
 
-
 @KtorExperimentalLocationsAPI
 object ArticlesPaths {
     @Location("/articles") class ArticlesRequest(page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: RepositoryI.Direction? = null, val search: String? = null) {
@@ -30,9 +29,8 @@ object ArticlesPaths {
 @KtorExperimentalLocationsAPI
 fun Route.article(repo: ArticleRepository) {
     get<ArticlesPaths.ArticlesRequest> {
-        assertCan(VIEW)
-
         val articles = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
+        assertCan(VIEW, articles.result)
         call.respond(articles)
     }
 
@@ -43,10 +41,10 @@ fun Route.article(repo: ArticleRepository) {
     }
 
     post<ArticlesPaths.PostArticleRequest> {
-        assertCan(CREATE)
-
         val article = call.receive<ArticleEntity>()
         article.createdBy = citizen
+
+        assertCan(CREATE, article)
 
         repo.upsert(article)
 

@@ -27,10 +27,8 @@ object CommentArticlePaths {
 @KtorExperimentalLocationsAPI
 fun Route.commentArticle(repo: CommentArticleRepository) {
     get<CommentArticlePaths.ArticleCommentRequest> {
-        assertCan(VIEW, it.article)
-
         val comment = repo.findByTarget(it.article)
-
+        assertCan(VIEW, comment.result)
         call.respond(HttpStatusCode.OK, comment)
     }
 
@@ -50,6 +48,7 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
 
     get<CommentArticlePaths.CitizenCommentArticleRequest> {
         val comments = repo.findByCitizen(it.citizen)
+        assertCan(VIEW, comments.result)
         call.respond(comments)
     }
 }

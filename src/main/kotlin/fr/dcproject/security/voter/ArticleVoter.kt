@@ -3,6 +3,7 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.User
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Article as ArticleEntity
+import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
 class ArticleVoter: Voter {
@@ -15,7 +16,8 @@ class ArticleVoter: Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-                && subject is ArticleEntity?
+               &&
+               (subject is List<*> || subject is ArticleEntity? || subject is VoteEntity<*> || subject is CommentEntity<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -25,7 +27,19 @@ class ArticleVoter: Voter {
         }
 
         if (action == Action.VIEW) {
-            return Vote.GRANTED
+            if (subject is ArticleEntity) {
+                return if (subject.isDeleted()) Vote.DENIED
+                else Vote.GRANTED
+            }
+            if (subject is List<*>) {
+                subject.forEach {
+                    if (it !is ArticleEntity || it.isDeleted()) {
+                        return Vote.DENIED
+                    }
+                }
+                return Vote.GRANTED
+            }
+            return Vote.DENIED
         }
 
         if (action is CommentVoter.Action) return voteForComment(action)

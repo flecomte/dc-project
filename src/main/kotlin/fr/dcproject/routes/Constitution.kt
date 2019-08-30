@@ -1,6 +1,9 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
+import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
+import fr.dcproject.security.voter.assertCan
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -28,16 +31,19 @@ object ConstitutionPaths {
 fun Route.constitution(repo: ConstitutionRepository) {
     get<ConstitutionPaths.ConstitutionsRequest> {
         val constitutions = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
+        assertCan(VIEW, constitutions.result)
         call.respond(constitutions)
     }
 
     get<ConstitutionPaths.ConstitutionRequest> {
+        assertCan(VIEW, it.constitution)
         call.respond(it.constitution)
     }
 
     post<ConstitutionPaths.PostConstitutionRequest> {
         val constitution = call.receive<ConstitutionEntity>()
         constitution.createdBy = citizen
+        assertCan(CREATE, constitution)
 
         repo.upsert(constitution)
 

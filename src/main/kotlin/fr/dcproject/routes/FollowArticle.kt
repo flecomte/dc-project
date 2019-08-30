@@ -20,17 +20,25 @@ object FollowArticlePaths {
 @KtorExperimentalLocationsAPI
 fun Route.followArticle(repo: FollowArticleRepository) {
     post<FollowArticlePaths.ArticleFollowRequest> {
-        repo.follow(FollowEntity(target = it.article, createdBy = this.citizen))
+        val follow = FollowEntity(target = it.article, createdBy = this.citizen)
+        // TODO create voter
+//        assertCan(FollowVoter.Action.CREATE, follow)
+        repo.follow(follow)
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowArticlePaths.ArticleFollowRequest> {
-        repo.unfollow(FollowEntity(target = it.article, createdBy = this.citizen))
+        val follow = FollowEntity(target = it.article, createdBy = this.citizen)
+        // TODO create voter
+//        assertCan(FollowVoter.Action.DELETE, follow)
+        repo.unfollow(follow)
         call.respond(HttpStatusCode.NoContent)
     }
 
     get<FollowArticlePaths.CitizenFollowArticleRequest> {
         val follows = repo.findByCitizen(it.citizen)
+        // TODO add security
+//        assertCan(FollowVoter.Action.VIEW, follows)
         call.respond(follows)
     }
 }

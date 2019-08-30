@@ -1,5 +1,6 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.entity.Comment
 import fr.dcproject.entity.User
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Constitution as ConstitutionEntity
@@ -14,7 +15,9 @@ class ConstitutionVoter: Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action || action is CommentVoter.Action) && subject is ConstitutionEntity?
+        return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
+               &&
+               (subject is List<*> || subject is ConstitutionEntity? || subject is VoteEntity<*> || subject is Comment<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -24,7 +27,19 @@ class ConstitutionVoter: Voter {
         }
 
         if (action == Action.VIEW) {
-            return Vote.GRANTED
+            if (subject is ConstitutionEntity) {
+                return if (subject.isDeleted()) Vote.DENIED
+                else Vote.GRANTED
+            }
+            if (subject is List<*>) {
+                subject.forEach {
+                    if (it !is ConstitutionEntity || it.isDeleted()) {
+                        return Vote.DENIED
+                    }
+                }
+                return Vote.GRANTED
+            }
+            return Vote.DENIED
         }
 
         if (action == Action.DELETE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {

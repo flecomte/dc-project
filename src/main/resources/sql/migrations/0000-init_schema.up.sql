@@ -236,6 +236,7 @@ create table comment
     "content"   text                      not null check ( content != '' and length(content) < 4096),
     parent_id   uuid references comment (id),
     parents_ids uuid[],
+    deleted_at  timestamptz               null,
     foreign key (created_by_id) references citizen (id),
     primary key (id)
 ) inherits (extra);

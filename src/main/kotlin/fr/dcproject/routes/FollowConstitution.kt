@@ -20,17 +20,25 @@ object FollowConstitutionPaths {
 @KtorExperimentalLocationsAPI
 fun Route.followConstitution(repo: FollowConstitutionRepository) {
     post<FollowConstitutionPaths.ConstitutionFollowRequest> {
-        repo.follow(FollowEntity(target = it.constitution, createdBy = this.citizen))
+        val follow = FollowEntity(target = it.constitution, createdBy = this.citizen)
+//        TODO create voter
+//        assertCan(FollowVoter.Action.CREATE, follow)
+        repo.follow(follow)
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowConstitutionPaths.ConstitutionFollowRequest> {
-        repo.unfollow(FollowEntity(target = it.constitution, createdBy = this.citizen))
+        val follow = FollowEntity(target = it.constitution, createdBy = this.citizen)
+//        TODO create voter
+//        assertCan(FollowVoter.Action.DELETE, follow)
+        repo.unfollow(follow)
         call.respond(HttpStatusCode.NoContent)
     }
 
     get<FollowConstitutionPaths.CitizenFollowConstitutionRequest> {
         val follows = repo.findByCitizen(it.citizen)
+//        TODO create voter
+//        assertCan(FollowVoter.Action.VIEW, follows)
         call.respond(follows)
     }
 }

@@ -27,22 +27,19 @@ object CommentConstitutionPaths {
 @KtorExperimentalLocationsAPI
 fun Route.commentConstitution(repo: CommentConstitutionRepository) {
     get<CommentConstitutionPaths.ConstitutionCommentRequest> {
-        assertCan(VIEW, it.constitution)
-
-        val comment = repo.findByTarget(it.constitution)
-
-        call.respond(HttpStatusCode.OK, comment)
+        val comments = repo.findByTarget(it.constitution)
+        assertCan(VIEW, comments.result)
+        call.respond(HttpStatusCode.OK, comments)
     }
 
     post<CommentConstitutionPaths.ConstitutionCommentRequest> {
-        assertCan(CREATE, it.constitution)
-
         val content = call.receiveText()
         val comment = CommentEntity(
             target = it.constitution,
             createdBy = citizen,
             content = content
         )
+        assertCan(CREATE, comment)
         repo.comment(comment)
 
         call.respond(HttpStatusCode.Created, comment)
@@ -50,6 +47,7 @@ fun Route.commentConstitution(repo: CommentConstitutionRepository) {
 
     get<CommentConstitutionPaths.CitizenCommentConstitutionRequest> {
         val comments = repo.findByCitizen(it.citizen)
+        assertCan(VIEW, comments.result)
         call.respond(comments)
     }
 }

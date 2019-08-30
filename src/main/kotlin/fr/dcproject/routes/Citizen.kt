@@ -26,9 +26,8 @@ object CitizenPaths {
 @KtorExperimentalLocationsAPI
 fun Route.citizen(repo: CitizenRepository) {
     get<CitizenPaths.CitizensRequest> {
-        assertCan(VIEW)
-
         val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
+        assertCan(VIEW, citizens.result)
         call.respond(citizens)
     }
 
