@@ -379,7 +379,30 @@ paths:
       responses:
         204:
           description: Return only http status 204 on success
-
+  /articles/{article}/vote:
+    parameters:
+      - name: article
+        in: path
+        description: The ID of article
+        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+        required: true
+        schema:
+          type: string
+          format: uuid
+    put:
+      security:
+        - JWTAuth: []
+      summary: Vote for one article
+      tags:
+        - vote
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        201:
+          description: Return only http status 201 on success
 
 components:
   parameters:
@@ -723,6 +746,25 @@ components:
     FollowResponse:
       allOf:
         - $ref: '#/components/schemas/FollowBase'
+
+
+    VoteBase:
+      allOf:
+        - type: object
+          properties:
+            note:
+              type: integer
+              minimum: -1
+              maximum: 1
+              required: true
+    VoteRequest:
+      allOf:
+        - $ref: '#/components/schemas/VoteBase'
+    VoteResponse:
+      allOf:
+        - $ref: '#/components/schemas/VoteBase'
+        - $ref: '#/components/schemas/Extra'
+
 
 
   requestBodies:
