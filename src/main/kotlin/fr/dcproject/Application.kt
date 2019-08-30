@@ -109,7 +109,8 @@ fun Application.module(env: Env = PROD) {
             ConstitutionVoter(),
             CitizenVoter(),
             CommentVoter(),
-            VoteVoter()
+            VoteVoter(),
+            FollowVoter()
         )
     }
 

@@ -2,6 +2,8 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
+import fr.dcproject.security.voter.FollowVoter.Action.*
+import fr.dcproject.security.voter.assertCan
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.*
@@ -21,24 +23,21 @@ object FollowArticlePaths {
 fun Route.followArticle(repo: FollowArticleRepository) {
     post<FollowArticlePaths.ArticleFollowRequest> {
         val follow = FollowEntity(target = it.article, createdBy = this.citizen)
-        // TODO create voter
-//        assertCan(FollowVoter.Action.CREATE, follow)
+        assertCan(CREATE, follow)
         repo.follow(follow)
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowArticlePaths.ArticleFollowRequest> {
         val follow = FollowEntity(target = it.article, createdBy = this.citizen)
-        // TODO create voter
-//        assertCan(FollowVoter.Action.DELETE, follow)
+        assertCan(DELETE, follow)
         repo.unfollow(follow)
         call.respond(HttpStatusCode.NoContent)
     }
 
     get<FollowArticlePaths.CitizenFollowArticleRequest> {
         val follows = repo.findByCitizen(it.citizen)
-        // TODO add security
-//        assertCan(FollowVoter.Action.VIEW, follows)
+        assertCan(VIEW, follows.result)
         call.respond(follows)
     }
 }

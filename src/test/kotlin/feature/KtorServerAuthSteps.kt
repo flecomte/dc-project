@@ -78,7 +78,9 @@ class KtorServerAuthSteps: En, KoinTest {
                 id = UUID.fromString(id),
                 name = Citizen.Name(firstName, lastName),
                 birthday = DateTime.now(),
-                user = user
+                user = user,
+                followAnonymous = false,
+                voteAnonymous = false
             )
 
             try {

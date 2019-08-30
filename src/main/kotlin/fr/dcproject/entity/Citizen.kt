@@ -9,8 +9,8 @@ class Citizen(
     var name: Name?,
     var birthday: DateTime?,
     var userId: UUID? = null,
-    var voteanonymous: Boolean? = null,
-    var followanonymous: Boolean? = null,
+    var voteAnonymous: Boolean = true,
+    var followAnonymous: Boolean = true,
     var user: User?
 ) : UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
