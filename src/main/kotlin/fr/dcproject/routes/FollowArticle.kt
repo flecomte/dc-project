@@ -13,7 +13,7 @@ import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
 @KtorExperimentalLocationsAPI
 object FollowArticlePaths {
-    @Location("/articles/{article}/follow") class ArticleFollowRequest(val article: ArticleEntity)
+    @Location("/articles/{article}/follows") class ArticleFollowRequest(val article: ArticleEntity)
     @Location("/citizens/{citizen}/follows/articles") class CitizenFollowArticleRequest(val citizen: Citizen)
 }
 

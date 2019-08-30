@@ -24,7 +24,6 @@ object ArticlesPaths {
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
     @Location("/articles/{article}") class ArticleRequest(val article: ArticleEntity)
-    @Location("/articles/{article}/follow") class ArticleFollowRequest(val article: ArticleEntity)
     @Location("/articles") class PostArticleRequest
 }
 

@@ -323,6 +323,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+  /articles/{article}/follows:
+    parameters:
+      - name: article
+        in: path
+        description: The ID of article
+        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+        required: true
+        schema:
+          type: string
+          format: uuid
+    post:
+      security:
+        - JWTAuth: []
+      summary: Follow one article
+      tags:
+        - follow
+      responses:
+        201:
+          description: Return only http status 201 on success
+    delete:
+      security:
+        - JWTAuth: []
+      summary: Unfollow one article
+      tags:
+        - follow
+      responses:
+        204:
+          description: Return only http status 204 on success
 
 
 components:
@@ -661,6 +689,12 @@ components:
                 - $ref: '#/components/schemas/UUID'
                 - $ref: '#/components/schemas/UUID'
 
+    FollowBase:
+      allOf:
+        - $ref: '#/components/schemas/Extra'
+    FollowResponse:
+      allOf:
+        - $ref: '#/components/schemas/FollowBase'
 
 
   requestBodies:

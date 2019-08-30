@@ -3,7 +3,7 @@ Feature: follow Article and Constitution
   # Article
   Scenario: The route for follow article must response a 201 and return object
     Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
-    When I send a POST request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
+    When I send a POST request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follows"
     Then the response status code should be 201
 
   Scenario: The route for get follows of articles must response a 200 and return objects
@@ -16,7 +16,7 @@ Feature: follow Article and Constitution
 
   Scenario: The route for unfollow article must response a 204
     Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
-    When I send a DELETE request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follow"
+    When I send a DELETE request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/follows"
     Then the response status code should be 204
 
   # Constitution
