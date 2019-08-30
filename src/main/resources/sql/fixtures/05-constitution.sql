@@ -7,7 +7,7 @@ begin
     delete from title;
     delete from constitution;
 
-    insert into constitution (id, version_id, created_by_id, title, annonymous)
+    insert into constitution (id, version_id, created_by_id, title, anonymous)
     select
         uuid_in(md5('constitution'||row_number() over ())::cstring),
         uuid_in(md5('constitution_v'||row_number() over ())::cstring),

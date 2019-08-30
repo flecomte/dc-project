@@ -6,7 +6,7 @@ import java.util.*
 class Constitution(
     id: UUID = UUID.randomUUID(),
     var title: String?,
-    var annonymous: Boolean? = true,
+    var anonymous: Boolean? = true,
     var titles: List<Title> = listOf(),
     createdBy: Citizen?
 ):  UuidEntity(id),

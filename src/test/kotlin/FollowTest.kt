@@ -30,8 +30,8 @@ class FollowTest {
           },
           "birthday":"2019-08-09T11:42:47.168Z",
           "user_id":null,
-          "vote_annonymous":null,
-          "follow_annonymous":null,
+          "vote_anonymous":null,
+          "follow_anonymous":null,
           "user":{  
              "id":"721db690-d050-46e6-92b0-056f2e8ba993",
              "username":"jaque",
@@ -45,7 +45,7 @@ class FollowTest {
        "target":{  
           "id":"34588ea7-c180-4694-801b-1b5c5a6ed73f",
           "title":"Hello world!",
-          "annonymous":true,
+          "anonymous":true,
           "content":"bla bla bla",
           "description":"this is the changement !",
           "tags":[  

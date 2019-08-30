@@ -10,7 +10,7 @@ open class Vote <T: UuidEntity> (
     createdBy: Citizen,
     override var target: T,
     var note: Int,
-    var annonymous: Boolean = true
+    var anonymous: Boolean = true
 ): Extra<T>(id, createdBy),
     EntityUpdatedAt by EntityUpdatedAtImp() {
     init {

@@ -17,7 +17,7 @@ declare
     {
       "version_id": "933b6a1b-50c9-42b6-989f-c02a57814ef9",
       "title": "Love the world",
-      "annonymous": false,
+      "anonymous": false,
       "content": "bla bal bla",
       "tags": [
         "love",

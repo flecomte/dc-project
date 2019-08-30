@@ -37,7 +37,7 @@ class ConstitutionSteps: En, KoinTest {
                 title = "hello",
                 titles = listOf(title1),
                 createdBy = citizen,
-                annonymous = false
+                anonymous = false
             )
             get<ConstitutionRepository>().upsert(constitution)
         }
@@ -54,7 +54,7 @@ class ConstitutionSteps: En, KoinTest {
                 title = "hello",
                 titles = listOf(title1),
                 createdBy = citizen,
-                annonymous = false
+                anonymous = false
             )
             get<ConstitutionRepository>().upsert(constitution)
         }

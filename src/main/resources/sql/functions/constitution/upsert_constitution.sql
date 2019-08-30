@@ -19,14 +19,14 @@ begin
 
     raise notice '%', _id_exist;
 
-    insert into constitution (id, version_id, created_by_id, title, annonymous)
+    insert into constitution (id, version_id, created_by_id, title, anonymous)
     select
         case when _id_exist then uuid_generate_v4()
              else coalesce(id, uuid_generate_v4()) end,
        version_id,
        _citizen_id,
        title,
-       annonymous
+       anonymous
     from json_populate_record(null::constitution, resource)
     returning id into new_id;
 

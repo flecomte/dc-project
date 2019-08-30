@@ -14,7 +14,7 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
     fun vote(vote: VoteEntity<T>) {
         val reference = vote.target::class.simpleName!!.toLowerCase()
         val author = vote.createdBy ?: error("vote must be contain an author")
-        val anonymous = author.voteAnnonymous
+        val anonymous = author.voteanonymous
         requester
             .getFunction("vote")
             .sendQuery(

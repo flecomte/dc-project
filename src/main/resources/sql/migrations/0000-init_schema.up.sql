@@ -17,8 +17,8 @@ create table citizen
     name              jsonb                                  not null check ( name ? 'first_name' and name ? 'last_name' ),
     birthday          date                                   not null,
     user_id           uuid                                   not null references "user" (id) unique,
-    vote_annonymous   boolean     default true               not null,
-    follow_annonymous boolean     default true               not null
+    vote_anonymous   boolean     default true               not null,
+    follow_anonymous boolean     default true               not null
 );
 
 create table workgroup
@@ -29,7 +29,7 @@ create table workgroup
     created_by_id uuid                                   not null references citizen (id),
     name          varchar(128)                           not null,
     description   text                                   null,
-    annonymous    boolean     default false              not null,
+    anonymous    boolean     default false              not null,
     logo          text                                   null,
     owner_id      uuid                                   not null references citizen (id)
 );
@@ -100,7 +100,7 @@ create table article
     version_id     uuid          default uuid_generate_v4() not null,
     version_number int                                      not null,
     title          text                                     not null check ( length(title) < 128 ),
-    annonymous     boolean       default false              not null,
+    anonymous     boolean       default false              not null,
     content        text                                     not null check ( content != '' ),
     description    text                                     null check ( description != '' ),
     tags           varchar(32)[] default '{}'               not null,
@@ -121,7 +121,7 @@ create table constitution
     version_id     uuid        default uuid_generate_v4() not null,
     version_number int                                    not null,
     title          text                                   not null check ( length(title) < 128 ),
-    annonymous     boolean     default false              not null
+    anonymous     boolean     default false              not null
 );
 
 create trigger generate_version_number_trigger

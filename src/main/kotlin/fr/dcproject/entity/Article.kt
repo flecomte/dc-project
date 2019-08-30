@@ -6,7 +6,7 @@ import java.util.*
 class Article(
     id: UUID = UUID.randomUUID(),
     var title: String?,
-    var annonymous: Boolean? = true,
+    var anonymous: Boolean? = true,
     var content: String?,
     var description: String?,
     var tags: List<String> = emptyList(),

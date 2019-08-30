@@ -14,14 +14,14 @@ begin
 --       and draft = false
     ;
 
-    insert into article (id, version_id, created_by_id, title, annonymous, content, description, tags)
+    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags)
     select
         case when _id_exist then uuid_generate_v4()
              else coalesce(id, uuid_generate_v4()) end,
         coalesce(version_id, uuid_generate_v4()),
         (resource#>>'{created_by, id}')::uuid,
         title,
-        annonymous,
+        anonymous,
         content,
         description,
         tags

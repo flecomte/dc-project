@@ -21,7 +21,7 @@ class ConstitutionTest {
     private val constitutionJson: String = """{  
        "id":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
        "title":"Hello world!",
-       "annonymous":true,
+       "anonymous":true,
        "titles":[  
           {  
              "id":"8156b66f-a9c8-4fd9-8375-a8a1f42ccfd2",
@@ -36,8 +36,8 @@ class ConstitutionTest {
                 },
                 "birthday":"2019-08-07T20:34:08.013Z",
                 "user_id":null,
-                "vote_annonymous":null,
-                "follow_annonymous":null,
+                "vote_anonymous":null,
+                "follow_anonymous":null,
                 "user":{  
                    "id":"257abe9f-be17-4ad3-ae6a-b1dc9706d5d7",
                    "username":"jaque",
@@ -60,8 +60,8 @@ class ConstitutionTest {
           },
           "birthday":"2019-08-07T20:34:08.013Z",
           "user_id":null,
-          "vote_annonymous":null,
-          "follow_annonymous":null,
+          "vote_anonymous":null,
+          "follow_anonymous":null,
           "user":{  
              "id":"257abe9f-be17-4ad3-ae6a-b1dc9706d5d7",
              "username":"jaque",
@@ -86,7 +86,7 @@ class ConstitutionTest {
         )
         val constitution = Constitution(
             title = "Hello world!",
-            annonymous = true,
+            anonymous = true,
             titles = listOf(title1),
             createdBy = citizen
         )
