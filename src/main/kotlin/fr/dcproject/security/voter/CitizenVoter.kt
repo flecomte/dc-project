@@ -37,6 +37,10 @@ class CitizenVoter: Voter {
             return Vote.GRANTED
         }
 
+        if (action is Action) {
+            return Vote.DENIED
+        }
+
         return Vote.ABSTAIN
     }
 }

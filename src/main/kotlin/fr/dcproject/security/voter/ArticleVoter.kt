@@ -1,8 +1,8 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.Article
 import fr.dcproject.entity.User
 import io.ktor.application.ApplicationCall
+import fr.dcproject.entity.Article as ArticleEntity
 
 class ArticleVoter: Voter {
     enum class Action: ActionI {
@@ -34,12 +34,16 @@ class ArticleVoter: Voter {
             return Vote.GRANTED
         }
 
-        if (action == Action.DELETE && user is User && subject is Article && subject.createdBy?.userId == user.id) {
+        if (action == Action.DELETE && user is User && subject is ArticleEntity && subject.createdBy?.userId == user.id) {
             return Vote.GRANTED
         }
 
-        if (action == Action.UPDATE && user is User && subject is Article && subject.createdBy?.userId == user.id) {
+        if (action == Action.UPDATE && user is User && subject is ArticleEntity && subject.createdBy?.userId == user.id) {
             return Vote.GRANTED
+        }
+
+        if (action is Action) {
+            return Vote.DENIED
         }
 
         return Vote.ABSTAIN

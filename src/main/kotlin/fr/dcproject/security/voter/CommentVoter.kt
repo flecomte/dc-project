@@ -33,6 +33,10 @@ class CommentVoter: Voter {
             return Vote.DENIED
         }
 
+        if (action is Action) {
+            return Vote.DENIED
+        }
+
         return Vote.ABSTAIN
     }
 }
