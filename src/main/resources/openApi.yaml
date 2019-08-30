@@ -617,6 +617,18 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ArticleResponse'
+
+    Extra:
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/UuidEntity'
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/CreatedBy'
+        - type: object
+          properties:
+            target:
+              $ref: '#/components/schemas/UuidEntity'
+
     CommentBase:
       type: object
       allOf:
@@ -634,9 +646,8 @@ components:
     CommentResponse:
       allOf:
         - $ref: '#/components/schemas/CommentBase'
-        - $ref: '#/components/schemas/CreatedBy'
-        - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/UpdatedAt'
+        - $ref: '#/components/schemas/Extra'
         - type: object
           properties:
             parents_ids:
@@ -644,8 +655,6 @@ components:
               required: false
               items:
                 $ref: '#/components/schemas/UUID'
-            target:
-              $ref: '#/components/schemas/UuidEntity'
             parent:
               required: false
               allOf:
