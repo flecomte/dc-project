@@ -12,11 +12,11 @@ create table "user"
 
 create table citizen
 (
-    id                uuid        default uuid_generate_v4() not null primary key,
-    created_at        timestamptz default now()              not null,
-    name              jsonb                                  not null check ( name ? 'first_name' and name ? 'last_name' ),
-    birthday          date                                   not null,
-    user_id           uuid                                   not null references "user" (id) unique,
+    id               uuid        default uuid_generate_v4() not null primary key,
+    created_at       timestamptz default now()              not null,
+    name             jsonb                                  not null check ( name ? 'first_name' and name ? 'last_name' ),
+    birthday         date                                   not null,
+    user_id          uuid                                   not null references "user" (id) unique,
     vote_anonymous   boolean     default true               not null,
     follow_anonymous boolean     default true               not null
 );
@@ -29,7 +29,7 @@ create table workgroup
     created_by_id uuid                                   not null references citizen (id),
     name          varchar(128)                           not null,
     description   text                                   null,
-    anonymous    boolean     default false              not null,
+    anonymous     boolean     default false              not null,
     logo          text                                   null,
     owner_id      uuid                                   not null references citizen (id)
 );
@@ -100,10 +100,11 @@ create table article
     version_id     uuid          default uuid_generate_v4() not null,
     version_number int                                      not null,
     title          text                                     not null check ( length(title) < 128 ),
-    anonymous     boolean       default false              not null,
+    anonymous      boolean       default false              not null,
     content        text                                     not null check ( content != '' ),
     description    text                                     null check ( description != '' ),
     tags           varchar(32)[] default '{}'               not null,
+    deleted_at     timestamptz   default null               null,
     unique (version_id, version_number)
 );
 
@@ -121,7 +122,9 @@ create table constitution
     version_id     uuid        default uuid_generate_v4() not null,
     version_number int                                    not null,
     title          text                                   not null check ( length(title) < 128 ),
-    anonymous     boolean     default false              not null
+    anonymous      boolean     default false              not null,
+    deleted_at     timestamptz default null               null,
+    unique (version_id, version_number)
 );
 
 create trigger generate_version_number_trigger
