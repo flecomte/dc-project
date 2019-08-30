@@ -1,5 +1,6 @@
 /.gradle
-/.idea
+/.idea/*
+!/.idea/runConfigurations
 /out
 /build
 *.ipr
