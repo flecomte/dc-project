@@ -284,6 +284,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+  /constitutions/{constitution}/comments:
+    parameters:
+      - name: constitution
+        in: path
+        description: The ID of constitution
+        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get comment and children of one constitution
+      tags:
+        - comment
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: Create Comment to constitution
+      tags:
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
 
 
 components:
