@@ -101,8 +101,8 @@ create table article
     version_number int                                      not null,
     title          text                                     not null check ( length(title) < 128 ),
     anonymous      boolean       default false              not null,
-    content        text                                     not null check ( content != '' ),
-    description    text                                     null check ( description != '' ),
+    content        text                                     not null check ( content != '' and length(content) < 4096 ),
+    description    text                                     null check ( description != '' and length(description) < 4096 ),
     tags           varchar(32)[] default '{}'               not null,
     deleted_at     timestamptz   default null               null,
     unique (version_id, version_number)
@@ -122,6 +122,7 @@ create table constitution
     version_id     uuid        default uuid_generate_v4() not null,
     version_number int                                    not null,
     title          text                                   not null check ( length(title) < 128 ),
+    intro          text                                   null check ( length(intro) < 4096 ),
     anonymous      boolean     default false              not null,
     deleted_at     timestamptz default null               null,
     unique (version_id, version_number)
@@ -360,3 +361,199 @@ create table resource_view
     created_by_id uuid                                   null references citizen (id),
     ip            cidr                                   null
 );
+
+
+
+
+
+--------------
+-- ZOMBO DB --
+--------------
+
+-- Filter
+SELECT zdb.define_filter('french_stop', '{
+    "type": "stop",
+    "stopwords": "_french_",
+    "ignore_case": true
+}');
+
+SELECT zdb.define_filter('french_elision', '{
+    "type": "elision",
+    "articles": [
+        "à",
+        "ainsi",
+        "alors",
+        "assez",
+        "au",
+        "aussi",
+        "aux",
+        "c",
+        "ça",
+        "car",
+        "ce",
+        "cela",
+        "ces",
+        "ceux",
+        "ci",
+        "celle",
+        "celles",
+        "d",
+        "de",
+        "déjà",
+        "depuis",
+        "des",
+        "donc",
+        "du",
+        "et",
+        "ici",
+        "l",
+        "la",
+        "là",
+        "le",
+        "les",
+        "leur",
+        "leurs",
+        "ma",
+        "mais",
+        "même",
+        "mes",
+        "mon",
+        "ne",
+        "ni",
+        "notre",
+        "nous",
+        "ou",
+        "où",
+        "s",
+        "sa",
+        "ses",
+        "son",
+        "t",
+        "ta",
+        "tant",
+        "tantôt",
+        "tels",
+        "tes",
+        "ton",
+        "tôt",
+        "toujours",
+        "trop",
+        "un",
+        "une",
+        "votre",
+        "vos"
+    ],
+    "ignore_case": true
+}');
+
+SELECT zdb.define_filter('french_stemmer', '{
+    "type": "stemmer",
+    "language": "light_french"
+}');
+
+SELECT zdb.define_filter('worddelimiter', '{
+    "type": "word_delimiter"
+}');
+
+-- Tokenizer
+SELECT zdb.define_tokenizer('ngram_tokenizer', '{
+  "type": "nGram",
+  "min_gram": 3,
+  "max_gram": 7,
+  "token_chars": ["letter", "digit"]
+}');
+
+-- Analyzer
+SELECT zdb.define_analyzer('name_analyzer', '{
+    "type": "custom",
+    "tokenizer": "ngram_tokenizer",
+    "filter": ["lowercase", "asciifolding"]
+}');
+
+SELECT zdb.define_analyzer('fr_analyzer', '{
+    "tokenizer": "standard",
+    "filter": ["french_elision", "worddelimiter", "asciifolding", "lowercase", "french_stop", "french_stemmer"]
+}');
+
+-- INDEX article table
+SELECT zdb.define_field_mapping('article', 'title', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+SELECT zdb.define_field_mapping('article', 'content', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+SELECT zdb.define_field_mapping('article', 'description', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+CREATE INDEX article_idx
+    ON article
+        USING zombodb ((article.*))
+    WITH (ALIAS='article_idx');
+
+REINDEX INDEX article_idx;
+
+
+-- INDEX constitution table
+SELECT zdb.define_field_mapping('constitution', 'title', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+SELECT zdb.define_field_mapping('constitution', 'intro', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+CREATE INDEX constitution_idx
+    ON constitution
+        USING zombodb ((constitution.*))
+    WITH (ALIAS='constitution_idx');
+
+REINDEX INDEX constitution_idx;
+
+
+-- INDEX coment table
+SELECT zdb.define_field_mapping('comment', 'content', '{
+    "type": "text",
+    "analyzer": "fr_analyzer",
+    "search_analyzer": "fr_analyzer"
+}');
+
+CREATE INDEX comment_idx
+    ON comment
+        USING zombodb ((comment.*))
+    WITH (ALIAS='comment_idx');
+
+REINDEX INDEX comment_idx;
+
+
+-- INDEX citizen table
+SELECT zdb.define_field_mapping('citizen', 'first_name', '{
+    "type": "text",
+    "analyzer": "name_analyzer",
+    "search_analyzer": "name_analyzer"
+}');
+
+SELECT zdb.define_field_mapping('citizen', 'last_name', '{
+    "type": "text",
+    "analyzer": "name_analyzer",
+    "search_analyzer": "name_analyzer"
+}');
+
+CREATE INDEX citizen_idx
+    ON citizen
+        USING zombodb ((citizen.*))
+    WITH (ALIAS='citizen_idx');
+
+REINDEX INDEX citizen_idx;

@@ -37,5 +37,5 @@ drop function if exists set_version_number();
 drop table if exists moderator;
 drop table if exists citizen_in_workgroup;
 drop table if exists workgroup;
-drop table if exists citizen;
+drop table if exists citizen cascade;
 drop table if exists "user";
