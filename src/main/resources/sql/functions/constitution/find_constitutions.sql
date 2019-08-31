@@ -1,5 +1,5 @@
 create or replace function find_constitutions(
-    search text default null,
+    _search text default null,
     direction text default 'desc',
     sort text default 'created_at',
     "limit" int default 50,
@@ -9,15 +9,16 @@ create or replace function find_constitutions(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from constitution)
+    select json_agg(t), (select count(id) from constitution c where _search is null or _search = '' or c ==> dsl.multi_match('{title^3, intro}', _search))
     into resource, total
     from (
         select
             c.*,
             find_citizen_by_id(c.created_by_id) as created_by,
-            find_constitution_titles_by_id(c.id) as titles
+            find_constitution_titles_by_id(c.id) as titles,
+            zdb.score(c.ctid) _score
         from constitution as c
-        where "search" is null or title ilike '%'||"search"||'%'
+        where _search is null or _search = '' or c ==> dsl.multi_match('{title^3, intro}', _search)
         order by
         case direction when 'asc' then
             case sort

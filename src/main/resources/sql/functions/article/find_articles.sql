@@ -1,5 +1,5 @@
 create or replace function find_articles(
-    search text default null,
+    _search text default null,
     direction text default 'desc',
     sort text default 'created_at',
     "limit" int default 50,
@@ -9,15 +9,17 @@ create or replace function find_articles(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from article)
+    select json_agg(t), (select count(id) from article a where _search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description}', _search))
     into resource, total
     from (
         select
             a.*,
-            find_citizen_by_id(a.created_by_id) as created_by
+            find_citizen_by_id(a.created_by_id) as created_by,
+            zdb.score(a.ctid) _score
         from article as a
-        where "search" is null or title ilike '%'||"search"||'%'
+        where _search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description}', _search)
         order by
+        _score desc,
         case direction when 'asc' then
             case sort
                 when 'title' then a.title
