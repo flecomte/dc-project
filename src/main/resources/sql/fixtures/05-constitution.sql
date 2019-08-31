@@ -7,13 +7,14 @@ begin
     delete from title;
     delete from constitution;
 
-    insert into constitution (id, version_id, created_by_id, title, anonymous)
+    insert into constitution (id, version_id, created_by_id, title, anonymous, created_at)
     select
         uuid_in(md5('constitution'||row_number() over ())::cstring),
         uuid_in(md5('constitution_v'||row_number() over ())::cstring),
         z.id,
         'title' || row_number() over (),
-        row_number() over () % 3 = 0
+        row_number() over () % 3 = 0,
+        now() + (row_number() over () * interval '7 minute 3 second')
     from citizen z;
 
     insert into title (id, created_by_id, name, rank, constitution_id)

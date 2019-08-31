@@ -12,7 +12,7 @@ begin
     delete from article_relations;
     delete from article;
 
-    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags)
+    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at)
     select
         uuid_in(md5('article'||row_number() over ())::cstring),
         uuid_in(md5('article_v'||row_number() over ())::cstring),
@@ -21,7 +21,8 @@ begin
         row_number() over () % 3 = 0,
         'content' || row_number() over (),
         'description' || row_number() over (),
-        _tags[(row_number() over () % 5):(row_number() over () % 9)]
+        _tags[(row_number() over () % 5):(row_number() over () % 9)],
+        now() + (row_number() over () * interval '7 minute 3 second')
     from citizen z;
 
     insert into article_relations (source_id, target_id, created_by_id, comment)
@@ -36,4 +37,3 @@ begin
     raise notice 'article fixtures done';
 end;
 $$;
-
