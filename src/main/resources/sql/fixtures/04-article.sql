@@ -8,6 +8,7 @@ declare
         "love", "human", "scuirel"
     }
     $tags$;
+    _citizen_count int = (select count(z) from citizen z);
 begin
     delete from article_relations;
     delete from article;
@@ -15,7 +16,7 @@ begin
     insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at)
     select
         uuid_in(md5('article'||row_number() over ())::cstring),
-        uuid_in(md5('article_v'||row_number() over ())::cstring),
+        uuid_in(md5('article_v'||row_number() over () % (_citizen_count / 2))::cstring),
         z.id,
         'title' || row_number() over (),
         row_number() over () % 3 = 0,
