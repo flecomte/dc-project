@@ -144,7 +144,7 @@ paths:
       summary: Get all articles
       tags:
         - article
-      operationId: getArticles
+      operationId: getArticle
       parameters:
         - name: article
           in: query
