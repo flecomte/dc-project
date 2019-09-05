@@ -147,7 +147,7 @@ paths:
       operationId: getArticle
       parameters:
         - name: article
-          in: query
+          in: path
           required: true
           description: the ID of article
           schema:
