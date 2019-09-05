@@ -23,6 +23,8 @@ import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
 import io.ktor.features.*
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
 import io.ktor.jackson.jackson
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -34,6 +36,7 @@ import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
+import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
 import fr.dcproject.repository.Article as RepositoryArticle
@@ -176,6 +179,16 @@ fun Application.module(env: Env = PROD) {
                 throw e
             }
         }
+    }
+
+    install(CORS) {
+        method(HttpMethod.Options)
+        header(HttpHeaders.Authorization)
+        anyHost()
+        // host("localhost:4200", schemes = listOf("http", "https"))
+        allowCredentials = true
+        allowSameOrigin = true
+        maxAge = Duration.ofDays(1)
     }
 
     // TODO move to postgresJson lib
