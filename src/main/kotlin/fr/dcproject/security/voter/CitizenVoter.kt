@@ -25,6 +25,7 @@ class CitizenVoter: Voter {
         }
 
         if (action == Action.VIEW) {
+            if (user == null) return Vote.DENIED
             if (subject is Citizen) {
                 return if (subject.isDeleted()) Vote.DENIED
                 else Vote.GRANTED
