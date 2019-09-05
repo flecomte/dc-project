@@ -61,7 +61,6 @@ begin
     assert (_find_comments_by_id_result->>'content' = 'Ho my god !'), 'content of comment must be "Ho my god !"';
 
     perform edit_comment(
-        reference => 'article'::regclass,
         _id => _comment_id,
         _content => 'edited content'::text
     );
@@ -77,14 +76,14 @@ begin
 
     select resource, total
     into _selected_comments, _selected_comments_total
-    from find_comments_article_by_citizen(_citizen_id);
+    from find_comments_by_citizen(_citizen_id);
     assert (_selected_comments_total = 1), 'the number of comments for this citizen must be 1, "' || _selected_comments_total || '" returned';
     assert (_selected_comments#>>'{0,content}' = 'edited content'),
         'the content of first comment for this citizen must be "edited content", "' || (_selected_comments#>>'{0,content}') || '" returned';
 
     select resource, total
     into _selected_comments, _selected_comments_total
-    from find_comments_constitution_by_citizen(_citizen_id);
+    from find_comments_by_citizen(_citizen_id, 'constitution'::regclass);
     assert (_selected_comments_total = 0), 'the number of comments for this citizen must be 0, "' || _selected_comments_total || '" returned';
 
 
