@@ -51,7 +51,10 @@ create table moderator
     user_id         uuid                                   not null references "user" (id)
 );
 
--- Article & Constitution
+
+-------------------------------------
+-- Article & Constitution triggers --
+-------------------------------------
 
 create or replace function generate_version_number(tablename regclass, version_id uuid, out generated_number int)
     language plpgsql as
@@ -83,6 +86,65 @@ begin
 end;
 $$;
 
+create or replace function set_all_version_to_old(tablename regclass, version_id uuid) returns void
+    language plpgsql as
+$$
+declare
+    _version_id alias for version_id;
+begin
+    if (tablename = 'article'::regclass) then
+        update article a
+        set is_last_version = false
+        where a.version_id = _version_id and a.is_last_version = true;
+    elseif (tablename = 'constitution'::regclass) then
+        update constitution c
+        set is_last_version = false
+        where c.version_id = _version_id and c.is_last_version = true;
+    else
+        raise exception '% is not implemented', tablename::text;
+    end if;
+end;
+$$;
+
+create or replace function set_correct_last_version(tablename regclass, version_id uuid) returns void
+    language plpgsql as
+$$
+declare
+    _version_id alias for version_id;
+begin
+    perform set_all_version_to_old(tablename, _version_id);
+
+    if (tablename = 'article'::regclass) then
+        update article a1
+        set is_last_version = true
+        from (
+            select id from article a2
+            where a2.version_id = _version_id
+              and a2.is_draft = false
+              and a2.deleted_at is null
+            order by version_number desc
+            limit 1
+        ) as a3
+        where a1.version_id = _version_id and a1.id = a3.id;
+    elseif (tablename = 'constitution'::regclass) then
+        update constitution c1
+        set is_last_version = true
+        from (
+            select id from constitution c2
+            where c2.version_id = _version_id
+              and c2.is_draft = false
+              and c2.deleted_at is null
+            order by version_number desc
+            limit 1
+        ) as c3
+        where c1.version_id = _version_id and c1.id = c3.id;
+    else
+        raise exception '% is not implemented', tablename::text;
+    end if;
+end;
+$$;
+
+
 create or replace function set_version_number() returns trigger
     language plpgsql as
 $$
@@ -92,21 +154,53 @@ begin
 end;
 $$;
 
+create or replace function set_to_last_version() returns trigger
+    language plpgsql as
+$$
+begin
+    if (new.is_draft = false and new.deleted_at is null) then
+        perform set_all_version_to_old(tg_table_name::regclass, new.version_id);
+        new.is_last_version = true;
+    else
+        new.is_last_version = false;
+    end if;
+    return new;
+end;
+$$;
+
+create or replace function set_last_version() returns trigger
+    language plpgsql as
+$$
+begin
+    if (new.is_draft != old.is_draft or new.deleted_at != old.deleted_at) then
+        perform set_correct_last_version(tg_table_name::regclass, new.version_id);
+    end if;
+    return new;
+end;
+$$;
+
+-------------
+-- Article --
+-------------
 create table article
 (
-    id             uuid          default uuid_generate_v4() not null primary key,
-    created_at     timestamptz   default now()              not null,
-    created_by_id  uuid                                     not null references citizen (id),
-    version_id     uuid          default uuid_generate_v4() not null,
-    version_number int                                      not null,
-    title          text                                     not null check ( length(title) < 128 ),
-    anonymous      boolean       default false              not null,
-    content        text                                     not null check ( content != '' and length(content) < 4096 ),
-    description    text                                     null check ( description != '' and length(description) < 4096 ),
-    tags           varchar(32)[] default '{}'               not null,
-    deleted_at     timestamptz   default null               null,
+    id              uuid          default uuid_generate_v4() not null primary key,
+    created_at      timestamptz   default now()              not null,
+    created_by_id   uuid                                     not null references citizen (id),
+    version_id      uuid          default uuid_generate_v4() not null,
+    version_number  int                                      not null,
+    title           text                                     not null check ( length(title) < 128 ),
+    anonymous       boolean       default false              not null,
+    content         text                                     not null check ( content != '' and length(content) < 4096 ),
+    description     text                                     null check ( description != '' and length(description) < 4096 ),
+    tags            varchar(32)[] default '{}'               not null,
+    deleted_at      timestamptz   default null               null,
+    is_draft        boolean       default false              not null,
+    is_last_version boolean       default false              not null,
     unique (version_id, version_number)
 );
+
+create unique index last_version_article_idx on article (is_last_version, version_id) where is_last_version = true;
 
 create trigger generate_version_number_trigger
     before insert
@@ -114,25 +208,60 @@ create trigger generate_version_number_trigger
     for each row
 execute function set_version_number();
 
+create trigger set_to_last_version_trigger
+    before insert
+    on article
+    for each row
+execute function set_to_last_version();
+
+create trigger set_last_version_trigger
+    after update
+    on article
+    for each row
+execute function set_last_version();
+
+------------------
+-- Constitution --
+------------------
+
 create table constitution
 (
-    id             uuid        default uuid_generate_v4() not null primary key,
-    created_at     timestamptz default now()              not null,
-    created_by_id  uuid                                   not null references citizen (id),
-    version_id     uuid        default uuid_generate_v4() not null,
-    version_number int                                    not null,
-    title          text                                   not null check ( length(title) < 128 ),
-    intro          text                                   null check ( length(intro) < 4096 ),
-    anonymous      boolean     default false              not null,
-    deleted_at     timestamptz default null               null,
+    id              uuid        default uuid_generate_v4() not null primary key,
+    created_at      timestamptz default now()              not null,
+    created_by_id   uuid                                   not null references citizen (id),
+    version_id      uuid        default uuid_generate_v4() not null,
+    version_number  int                                    not null,
+    title           text                                   not null check ( length(title) < 128 ),
+    intro           text                                   null check ( length(intro) < 4096 ),
+    anonymous       boolean     default false              not null,
+    deleted_at      timestamptz default null               null,
+    is_draft        boolean     default false              not null,
+    is_last_version boolean     default false              not null,
     unique (version_id, version_number)
 );
+
+create unique index last_version_constitution_idx on constitution (is_last_version, version_id) where is_last_version = true;
 
 create trigger generate_version_number_trigger
     before insert
     on constitution
     for each row
 execute procedure set_version_number();
+
+create trigger set_to_last_version_trigger
+    before insert
+    on constitution
+    for each row
+execute function set_to_last_version();
+
+create trigger set_last_version_trigger
+    after update
+    on constitution
+    for each row
+execute function set_last_version();
+
+------
+
 
 create table title
 (
@@ -364,196 +493,207 @@ create table resource_view
 
 
 
-
-
 --------------
 -- ZOMBO DB --
 --------------
 
 -- Filter
-SELECT zdb.define_filter('french_stop', '{
-    "type": "stop",
-    "stopwords": "_french_",
-    "ignore_case": true
+select zdb.define_filter('french_stop', '{
+  "type": "stop",
+  "stopwords": "_french_",
+  "ignore_case": true
 }');
 
-SELECT zdb.define_filter('french_elision', '{
-    "type": "elision",
-    "articles": [
-        "à",
-        "ainsi",
-        "alors",
-        "assez",
-        "au",
-        "aussi",
-        "aux",
-        "c",
-        "ça",
-        "car",
-        "ce",
-        "cela",
-        "ces",
-        "ceux",
-        "ci",
-        "celle",
-        "celles",
-        "d",
-        "de",
-        "déjà",
-        "depuis",
-        "des",
-        "donc",
-        "du",
-        "et",
-        "ici",
-        "l",
-        "la",
-        "là",
-        "le",
-        "les",
-        "leur",
-        "leurs",
-        "ma",
-        "mais",
-        "même",
-        "mes",
-        "mon",
-        "ne",
-        "ni",
-        "notre",
-        "nous",
-        "ou",
-        "où",
-        "s",
-        "sa",
-        "ses",
-        "son",
-        "t",
-        "ta",
-        "tant",
-        "tantôt",
-        "tels",
-        "tes",
-        "ton",
-        "tôt",
-        "toujours",
-        "trop",
-        "un",
-        "une",
-        "votre",
-        "vos"
-    ],
-    "ignore_case": true
+select zdb.define_filter('french_elision', '{
+  "type": "elision",
+  "articles": [
+    "à",
+    "ainsi",
+    "alors",
+    "assez",
+    "au",
+    "aussi",
+    "aux",
+    "c",
+    "ça",
+    "car",
+    "ce",
+    "cela",
+    "ces",
+    "ceux",
+    "ci",
+    "celle",
+    "celles",
+    "d",
+    "de",
+    "déjà",
+    "depuis",
+    "des",
+    "donc",
+    "du",
+    "et",
+    "ici",
+    "l",
+    "la",
+    "là",
+    "le",
+    "les",
+    "leur",
+    "leurs",
+    "ma",
+    "mais",
+    "même",
+    "mes",
+    "mon",
+    "ne",
+    "ni",
+    "notre",
+    "nous",
+    "ou",
+    "où",
+    "s",
+    "sa",
+    "ses",
+    "son",
+    "t",
+    "ta",
+    "tant",
+    "tantôt",
+    "tels",
+    "tes",
+    "ton",
+    "tôt",
+    "toujours",
+    "trop",
+    "un",
+    "une",
+    "votre",
+    "vos"
+  ],
+  "ignore_case": true
 }');
 
-SELECT zdb.define_filter('french_stemmer', '{
-    "type": "stemmer",
-    "language": "light_french"
+select zdb.define_filter('french_stemmer', '{
+  "type": "stemmer",
+  "language": "light_french"
 }');
 
-SELECT zdb.define_filter('worddelimiter', '{
-    "type": "word_delimiter"
+select zdb.define_filter('worddelimiter', '{
+  "type": "word_delimiter"
 }');
 
 -- Tokenizer
-SELECT zdb.define_tokenizer('ngram_tokenizer', '{
+select zdb.define_tokenizer('ngram_tokenizer', '{
   "type": "nGram",
   "min_gram": 3,
   "max_gram": 7,
-  "token_chars": ["letter", "digit"]
+  "token_chars": [
+    "letter",
+    "digit"
+  ]
 }');
 
 -- Analyzer
-SELECT zdb.define_analyzer('name_analyzer', '{
-    "type": "custom",
-    "tokenizer": "ngram_tokenizer",
-    "filter": ["lowercase", "asciifolding"]
+select zdb.define_analyzer('name_analyzer', '{
+  "type": "custom",
+  "tokenizer": "ngram_tokenizer",
+  "filter": [
+    "lowercase",
+    "asciifolding"
+  ]
 }');
 
-SELECT zdb.define_analyzer('fr_analyzer', '{
-    "tokenizer": "standard",
-    "filter": ["french_elision", "worddelimiter", "asciifolding", "lowercase", "french_stop", "french_stemmer"]
+select zdb.define_analyzer('fr_analyzer', '{
+  "tokenizer": "standard",
+  "filter": [
+    "french_elision",
+    "worddelimiter",
+    "asciifolding",
+    "lowercase",
+    "french_stop",
+    "french_stemmer"
+  ]
 }');
 
 -- INDEX article table
-SELECT zdb.define_field_mapping('article', 'title', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('article', 'title', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-SELECT zdb.define_field_mapping('article', 'content', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('article', 'content', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-SELECT zdb.define_field_mapping('article', 'description', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('article', 'description', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-CREATE INDEX article_idx
-    ON article
-        USING zombodb ((article.*))
-    WITH (ALIAS='article_idx');
+create index article_idx
+    on article
+        using zombodb ((article.*))
+    with (alias ='article_idx');
 
-REINDEX INDEX article_idx;
+reindex index article_idx;
 
 
 -- INDEX constitution table
-SELECT zdb.define_field_mapping('constitution', 'title', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('constitution', 'title', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-SELECT zdb.define_field_mapping('constitution', 'intro', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('constitution', 'intro', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-CREATE INDEX constitution_idx
-    ON constitution
-        USING zombodb ((constitution.*))
-    WITH (ALIAS='constitution_idx');
+create index constitution_idx
+    on constitution
+        using zombodb ((constitution.*))
+    with (alias ='constitution_idx');
 
-REINDEX INDEX constitution_idx;
+reindex index constitution_idx;
 
 
 -- INDEX coment table
-SELECT zdb.define_field_mapping('comment', 'content', '{
-    "type": "text",
-    "analyzer": "fr_analyzer",
-    "search_analyzer": "fr_analyzer"
+select zdb.define_field_mapping('comment', 'content', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
 }');
 
-CREATE INDEX comment_idx
-    ON comment
-        USING zombodb ((comment.*))
-    WITH (ALIAS='comment_idx');
+create index comment_idx
+    on comment
+        using zombodb ((comment.*))
+    with (alias ='comment_idx');
 
-REINDEX INDEX comment_idx;
+reindex index comment_idx;
 
 
 -- INDEX citizen table
-SELECT zdb.define_field_mapping('citizen', 'first_name', '{
-    "type": "text",
-    "analyzer": "name_analyzer",
-    "search_analyzer": "name_analyzer"
+select zdb.define_field_mapping('citizen', 'first_name', '{
+  "type": "text",
+  "analyzer": "name_analyzer",
+  "search_analyzer": "name_analyzer"
 }');
 
-SELECT zdb.define_field_mapping('citizen', 'last_name', '{
-    "type": "text",
-    "analyzer": "name_analyzer",
-    "search_analyzer": "name_analyzer"
+select zdb.define_field_mapping('citizen', 'last_name', '{
+  "type": "text",
+  "analyzer": "name_analyzer",
+  "search_analyzer": "name_analyzer"
 }');
 
-CREATE INDEX citizen_idx
-    ON citizen
-        USING zombodb ((citizen.*))
-    WITH (ALIAS='citizen_idx');
+create index citizen_idx
+    on citizen
+        using zombodb ((citizen.*))
+    with (alias ='citizen_idx');
 
-REINDEX INDEX citizen_idx;
+reindex index citizen_idx;

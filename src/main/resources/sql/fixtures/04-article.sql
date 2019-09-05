@@ -13,7 +13,7 @@ begin
     delete from article_relations;
     delete from article;
 
-    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at)
+    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at, is_draft)
     select
         uuid_in(md5('article'||row_number() over ())::cstring),
         uuid_in(md5('article_v'||row_number() over () % (_citizen_count / 2))::cstring),
@@ -23,7 +23,8 @@ begin
         'content' || row_number() over (),
         'description' || row_number() over (),
         _tags[(row_number() over () % 5):(row_number() over () % 9)],
-        now() + (row_number() over () * interval '7 minute 3 second')
+        now() + (row_number() over () * interval '7 minute 3 second'),
+        (row_number() over () % 7) = 0
     from citizen z;
 
     insert into article_relations (source_id, target_id, created_by_id, comment)

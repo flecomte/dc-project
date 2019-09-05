@@ -11,6 +11,8 @@ begin
         into resource
         from article as a
         where a.version_id = _version_id
+          and a.is_draft = false
+          and a.deleted_at is null
         order by a.version_number desc
         limit 1
     ) as t;
