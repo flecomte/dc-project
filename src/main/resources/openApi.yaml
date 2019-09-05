@@ -159,9 +159,35 @@ paths:
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ArticleResponse'
+                $ref: '#/components/schemas/ArticleResponse'
+  /articles/{article}/versions:
+    get:
+      summary: Get all versions of articles
+      tags:
+        - article
+      operationId: getArticleVersions
+      parameters:
+        - name: article
+          in: path
+          required: true
+          description: the ID of article
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: The versions of Article
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ArticleResponse'
 
   /constitutions:
     get:

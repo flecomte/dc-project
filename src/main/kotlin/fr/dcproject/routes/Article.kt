@@ -23,6 +23,10 @@ object ArticlesPaths {
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
     @Location("/articles/{article}") class ArticleRequest(val article: ArticleEntity)
+    @Location("/articles/{article}/versions") class ArticleVersionsRequest(val article: ArticleEntity, page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: RepositoryI.Direction? = null, val search: String? = null) {
+        val page: Int = if (page < 1) 1 else page
+        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    }
     @Location("/articles") class PostArticleRequest
 }
 
@@ -38,6 +42,14 @@ fun Route.article(repo: ArticleRepository) {
         assertCan(VIEW, it.article)
 
         call.respond(it.article)
+    }
+
+    get<ArticlesPaths.ArticleVersionsRequest> {
+        assertCan(VIEW, it.article)
+
+        val versions = repo.findVerionsByVersionsId(it.page, it.limit, it.article.versionId)
+
+        call.respond(versions)
     }
 
     post<ArticlesPaths.PostArticleRequest> {

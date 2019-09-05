@@ -4,6 +4,10 @@ Feature: articles routes
     When I send a GET request to "/articles"
     Then the response status code should be 200
 
+  Scenario: Can get versions of article by the id
+    When I send a GET request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/versions"
+    Then the response status code should be 200
+
   Scenario: The route for get one article must response a 200 and return article
     When I send a GET request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
     Then the response status code should be 200

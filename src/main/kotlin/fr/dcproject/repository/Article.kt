@@ -16,6 +16,12 @@ class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
         return function.selectOne("id" to id)
     }
 
+    fun findVerionsByVersionsId(page: Int = 1, limit: Int = 50, versionId: UUID): Paginated<ArticleEntity> {
+        return requester
+            .getFunction("find_articles_versions_by_version_id")
+            .select(page, limit, "version_id" to versionId)
+    }
+
     fun find(
         page: Int = 1,
         limit: Int = 50,
