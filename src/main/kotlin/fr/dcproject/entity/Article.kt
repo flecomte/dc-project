@@ -16,4 +16,8 @@ class Article(
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy),
-    EntityDeletedAt by EntityDeletedAtImp()
+    EntityDeletedAt by EntityDeletedAtImp() {
+    init {
+        tags = tags.distinct()
+    }
+}
