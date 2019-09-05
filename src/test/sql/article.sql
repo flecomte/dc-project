@@ -24,9 +24,19 @@ begin
     select upsert_article(created_article) into created_article;
     assert created_article->>'version_id' is not null, 'version_id should not be null';
     assert (created_article->>'version_number')::int = 1, format('version_number must be equal to 1, %s instead', created_article->>'version_number');
-    -- try tu create new version
+    -- try to create new version
     select upsert_article(created_article) into created_article;
     assert (created_article->>'version_number')::int = 2, format('version_number must be equal to 2, %s instead', created_article->>'version_number');
+
+    -- get articles versions by version_id
+    select find_articles_versions_by_version_id((created_article->>'version_id')::uuid) into selected_article;
+    assert selected_article#>>'{0,title}' = 'Love the world', format('title must be "Love the world", %s', selected_article#>>'{0,title}');
+    assert (selected_article#>>'{0,version_number}')::int = 2, format('version_id must be 2, %s instead', selected_article#>>'{0,version_number}');
+
+    -- get articles versions by id
+    select find_articles_versions_by_id((created_article->>'id')::uuid) into selected_article;
+    assert selected_article#>>'{0,title}' = 'Love the world', format('title must be "Love the world", %s', selected_article#>>'{0,title}');
+    assert (selected_article#>>'{0,version_number}')::int = 2, format('version_id must be 2, %s instead', selected_article#>>'{0,version_number}');
 
     -- get article by id and check the title
     select find_article_by_id((created_article->>'id')::uuid) into selected_article;
