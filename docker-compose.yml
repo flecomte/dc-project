@@ -6,6 +6,7 @@ services:
   elasticsearch:
     container_name: elasticsearch_${NAME}
     image: elasticsearch:6.7.1
+    restart: always
     ports:
       - ${ELASTIC_REST}:9200
       - ${ELASTIC_NODES}:9300
