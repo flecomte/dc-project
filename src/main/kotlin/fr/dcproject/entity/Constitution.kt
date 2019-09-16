@@ -8,6 +8,8 @@ class Constitution(
     var title: String?,
     var anonymous: Boolean? = true,
     var titles: List<Title> = listOf(),
+    var draft: Boolean = false,
+    var lastVersion: Boolean = false,
     createdBy: Citizen?
 ):  UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),

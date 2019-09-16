@@ -10,6 +10,8 @@ class Article(
     var content: String?,
     var description: String?,
     var tags: List<String> = emptyList(),
+    var draft: Boolean = false,
+    var lastVersion: Boolean = false,
     createdBy: Citizen?
 ):
     UuidEntity(id),

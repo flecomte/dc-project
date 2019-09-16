@@ -14,6 +14,7 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import fr.dcproject.entity.Article as ArticleEntity
+import fr.dcproject.entity.request.Article as ArticleEntityRequest
 import fr.dcproject.repository.Article as ArticleRepository
 
 @KtorExperimentalLocationsAPI
@@ -53,8 +54,8 @@ fun Route.article(repo: ArticleRepository) {
     }
 
     post<ArticlesPaths.PostArticleRequest> {
-        val article = call.receive<ArticleEntity>()
-        article.createdBy = citizen
+        val request = call.receive<ArticleEntityRequest>()
+        val article = request.create(citizen)
 
         assertCan(CREATE, article)
 

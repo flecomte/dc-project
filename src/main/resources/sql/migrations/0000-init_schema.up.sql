@@ -94,12 +94,14 @@ declare
 begin
     if (tablename = 'article'::regclass) then
         update article a
-        set is_last_version = false
-        where a.version_id = _version_id and a.is_last_version = true;
+        set last_version = false
+        where a.version_id = _version_id
+          and a.last_version = true;
     elseif (tablename = 'constitution'::regclass) then
         update constitution c
-        set is_last_version = false
-        where c.version_id = _version_id and c.is_last_version = true;
+        set last_version = false
+        where c.version_id = _version_id
+          and c.last_version = true;
     else
         raise exception '% is not implemented', tablename::text;
     end if;
@@ -116,28 +118,32 @@ begin
 
     if (tablename = 'article'::regclass) then
         update article a1
-        set is_last_version = true
+        set last_version = true
         from (
-            select id from article a2
+            select id
+            from article a2
             where a2.version_id = _version_id
-              and a2.is_draft = false
+              and a2.draft = false
               and a2.deleted_at is null
             order by version_number desc
             limit 1
         ) as a3
-        where a1.version_id = _version_id and a1.id = a3.id;
+        where a1.version_id = _version_id
+          and a1.id = a3.id;
     elseif (tablename = 'constitution'::regclass) then
         update constitution c1
-        set is_last_version = true
+        set last_version = true
         from (
-            select id from constitution c2
+            select id
+            from constitution c2
             where c2.version_id = _version_id
-              and c2.is_draft = false
+              and c2.draft = false
               and c2.deleted_at is null
             order by version_number desc
             limit 1
         ) as c3
-        where c1.version_id = _version_id and c1.id = c3.id;
+        where c1.version_id = _version_id
+          and c1.id = c3.id;
     else
         raise exception '% is not implemented', tablename::text;
     end if;
@@ -158,11 +164,11 @@ create or replace function set_to_last_version() returns trigger
     language plpgsql as
 $$
 begin
-    if (new.is_draft = false and new.deleted_at is null) then
+    if (new.draft = false and new.deleted_at is null) then
         perform set_all_version_to_old(tg_table_name::regclass, new.version_id);
-        new.is_last_version = true;
+        new.last_version = true;
     else
-        new.is_last_version = false;
+        new.last_version = false;
     end if;
     return new;
 end;
@@ -172,7 +178,7 @@ create or replace function set_last_version() returns trigger
     language plpgsql as
 $$
 begin
-    if (new.is_draft != old.is_draft or new.deleted_at != old.deleted_at) then
+    if (new.draft != old.draft or new.deleted_at != old.deleted_at) then
         perform set_correct_last_version(tg_table_name::regclass, new.version_id);
     end if;
     return new;
@@ -184,23 +190,23 @@ $$;
 -------------
 create table article
 (
-    id              uuid          default uuid_generate_v4() not null primary key,
-    created_at      timestamptz   default now()              not null,
-    created_by_id   uuid                                     not null references citizen (id),
-    version_id      uuid          default uuid_generate_v4() not null,
-    version_number  int                                      not null,
-    title           text                                     not null check ( length(title) < 128 ),
-    anonymous       boolean       default false              not null,
-    content         text                                     not null check ( content != '' and length(content) < 4096 ),
-    description     text                                     null check ( description != '' and length(description) < 4096 ),
-    tags            varchar(32)[] default '{}'               not null,
-    deleted_at      timestamptz   default null               null,
-    is_draft        boolean       default false              not null,
-    is_last_version boolean       default false              not null,
+    id             uuid          default uuid_generate_v4() not null primary key,
+    created_at     timestamptz   default now()              not null,
+    created_by_id  uuid                                     not null references citizen (id),
+    version_id     uuid          default uuid_generate_v4() not null,
+    version_number int                                      not null,
+    title          text                                     not null check ( length(title) < 128 ),
+    anonymous      boolean       default false              not null,
+    content        text                                     not null check ( content != '' and length(content) < 4096 ),
+    description    text                                     null check ( description != '' and length(description) < 4096 ),
+    tags           varchar(32)[] default '{}'               not null,
+    deleted_at     timestamptz   default null               null,
+    draft          boolean       default false              not null,
+    last_version   boolean       default false              not null,
     unique (version_id, version_number)
 );
 
-create unique index last_version_article_idx on article (is_last_version, version_id) where is_last_version = true;
+create unique index last_version_article_idx on article (last_version, version_id) where last_version = true;
 
 create trigger generate_version_number_trigger
     before insert
@@ -226,21 +232,21 @@ execute function set_last_version();
 
 create table constitution
 (
-    id              uuid        default uuid_generate_v4() not null primary key,
-    created_at      timestamptz default now()              not null,
-    created_by_id   uuid                                   not null references citizen (id),
-    version_id      uuid        default uuid_generate_v4() not null,
-    version_number  int                                    not null,
-    title           text                                   not null check ( length(title) < 128 ),
-    intro           text                                   null check ( length(intro) < 4096 ),
-    anonymous       boolean     default false              not null,
-    deleted_at      timestamptz default null               null,
-    is_draft        boolean     default false              not null,
-    is_last_version boolean     default false              not null,
+    id             uuid        default uuid_generate_v4() not null primary key,
+    created_at     timestamptz default now()              not null,
+    created_by_id  uuid                                   not null references citizen (id),
+    version_id     uuid        default uuid_generate_v4() not null,
+    version_number int                                    not null,
+    title          text                                   not null check ( length(title) < 128 ),
+    intro          text                                   null check ( length(intro) < 4096 ),
+    anonymous      boolean     default false              not null,
+    deleted_at     timestamptz default null               null,
+    draft          boolean     default false              not null,
+    last_version   boolean     default false              not null,
     unique (version_id, version_number)
 );
 
-create unique index last_version_constitution_idx on constitution (is_last_version, version_id) where is_last_version = true;
+create unique index last_version_constitution_idx on constitution (last_version, version_id) where last_version = true;
 
 create trigger generate_version_number_trigger
     before insert

@@ -560,6 +560,13 @@ components:
         version_id:
           $ref: '#/components/schemas/UUID'
 
+    lastVersion:
+      properties:
+        last_version:
+          type: boolean
+          required: false
+          default: false
+
     Paginated:
       properties:
         result:
@@ -696,6 +703,10 @@ components:
               type: boolean
               required: false
               default: true
+            draft:
+              type: boolean
+              required: false
+              default: false
         - $ref: '#/components/schemas/versionId'
     ArticleResponse:
       type: object
@@ -704,6 +715,7 @@ components:
         - $ref: '#/components/schemas/UuidEntity'
         - $ref: '#/components/schemas/CreatedBy'
         - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/lastVersion'
     ArticleRequest:
        $ref: '#/components/schemas/ArticleBase'
 
@@ -727,6 +739,10 @@ components:
               type: boolean
               required: false
               default: true
+            draft:
+              type: boolean
+              required: false
+              default: false
         - $ref: '#/components/schemas/versionId'
     ConstitutionResponse:
       type: object

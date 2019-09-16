@@ -13,7 +13,7 @@ begin
     delete from article_relations;
     delete from article;
 
-    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at, is_draft)
+    insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, created_at, draft)
     select
         uuid_in(md5('article'||row_number() over ())::cstring),
         uuid_in(md5('article_v'||row_number() over () % (_citizen_count / 2))::cstring),

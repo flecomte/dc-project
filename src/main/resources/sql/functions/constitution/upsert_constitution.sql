@@ -13,11 +13,7 @@ begin
     into _id_exist
     from constitution
     where (resource->>'id')::uuid is not null
-      and id = (resource->>'id')::uuid
---       and draft = false
-    ;
-
-    raise notice '%', _id_exist;
+      and id = (resource->>'id')::uuid;
 
     insert into constitution (id, version_id, created_by_id, title, anonymous)
     select
