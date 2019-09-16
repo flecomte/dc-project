@@ -7,6 +7,11 @@ declare
     _citizen_id uuid = (resource#>>'{created_by, id}')::uuid;
     new_id uuid;
     _id_exist boolean;
+    _existing_draft constitution = (
+        select c from constitution c
+        where c.version_id = (resource->>'version_id')::uuid
+          and c.draft = true
+    );
 begin
     -- check if version id already exist
     select count(*) >= 1
@@ -15,16 +20,28 @@ begin
     where (resource->>'id')::uuid is not null
       and id = (resource->>'id')::uuid;
 
-    insert into constitution (id, version_id, created_by_id, title, anonymous)
-    select
-        case when _id_exist then uuid_generate_v4()
-             else coalesce(id, uuid_generate_v4()) end,
-       version_id,
-       _citizen_id,
-       title,
-       anonymous
-    from json_populate_record(null::constitution, resource)
-    returning id into new_id;
+    if (_existing_draft.id is not null) then
+        update constitution c2 set
+            title = c.title,
+            anonymous = c.anonymous,
+            intro = c.intro,
+            draft = c.draft
+        from json_populate_record(null::constitution, resource) c
+        where c2.id = (_existing_draft.id)::uuid
+        returning c2.id into new_id;
+    else
+        insert into constitution (id, version_id, created_by_id, title, intro, anonymous)
+        select
+            case when _id_exist then uuid_generate_v4()
+                 else coalesce(id, uuid_generate_v4()) end,
+           version_id,
+           _citizen_id,
+           title,
+           intro,
+           anonymous
+        from json_populate_record(null::constitution, resource)
+        returning id into new_id;
+    end if;
 
     titles := (resource->>'titles');
 
