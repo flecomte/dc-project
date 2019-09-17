@@ -19,6 +19,9 @@ class Article(
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp() {
+
+    val votes = VoteAggregation(0,0,0)
+
     init {
         tags = tags.distinct()
     }

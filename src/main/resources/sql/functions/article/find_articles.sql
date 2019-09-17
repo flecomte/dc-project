@@ -15,6 +15,7 @@ begin
         select
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by,
+            count_vote('article', a.id) as votes,
             zdb.score(a.ctid) _score
         from article as a
         where (

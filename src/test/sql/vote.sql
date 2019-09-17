@@ -24,6 +24,7 @@ declare
       ]
     }
     $json$;
+    votes jsonb;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -67,6 +68,8 @@ begin
     exception when check_violation then
     end;
 
+    select count_vote('article', '933b6a1b-50c9-42b6-989f-c02a57814ef9') into votes;
+    assert ((votes->>'up')::int = 0), 'vote.up must be 0';
 
     -- delete vote and context
     delete from vote;
