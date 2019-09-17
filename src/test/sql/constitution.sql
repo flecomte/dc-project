@@ -22,7 +22,8 @@ declare
       "tags": [
         "love",
         "test"
-      ]
+      ],
+      "draft":false
     }
     $json$;
     created_constitution json := $json$

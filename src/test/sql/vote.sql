@@ -21,7 +21,8 @@ declare
       "tags": [
         "love",
         "test"
-      ]
+      ],
+      "draft":false
     }
     $json$;
     votes jsonb;

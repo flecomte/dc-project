@@ -22,7 +22,8 @@ declare
       "tags": [
         "love",
         "test"
-      ]
+      ],
+      "draft":false
     }
     $json$;
     _comment_id uuid;
