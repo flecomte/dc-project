@@ -4,8 +4,8 @@ $$
 declare
     new_id uuid;
     _id_exist boolean;
-    _existing_draft article = (
-        select a from article a
+    _existing_draft_id uuid = (
+        select a.id from article a
         where a.version_id = (resource->>'version_id')::uuid
           and a.draft = true
     );
@@ -17,7 +17,7 @@ begin
     where (resource->>'id')::uuid is not null
       and id = (resource->>'id')::uuid;
 
-    if (_existing_draft.id is not null) then
+    if (_existing_draft_id is not null) then
         update article a2 set
             title = a.title,
             anonymous = a.anonymous,
@@ -26,7 +26,7 @@ begin
             tags = a.tags,
             draft = a.draft
         from json_populate_record(null::article, resource) a
-        where a2.id = (_existing_draft.id)::uuid
+        where a2.id = (_existing_draft_id)::uuid
         returning a2.id into new_id;
     else
         insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, draft)

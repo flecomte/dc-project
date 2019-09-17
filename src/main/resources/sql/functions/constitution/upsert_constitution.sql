@@ -7,8 +7,8 @@ declare
     _citizen_id uuid = (resource#>>'{created_by, id}')::uuid;
     new_id uuid;
     _id_exist boolean;
-    _existing_draft constitution = (
-        select c from constitution c
+    _existing_draft_id uuid = (
+        select c.id from constitution c
         where c.version_id = (resource->>'version_id')::uuid
           and c.draft = true
     );
@@ -20,14 +20,14 @@ begin
     where (resource->>'id')::uuid is not null
       and id = (resource->>'id')::uuid;
 
-    if (_existing_draft.id is not null) then
+    if (_existing_draft_id is not null) then
         update constitution c2 set
             title = c.title,
             anonymous = c.anonymous,
             intro = c.intro,
             draft = c.draft
         from json_populate_record(null::constitution, resource) c
-        where c2.id = (_existing_draft.id)::uuid
+        where c2.id = (_existing_draft_id)::uuid
         returning c2.id into new_id;
     else
         insert into constitution (id, version_id, created_by_id, title, intro, anonymous)

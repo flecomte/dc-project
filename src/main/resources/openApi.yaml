@@ -141,7 +141,7 @@ paths:
                 $ref: '#/components/schemas/ArticleResponse'
   /articles/{article}:
     get:
-      summary: Get all articles
+      summary: Get one article
       tags:
         - article
       operationId: getArticle
