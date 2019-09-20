@@ -1,4 +1,4 @@
-create or replace function vote(reference regclass, _target_id uuid, _created_by_id uuid, _note int, _anonymous bool default true) returns void
+create or replace function vote(reference regclass, _target_id uuid, _created_by_id uuid, _note int, _anonymous bool default true, out resource json)
     language plpgsql as
 $$
 begin
@@ -29,6 +29,8 @@ begin
     else
         raise exception '% no implemented', reference::text;
     end if;
+
+    select count_vote(reference, _target_id) into resource;
 end;
 $$;
 

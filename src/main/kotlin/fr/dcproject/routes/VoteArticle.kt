@@ -35,7 +35,7 @@ fun Route.voteArticle(repo: VoteArticleRepository) {
             createdBy = this.citizen
         )
         assertCan(CREATE, vote)
-        repo.vote(vote)
-        call.respond(HttpStatusCode.Created)
+        val votes = repo.vote(vote)
+        call.respond(HttpStatusCode.Created, votes)
     }
 }

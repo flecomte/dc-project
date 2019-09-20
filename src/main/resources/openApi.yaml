@@ -444,6 +444,11 @@ paths:
       responses:
         201:
           description: Return only http status 201 on success
+
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteAggregation'
   /constitutions/{constitution}/vote:
     parameters:
       - name: constitution
@@ -716,6 +721,10 @@ components:
         - $ref: '#/components/schemas/CreatedBy'
         - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/lastVersion'
+        - properties:
+            votes:
+              $ref: '#/components/schemas/VoteAggregation'
+
     ArticleRequest:
        $ref: '#/components/schemas/ArticleBase'
 
@@ -872,6 +881,23 @@ components:
       allOf:
         - $ref: '#/components/schemas/VoteBase'
         - $ref: '#/components/schemas/Extra'
+    VoteAggregation:
+      allOf:
+        - type: object
+          properties:
+            up:
+              type: number
+              minimum: 0
+            neutral:
+              type: number
+              minimum: 0
+            down:
+              type: number
+              minimum: 0
+        - $ref: '#/components/schemas/UpdatedAt'
+
+
+
 
 
 
