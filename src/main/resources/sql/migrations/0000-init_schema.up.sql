@@ -368,11 +368,12 @@ create table follow_citizen
 
 create table comment
 (
-    updated_at  timestamptz default now() not null check ( updated_at >= created_at ),
-    "content"   text                      not null check ( content != '' and length(content) < 4096),
-    parent_id   uuid references comment (id),
-    parents_ids uuid[],
-    deleted_at  timestamptz               null,
+    updated_at        timestamptz default now() not null check ( updated_at >= created_at ),
+    "content"         text                      not null check ( content != '' and length(content) < 4096),
+    parent_id         uuid                      not null,
+    parent_comment_id uuid references comment (id),
+    parents_ids       uuid[],
+    deleted_at        timestamptz               null,
     foreign key (created_by_id) references citizen (id),
     primary key (id)
 ) inherits (extra);
@@ -380,19 +381,24 @@ create table comment
 create index comment_parents_ids_idx
     on comment (parents_ids);
 
+create index parent_id
+    on comment (parent_id);
+
 create or replace function set_comment_parents_ids() returns trigger
     language plpgsql as
 $$
 begin
-    if (new.parent_id is not null) then
+    if (new.parent_comment_id is not null) then
         new.parents_ids = (
             select com.parents_ids || com.id
             from "comment" com
-            where com.id = new.parent_id
+            where com.id = new.parent_comment_id
         );
     else
-        new.parents_ids = null;
+        new.parents_ids = array [new.target_id]::uuid[];
     end if;
+
+    new.parent_id = (new.parents_ids[array_upper(new.parents_ids, 1)]);
 
     return new;
 end;
@@ -409,7 +415,7 @@ create table comment_on_article
     target_reference regclass default 'article'::regclass not null,
     foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references article (id),
-    foreign key (parent_id) references comment_on_article (id),
+    foreign key (parent_comment_id) references comment_on_article (id),
     primary key (id)
 ) inherits (comment);
 
@@ -427,7 +433,7 @@ create table comment_on_constitution
     target_reference regclass default 'constitution'::regclass not null,
     foreign key (created_by_id) references citizen (id),
     foreign key (target_id) references constitution (id),
-    foreign key (parent_id) references comment_on_constitution (id),
+    foreign key (parent_comment_id) references comment_on_constitution (id),
     primary key (id)
 ) inherits (comment);
 

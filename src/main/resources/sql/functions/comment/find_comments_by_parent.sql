@@ -15,7 +15,7 @@ begin
             find_reference_by_id(com.target_id, com.target_reference) as target,
             find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
-        where com.parents_ids @> array[_parent_id]
+        where parent_id = _parent_id
         order by com.parents_ids nulls first, created_at desc,
         com.created_at desc
         limit "limit" offset "offset"

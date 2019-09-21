@@ -93,7 +93,7 @@ begin
         target_id => (created_article->>'id')::uuid,
         created_by_id => _citizen_id,
         content => 'God not exist'::text,
-        parent_id => _comment_id::uuid
+        parent_comment_id => _comment_id::uuid
     ) into _comment_id_response;
 
     select "comment"(
@@ -101,7 +101,7 @@ begin
         target_id => (created_article->>'id')::uuid,
         created_by_id => _citizen_id,
         content => 'are you really sure ?'::text,
-        parent_id => _comment_id_response::uuid
+        parent_comment_id => _comment_id_response::uuid
     ) into _comment_id_response2;
     assert (select count(*) = 3 from "comment"), 'response must be inserted';
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
