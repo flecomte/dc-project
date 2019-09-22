@@ -19,6 +19,17 @@ import fr.dcproject.repository.CommentGeneric as CommentRepository
 object CommentPaths {
     // TODO: change UUID by entity converter
     @Location("/comments/{comment}") class CommentRequest(val comment: UUID)
+
+    @Location("/comments/{comment}/children")
+    class CommentChildrenRequest(
+        val comment: UUID,
+        page: Int = 1,
+        limit: Int = 50,
+        val search: String? = null
+    ) {
+        val page: Int = if (page < 1) 1 else page
+        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    }
 }
 
 @KtorExperimentalLocationsAPI
@@ -28,6 +39,19 @@ fun Route.comment(repo: CommentRepository) {
         assertCan(VIEW, comment)
 
         call.respond(HttpStatusCode.OK, comment)
+    }
+
+    get<CommentPaths.CommentChildrenRequest> {
+        val comments =
+            repo.findByParent(
+                it.comment,
+                it.page,
+                it.limit
+            )
+
+        assertCan(VIEW, comments.result)
+
+        call.respond(HttpStatusCode.OK, comments)
     }
 
     put<CommentPaths.CommentRequest> {

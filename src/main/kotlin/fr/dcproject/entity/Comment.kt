@@ -10,7 +10,8 @@ open class Comment <T: UuidEntity> (
     var content: String,
     var responses: List<Comment<T>>? = null,
     var parent: Comment<T>? = null,
-    var parentsIds: List<UUID>? = null
+    var parentsIds: List<UUID>? = null,
+    val childrenCount: Int? = null
 ): Extra<T>(id, createdBy),
     EntityUpdatedAt by EntityUpdatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp()

@@ -257,8 +257,17 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
   /comments/{comment}:
+    parameters:
+      - name: comment
+        in: path
+        description: The ID of comment
+        example: 701dc504-db49-7e3a-2c0a-32542507ea57
+        required: true
+        schema:
+          type: string
+          format: uuid
     get:
-      summary: Get Comment and children by Comment ID
+      summary: Get Comment by Comment ID
       tags:
         - comment
       responses:
@@ -286,6 +295,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+
+  /comments/{comment}/children:
+    parameters:
+      - name: comment
+        in: path
+        description: The ID of comment
+        example: 701dc504-db49-7e3a-2c0a-32542507ea57
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      summary: Get Comment children by Comment ID
+      tags:
+        - comment
+      responses:
+        200:
+          description: Return Comment children
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+
   /articles/{article}/comments:
     parameters:
       - name: article
@@ -297,7 +336,7 @@ paths:
           type: string
           format: uuid
     get:
-      summary: Get comment and children of one article
+      summary: Get comments of one article
       tags:
         - comment
       responses:
@@ -547,7 +586,7 @@ components:
     CreatedBy:
       properties:
         created_by:
-          $ref: '#/components/schemas/UuidEntity'
+          $ref: '#/components/schemas/CitizenResponse'
 
     CreatedAt:
       properties:
