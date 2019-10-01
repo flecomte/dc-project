@@ -513,6 +513,37 @@ paths:
         201:
           description: Return only http status 201 on success
 
+  /citizens/{citizen}/votes/articles:
+    parameters:
+      - name: citizen
+        in: path
+        description: The ID of citizen
+        example: 35a0a0eb-56ca-24f5-55f3-e0bac0dd048c
+        required: true
+        schema:
+          type: string
+          format: uuid
+    get:
+      security:
+        - JWTAuth: []
+      summary: all article vote for one citizen
+      tags:
+        - vote
+      responses:
+        201:
+          description: Votes
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/VoteResponse'
+
 components:
   parameters:
     page:
