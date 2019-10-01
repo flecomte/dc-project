@@ -38,6 +38,21 @@ paths:
               example:
                 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag
 
+  /citizens/current:
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get Citizen
+      tags:
+        - citizen
+      operationId: getCurrentCitizen
+      responses:
+        200:
+          description: The Citizen object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenResponse'
   /citizens/{citizen}:
     get:
       security:

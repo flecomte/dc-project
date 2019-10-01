@@ -1,5 +1,6 @@
 package fr.dcproject.routes
 
+import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
 import fr.dcproject.security.voter.CitizenVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -19,6 +20,7 @@ object CitizenPaths {
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
     @Location("/citizens/{citizen}") class CitizenRequest(val citizen: Citizen)
+    @Location("/citizens/current") class CurrentCitizenRequest
     @Location("/citizens/{citizen}/follows/articles") class CitizenFollowArticleRequest(val citizen: Citizen)
     @Location("/citizens/{citizen}/follows/constitutions") class CitizenFollowConstitutionRequest(val citizen: Citizen)
 }
@@ -35,5 +37,11 @@ fun Route.citizen(repo: CitizenRepository) {
         assertCan(VIEW, it.citizen)
 
         call.respond(it.citizen)
+    }
+
+    get<CitizenPaths.CurrentCitizenRequest> {
+        assertCan(VIEW, citizen)
+
+        call.respond(citizen)
     }
 }
