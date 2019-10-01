@@ -17,7 +17,7 @@ begin
             find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
         where parent_id = _parent_id
-        order by created_at desc,
+        order by created_at asc,
         com.created_at desc
         limit "limit" offset "offset"
     ) as t;

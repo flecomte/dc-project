@@ -30,7 +30,6 @@ begin
           and created_by_id = _created_by_id
 
         order by
-            created_at desc,
             com.created_at desc
 
         limit "limit" offset "offset"
