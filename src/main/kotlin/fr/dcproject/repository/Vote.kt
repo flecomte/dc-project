@@ -3,10 +3,13 @@ package fr.dcproject.repository
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.VoteAggregation
+import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
+import java.util.*
 import kotlin.reflect.KClass
+import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
 open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<VoteEntity<T>> {
@@ -25,6 +28,26 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
                 "created_by_id" to author.id,
                 "anonymous" to anonymous
             )!!
+    }
+
+    open fun findByCitizen(
+        citizen: CitizenEntity,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<T>> =
+        findByCitizen(citizen.id ?: error("The citizen must have an id"), page, limit)
+
+    open fun findByCitizen(
+        citizenId: UUID,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<T>> {
+        return requester.run {
+            getFunction("find_votes_by_citizen")
+            .select(page, limit,
+                "created_by_id" to citizenId
+            )
+        }
     }
 }
 
