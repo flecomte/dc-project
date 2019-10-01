@@ -1,6 +1,8 @@
 package feature
 
+import com.google.gson.JsonElement
 import com.google.gson.JsonParser
+import com.google.gson.JsonPrimitive
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.ktor.http.ContentType
@@ -10,10 +12,8 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
-import org.junit.jupiter.api.Assertions
-import org.opentest4j.AssertionFailedError
 import kotlin.test.assertEquals
-import kotlin.test.assertTrue
+import kotlin.test.fail
 
 @ImplicitReflectionSerializer
 @KtorExperimentalAPI
@@ -48,12 +48,9 @@ class KtorServerRequestSteps : En {
         }
 
         Then("the response should contain object:") { expected: DataTable ->
-            val call = KtorServerContext.defaultServer.call ?: throw AssertionFailedError("No call")
-            val response = JsonParser().parse(call.response.content).getAsJsonObject()
-
             expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
-                assertTrue(response.has(key))
-                Assertions.assertEquals(valueExpected, response.get(key).asString)
+                val jsonPrimitive = findJsonElement(key) as? JsonPrimitive ?: fail("\"$key\" element isn't json primitive")
+                assertEquals(jsonPrimitive.asString, valueExpected)
             }
         }
 
@@ -61,4 +58,28 @@ class KtorServerRequestSteps : En {
             print(KtorServerContext.defaultServer.call?.response?.content)
         }
     }
+
+    private fun findJsonElement(node: String): JsonElement {
+        var jsonElement: JsonElement = responseJsonElement
+        val elements = node.split("].", "[", ".")
+
+        elements
+            .filter { it.trim().isNotBlank() }
+            .map { it.trim() }
+            .forEach {
+                val asArrayIndex = """^\d+$""".toRegex().find(it)
+
+                jsonElement = if (asArrayIndex != null) {
+                    val index = asArrayIndex.groups.first()!!
+                    jsonElement.asJsonArray.get(index.value.toInt())
+                } else {
+                    jsonElement.asJsonObject.get(it) ?: throw AssertionError("\"$node\" element not found on json response")
+                }
+            }
+
+        return jsonElement
+    }
+
+    private val responseJsonElement: JsonElement
+        get() = JsonParser().parse(KtorServerContext.defaultServer.call?.response?.content).getAsJsonObject() ?: fail("The response isn't valid JSON")
 }
