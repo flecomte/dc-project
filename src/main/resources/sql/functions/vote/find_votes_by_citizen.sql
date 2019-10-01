@@ -1,4 +1,4 @@
-create or replace function find_comments_by_citizen(
+create or replace function find_votes_by_citizen(
     _created_by_id uuid,
     _reference regclass default null,
     "limit" int default 50,
@@ -11,7 +11,7 @@ begin
     select
         json_agg(t),
         (
-            select count(id) from "comment"
+            select count(id) from vote
             where
                   (_reference is null or _reference = target_reference)
               and created_by_id = _created_by_id
@@ -19,22 +19,22 @@ begin
     into resource, total
     from (
         select
-            com.*,
-            find_reference_by_id(com.target_id, _reference) as target,
-            find_citizen_by_id(com.created_by_id) as created_by
+            v.*,
+            find_reference_by_id(v.target_id, _reference) as target,
+            find_citizen_by_id(v.created_by_id) as created_by
 
-        from "comment" as com
+        from vote as v
 
         where
             (_reference is null or _reference = target_reference)
           and created_by_id = _created_by_id
 
         order by
-            com.created_at desc
+            v.created_at desc
 
         limit "limit" offset "offset"
     ) as t;
 end;
 $$;
 
--- drop function if exists find_comments_by_citizen(uuid, regclass, int, int);
+-- drop function if exists find_votes_by_citizen(uuid, regclass, int, int);

@@ -2,7 +2,9 @@ do
 $$
 declare
     created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
+    created_user2    json  := '{"username": "george2", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     _citizen_id      uuid;
+    _citizen_id2      uuid;
     created_citizen json := $json$
     {
       "name": {
@@ -10,6 +12,15 @@ declare
         "last_name": "MICHEL"
       },
       "birthday": "2001-01-01"
+    }
+    $json$;
+    created_citizen2 json := $json$
+    {
+      "name": {
+        "first_name": "George2",
+        "last_name": "MICHEL2"
+      },
+      "birthday": "2001-01-02"
     }
     $json$;
     created_article  json := $json$
@@ -26,14 +37,20 @@ declare
     }
     $json$;
     votes jsonb;
+    votes_of_citizen json;
+    votes_total int;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
+    select insert_user(created_user2) into created_user2;
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', created_user->>'id'), true)::json;
+    created_citizen2 := jsonb_set(created_citizen2::jsonb, '{user}'::text[], jsonb_build_object('id', created_user2->>'id'), true)::json;
 
     -- insert new citizen for context
     select upsert_citizen(created_citizen) into created_citizen;
+    select upsert_citizen(created_citizen2) into created_citizen2;
     _citizen_id := created_citizen->>'id';
+    _citizen_id2 := created_citizen2->>'id';
     created_article := jsonb_set(created_article::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_article#>>'{created_by, id}' = _citizen_id::text, format('citizenId in article must be the same as citizen, %s != %s', created_article#>>'{created_by, id}', _citizen_id::text);
     -- upsert article
@@ -71,6 +88,14 @@ begin
 
     select count_vote('article', '933b6a1b-50c9-42b6-989f-c02a57814ef9') into votes;
     assert ((votes->>'up')::int = 0), 'vote.up must be 0';
+
+    -- Test "find_votes_by_citizen"
+    select resource, total into votes_of_citizen, votes_total from find_votes_by_citizen(_citizen_id2);
+    assert (votes_total = 0), format('votes count for user %s must be 0, instead of %s', _citizen_id2, votes_total);
+
+    select resource, total into votes_of_citizen, votes_total from find_votes_by_citizen(_citizen_id);
+    assert (votes_total = 1), format('votes count for user %s must be 1, instead of %s', _citizen_id, votes_total);
+    assert ((votes_of_citizen#>>'{0,note}')::int = -1), format('the note must be -1, instead of %s', (votes_of_citizen#>>'{0,note}'));
 
     -- delete vote and context
     delete from vote;
