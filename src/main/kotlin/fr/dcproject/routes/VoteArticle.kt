@@ -50,7 +50,7 @@ fun Route.voteArticle(repo: VoteArticleRepository) {
     }
 
     get<VoteArticlePaths.CitizenVoteArticleRequest> {
-        val votes = repo.findByCitizen(it.citizen)
+        val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
         assertCan(VIEW, votes.result)
 
         call.respond(votes)

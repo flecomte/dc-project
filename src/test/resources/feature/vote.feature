@@ -27,5 +27,5 @@ Feature: vote Article
     And the response should contain object:
       | current_page   | 1  |
       | limit          | 50 |
-      | total          | 2  |
-      | result[0].note | -1 |
+      | total          | 1  |
+      | result[0].note | 1  |

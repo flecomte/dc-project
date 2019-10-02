@@ -50,7 +50,7 @@ class KtorServerRequestSteps : En {
         Then("the response should contain object:") { expected: DataTable ->
             expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
                 val jsonPrimitive = findJsonElement(key) as? JsonPrimitive ?: fail("\"$key\" element isn't json primitive")
-                assertEquals(jsonPrimitive.asString, valueExpected)
+                assertEquals(valueExpected, jsonPrimitive.asString)
             }
         }
 

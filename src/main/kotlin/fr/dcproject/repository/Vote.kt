@@ -1,5 +1,6 @@
 package fr.dcproject.repository
 
+import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.VoteAggregation
@@ -30,26 +31,64 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
             )!!
     }
 
-    open fun findByCitizen(
+    fun findByCitizen(
         citizen: CitizenEntity,
+        target: String,
+        typeReference: TypeReference<List<VoteEntity<T>>>,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<VoteEntity<T>> =
-        findByCitizen(citizen.id ?: error("The citizen must have an id"), page, limit)
+        findByCitizen(
+            citizen.id ?: error("The citizen must have an id"),
+            target,
+            typeReference,
+            page,
+            limit
+        )
 
-    open fun findByCitizen(
+    fun findByCitizen(
         citizenId: UUID,
+        target: String,
+        typeReference: TypeReference<List<VoteEntity<T>>>,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<VoteEntity<T>> {
         return requester.run {
             getFunction("find_votes_by_citizen")
-            .select(page, limit,
-                "created_by_id" to citizenId
-            )
+            .select(page, limit, typeReference, mapOf(
+                "created_by_id" to citizenId,
+                "reference" to target
+            ))
         }
     }
 }
 
-class VoteArticle (requester: Requester): Vote<Article>(requester)
-class VoteConstitution (requester: Requester): Vote<Constitution>(requester)
+class VoteArticle (requester: Requester): Vote<Article>(requester) {
+    fun findByCitizen(
+        citizen: CitizenEntity,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<Article>> =
+        findByCitizen(
+            citizen,
+            "article",
+            object: TypeReference<List<VoteEntity<Article>>>() {},
+            page,
+            limit
+        )
+}
+
+class VoteConstitution (requester: Requester): Vote<Constitution>(requester) {
+    fun findByCitizen(
+        citizen: CitizenEntity,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<Constitution>> =
+        findByCitizen(
+            citizen,
+            "constitution",
+            object: TypeReference<List<VoteEntity<Constitution>>>() {},
+            page,
+            limit
+        )
+}
