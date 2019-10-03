@@ -1,5 +1,6 @@
 package feature
 
+import com.google.gson.JsonArray
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.google.gson.JsonPrimitive
@@ -59,27 +60,24 @@ class KtorServerRequestSteps : En {
         }
     }
 
-    private fun findJsonElement(node: String): JsonElement {
+    private fun findJsonElement(path: String): JsonElement {
         var jsonElement: JsonElement = responseJsonElement
-        val elements = node.split("].", "[", ".")
 
-        elements
+        path
+            .split("].", "[", ".")
             .filter { it.trim().isNotBlank() }
             .map { it.trim() }
             .forEach {
-                val asArrayIndex = """^\d+$""".toRegex().find(it)
-
-                jsonElement = if (asArrayIndex != null) {
-                    val index = asArrayIndex.groups.first()!!
-                    jsonElement.asJsonArray.get(index.value.toInt())
+                jsonElement = if (jsonElement is JsonArray) {
+                    jsonElement.asJsonArray.get(it.toInt())
                 } else {
-                    jsonElement.asJsonObject.get(it) ?: throw AssertionError("\"$node\" element not found on json response")
-                }
+                    jsonElement.asJsonObject.get(it)
+                } ?: throw AssertionError("\"$path\" element not found on json response")
             }
 
         return jsonElement
     }
 
     private val responseJsonElement: JsonElement
-        get() = JsonParser().parse(KtorServerContext.defaultServer.call?.response?.content).getAsJsonObject() ?: fail("The response isn't valid JSON")
+        get() = JsonParser().parse(KtorServerContext.defaultServer.call?.response?.content)
 }
