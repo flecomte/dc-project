@@ -15,6 +15,7 @@ import io.ktor.locations.put
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Vote as VoteEntity
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
@@ -33,6 +34,14 @@ object VoteArticlePaths {
         limit: Int = 50,
         val search: String? = null
     ): PaginatedRequestI by PaginatedRequest(page, limit)
+
+    @Location("/citizens/{citizen}/votes")
+    class CitizenVotesByIdsRequest(val citizen: Citizen, id: List<String>) {
+        val id: List<UUID> = id
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .map { UUID.fromString(it) }
+    }
 }
 
 @KtorExperimentalLocationsAPI
@@ -52,6 +61,13 @@ fun Route.voteArticle(repo: VoteArticleRepository) {
     get<VoteArticlePaths.CitizenVoteArticleRequest> {
         val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
         assertCan(VIEW, votes.result)
+
+        call.respond(votes)
+    }
+
+    get<VoteArticlePaths.CitizenVotesByIdsRequest> {
+        val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
+        assertCan(VIEW, votes)
 
         call.respond(votes)
     }

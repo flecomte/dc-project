@@ -62,14 +62,7 @@ paths:
         - citizen
       operationId: getCitizen
       parameters:
-        - name: citizen
-          in: path
-          description: ID of citizen
-          example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-          required: true
-          schema:
-            type: string
-            format: uuid
+        - $ref: '#/components/parameters/citizen'
       responses:
         200:
           description: The Citizen object
@@ -79,6 +72,40 @@ paths:
                 $ref: '#/components/schemas/CitizenResponse'
         404:
           description: Citizen not found
+  /citizens/{citizen}/votes:
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get Citizen
+      tags:
+        - citizen
+      operationId: getCitizenVotes
+      parameters:
+        - $ref: '#/components/parameters/citizen'
+        - name: id
+          in: query
+          required: true
+          example:
+            - 1329ab90-edae-cfed-f863-c8cb069fa327
+            - cab54e50-ce85-bba0-da23-fc9f75feeaf5
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+
+      responses:
+        200:
+          description: The Votes objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VoteResponse'
+        404:
+          description: Citizen not found
+
   /citizens:
     get:
       security:
@@ -608,6 +635,16 @@ components:
       required: false
       schema:
         type: string
+
+    citizen:
+      name: citizen
+      in: path
+      description: ID of citizen
+      example: 770d46e8-c458-417d-beaf-0f2faa109b26
+      required: true
+      schema:
+        type: string
+        format: uuid
 
   securitySchemes:
     JWTAuth:

@@ -32,21 +32,6 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
     }
 
     fun findByCitizen(
-        citizen: CitizenEntity,
-        target: String,
-        typeReference: TypeReference<List<VoteEntity<T>>>,
-        page: Int = 1,
-        limit: Int = 50
-    ): Paginated<VoteEntity<T>> =
-        findByCitizen(
-            citizen.id ?: error("The citizen must have an id"),
-            target,
-            typeReference,
-            page,
-            limit
-        )
-
-    fun findByCitizen(
         citizenId: UUID,
         target: String,
         typeReference: TypeReference<List<VoteEntity<T>>>,
@@ -61,6 +46,21 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
             ))
         }
     }
+
+    fun findCitizenVotesByTargets(
+        citizen: CitizenEntity,
+        targets: List<UUID>
+    ): List<VoteEntity<*>> {
+        val typeReference = object: TypeReference<List<VoteEntity<UuidEntity>>>() {}
+        return requester.run {
+            val citizenId = citizen.id ?: error("The citizen must have an id")
+            getFunction("find_citizen_votes_by_target_ids")
+                .select(typeReference, mapOf(
+                    "citizen_id" to citizenId,
+                    "ids" to targets
+                ))
+        }
+    }
 }
 
 class VoteArticle (requester: Requester): Vote<Article>(requester) {
@@ -70,7 +70,7 @@ class VoteArticle (requester: Requester): Vote<Article>(requester) {
         limit: Int = 50
     ): Paginated<VoteEntity<Article>> =
         findByCitizen(
-            citizen,
+            citizen.id ?: error("The citizen must have an id"),
             "article",
             object: TypeReference<List<VoteEntity<Article>>>() {},
             page,
@@ -85,7 +85,7 @@ class VoteConstitution (requester: Requester): Vote<Constitution>(requester) {
         limit: Int = 50
     ): Paginated<VoteEntity<Constitution>> =
         findByCitizen(
-            citizen,
+            citizen.id ?: error("The citizen must have an id"),
             "constitution",
             object: TypeReference<List<VoteEntity<Constitution>>>() {},
             page,

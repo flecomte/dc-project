@@ -450,8 +450,9 @@ execute procedure set_comment_parents_ids();
 
 create table vote
 (
-    anonymous boolean default true not null,
-    note      int                  not null check ( note >= -1 and note <= 1 ),
+    updated_at timestamptz default now() not null check ( updated_at >= created_at ),
+    anonymous  boolean     default true  not null,
+    note       int                       not null check ( note >= -1 and note <= 1 ),
     foreign key (created_by_id) references citizen (id),
     primary key (id),
     unique (created_by_id, target_id)

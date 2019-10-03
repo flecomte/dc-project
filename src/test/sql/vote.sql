@@ -38,6 +38,7 @@ declare
     $json$;
     votes jsonb;
     votes_of_citizen json;
+    votes_of_citizen_for_targets json;
     votes_total int;
 begin
     -- insert user for context
@@ -96,6 +97,11 @@ begin
     select resource, total into votes_of_citizen, votes_total from find_votes_by_citizen(_citizen_id);
     assert (votes_total = 1), format('votes count for user %s must be 1, instead of %s', _citizen_id, votes_total);
     assert ((votes_of_citizen#>>'{0,note}')::int = -1), format('the note must be -1, instead of %s', (votes_of_citizen#>>'{0,note}'));
+
+    -- test "find_citizen_votes_by_target_ids"
+    select find_citizen_votes_by_target_ids(_citizen_id, array[(created_article->>'id')]::uuid[]) into votes_of_citizen_for_targets;
+    assert (json_array_length(votes_of_citizen_for_targets) = 1), format('the function must be return 1 vote, instead of %s', json_array_length(votes_of_citizen_for_targets));
+    assert (votes_of_citizen_for_targets#>>'{0,target_id}' = created_article->>'id'), format('target_id of vote must be %s, instead of %s', created_article->>'id', votes_of_citizen_for_targets#>>'{0,target_id}');
 
     -- delete vote and context
     delete from vote;
