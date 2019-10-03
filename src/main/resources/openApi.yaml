@@ -267,19 +267,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
   /constitutions/{constitution}:
+    parameters:
+      - $ref: '#/components/parameters/constitution'
     get:
       summary: Get all constitutions
       tags:
         - constitution
       operationId: getConstitutions
-      parameters:
-        - name: constitution
-          in: query
-          required: true
-          description: the ID of constitution
-          schema:
-            type: string
-            format: uuid
       responses:
         200:
           description: The Constitution objects
@@ -390,14 +384,7 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
   /constitutions/{constitution}/comments:
     parameters:
-      - name: constitution
-        in: path
-        description: The ID of constitution
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/constitution'
     get:
       summary: Get comment and children of one constitution
       tags:
@@ -450,14 +437,7 @@ paths:
           description: Return only http status 204 on success
   /constitutions/{constitution}/follows:
     parameters:
-      - name: constitution
-        in: path
-        description: The ID of constitution
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/constitution'
     post:
       security:
         - JWTAuth: []
@@ -500,14 +480,7 @@ paths:
                 $ref: '#/components/schemas/VoteAggregation'
   /constitutions/{constitution}/vote:
     parameters:
-      - name: constitution
-        in: path
-        description: The ID of constitution
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/constitution'
     put:
       security:
         - JWTAuth: []
@@ -612,6 +585,16 @@ components:
       in: path
       required: true
       description: the ID of article
+      schema:
+        type: string
+        format: uuid
+
+    constitution:
+      name: constitution
+      in: path
+      required: true
+      description: the ID of constitution
+      example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
       schema:
         type: string
         format: uuid
