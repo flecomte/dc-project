@@ -54,6 +54,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CitizenResponse'
   /citizens/{citizen}:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
     get:
       security:
         - JWTAuth: []
@@ -61,8 +63,6 @@ paths:
       tags:
         - citizen
       operationId: getCitizen
-      parameters:
-        - $ref: '#/components/parameters/citizen'
       responses:
         200:
           description: The Citizen object
@@ -73,6 +73,8 @@ paths:
         404:
           description: Citizen not found
   /citizens/{citizen}/votes:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
     get:
       security:
         - JWTAuth: []
@@ -81,7 +83,6 @@ paths:
         - citizen
       operationId: getCitizenVotes
       parameters:
-        - $ref: '#/components/parameters/citizen'
         - name: id
           in: query
           required: true
@@ -182,19 +183,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
   /articles/{article}:
+    parameters:
+      - $ref: '#/components/parameters/article'
     get:
       summary: Get one article
       tags:
         - article
       operationId: getArticle
-      parameters:
-        - name: article
-          in: path
-          required: true
-          description: the ID of article
-          schema:
-            type: string
-            format: uuid
       responses:
         200:
           description: The Article objects
@@ -203,19 +198,13 @@ paths:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
   /articles/{article}/versions:
+    parameters:
+      - $ref: '#/components/parameters/article'
     get:
       summary: Get all versions of articles
       tags:
         - article
       operationId: getArticleVersions
-      parameters:
-        - name: article
-          in: path
-          required: true
-          description: the ID of article
-          schema:
-            type: string
-            format: uuid
       responses:
         200:
           description: The versions of Article
@@ -369,14 +358,7 @@ paths:
 
   /articles/{article}/comments:
     parameters:
-      - name: article
-        in: path
-        description: The ID of article
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/article'
     get:
       summary: Get comments of one article
       tags:
@@ -447,14 +429,7 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
   /articles/{article}/follows:
     parameters:
-      - name: article
-        in: path
-        description: The ID of article
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/article'
     post:
       security:
         - JWTAuth: []
@@ -503,14 +478,7 @@ paths:
           description: Return only http status 204 on success
   /articles/{article}/vote:
     parameters:
-      - name: article
-        in: path
-        description: The ID of article
-        example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/article'
     put:
       security:
         - JWTAuth: []
@@ -557,14 +525,7 @@ paths:
 
   /citizens/{citizen}/votes/articles:
     parameters:
-      - name: citizen
-        in: path
-        description: The ID of citizen
-        example: 35a0a0eb-56ca-24f5-55f3-e0bac0dd048c
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/article'
     get:
       security:
         - JWTAuth: []
@@ -642,6 +603,15 @@ components:
       description: ID of citizen
       example: 770d46e8-c458-417d-beaf-0f2faa109b26
       required: true
+      schema:
+        type: string
+        format: uuid
+
+    article:
+      name: article
+      in: path
+      required: true
+      description: the ID of article
       schema:
         type: string
         format: uuid
