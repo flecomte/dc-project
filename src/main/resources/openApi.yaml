@@ -283,14 +283,7 @@ paths:
                 $ref: '#/components/schemas/ConstitutionResponse'
   /comments/{comment}:
     parameters:
-      - name: comment
-        in: path
-        description: The ID of comment
-        example: 701dc504-db49-7e3a-2c0a-32542507ea57
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/comment'
     get:
       summary: Get Comment by Comment ID
       tags:
@@ -323,14 +316,7 @@ paths:
 
   /comments/{comment}/children:
     parameters:
-      - name: comment
-        in: path
-        description: The ID of comment
-        example: 701dc504-db49-7e3a-2c0a-32542507ea57
-        required: true
-        schema:
-          type: string
-          format: uuid
+      - $ref: '#/components/parameters/comment'
     get:
       summary: Get Comment children by Comment ID
       tags:
@@ -595,6 +581,16 @@ components:
       required: true
       description: the ID of constitution
       example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+      schema:
+        type: string
+        format: uuid
+
+    comment:
+      name: comment
+      in: path
+      description: The ID of comment
+      example: 701dc504-db49-7e3a-2c0a-32542507ea57
+      required: true
       schema:
         type: string
         format: uuid
