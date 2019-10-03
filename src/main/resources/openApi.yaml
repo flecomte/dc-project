@@ -80,6 +80,7 @@ paths:
         - JWTAuth: []
       summary: Get Citizen
       tags:
+        - vote
         - citizen
       operationId: getCitizenVotes
       parameters:
@@ -343,6 +344,7 @@ paths:
       summary: Get comments of one article
       tags:
         - comment
+        - article
       responses:
         200:
           description: Return Comment and children
@@ -356,6 +358,7 @@ paths:
       summary: Create Comment to article
       tags:
         - comment
+        - article
       requestBody:
         content:
           application/json:
@@ -375,6 +378,7 @@ paths:
       summary: Get comment and children of one constitution
       tags:
         - comment
+        - constitution
       responses:
         200:
           description: Return Comment and children
@@ -388,6 +392,7 @@ paths:
       summary: Create Comment to constitution
       tags:
         - comment
+        - constitution
       requestBody:
         content:
           application/json:
@@ -409,6 +414,7 @@ paths:
       summary: Follow one article
       tags:
         - follow
+        - article
       responses:
         201:
           description: Return only http status 201 on success
@@ -418,6 +424,7 @@ paths:
       summary: Unfollow one article
       tags:
         - follow
+        - article
       responses:
         204:
           description: Return only http status 204 on success
@@ -430,6 +437,7 @@ paths:
       summary: Follow one constitution
       tags:
         - follow
+        - constitution
       responses:
         201:
           description: Return only http status 201 on success
@@ -439,6 +447,7 @@ paths:
       summary: Unfollow one constitution
       tags:
         - follow
+        - constitution
       responses:
         204:
           description: Return only http status 204 on success
@@ -451,6 +460,7 @@ paths:
       summary: Vote for one article
       tags:
         - vote
+        - article
       requestBody:
         content:
           application/json:
@@ -473,6 +483,7 @@ paths:
       summary: Vote for one constitution
       tags:
         - vote
+        - constitution
       requestBody:
         content:
           application/json:
@@ -491,6 +502,8 @@ paths:
       summary: all article vote for one citizen
       tags:
         - vote
+        - article
+        - citizen
       responses:
         201:
           description: Votes
