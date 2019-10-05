@@ -647,6 +647,12 @@ select zdb.define_field_mapping('article', 'description', '{
   "search_analyzer": "fr_analyzer"
 }');
 
+select zdb.define_field_mapping('article', 'tags', '{
+  "type": "text",
+  "analyzer": "name_analyzer",
+  "search_analyzer": "name_analyzer"
+}');
+
 create index article_idx
     on article
         using zombodb ((article.*))

@@ -9,7 +9,7 @@ create or replace function find_articles(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from article a where (_search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description}', _search)) and a.last_version = true)
+    select json_agg(t), (select count(id) from article a where (_search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)) and a.last_version = true)
     into resource, total
     from (
         select
@@ -21,7 +21,7 @@ begin
         where (
               _search is null
            or _search = ''
-           or a ==> dsl.multi_match('{title^3, content, description}', _search)
+           or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)
         ) and a.last_version = true
         order by
         _score desc,
