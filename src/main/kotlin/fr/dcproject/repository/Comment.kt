@@ -70,9 +70,7 @@ abstract class Comment <T: UuidEntity>(override var requester: Requester): Repos
             .getFunction("comment")
             .sendQuery(
                 "reference" to reference,
-                "target_id" to comment.target.id,
-                "created_by_id" to comment.createdBy?.id,
-                "content" to comment.content
+                "resource" to comment
             )
     }
 

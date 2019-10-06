@@ -7,7 +7,7 @@ create or replace function find_comments_by_target(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from "comment" c3 where c3.parent_id = _target_id)
+    select json_agg(t), (select count(id) from "comment" c3 where c3.target_id = _target_id)
     into resource, total
     from (
         select
@@ -16,7 +16,7 @@ begin
             find_reference_by_id(com.target_id, com.target_reference) as target,
             find_citizen_by_id(com.created_by_id) as created_by
         from "comment" as com
-        where com.parent_id = _target_id
+        where com.target_id = _target_id
         order by created_at asc,
         com.created_at desc
         limit "limit" offset "offset"

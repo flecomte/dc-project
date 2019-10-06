@@ -34,6 +34,7 @@ declare
     _find_comments_by_target_result json;
     _find_comments_by_parent_result json;
     _find_comments_by_id_result json;
+    _comment json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -49,17 +50,22 @@ begin
     select upsert_article(created_article) into created_article;
 
 
+    _comment = json_build_object(
+        'id', 'a2962f49-74e6-4f20-9c13-36f3ccbc4ad7',
+        'target', jsonb_build_object('id', created_article->>'id'),
+        'created_by', jsonb_build_object('id', _citizen_id),
+        'content', 'Ho my god !'
+    );
     select "comment"(
         reference => 'article'::regclass,
-        target_id => (created_article->>'id')::uuid,
-        created_by_id => _citizen_id,
-        content => 'Ho my god !'::text
+        resource => _comment
     ) into _comment_id;
+
     assert (select count(*) = 1 from "comment"), 'comment must be inserted, "' || (select count(*) from "comment") || '" exist';
     assert (select com.content = 'Ho my god !' from "comment" com), 'the content of comment must be "Ho my god !" instead of "' || (select com.content from "comment" as com) || '"';
 
     select find_comment_by_id(_comment_id) into _find_comments_by_id_result;
-    assert (_find_comments_by_id_result->>'content' = 'Ho my god !'), 'content of comment must be "Ho my god !"';
+    assert (_find_comments_by_id_result->>'content' = 'Ho my god !'), format('content of comment must be "Ho my god !" instead of %s', _find_comments_by_id_result->>'content');
 
     perform edit_comment(
         _id => _comment_id,
@@ -88,20 +94,29 @@ begin
     assert (_selected_comments_total = 0), 'the number of comments for this citizen must be 0, "' || _selected_comments_total || '" returned';
 
 
+    _comment = json_build_object(
+        'id', '50962646-07b6-42a3-9798-d756b9b6e2ba',
+        'target', jsonb_build_object('id', created_article->>'id'),
+        'created_by', jsonb_build_object('id', _citizen_id),
+        'content', 'God not exist',
+        'parent', json_build_object('id', _comment_id)
+    );
     select "comment"(
         reference => 'article'::regclass,
-        target_id => (created_article->>'id')::uuid,
-        created_by_id => _citizen_id,
-        content => 'God not exist'::text,
-        parent_comment_id => _comment_id::uuid
+        resource => _comment
     ) into _comment_id_response;
 
+
+    _comment = json_build_object(
+            'id', 'ce82e683-23a8-4977-92fb-8d61a3ec995a',
+            'target', jsonb_build_object('id', created_article->>'id'),
+            'created_by', jsonb_build_object('id', _citizen_id),
+            'content', 'are you really sure ?',
+            'parent', json_build_object('id', _comment_id_response)
+        );
     select "comment"(
         reference => 'article'::regclass,
-        target_id => (created_article->>'id')::uuid,
-        created_by_id => _citizen_id,
-        content => 'are you really sure ?'::text,
-        parent_comment_id => _comment_id_response::uuid
+        resource => _comment
     ) into _comment_id_response2;
     assert (select count(*) = 3 from "comment"), 'response must be inserted';
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
@@ -116,12 +131,12 @@ begin
     assert (_find_comments_by_target_result#>>'{1,content}') = 'God not exist', 'the second content must contain "God not exist", "' || (_find_comments_by_target_result#>>'{1,content}') || '" returned';
     assert (_find_comments_by_target_result#>>'{2,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_target_result#>>'{2,content}') || '" returned';
 
+    raise notice '%', (_find_comments_by_target_result#>>'{0,id}');
     select resource into _find_comments_by_parent_result
-    from find_comments_by_parent((_find_comments_by_target_result#>>'{0,id}')::uuid);
-    assert json_array_length(_find_comments_by_parent_result) = 2,
-        'the result should contain 2 comment, ' || json_array_length(_find_comments_by_parent_result) || ' returned';
-    assert (_find_comments_by_parent_result#>>'{0,content}') = 'God not exist', 'the second content must contain "God not exist", "' || (_find_comments_by_parent_result#>>'{0,content}') || '" returned';
-    assert (_find_comments_by_parent_result#>>'{1,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_parent_result#>>'{1,content}') || '" returned';
+    from find_comments_by_parent((_find_comments_by_target_result#>>'{1,id}')::uuid);
+    assert json_array_length(_find_comments_by_parent_result) = 1,
+        'the result should contain 1 comment, ' || json_array_length(_find_comments_by_parent_result) || ' returned';
+    assert (_find_comments_by_parent_result#>>'{0,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_parent_result#>>'{1,content}') || '" returned';
 
     -- delete comment and context
     delete from "comment";
