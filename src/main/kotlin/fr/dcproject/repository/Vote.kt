@@ -2,6 +2,7 @@ package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.entity.Article
+import fr.dcproject.entity.Comment
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.VoteAggregation
 import fr.postgresjson.connexion.Paginated
@@ -17,7 +18,14 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
     override val entityName = VoteEntity::class as KClass<VoteEntity<T>>
 
     fun vote(vote: VoteEntity<T>): VoteAggregation {
-        val reference = vote.target::class.simpleName!!.toLowerCase()
+        val target = vote.target
+        val reference = if (target is Comment<*>) {
+            target::class.simpleName!!.toLowerCase() +
+            "_on_" +
+            target.target::class.simpleName!!.toLowerCase()
+        } else {
+            target::class.simpleName!!.toLowerCase()
+        }
         val author = vote.createdBy ?: error("vote must be contain an author")
         val anonymous = author.voteAnonymous
         return requester
@@ -73,6 +81,21 @@ class VoteArticle (requester: Requester): Vote<Article>(requester) {
             citizen.id ?: error("The citizen must have an id"),
             "article",
             object: TypeReference<List<VoteEntity<Article>>>() {},
+            page,
+            limit
+        )
+}
+
+class VoteArticleComment (requester: Requester): Vote<Comment<Article>>(requester) {
+    fun findByCitizen(
+        citizen: CitizenEntity,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<Comment<Article>>> =
+        findByCitizen(
+            citizen.id ?: error("The citizen must have an id"),
+            "article",
+            object: TypeReference<List<VoteEntity<Comment<Article>>>>() {},
             page,
             limit
         )

@@ -2,7 +2,10 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
-import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest.Content
+import fr.dcproject.repository.CommentArticle
+import fr.dcproject.repository.VoteArticleComment
+import fr.dcproject.routes.VoteArticlePaths.ArticleCommentVoteRequest
+import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.dcproject.security.voter.VoteVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -27,6 +30,11 @@ object VoteArticlePaths {
         data class Content(var note: Int)
     }
 
+    @Location("/articles/{article}/comments/{comment}/vote")
+    class ArticleCommentVoteRequest(val article: ArticleEntity, val comment: UUID) {
+        data class Content(var note: Int)
+    }
+
     @Location("/citizens/{citizen}/votes/articles")
     class CitizenVoteArticleRequest(
         val citizen: Citizen,
@@ -45,9 +53,9 @@ object VoteArticlePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.voteArticle(repo: VoteArticleRepository) {
-    put<VoteArticlePaths.ArticleVoteRequest> {
-        val content = call.receive<Content>()
+fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteArticleComment, commentRepo: CommentArticle) {
+    put<ArticleVoteRequest> {
+        val content = call.receive<ArticleVoteRequest.Content>()
         val vote = VoteEntity(
             target = it.article,
             note = content.note,
@@ -55,6 +63,19 @@ fun Route.voteArticle(repo: VoteArticleRepository) {
         )
         assertCan(CREATE, vote)
         val votes = repo.vote(vote)
+        call.respond(HttpStatusCode.Created, votes)
+    }
+
+    put<ArticleCommentVoteRequest> {
+        val comment = commentRepo.findById(it.comment)!!
+        val content = call.receive<ArticleCommentVoteRequest.Content>()
+        val vote = VoteEntity(
+            target = comment,
+            note = content.note,
+            createdBy = this.citizen
+        )
+        assertCan(CREATE, vote)
+        val votes = voteCommentRepo.vote(vote)
         call.respond(HttpStatusCode.Created, votes)
     }
 

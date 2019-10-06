@@ -164,7 +164,7 @@ fun Application.module(env: Env = PROD) {
             comment(get())
             commentArticle(get())
             commentConstitution(get())
-            voteArticle(get())
+            voteArticle(get(), get(), get())
             voteConstitution(get())
         }
     }
