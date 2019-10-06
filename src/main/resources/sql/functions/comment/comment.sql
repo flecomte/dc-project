@@ -15,7 +15,7 @@ begin
         insert into comment_on_constitution (id, created_by_id, target_id, content, parent_comment_id)
         values (_new_id, _created_by_id, _target_id, _content, _parent_comment_id);
     else
-        raise exception 'comment with target as "%", is no implemented', reference::text;
+        raise exception 'comment with target as "%", is not implemented', reference::text;
     end if;
     _id = _new_id;
 end;

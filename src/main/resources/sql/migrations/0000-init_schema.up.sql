@@ -77,7 +77,7 @@ begin
         order by version_number desc
         limit 1;
     else
-        raise exception '% is not implemented', tablename::text;
+        raise exception '% is not implemented for function "generate_version_number"', tablename::text;
     end if;
 
     if not found then
@@ -103,7 +103,7 @@ begin
         where c.version_id = _version_id
           and c.last_version = true;
     else
-        raise exception '% is not implemented', tablename::text;
+        raise exception '% is not implemented for function "set_all_version_to_old"', tablename::text;
     end if;
 end;
 $$;
@@ -145,7 +145,7 @@ begin
         where c1.version_id = _version_id
           and c1.id = c3.id;
     else
-        raise exception '% is not implemented', tablename::text;
+        raise exception '% is not implemented for function "set_correct_last_version"', tablename::text;
     end if;
 end;
 $$;

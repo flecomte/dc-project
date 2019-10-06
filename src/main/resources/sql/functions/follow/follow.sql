@@ -15,7 +15,7 @@ begin
         values (_created_by_id, _target_id)
         on conflict (created_by_id, target_id) do nothing;
     else
-        raise exception '% no implemented', reference::text;
+        raise exception '% no implemented for follow', reference::text;
     end if;
 end;
 $$;

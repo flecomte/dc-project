@@ -31,7 +31,7 @@ begin
           anonymous = excluded.anonymous,
           updated_at = now();
     else
-        raise exception '% no implemented', reference::text;
+        raise exception '% no implemented for vote', reference::text;
     end if;
 
     select count_vote(reference, _target_id) into resource;
