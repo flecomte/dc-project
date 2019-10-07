@@ -1,4 +1,4 @@
-create or replace function count_vote(reference regclass, _target_id uuid, out resource json)
+create or replace function count_vote(_target_id uuid, out resource json)
     language plpgsql as
 $$
 declare
@@ -16,8 +16,7 @@ begin
                 when  1 then 'up'
             end) as label
         from vote v
-        where v.target_reference = reference
-          and v.target_id = _target_id
+        where v.target_id = _target_id
         group by v.note
         order by v.note
     ) t;
@@ -26,4 +25,4 @@ begin
 end;
 $$;
 
--- drop function if exists count_vote(regclass,uuid);
+-- drop function if exists count_vote(uuid);

@@ -87,7 +87,7 @@ begin
     exception when check_violation then
     end;
 
-    select count_vote('article', '933b6a1b-50c9-42b6-989f-c02a57814ef9') into votes;
+    select count_vote('933b6a1b-50c9-42b6-989f-c02a57814ef9') into votes;
     assert ((votes->>'up')::int = 0), 'vote.up must be 0';
 
     -- Test "find_votes_by_citizen"

@@ -8,7 +8,7 @@ begin
         select
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by,
-            count_vote('article', a.id) as votes
+            count_vote(a.id) as votes
         into resource
         from article as a
         where a.id = _id

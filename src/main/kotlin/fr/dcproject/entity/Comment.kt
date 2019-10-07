@@ -14,4 +14,5 @@ open class Comment <T: UuidEntity> (
     val childrenCount: Int? = null
 ): Extra<T>(id, createdBy, target),
     EntityUpdatedAt by EntityUpdatedAtImp(),
-    EntityDeletedAt by EntityDeletedAtImp()
+    EntityDeletedAt by EntityDeletedAtImp(),
+    Votable by VotableImp()

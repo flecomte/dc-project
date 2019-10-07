@@ -833,9 +833,7 @@ components:
         - $ref: '#/components/schemas/CreatedBy'
         - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/lastVersion'
-        - properties:
-            votes:
-              $ref: '#/components/schemas/VoteAggregation'
+        - $ref: '#/components/schemas/Votable'
 
     ArticleRequest:
        $ref: '#/components/schemas/ArticleBase'
@@ -956,6 +954,7 @@ components:
         - $ref: '#/components/schemas/CommentBase'
         - $ref: '#/components/schemas/UpdatedAt'
         - $ref: '#/components/schemas/Extra'
+        - $ref: '#/components/schemas/Votable'
         - type: object
           properties:
             parents_ids:
@@ -1007,7 +1006,11 @@ components:
               type: number
               minimum: 0
         - $ref: '#/components/schemas/UpdatedAt'
-
+    Votable:
+      type: object
+      properties:
+        votes:
+          $ref: '#/components/schemas/VoteAggregation'
 
 
 

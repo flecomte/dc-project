@@ -34,7 +34,7 @@ begin
         raise exception '% no implemented for vote', reference::text;
     end if;
 
-    select count_vote(reference, _target_id) into resource;
+    select count_vote(_target_id) into resource;
 end;
 $$;
 

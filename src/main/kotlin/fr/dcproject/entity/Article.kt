@@ -18,9 +18,8 @@ class Article(
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy),
-    EntityDeletedAt by EntityDeletedAtImp() {
-
-    val votes = VoteAggregation(0,0,0)
+    EntityDeletedAt by EntityDeletedAtImp(),
+    Votable by VotableImp() {
 
     init {
         tags = tags.distinct()
