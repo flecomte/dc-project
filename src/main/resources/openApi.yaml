@@ -405,6 +405,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+
   /articles/{article}/follows:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -451,6 +452,7 @@ paths:
       responses:
         204:
           description: Return only http status 204 on success
+
   /articles/{article}/vote:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -492,6 +494,31 @@ paths:
       responses:
         201:
           description: Return only http status 201 on success
+  /comments/{comment}/vote:
+    parameters:
+      - $ref: '#/components/parameters/comment'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Vote for a comment
+      tags:
+        - vote
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        201:
+          description: Return votes aggregation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteAggregation'
+        404:
+          description: article or comment not found
+
 
   /citizens/{citizen}/votes/articles:
     parameters:
@@ -584,6 +611,7 @@ components:
       in: path
       required: true
       description: the ID of article
+      example: d91aa0cd-61d6-83cc-41bb-8d5656e130f7
       schema:
         type: string
         format: uuid

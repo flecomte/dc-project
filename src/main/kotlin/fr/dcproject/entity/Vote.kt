@@ -8,10 +8,10 @@ import java.util.*
 open class Vote <T: UuidEntity> (
     id: UUID = UUID.randomUUID(),
     createdBy: Citizen,
-    override var target: T,
+    target: T,
     var note: Int,
     var anonymous: Boolean = true
-): Extra<T>(id, createdBy),
+): Extra<T>(id, createdBy, target),
     EntityUpdatedAt by EntityUpdatedAtImp() {
     init {
         if (note > 1 && note < -1) {

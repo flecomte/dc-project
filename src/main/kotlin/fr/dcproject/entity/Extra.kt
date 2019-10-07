@@ -8,11 +8,14 @@ interface ExtraI <T: EntityI>:
     EntityCreatedAt,
     EntityCreatedBy<Citizen>{
     var target: T
+    var targetReference: String
 }
 
 abstract class Extra<T: UuidEntity>(
     id: UUID? = UUID.randomUUID(),
-    createdBy: Citizen
+    createdBy: Citizen,
+    override var target: T,
+    override var targetReference: String = target::class.simpleName!!.toLowerCase()
 ):
     ExtraI<T>,
     UuidEntity(id),

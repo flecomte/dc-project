@@ -2,10 +2,10 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
-import fr.dcproject.repository.CommentArticle
-import fr.dcproject.repository.VoteArticleComment
-import fr.dcproject.routes.VoteArticlePaths.ArticleCommentVoteRequest
+import fr.dcproject.repository.CommentGeneric
+import fr.dcproject.repository.VoteComment
 import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
+import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.dcproject.security.voter.VoteVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -30,8 +30,8 @@ object VoteArticlePaths {
         data class Content(var note: Int)
     }
 
-    @Location("/articles/{article}/comments/{comment}/vote")
-    class ArticleCommentVoteRequest(val article: ArticleEntity, val comment: UUID) {
+    @Location("/comments/{comment}/vote")
+    class CommentVoteRequest(val comment: UUID) {
         data class Content(var note: Int)
     }
 
@@ -53,7 +53,7 @@ object VoteArticlePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteArticleComment, commentRepo: CommentArticle) {
+fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentGeneric) {
     put<ArticleVoteRequest> {
         val content = call.receive<ArticleVoteRequest.Content>()
         val vote = VoteEntity(
@@ -66,9 +66,9 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteArticleC
         call.respond(HttpStatusCode.Created, votes)
     }
 
-    put<ArticleCommentVoteRequest> {
+    put<CommentVoteRequest> {
         val comment = commentRepo.findById(it.comment)!!
-        val content = call.receive<ArticleCommentVoteRequest.Content>()
+        val content = call.receive<CommentVoteRequest.Content>()
         val vote = VoteEntity(
             target = comment,
             note = content.note,

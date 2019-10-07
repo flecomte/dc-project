@@ -40,10 +40,12 @@ Feature: vote Article
   Scenario: Can vote a comment on article
     Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     And I have comment "ea5c9e87-c99e-4646-a381-2910219e077f" on article "cc9c624e-a27e-42de-af78-ae821c657a68"
-    When I send a PUT request to "/articles/cc9c624e-a27e-42de-af78-ae821c657a68/comments/ea5c9e87-c99e-4646-a381-2910219e077f/vote" with body:
+    When I send a PUT request to "/comments/ea5c9e87-c99e-4646-a381-2910219e077f/vote" with body:
     """
     {
       "note": -1
     }
     """
     Then the response status code should be 201
+    And the response should contain object:
+      | down | 1 |

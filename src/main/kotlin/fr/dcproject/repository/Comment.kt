@@ -84,10 +84,8 @@ abstract class Comment <T: UuidEntity>(override var requester: Requester): Repos
     }
 }
 
-class GenericTargetEntity(id: UUID = UUID.randomUUID()): UuidEntity(id)
-
-class CommentGeneric (requester: Requester): Comment<GenericTargetEntity>(requester) {
-    override fun findById(id: UUID): CommentEntity<GenericTargetEntity>? {
+class CommentGeneric (requester: Requester): Comment<UuidEntity>(requester) {
+    override fun findById(id: UUID): CommentEntity<UuidEntity>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -97,7 +95,7 @@ class CommentGeneric (requester: Requester): Comment<GenericTargetEntity>(reques
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<GenericTargetEntity>> {
+    ): Paginated<CommentEntity<UuidEntity>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(page, limit,

@@ -22,7 +22,7 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<
         val reference = if (target is Comment<*>) {
             target::class.simpleName!!.toLowerCase() +
             "_on_" +
-            target.target::class.simpleName!!.toLowerCase()
+            target.targetReference
         } else {
             target::class.simpleName!!.toLowerCase()
         }
@@ -96,6 +96,21 @@ class VoteArticleComment (requester: Requester): Vote<Comment<Article>>(requeste
             citizen.id ?: error("The citizen must have an id"),
             "article",
             object: TypeReference<List<VoteEntity<Comment<Article>>>>() {},
+            page,
+            limit
+        )
+}
+
+class VoteComment (requester: Requester): Vote<Comment<UuidEntity>>(requester) {
+    fun findByCitizen(
+        citizen: CitizenEntity,
+        page: Int = 1,
+        limit: Int = 50
+    ): Paginated<VoteEntity<Comment<UuidEntity>>> =
+        findByCitizen(
+            citizen.id ?: error("The citizen must have an id"),
+            "article",
+            object: TypeReference<List<VoteEntity<Comment<UuidEntity>>>>() {},
             page,
             limit
         )
