@@ -7,6 +7,7 @@ import java.util.*
 class Citizen(
     id: UUID = UUID.randomUUID(),
     var name: Name?,
+    var email: String?,
     var birthday: DateTime?,
     var userId: UUID? = null,
     var voteAnonymous: Boolean = true,

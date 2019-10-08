@@ -29,6 +29,7 @@ class VoteTest {
           "last_name": "Bono",
           "civility": null
         },
+        "email": "jaque.bono@gmail.com",
         "birthday": "2019-10-01T10:59:40.570Z",
         "user_id": null,
         "vote_anonymous": true,
@@ -62,6 +63,7 @@ class VoteTest {
             "last_name": "Bono",
             "civility": null
           },
+          "email": "jaque.bono@gmail.com",
           "birthday": "2019-10-01T10:59:40.570Z",
           "user_id": null,
           "vote_anonymous": true,
@@ -102,6 +104,7 @@ class VoteTest {
         val user = User(username = "jaque", plainPassword = "azerty")
         val citizen = Citizen(
             name = Citizen.Name("Jaque", "Bono"),
+            email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user
         )

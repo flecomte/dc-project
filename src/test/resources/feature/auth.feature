@@ -9,7 +9,8 @@ Feature: Auth routes
       "user":{
         "username": "george-junior",
         "plain_password": "azerty"
-      }
+      },
+      "email": "george-junior@gmail.com"
     }
     """
     Then the response status code should be 200

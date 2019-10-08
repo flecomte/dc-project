@@ -47,6 +47,7 @@ class ArticleTest {
           "created_at" : null,
           "updated_at" : null
         },
+        "email": "jaque.bono@gmail.com",
         "created_at" : null
       },
       "created_at" : null
@@ -59,6 +60,7 @@ class ArticleTest {
         val citizen = Citizen(
             name = Citizen.Name("Jaque", "Bono"),
             birthday = DateTime.now(),
+            email = "jaque.bono@gmail.com",
             user = user
         )
         val article = Article(

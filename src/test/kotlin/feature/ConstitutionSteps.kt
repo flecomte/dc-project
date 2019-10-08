@@ -18,6 +18,7 @@ class ConstitutionSteps: En, KoinTest {
         Given("I have constitution with id {string}") { id: String ->
             var citizen = Citizen(
                 name = Citizen.Name("John", "Doe"),
+                email = "john.doe@gmail.com",
                 birthday = DateTime.now(),
                 user = UserEntity(username = "john-doe", plainPassword = "azerty")
             )

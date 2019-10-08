@@ -34,6 +34,7 @@ class ConstitutionTest {
                    "last_name":"Bono",
                    "civility":null
                 },
+                "email": "jaque.bono@gmail.com",
                 "birthday":"2019-08-07T20:34:08.013Z",
                 "user_id":null,
                 "vote_anonymous":null,
@@ -58,6 +59,7 @@ class ConstitutionTest {
              "last_name":"Bono",
              "civility":null
           },
+          "email": "jaque.bono@gmail.com",
           "birthday":"2019-08-07T20:34:08.013Z",
           "user_id":null,
           "vote_anonymous":null,
@@ -78,6 +80,7 @@ class ConstitutionTest {
         val user = User(username = "jaque", plainPassword = "azerty")
         val citizen = Citizen(
             name = Citizen.Name("Jaque", "Bono"),
+            email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user
         )

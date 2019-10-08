@@ -28,6 +28,7 @@ class FollowTest {
              "last_name":"Bono",
              "civility":null
           },
+          "email": "jaque.bono@gmail.com",
           "birthday":"2019-08-09T11:42:47.168Z",
           "user_id":null,
           "vote_anonymous":null,
@@ -66,6 +67,7 @@ class FollowTest {
         val user = User(username = "jaque", plainPassword = "azerty")
         val citizen = Citizen(
             name = Citizen.Name("Jaque", "Bono"),
+            email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user
         )

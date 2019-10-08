@@ -31,6 +31,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(data["id"]),
                 name = Citizen.Name(data["firstName"], data["lastName"]),
+                email = ((data["firstName"] + "-" + data["lastName"]).toLowerCase()) + "@gmail.com",
                 birthday = DateTime.now(),
                 user = user
             )
@@ -53,6 +54,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(id),
                 name = Citizen.Name(firstName, lastName),
+                email = ("$firstName-$lastName".toLowerCase())+"@gmail.com",
                 birthday = DateTime.now(),
                 user = user
             )
@@ -77,6 +79,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(id),
                 name = Citizen.Name(firstName, lastName),
+                email = "$firstName-$lastName".toLowerCase() + "@gmail.com",
                 birthday = DateTime.now(),
                 user = user,
                 followAnonymous = false,
