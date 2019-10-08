@@ -11,7 +11,8 @@ declare
         "first_name": "George",
         "last_name": "MICHEL"
       },
-      "birthday": "2001-01-01"
+      "birthday": "2001-01-01",
+      "email":"george.michel@gmail.com"
     }
     $json$;
     created_citizen2 json := $json$
@@ -20,7 +21,8 @@ declare
         "first_name": "George2",
         "last_name": "MICHEL2"
       },
-      "birthday": "2001-01-02"
+      "birthday": "2001-01-02",
+      "email":"george.michel@gmail.com"
     }
     $json$;
     created_article  json := $json$

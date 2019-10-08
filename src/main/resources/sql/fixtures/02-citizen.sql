@@ -2,7 +2,7 @@ do
 $$
 begin
     delete from citizen;
-    insert into citizen (id, name, birthday, user_id, vote_anonymous, follow_anonymous)
+    insert into citizen (id, name, birthday, user_id, vote_anonymous, follow_anonymous, email)
     select
         uuid_in(md5('citizen'||row_number() over ()::text)::cstring),
         jsonb_build_object(
@@ -13,7 +13,8 @@ begin
         now() - interval '25 years',
         u.id,
         row_number() over () % 3 = 0,
-        row_number() over () % 5 = 1
+        row_number() over () % 5 = 1,
+        u.username || '@domain'|| (row_number() over () % 5 = 1) || '.com'
     from "user" u;
 
     raise notice 'citizen fixtures done';

@@ -4,7 +4,7 @@ declare
     created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     _user_id         uuid;
     _citizen_id      uuid;
-    created_citizen  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01"}';
+    created_citizen  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com"}';
     created_article  json := '{"version_id":"933b6a1b-50c9-42b6-989f-c02a57814ef9", "title": "Love the world", "anonymous": false, "content": "bla bal bla", "tags": ["love", "test"], "draft":false}';
     created_article_v2 json;
     first_article_id uuid;
