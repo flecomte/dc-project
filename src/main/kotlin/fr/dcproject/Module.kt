@@ -1,5 +1,6 @@
 package fr.dcproject
 
+import fr.dcproject.messages.Mailer
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -47,4 +48,6 @@ val Module = module {
     single { VoteCommentRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
+
+    single { Mailer(config.sendGridKey)  }
 }

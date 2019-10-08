@@ -18,6 +18,8 @@ class Config {
     var username: String = config.getString("db.username")
     var password: String = config.getString("db.password")
     val port: Int = config.getInt("db.port")
+
+    val sendGridKey: String = config.getString("mail.sendGrid.key")
 }
 
 object JwtConfig {

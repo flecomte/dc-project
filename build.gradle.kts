@@ -49,6 +49,7 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
+    implementation("com.sendgrid:sendgrid-java:4.4.1")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
