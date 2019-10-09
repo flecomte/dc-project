@@ -30,12 +30,12 @@ class SsoManager (
     private fun generateHtmlContent(citizen: CitizenEntity, url: String): String? {
         val urlObject = URLBuilder(url)
         urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user ?: error("Citizen must have User")))
-        return "Click <a href=\"$urlObject\">here</a> for connect to $domain"
+        return "Click <a href=\"${urlObject.buildString()}\">here</a> for connect to $domain"
     }
 
     private fun generateContent(citizen: CitizenEntity, url: String): String {
         val urlObject = URLBuilder(url)
         urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user ?: error("Citizen must have User")))
-        return "Copy this link into your browser for connect to $domain: \n$urlObject"
+        return "Copy this link into your browser for connect to $domain: \n${urlObject.buildString()}"
     }
 }
