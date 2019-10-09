@@ -98,7 +98,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryCitizen>().findById(id) ?: throw InternalError("Citizen $values not found")
+                get<RepositoryCitizen>().findById(id, true) ?: throw InternalError("Citizen $values not found")
             }
         }
     }
@@ -156,8 +156,8 @@ fun Application.module(env: Env = PROD) {
 //        trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
             article(get())
-            auth(get(), get())
-            citizen(get())
+            auth(get(), get(), get())
+            citizen(get(), get())
             constitution(get())
             followArticle(get())
             followConstitution(get())

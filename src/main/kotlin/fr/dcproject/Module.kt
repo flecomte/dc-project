@@ -1,6 +1,7 @@
 package fr.dcproject
 
 import fr.dcproject.messages.Mailer
+import fr.dcproject.messages.SsoManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -50,4 +51,5 @@ val Module = module {
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 
     single { Mailer(config.sendGridKey)  }
+    single { SsoManager(get<Mailer>(), config.domain, get())  }
 }

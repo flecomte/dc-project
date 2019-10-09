@@ -1,3 +1,6 @@
+import com.sendgrid.helpers.mail.Mail
+import com.sendgrid.helpers.mail.objects.Content
+import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.Env
 import fr.dcproject.messages.Mailer
 import fr.dcproject.module
@@ -17,12 +20,16 @@ class MailerTest: KoinTest, AutoCloseKoinTest() {
     @Test
     fun `can be send an email`() {
         withTestApplication({ module(Env.TEST) }) {
-            get<Mailer>().sendEmail(
-                "reset-password@dc-project.fr",
-                "fabrice.lecomte.be@gmail.com",
-                "Email Work !",
-                "Test"
-            )
+            get<Mailer>().sendEmail {
+                Mail(
+                    Email("sso@dc-project.fr"),
+                    "Test",
+                    Email("fabrice.lecomte.be@gmail.com"),
+                    Content("text/plain", "Email Work !")
+                ).apply {
+                    addContent(Content("text/html", "Email <b>Work</b> !"))
+                }
+            }
         }
     }
 }

@@ -19,7 +19,7 @@ create table citizen
     user_id          uuid                                   not null references "user" (id) unique,
     vote_anonymous   boolean     default true               not null,
     follow_anonymous boolean     default true               not null,
-    email            text                                   not null check ( email ~* '.+@.+\..+' )
+    email            text                                   not null check ( email ~* '.+@.+\..+' ) unique
 );
 
 create table workgroup

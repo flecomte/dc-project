@@ -30,6 +30,12 @@ class Citizen(override var requester: Requester) : RepositoryI<CitizenEntity> {
             .selectOne("username" to unsername)
     }
 
+    fun findByEmail(email: String): CitizenEntity? {
+        return requester
+            .getFunction("find_citizen_by_email")
+            .selectOne("email" to email)
+    }
+
     fun find(
         page: Int = 1,
         limit: Int = 50,

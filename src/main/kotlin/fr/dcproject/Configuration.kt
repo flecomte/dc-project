@@ -12,6 +12,7 @@ class Config {
     private var config = ConfigFactory.load()
     val sqlFiles = File(this::class.java.getResource("/sql").toURI())
     val envName: String = config.getString("app.envName")
+    val domain: String = config.getString("app.domain")
 
     val host: String = config.getString("db.host")
     var database: String = config.getString("db.database")
@@ -23,11 +24,12 @@ class Config {
 }
 
 object JwtConfig {
-    const val secret = "zAP5MBA4B4Ijz0MZaS48"
-    private const val issuer = "dc-project.fr"
-    private const val validityInMs = 36_000_00 * 10 // 10 hours
+    private const val secret = "zAP5MBA4B4Ijz0MZaS48"
+    const val issuer = "dc-project.fr"
+    private const val validityInMs = 3_600_000 * 10 // 10 hours
+
     // TODO change to RSA512
-    private val algorithm = Algorithm.HMAC512(secret)
+    val algorithm = Algorithm.HMAC512(secret)
 
     val verifier: JWTVerifier = JWT
         .require(algorithm)

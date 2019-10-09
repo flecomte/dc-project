@@ -1,7 +1,6 @@
 package feature
 
 import com.auth0.jwt.JWT
-import com.auth0.jwt.algorithms.Algorithm
 import fr.dcproject.JwtConfig
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
@@ -31,7 +30,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(data["id"]),
                 name = Citizen.Name(data["firstName"], data["lastName"]),
-                email = ((data["firstName"] + "-" + data["lastName"]).toLowerCase()) + "@gmail.com",
+                email = data["email"] ?: ((data["firstName"] + "-" + data["lastName"]).toLowerCase()) + "@dc-project.com",
                 birthday = DateTime.now(),
                 user = user
             )
@@ -44,7 +43,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val jwtAsString: String = JWT.create()
                 .withIssuer("dc-project.fr")
                 .withClaim("id", id)
-                .sign(Algorithm.HMAC512(JwtConfig.secret))
+                .sign(JwtConfig.algorithm)
 
             val user = User(
                 id = UUID.fromString(id),
@@ -54,7 +53,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(id),
                 name = Citizen.Name(firstName, lastName),
-                email = ("$firstName-$lastName".toLowerCase())+"@gmail.com",
+                email = ("$firstName-$lastName".toLowerCase())+"@dc-project.fr",
                 birthday = DateTime.now(),
                 user = user
             )

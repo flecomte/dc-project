@@ -32,6 +32,12 @@ class User(override var requester: Requester) : RepositoryI<UserEntity> {
             .selectOne("resource" to user)
     }
 
+    fun changePassword(user: UserEntity) {
+        requester
+            .getFunction("change_user_password")
+            .sendQuery("resource" to user)
+    }
+
     class UserNotFound(override val message: String?, override val cause: Throwable?): Throwable(message, cause) {
         constructor(id: UUID): this("No User with ID $id", null)
     }

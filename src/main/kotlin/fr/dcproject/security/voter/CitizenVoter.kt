@@ -3,19 +3,24 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.User
 import io.ktor.application.ApplicationCall
+import io.ktor.locations.KtorExperimentalLocationsAPI
 
+@KtorExperimentalLocationsAPI
 class CitizenVoter: Voter {
     enum class Action: ActionI {
         CREATE,
         UPDATE,
         VIEW,
-        DELETE
+        DELETE,
+        CHANGE_PASSWORD
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-               &&
-               (subject is List<*> || subject is Citizen?)
+           && (
+               subject is List<*> ||
+               subject is Citizen?
+           )
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -50,6 +55,15 @@ class CitizenVoter: Voter {
             subject is Citizen &&
             subject.user?.id == user.id) {
             return Vote.GRANTED
+        }
+
+        if (action == Action.CHANGE_PASSWORD && user != null && subject is Citizen) {
+            val userToChange = subject.user ?: error("Citizen must have User")
+            return if (user.id == userToChange.id) {
+                Vote.GRANTED
+            } else {
+                Vote.ABSTAIN
+            }
         }
 
         if (action is Action) {
