@@ -37,6 +37,34 @@ paths:
             text/plain:
               example:
                 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag
+  /sso:
+    post:
+      summary: Send email with JWT
+      tags:
+        - authentification
+      operationId: sso
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: email to send the token
+                  example:
+                    my.email@dc-project.fr
+                url:
+                  type: string
+                  description: url tu redirect with the token
+                  example:
+                    http://dc-project.fr/sso
+
+      responses:
+        204:
+          description: email send
+        404:
+          description: no user with this email
 
   /citizens/current:
     get:
@@ -105,6 +133,34 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/VoteResponse'
+        404:
+          description: Citizen not found
+  /citizens/{citizen}/password/change:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Change Citizen Password
+      tags:
+        - citizen
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              properties:
+                password:
+                  type: string
+                  format: password
+                  required: true
+                  example:
+                    qwerty
+
+      responses:
+        201:
+          description: Password changed
         404:
           description: Citizen not found
 
@@ -763,6 +819,11 @@ components:
           type: string
           example:
             1984-12-25
+        email:
+          type: string
+          format: email
+          example:
+            my.email@dc-project.fr
     CitizenRequest:
       allOf:
         - $ref: '#/components/schemas/CitizenBase'
