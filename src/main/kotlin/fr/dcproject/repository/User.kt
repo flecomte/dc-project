@@ -6,9 +6,7 @@ import io.ktor.auth.UserPasswordCredential
 import java.util.*
 import fr.dcproject.entity.User as UserEntity
 
-class User(override var requester: Requester) : RepositoryI<UserEntity> {
-    override val entityName = UserEntity::class
-
+class User(override var requester: Requester) : RepositoryI {
     fun findByCredentials(credentials: UserPasswordCredential): UserEntity? {
         return requester
             .getFunction("check_user")

@@ -1,11 +1,8 @@
 import fr.dcproject.Env
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.Constitution
 import fr.dcproject.module
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
-import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBe
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
@@ -25,11 +22,9 @@ class RepositoryTest: KoinTest, AutoCloseKoinTest() {
         withTestApplication({ module(Env.TEST) }) {
             val repoArticle = get<RepositoryArticle>()
             (repoArticle is RepositoryArticle) shouldBe true
-            repoArticle.entityName `should equal` Article::class
 
             val repoConstitution = get<RepositoryConstitution>()
             (repoConstitution is RepositoryConstitution) shouldBe true
-            repoConstitution.entityName `should equal` Constitution::class
         }
     }
 }

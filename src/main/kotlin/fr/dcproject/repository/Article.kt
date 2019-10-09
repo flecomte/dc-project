@@ -8,9 +8,7 @@ import net.pearx.kasechange.toSnakeCase
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 
-class Article(override var requester: Requester) : RepositoryI<ArticleEntity> {
-    override val entityName = ArticleEntity::class
-
+class Article(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): ArticleEntity? {
         val function = requester.getFunction("find_article_by_id")
         return function.selectOne("id" to id)

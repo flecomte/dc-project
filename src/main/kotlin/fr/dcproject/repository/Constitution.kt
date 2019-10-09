@@ -8,9 +8,7 @@ import net.pearx.kasechange.toSnakeCase
 import java.util.*
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-class Constitution(override var requester: Requester) : RepositoryI<ConstitutionEntity> {
-    override val entityName = ConstitutionEntity::class
-
+class Constitution(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): ConstitutionEntity? {
         val function = requester.getFunction("find_constitution_by_id")
         return function.selectOne("id" to id)

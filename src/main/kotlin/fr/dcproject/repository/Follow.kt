@@ -5,14 +5,12 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import kotlin.reflect.KClass
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow <T: UuidEntity>(override var requester: Requester): RepositoryI<FollowEntity<T>> {
-    override val entityName = FollowEntity::class as KClass<FollowEntity<T>>
+open class Follow <T: UuidEntity>(override var requester: Requester): RepositoryI {
     open fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,

@@ -10,13 +10,10 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import kotlin.reflect.KClass
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI<VoteEntity<T>> {
-    override val entityName = VoteEntity::class as KClass<VoteEntity<T>>
-
+open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI {
     fun vote(vote: VoteEntity<T>): VoteAggregation {
         val target = vote.target
         val reference = if (target is Comment<*>) {

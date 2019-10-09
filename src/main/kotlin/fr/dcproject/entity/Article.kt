@@ -2,7 +2,6 @@ package fr.dcproject.entity
 import fr.postgresjson.entity.*
 import java.util.*
 
-
 class Article(
     id: UUID = UUID.randomUUID(),
     var title: String?,

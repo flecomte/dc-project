@@ -9,9 +9,7 @@ import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.User as UserEntity
 
-class Citizen(override var requester: Requester) : RepositoryI<CitizenEntity> {
-    override val entityName = CitizenEntity::class
-
+class Citizen(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID, withUser: Boolean = false): CitizenEntity? {
         return requester
             .getFunction(if (withUser) "find_citizen_by_id_with_user" else "find_citizen_by_id")

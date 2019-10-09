@@ -5,15 +5,12 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import kotlin.reflect.KClass
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-abstract class Comment <T: UuidEntity>(override var requester: Requester): RepositoryI<CommentEntity<T>> {
-    override val entityName = CommentEntity::class as KClass<CommentEntity<T>>
-
+abstract class Comment <T: UuidEntity>(override var requester: Requester): RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
 
     abstract fun findByCitizen(
