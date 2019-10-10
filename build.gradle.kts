@@ -1,4 +1,7 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.owasp.dependencycheck.reporting.ReportGenerator
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -8,13 +11,20 @@ val postgresjson_version: String by project
 val jackson_version: String by project
 val cucumber_version: String by project
 
-plugins {
-    application
-    kotlin("jvm") version "1.3.40"
-}
-
 group = "fr.dcproject"
 version = "0.0.1"
+
+plugins {
+    jacoco
+    application
+
+    id("maven-publish")
+    id("org.jetbrains.kotlin.jvm") version "1.3.50"
+
+    id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("org.jlleitschuh.gradle.ktlint") version "8.2.0"
+    id("org.owasp.dependencycheck") version "5.1.0"
+}
 
 application {
     mainClassName = "io.ktor.server.jetty.EngineMain"
@@ -24,6 +34,32 @@ tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+}
+
+tasks.withType(ShadowJar::class) {
+    enabled = true
+
+    manifest.attributes["Main-Class"] = application.mainClassName
+    archiveFileName.set("dcproject.jar")
+
+    transform(ServiceFileTransformer::class.java) {
+        setPath("META-INF/services")
+        include("org.eclipse.jetty.http.HttpFieldPreEncoder")
+    }
+}
+
+jacoco {
+    toolVersion = "0.8.3"
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.isEnabled = true
+    }
+}
+
+dependencyCheck {
+    formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
 }
 
 repositories {
