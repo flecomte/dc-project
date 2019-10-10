@@ -10,7 +10,7 @@ import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-abstract class Comment <T: UuidEntity>(override var requester: Requester): RepositoryI {
+abstract class Comment <T : UuidEntity>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
 
     abstract fun findByCitizen(
@@ -81,7 +81,7 @@ abstract class Comment <T: UuidEntity>(override var requester: Requester): Repos
     }
 }
 
-class CommentGeneric (requester: Requester): Comment<UuidEntity>(requester) {
+class CommentGeneric(requester: Requester) : Comment<UuidEntity>(requester) {
     override fun findById(id: UUID): CommentEntity<UuidEntity>? {
         return requester
             .getFunction("find_comment_by_id")
@@ -102,7 +102,7 @@ class CommentGeneric (requester: Requester): Comment<UuidEntity>(requester) {
     }
 }
 
-class CommentArticle (requester: Requester): Comment<ArticleEntity>(requester) {
+class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
     override fun findById(id: UUID): CommentEntity<ArticleEntity>? {
         return requester
             .getFunction("find_comment_by_id")
@@ -125,7 +125,7 @@ class CommentArticle (requester: Requester): Comment<ArticleEntity>(requester) {
     }
 }
 
-class CommentConstitution (requester: Requester): Comment<ConstitutionEntity>(requester) {
+class CommentConstitution(requester: Requester) : Comment<ConstitutionEntity>(requester) {
     override fun findById(id: UUID): CommentEntity<ConstitutionEntity>? {
         return requester
             .getFunction("find_comment_by_id")

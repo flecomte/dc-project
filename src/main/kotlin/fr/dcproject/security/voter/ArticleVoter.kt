@@ -6,8 +6,8 @@ import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-class ArticleVoter: Voter {
-    enum class Action: ActionI {
+class ArticleVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         UPDATE,
         VIEW,
@@ -16,8 +16,7 @@ class ArticleVoter: Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-               &&
-               (subject is List<*> || subject is ArticleEntity? || subject is VoteEntity<*> || subject is CommentEntity<*>)
+            .and(subject is List<*> || subject is ArticleEntity? || subject is VoteEntity<*> || subject is CommentEntity<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

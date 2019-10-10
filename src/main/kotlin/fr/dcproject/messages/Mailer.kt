@@ -6,7 +6,7 @@ import com.sendgrid.SendGrid
 import com.sendgrid.helpers.mail.Mail
 import java.io.IOException
 
-class Mailer (
+class Mailer(
     private val key: String
 ) {
     fun sendEmail(action: () -> Mail): Boolean {

@@ -6,8 +6,8 @@ import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 
 @KtorExperimentalLocationsAPI
-class CitizenVoter: Voter {
-    enum class Action: ActionI {
+class CitizenVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         UPDATE,
         VIEW,
@@ -17,10 +17,7 @@ class CitizenVoter: Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-           && (
-               subject is List<*> ||
-               subject is Citizen?
-           )
+            .and(subject is List<*> || subject is Citizen?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

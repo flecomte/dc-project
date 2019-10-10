@@ -13,7 +13,7 @@ class Article(
     val tags: List<String> = emptyList(),
     val draft: Boolean = false,
     val versionId: UUID?
-):
+) :
     Request {
 
     fun merge(article: ArticleEntity) {

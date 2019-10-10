@@ -3,16 +3,16 @@ package fr.dcproject.security.voter
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Vote as VoteEntity
 
-class VoteVoter: Voter {
-    enum class Action: ActionI {
+class VoteVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         VIEW
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return action is Action && (
-            subject is VoteEntity<*>?
-            || subject is List<*>
+            subject is VoteEntity<*>? ||
+            subject is List<*>
         )
     }
 

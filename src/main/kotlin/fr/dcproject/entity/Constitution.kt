@@ -11,13 +11,13 @@ class Constitution(
     var draft: Boolean = false,
     var lastVersion: Boolean = false,
     createdBy: Citizen?
-):  UuidEntity(id),
+) : UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp() {
 
-    init{
+    init {
         titles.forEachIndexed { index, title ->
             title.createdBy = this.createdBy
             title.rank = index
@@ -30,7 +30,7 @@ class Constitution(
         var rank: Int? = null,
         var articles: List<Article> = listOf(),
         createdBy: Citizen? = null
-    ):  UuidEntity(id),
+    ) : UuidEntity(id),
         EntityCreatedAt by EntityCreatedAtImp(),
         EntityCreatedBy<Citizen> by EntityCreatedByImp(createdBy)
 }

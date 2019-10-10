@@ -6,8 +6,8 @@ import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-class ConstitutionVoter: Voter {
-    enum class Action: ActionI {
+class ConstitutionVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         UPDATE,
         VIEW,
@@ -16,8 +16,7 @@ class ConstitutionVoter: Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-               &&
-               (subject is List<*> || subject is ConstitutionEntity? || subject is VoteEntity<*> || subject is Comment<*>)
+            .and(subject is List<*> || subject is ConstitutionEntity? || subject is VoteEntity<*> || subject is Comment<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

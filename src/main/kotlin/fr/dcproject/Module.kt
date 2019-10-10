@@ -50,6 +50,6 @@ val Module = module {
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 
-    single { Mailer(config.sendGridKey)  }
-    single { SsoManager(get<Mailer>(), config.domain, get())  }
+    single { Mailer(config.sendGridKey) }
+    single { SsoManager(get<Mailer>(), config.domain, get()) }
 }

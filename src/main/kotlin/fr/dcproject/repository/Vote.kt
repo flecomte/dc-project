@@ -13,7 +13,7 @@ import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI {
+open class Vote <T : UuidEntity>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteEntity<T>): VoteAggregation {
         val target = vote.target
         val reference = if (target is Comment<*>) {
@@ -56,7 +56,7 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI 
         citizen: CitizenEntity,
         targets: List<UUID>
     ): List<VoteEntity<*>> {
-        val typeReference = object: TypeReference<List<VoteEntity<UuidEntity>>>() {}
+        val typeReference = object : TypeReference<List<VoteEntity<UuidEntity>>>() {}
         return requester.run {
             val citizenId = citizen.id ?: error("The citizen must have an id")
             getFunction("find_citizen_votes_by_target_ids")
@@ -68,7 +68,7 @@ open class Vote <T: UuidEntity>(override var requester: Requester): RepositoryI 
     }
 }
 
-class VoteArticle (requester: Requester): Vote<Article>(requester) {
+class VoteArticle(requester: Requester) : Vote<Article>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -77,13 +77,13 @@ class VoteArticle (requester: Requester): Vote<Article>(requester) {
         findByCitizen(
             citizen.id ?: error("The citizen must have an id"),
             "article",
-            object: TypeReference<List<VoteEntity<Article>>>() {},
+            object : TypeReference<List<VoteEntity<Article>>>() {},
             page,
             limit
         )
 }
 
-class VoteArticleComment (requester: Requester): Vote<Comment<Article>>(requester) {
+class VoteArticleComment(requester: Requester) : Vote<Comment<Article>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -92,13 +92,13 @@ class VoteArticleComment (requester: Requester): Vote<Comment<Article>>(requeste
         findByCitizen(
             citizen.id ?: error("The citizen must have an id"),
             "article",
-            object: TypeReference<List<VoteEntity<Comment<Article>>>>() {},
+            object : TypeReference<List<VoteEntity<Comment<Article>>>>() {},
             page,
             limit
         )
 }
 
-class VoteComment (requester: Requester): Vote<Comment<UuidEntity>>(requester) {
+class VoteComment(requester: Requester) : Vote<Comment<UuidEntity>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -107,13 +107,13 @@ class VoteComment (requester: Requester): Vote<Comment<UuidEntity>>(requester) {
         findByCitizen(
             citizen.id ?: error("The citizen must have an id"),
             "article",
-            object: TypeReference<List<VoteEntity<Comment<UuidEntity>>>>() {},
+            object : TypeReference<List<VoteEntity<Comment<UuidEntity>>>>() {},
             page,
             limit
         )
 }
 
-class VoteConstitution (requester: Requester): Vote<Constitution>(requester) {
+class VoteConstitution(requester: Requester) : Vote<Constitution>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -122,7 +122,7 @@ class VoteConstitution (requester: Requester): Vote<Constitution>(requester) {
         findByCitizen(
             citizen.id ?: error("The citizen must have an id"),
             "constitution",
-            object: TypeReference<List<VoteEntity<Constitution>>>() {},
+            object : TypeReference<List<VoteEntity<Constitution>>>() {},
             page,
             limit
         )

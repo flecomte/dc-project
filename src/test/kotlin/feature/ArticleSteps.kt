@@ -14,7 +14,7 @@ import fr.dcproject.entity.User as UserEntity
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 
-class ArticleSteps: En, KoinTest {
+class ArticleSteps : En, KoinTest {
     init {
         Given("I have article with id {string}") { id: String ->
             var citizen = Citizen(

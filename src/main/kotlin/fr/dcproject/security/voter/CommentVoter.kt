@@ -3,8 +3,8 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.Comment
 import io.ktor.application.ApplicationCall
 
-class CommentVoter: Voter {
-    enum class Action: ActionI {
+class CommentVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         UPDATE,
         VIEW,
@@ -12,8 +12,8 @@ class CommentVoter: Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action) &&
-               (subject is Comment<*>? || subject is List<*>)
+        return (action is Action)
+            .and(subject is Comment<*>? || subject is List<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

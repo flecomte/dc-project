@@ -56,7 +56,7 @@ fun Route.comment(repo: CommentRepository) {
 
     put<CommentPaths.CommentRequest> {
         val comment = repo.findById(it.comment)!!
-        assertCan(UPDATE,comment)
+        assertCan(UPDATE, comment)
 
         comment.content = call.receiveText()
         repo.edit(comment)

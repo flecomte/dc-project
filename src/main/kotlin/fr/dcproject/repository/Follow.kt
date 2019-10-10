@@ -10,7 +10,7 @@ import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow <T: UuidEntity>(override var requester: Requester): RepositoryI {
+open class Follow <T : UuidEntity>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -54,7 +54,7 @@ open class Follow <T: UuidEntity>(override var requester: Requester): Repository
     }
 }
 
-class FollowArticle (requester: Requester): Follow<ArticleEntity>(requester) {
+class FollowArticle(requester: Requester) : Follow<ArticleEntity>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,
@@ -69,7 +69,7 @@ class FollowArticle (requester: Requester): Follow<ArticleEntity>(requester) {
     }
 }
 
-class FollowConstitution (requester: Requester): Follow<ConstitutionEntity>(requester) {
+class FollowConstitution(requester: Requester) : Follow<ConstitutionEntity>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,

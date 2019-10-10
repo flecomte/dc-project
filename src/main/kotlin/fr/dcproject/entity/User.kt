@@ -14,7 +14,6 @@ class User(
 ) : UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityUpdatedAt by EntityUpdatedAtImp(),
-    Principal
-{
+    Principal {
     enum class Roles { ROLE_USER, ROLE_ADMIN }
 }

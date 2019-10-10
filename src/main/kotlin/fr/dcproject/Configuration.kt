@@ -50,5 +50,4 @@ object JwtConfig {
      * Calculate the expiration Date based on current time + the given validity
      */
     private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
-
 }

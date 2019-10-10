@@ -4,16 +4,16 @@ import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.entity.User as UserEntity
 
-class FollowVoter: Voter {
-    enum class Action: ActionI {
+class FollowVoter : Voter {
+    enum class Action : ActionI {
         CREATE,
         DELETE,
         VIEW
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action) &&
-               (subject is List<*> || subject is FollowEntity<*>?)
+        return (action is Action)
+            .and(subject is List<*> || subject is FollowEntity<*>?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

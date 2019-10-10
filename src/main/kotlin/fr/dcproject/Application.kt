@@ -143,7 +143,7 @@ fun Application.module(env: Env = PROD) {
 
             registerModule(JodaModule())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false);
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             configure(SerializationFeature.INDENT_OUTPUT, true)
             setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
                 indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)

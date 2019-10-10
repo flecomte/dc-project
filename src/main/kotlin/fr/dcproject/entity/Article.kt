@@ -12,7 +12,7 @@ class Article(
     var draft: Boolean = false,
     var lastVersion: Boolean = false,
     createdBy: Citizen?
-):
+) :
     UuidEntity(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     EntityCreatedAt by EntityCreatedAtImp(),

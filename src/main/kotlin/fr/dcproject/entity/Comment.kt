@@ -1,9 +1,9 @@
 package fr.dcproject.entity
 
- import fr.postgresjson.entity.*
+import fr.postgresjson.entity.*
 import java.util.*
 
-open class Comment <T: UuidEntity> (
+open class Comment <T : UuidEntity> (
     id: UUID = UUID.randomUUID(),
     createdBy: Citizen,
     target: T,
@@ -12,7 +12,7 @@ open class Comment <T: UuidEntity> (
     var parent: Comment<T>? = null,
     var parentsIds: List<UUID>? = null,
     val childrenCount: Int? = null
-): Extra<T>(id, createdBy, target),
+) : Extra<T>(id, createdBy, target),
     EntityUpdatedAt by EntityUpdatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp(),
     Votable by VotableImp()

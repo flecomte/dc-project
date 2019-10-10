@@ -41,7 +41,7 @@ object VoteArticlePaths {
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null
-    ): PaginatedRequestI by PaginatedRequest(page, limit)
+    ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
     @Location("/citizens/{citizen}/votes")
     class CitizenVotesByIdsRequest(val citizen: Citizen, id: List<String>) {

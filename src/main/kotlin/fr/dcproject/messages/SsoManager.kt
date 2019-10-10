@@ -8,7 +8,7 @@ import io.ktor.http.URLBuilder
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.repository.Citizen as CitizenRepository
 
-class SsoManager (
+class SsoManager(
     private val mailer: Mailer,
     private val domain: String,
     private val citizenRepo: CitizenRepository

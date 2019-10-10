@@ -1,5 +1,5 @@
 package fr.dcproject.entity.request
 
-class Comment (
+class Comment(
     val content: String
-): Request
+) : Request

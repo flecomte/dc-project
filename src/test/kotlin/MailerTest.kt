@@ -16,7 +16,7 @@ import org.koin.test.get
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class MailerTest: KoinTest, AutoCloseKoinTest() {
+class MailerTest : KoinTest, AutoCloseKoinTest() {
     @Test
     fun `can be send an email`() {
         withTestApplication({ module(Env.TEST) }) {

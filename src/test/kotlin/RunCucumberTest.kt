@@ -24,7 +24,7 @@ var unitialized: Boolean = false
 @KtorExperimentalLocationsAPI
 @RunWith(Cucumber::class)
 @CucumberOptions(plugin = ["pretty"])
-class RunCucumberTest: En, KoinTest {
+class RunCucumberTest : En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
 
     val ktorContext = KtorServerContext {
@@ -44,7 +44,7 @@ class RunCucumberTest: En, KoinTest {
             unitialized = true
         }
 
-        Before(-1) { scenario: Scenario ->
+        Before(-1) { _: Scenario ->
             config.database = "test"
             config.username = "test"
             config.password = "test"

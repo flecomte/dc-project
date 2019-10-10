@@ -13,7 +13,7 @@ import fr.dcproject.entity.User as UserEntity
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 
-class ConstitutionSteps: En, KoinTest {
+class ConstitutionSteps : En, KoinTest {
     init {
         Given("I have constitution with id {string}") { id: String ->
             var citizen = Citizen(

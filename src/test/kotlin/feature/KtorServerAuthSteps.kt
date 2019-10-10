@@ -17,8 +17,8 @@ import java.util.concurrent.CompletionException
 import kotlin.random.Random
 import fr.dcproject.repository.Citizen as CitizenRepository
 
-class KtorServerAuthSteps: En, KoinTest {
-    private val requester: Requester  by inject()
+class KtorServerAuthSteps : En, KoinTest {
+    private val requester: Requester by inject()
     init {
         When("I have citizen:") { body: DataTable ->
             val user = User(username = "jaque_${Random.nextInt(0, 10000)}", plainPassword = "azerty")
@@ -53,7 +53,7 @@ class KtorServerAuthSteps: En, KoinTest {
             val citizen = Citizen(
                 id = UUID.fromString(id),
                 name = Citizen.Name(firstName, lastName),
-                email = ("$firstName-$lastName".toLowerCase())+"@dc-project.fr",
+                email = ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr",
                 birthday = DateTime.now(),
                 user = user
             )
