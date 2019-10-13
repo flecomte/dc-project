@@ -5,12 +5,19 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
 import fr.dcproject.entity.User
+import org.eclipse.jetty.util.resource.JarResource
 import java.io.File
 import java.util.*
 
 class Config {
     private var config = ConfigFactory.load()
-    val sqlFiles = File(this::class.java.getResource("/sql").toURI())
+
+    val sqlFiles: File = try {
+        File(this::class.java.getResource("/sql").toURI())
+    } catch (e: IllegalArgumentException) {
+        JarResource.newResource("./resources/sql").file
+    }
+
     val envName: String = config.getString("app.envName")
     val domain: String = config.getString("app.domain")
 

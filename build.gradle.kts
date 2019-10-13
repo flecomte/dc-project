@@ -1,5 +1,3 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import com.github.jengelman.gradle.plugins.shadow.transformers.ServiceFileTransformer
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 
@@ -35,16 +33,13 @@ tasks.withType<KotlinCompile> {
         jvmTarget = "1.8"
     }
 }
-
-tasks.withType(ShadowJar::class) {
-    enabled = true
-
-    manifest.attributes["Main-Class"] = application.mainClassName
-    archiveFileName.set("dcproject.jar")
-
-    transform(ServiceFileTransformer::class.java) {
-        setPath("META-INF/services")
-        include("org.eclipse.jetty.http.HttpFieldPreEncoder")
+tasks.withType<Jar> {
+    manifest {
+        attributes(
+            mapOf(
+                "Main-Class" to application.mainClassName
+            )
+        )
     }
 }
 
