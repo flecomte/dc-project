@@ -578,7 +578,7 @@ paths:
 
   /citizens/{citizen}/votes/articles:
     parameters:
-      - $ref: '#/components/parameters/article'
+      - $ref: '#/components/parameters/citizen'
     get:
       security:
         - JWTAuth: []
@@ -588,7 +588,7 @@ paths:
         - article
         - citizen
       responses:
-        201:
+        200:
           description: Votes
           content:
             application/json:
@@ -601,6 +601,31 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/VoteResponse'
+  /citizens/{citizen}/comments/articles:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: all article comments for one citizen
+      tags:
+        - comment
+        - article
+        - citizen
+      responses:
+        200:
+          description: Comments
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
 
 components:
   parameters:
@@ -656,7 +681,7 @@ components:
       name: citizen
       in: path
       description: ID of citizen
-      example: 770d46e8-c458-417d-beaf-0f2faa109b26
+      example: 4d673bfa-eaef-4290-b52f-85a9c8a7eba5
       required: true
       schema:
         type: string
@@ -1095,7 +1120,9 @@ components:
       required: true
 
 servers:
-  - description: localhost
+  - description: localhost 80
+    url: http://localhost
+  - description: localhost 8080
     url: http://localhost:8080
   - description: production
     url: http://dc-project.fr
