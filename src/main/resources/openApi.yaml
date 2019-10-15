@@ -100,6 +100,8 @@ paths:
                 $ref: '#/components/schemas/CitizenResponse'
         404:
           description: Citizen not found
+        401:
+          $ref: '#/components/responses/401'
   /citizens/{citizen}/votes:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -123,7 +125,6 @@ paths:
             items:
               type: string
               format: uuid
-
       responses:
         200:
           description: The Votes objects
@@ -135,6 +136,8 @@ paths:
                   $ref: '#/components/schemas/VoteResponse'
         404:
           description: Citizen not found
+        401:
+          $ref: '#/components/responses/401'
   /citizens/{citizen}/password/change:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -157,12 +160,13 @@ paths:
                   required: true
                   example:
                     qwerty
-
       responses:
         201:
           description: Password changed
         404:
           description: Citizen not found
+        401:
+          $ref: '#/components/responses/401'
 
   /citizens:
     get:
@@ -192,6 +196,8 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CitizenResponse'
+        401:
+          $ref: '#/components/responses/401'
 
   /articles:
     get:
@@ -239,6 +245,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
+        401:
+          $ref: '#/components/responses/401'
   /articles/{article}:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -323,6 +331,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
+        401:
+          $ref: '#/components/responses/401'
   /constitutions/{constitution}:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -370,6 +380,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
 
   /comments/{comment}/children:
     parameters:
@@ -427,6 +439,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
   /constitutions/{constitution}/comments:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -461,6 +475,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
 
   /articles/{article}/follows:
     parameters:
@@ -485,6 +501,8 @@ paths:
       responses:
         204:
           description: Return only http status 204 on success
+        401:
+          $ref: '#/components/responses/401'
   /constitutions/{constitution}/follows:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -498,6 +516,8 @@ paths:
       responses:
         201:
           description: Return only http status 201 on success
+        401:
+          $ref: '#/components/responses/401'
     delete:
       security:
         - JWTAuth: []
@@ -508,6 +528,8 @@ paths:
       responses:
         204:
           description: Return only http status 204 on success
+        401:
+          $ref: '#/components/responses/401'
 
   /articles/{article}/vote:
     parameters:
@@ -527,11 +549,12 @@ paths:
       responses:
         201:
           description: Return only http status 201 on success
-
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoteAggregation'
+        401:
+          $ref: '#/components/responses/401'
   /constitutions/{constitution}/vote:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -572,8 +595,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoteAggregation'
-        404:
-          description: article or comment not found
+        401:
+          $ref: '#/components/responses/401'
 
 
   /citizens/{citizen}/votes/articles:
@@ -601,6 +624,8 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/VoteResponse'
+        401:
+          $ref: '#/components/responses/401'
   /citizens/{citizen}/comments/articles:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -626,8 +651,17 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
 
 components:
+  responses:
+    401:
+      description: Unautorized
+      content:
+        application/json:
+          schema:
+            description: noting
   parameters:
     page:
       name: page
