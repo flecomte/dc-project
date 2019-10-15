@@ -62,11 +62,10 @@ abstract class Comment <T : UuidEntity>(override var requester: Requester) : Rep
     }
 
     fun comment(comment: CommentEntity<T>) {
-        val reference = comment.target::class.simpleName!!.toLowerCase()
         requester
             .getFunction("comment")
             .sendQuery(
-                "reference" to reference,
+                "reference" to comment.targetReference,
                 "resource" to comment
             )
     }

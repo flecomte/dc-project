@@ -348,6 +348,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
+
   /comments/{comment}:
     parameters:
       - $ref: '#/components/parameters/comment'
@@ -382,7 +383,6 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         401:
           $ref: '#/components/responses/401'
-
   /comments/{comment}/children:
     parameters:
       - $ref: '#/components/parameters/comment'
@@ -404,6 +404,35 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CommentResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: Create Comment on other comment
+      tags:
+        - comment
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentRequest'
+      responses:
+        201:
+          description: Return the created Comment
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+        404:
+          description: Comment not found
+        401:
+          $ref: '#/components/responses/401'
 
   /articles/{article}/comments:
     parameters:
@@ -706,7 +735,7 @@ components:
       name: search
       in: query
       description: A text to seach
-      example: John Doe
+      example: content50
       required: false
       schema:
         type: string
@@ -1085,7 +1114,6 @@ components:
             parent:
               required: false
               allOf:
-                - $ref: '#/components/schemas/UUID'
                 - $ref: '#/components/schemas/UUID'
 
     FollowBase:
