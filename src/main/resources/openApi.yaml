@@ -1153,6 +1153,11 @@ components:
             down:
               type: number
               minimum: 0
+            total:
+              type: number
+              minimum: 0
+            score:
+              type: number
         - $ref: '#/components/schemas/UpdatedAt'
     Votable:
       type: object

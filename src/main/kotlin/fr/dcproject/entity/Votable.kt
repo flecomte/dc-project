@@ -5,5 +5,5 @@ interface Votable {
 }
 
 class VotableImp : Votable {
-    override var votes: VoteAggregation = VoteAggregation(0, 0, 0)
+    override var votes: VoteAggregation = VoteAggregation()
 }

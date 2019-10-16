@@ -3,7 +3,9 @@ create or replace function count_vote(_target_id uuid, out resource json)
 $$
 declare
     agg jsonb;
-    empty jsonb = '{"down":0,"neutral":0,"up":0}'::jsonb;
+    empty jsonb = '{"down":0,"neutral":0,"up":0,"total":0,"score":0}'::jsonb;
+    score int;
+    total int;
 begin
     select jsonb_object_agg(t.label, t.total)
     into agg
@@ -21,8 +23,17 @@ begin
         order by v.note
     ) t;
 
-    resource = coalesce(agg, empty) || jsonb_build_object('updated_at', now());
+    agg = empty || coalesce(agg, empty);
+    score = ((agg->>'up')::int - (agg->>'down')::int);
+    total = ((agg->>'up')::int + (agg->>'down')::int + (agg->>'neutral')::int);
+
+    resource = agg ||
+               jsonb_build_object('updated_at', now()) ||
+               jsonb_build_object('total', total) ||
+               jsonb_build_object('score', score);
 end;
 $$;
 
 -- drop function if exists count_vote(uuid);
+
+select * from count_vote('ced1563f-ecf5-4f11-8518-8aeceff3c13a');
