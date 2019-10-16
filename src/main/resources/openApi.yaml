@@ -208,7 +208,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/articleSort'
         - $ref: '#/components/parameters/direction'
         - $ref: '#/components/parameters/search'
       responses:
@@ -721,6 +721,19 @@ components:
       required: false
       schema:
         type: string
+    articleSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - title
+          - createdAt
+          - vote
+          - popularity
     direction:
       name: direction
       in: query

@@ -23,12 +23,14 @@ begin
            or _search = ''
            or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)
         ) and a.last_version = true
+
         order by
-        _score desc,
         case direction when 'asc' then
             case sort
                 when 'title' then a.title
                 when 'created_at' then a.created_at::text
+                when 'vote' then count_vote(a.id)->>'score'
+                when 'popularity' then count_vote(a.id)->>'total'
                 else null
             end
         end,
@@ -36,6 +38,8 @@ begin
             case sort
                 when 'title' then a.title
                 when 'created_at' then a.created_at::text
+                when 'vote' then count_vote(a.id)->>'score'
+                when 'popularity' then count_vote(a.id)->>'total'
             end
         end
         desc,
