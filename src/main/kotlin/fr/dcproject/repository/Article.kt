@@ -2,6 +2,7 @@ package fr.dcproject.repository
 
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
+import fr.postgresjson.entity.Parameter
 import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
 import net.pearx.kasechange.toSnakeCase
@@ -25,7 +26,8 @@ class Article(override var requester: Requester) : RepositoryI {
         limit: Int = 50,
         sort: String? = null,
         direction: Direction? = null,
-        search: String? = null
+        search: String? = null,
+        filter: Filter = Filter()
     ): Paginated<ArticleEntity> {
         return requester
             .getFunction("find_articles")
@@ -33,7 +35,8 @@ class Article(override var requester: Requester) : RepositoryI {
                 page, limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
-                "search" to search
+                "search" to search,
+                "filter" to filter
             )
     }
 
@@ -42,4 +45,8 @@ class Article(override var requester: Requester) : RepositoryI {
             .getFunction("upsert_article")
             .selectOne("resource" to article)
     }
+
+    class Filter(
+        val createdById: String? = null
+    ) : Parameter
 }

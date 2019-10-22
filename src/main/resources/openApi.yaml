@@ -211,6 +211,7 @@ paths:
         - $ref: '#/components/parameters/articleSort'
         - $ref: '#/components/parameters/direction'
         - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/createdBy'
       responses:
         200:
           description: The Article objects
@@ -752,6 +753,15 @@ components:
       required: false
       schema:
         type: string
+    createdBy:
+      name: createdBy
+      in: query
+      description: filter by Author
+      example: 4d673bfa-eaef-4290-b52f-85a9c8a7eba5
+      required: false
+      schema:
+        type: string
+        format: uuid
 
     citizen:
       name: citizen
@@ -798,6 +808,7 @@ components:
       type: http
       scheme: bearer
       description: call /login to get token
+      bearerFormat: JWT
 
   schemas:
     UUID:

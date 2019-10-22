@@ -1,5 +1,6 @@
 create or replace function find_articles(
     _search text default null,
+    _filter json default '{}',
     direction text default 'desc',
     sort text default 'created_at',
     "limit" int default 50,
@@ -9,7 +10,13 @@ create or replace function find_articles(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from article a where (_search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)) and a.last_version = true)
+    select json_agg(t), (
+        select count(id)
+        from article a
+        where (_search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description, tags}', _search))
+          and (_filter->>'created_by_id' is null or a.created_by_id = (_filter->>'created_by_id')::uuid)
+          and a.last_version = true
+        )
     into resource, total
     from (
         select
@@ -22,9 +29,12 @@ begin
               _search is null
            or _search = ''
            or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)
-        ) and a.last_version = true
+        )
+          and (_filter->>'created_by_id' is null or a.created_by_id = (_filter->>'created_by_id')::uuid)
+          and a.last_version = true
 
         order by
+        _score desc,
         case direction when 'asc' then
             case sort
                 when 'title' then a.title
@@ -49,4 +59,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_articles(text, text, text, int, int);
+-- drop function if exists find_articles(text, json, text, text, int, int);
