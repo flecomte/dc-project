@@ -13,6 +13,7 @@ services:
       - ${APP_PORT}:8080
     environment:
       DB_HOST: db
+      SEND_GRID_KEY: ${SEND_GRID_KEY}
     depends_on:
       - elasticsearch
       - db
