@@ -7,6 +7,9 @@
     <option name="METHOD_NAME" value="testArticle" />
     <option name="TEST_OBJECT" value="class" />
     <option name="PARAMETERS" value="" />
+    <envs>
+      <env name="SEND_GRID_KEY" value="$SEND_GRID_KEY$" />
+    </envs>
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
