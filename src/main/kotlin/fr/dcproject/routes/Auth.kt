@@ -42,18 +42,21 @@ fun Route.auth(
     post <LoginRequest> {
         try {
             val credentials = call.receive<UserPasswordCredential>()
-            val user = userRepo.findByCredentials(credentials) ?: throw BadRequestException("Username not exist or password is wrong")
+            val user = userRepo.findByCredentials(credentials) ?: throw WrongLoginOrPassword()
             call.respondText(JwtConfig.makeToken(user))
         } catch (e: MismatchedInputException) {
-            throw BadRequestException("You must be send name and password to the request")
+            call.respond(HttpStatusCode.BadRequest, "You must be send name and password to the request")
+        } catch (e: WrongLoginOrPassword) {
+            call.respond(HttpStatusCode.BadRequest, e.message)
         }
     }
 
     post <RegisterRequest> {
         val citizen = call.receive<CitizenEntity>()
         citizen.user?.roles = listOf(User.Roles.ROLE_USER)
+        // TODO implement with validator
+        citizen.email ?: throw BadRequestException("Bad request")
         val created = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
-
         call.respondText(JwtConfig.makeToken(created))
     }
 
@@ -68,3 +71,5 @@ fun Route.auth(
         call.respond(HttpStatusCode.NoContent)
     }
 }
+
+class WrongLoginOrPassword(override val message: String = "Username not exist or password is wrong") : Exception()
