@@ -14,7 +14,7 @@ class SsoManager(
     private val citizenRepo: CitizenRepository
 ) {
     fun sendMail(email: String, url: String) {
-        val citizen = citizenRepo.findByEmail(email) ?: error("No Citizen with this email")
+        val citizen = citizenRepo.findByEmail(email) ?: noEmail(email)
         mailer.sendEmail {
             Mail(
                 Email("sso@$domain"),
@@ -38,4 +38,9 @@ class SsoManager(
         urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user ?: error("Citizen must have User")))
         return "Copy this link into your browser for connect to $domain: \n${urlObject.buildString()}"
     }
+
+    class EmailNotFound(val email: String) : Exception() {
+        override val message: String = "No Citizen with this email : $email"
+    }
+    private fun noEmail(email: String): Nothing = throw EmailNotFound(email)
 }
