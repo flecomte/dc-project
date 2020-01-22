@@ -1,8 +1,8 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
-import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.mutable.EntityUpdatedAt
+import fr.postgresjson.entity.mutable.EntityUpdatedAtImp
+import fr.postgresjson.entity.mutable.UuidEntity
 import java.util.*
 
 open class Vote <T : UuidEntity> (

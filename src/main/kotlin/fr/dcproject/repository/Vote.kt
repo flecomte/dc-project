@@ -7,7 +7,7 @@ import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.VoteAggregation
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.mutable.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity

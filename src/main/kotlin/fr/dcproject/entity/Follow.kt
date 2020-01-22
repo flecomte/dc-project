@@ -1,5 +1,5 @@
 package fr.dcproject.entity
-import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.mutable.UuidEntity
 import java.util.*
 
 class Follow <T : UuidEntity> (

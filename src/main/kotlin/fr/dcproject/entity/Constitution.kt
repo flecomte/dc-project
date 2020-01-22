@@ -1,6 +1,6 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.*
+import fr.postgresjson.entity.mutable.*
 import java.util.*
 
 class Constitution(
