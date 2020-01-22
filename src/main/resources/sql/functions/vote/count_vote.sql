@@ -36,4 +36,4 @@ $$;
 
 -- drop function if exists count_vote(uuid);
 
-select * from count_vote('ced1563f-ecf5-4f11-8518-8aeceff3c13a');
+-- select * from count_vote('ced1563f-ecf5-4f11-8518-8aeceff3c13a');
