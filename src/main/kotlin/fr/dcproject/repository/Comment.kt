@@ -12,7 +12,7 @@ import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-abstract class Comment <T : TargetI>(override var requester: Requester) : RepositoryI {
+abstract class Comment<T : TargetI>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
 
     abstract fun findByCitizen(
@@ -36,9 +36,10 @@ abstract class Comment <T : TargetI>(override var requester: Requester) : Reposi
     ): Paginated<CommentEntity<T>> {
         return requester.run {
             getFunction("find_comments_by_parent")
-            .select(page, limit,
-                "parent_id" to parentId
-            )
+                .select(
+                    page, limit,
+                    "parent_id" to parentId
+                )
         }
     }
 
@@ -57,9 +58,10 @@ abstract class Comment <T : TargetI>(override var requester: Requester) : Reposi
     ): Paginated<CommentEntity<T>> {
         return requester.run {
             getFunction("find_comments_by_target")
-            .select(page, limit,
-                "target_id" to targetId
-            )
+                .select(
+                    page, limit,
+                    "target_id" to targetId
+                )
         }
     }
 
@@ -96,7 +98,8 @@ class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
     ): Paginated<CommentEntity<TargetRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
-                .select(page, limit,
+                .select(
+                    page, limit,
                     "created_by_id" to citizen.id
                 )
         }
@@ -117,7 +120,8 @@ class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
     ): Paginated<CommentEntity<ArticleRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
-                .select(page, limit,
+                .select(
+                    page, limit,
                     "created_by_id" to citizen.id,
                     "reference" to TargetI.getReference(ArticleRef::class)
                 )
@@ -139,7 +143,8 @@ class CommentConstitution(requester: Requester) : Comment<ConstitutionEntity>(re
     ): Paginated<CommentEntity<ConstitutionEntity>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
-                .select(page, limit,
+                .select(
+                    page, limit,
                     "created_by_id" to citizen.id,
                     "reference" to TargetI.getReference(ConstitutionEntity::class)
                 )

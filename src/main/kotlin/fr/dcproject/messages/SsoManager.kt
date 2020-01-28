@@ -46,5 +46,6 @@ class SsoManager(
     class EmailNotFound(val email: String) : Exception() {
         override val message: String = "No Citizen with this email : $email"
     }
+
     private fun noEmail(email: String): Nothing = throw EmailNotFound(email)
 }

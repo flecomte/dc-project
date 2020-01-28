@@ -78,7 +78,10 @@ class AuthorizationVoter {
         override val key = AttributeKey<AuthorizationVoter>("Voter")
 
         @KtorExperimentalAPI
-        override fun install(pipeline: ApplicationCallPipeline, configure: Configuration.() -> Unit): AuthorizationVoter {
+        override fun install(
+            pipeline: ApplicationCallPipeline,
+            configure: Configuration.() -> Unit
+        ): AuthorizationVoter {
             val configuration = Configuration().apply(configure)
 
             pipeline.intercept(ApplicationCallPipeline.Features) {

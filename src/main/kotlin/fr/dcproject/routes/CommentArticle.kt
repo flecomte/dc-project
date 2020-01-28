@@ -31,7 +31,9 @@ object CommentArticlePaths {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
-    @Location("/citizens/{citizen}/comments/articles") class CitizenCommentArticleRequest(val citizen: Citizen)
+
+    @Location("/citizens/{citizen}/comments/articles")
+    class CitizenCommentArticleRequest(val citizen: Citizen)
 }
 
 @KtorExperimentalLocationsAPI

@@ -17,7 +17,8 @@ val ApplicationCall.citizen: CitizenEntity
     get() = attributes.computeIfAbsent(citizenAttributeKey) {
         runBlocking {
             val user = authentication.principal<UserI>() ?: throw ForbiddenException()
-            GlobalContext.get().koin.get<CitizenRepository>().findByUser(user) ?: throw ForbiddenException("Citizen not found for this user id \"${user.id}\"")
+            GlobalContext.get().koin.get<CitizenRepository>().findByUser(user)
+                ?: throw ForbiddenException("Citizen not found for this user id \"${user.id}\"")
         }
     }
 

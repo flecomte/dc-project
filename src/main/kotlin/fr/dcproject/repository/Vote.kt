@@ -12,7 +12,7 @@ import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-open class Vote <T : TargetI>(override var requester: Requester) : RepositoryI {
+open class Vote<T : TargetI>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteEntity<T>): VoteAggregation {
         val author = vote.createdBy
         val anonymous = author.voteAnonymous
@@ -36,10 +36,12 @@ open class Vote <T : TargetI>(override var requester: Requester) : RepositoryI {
     ): Paginated<VoteEntity<T>> {
         return requester.run {
             getFunction("find_votes_by_citizen")
-            .select(page, limit, typeReference, mapOf(
-                "created_by_id" to citizenId,
-                "reference" to target
-            ))
+                .select(
+                    page, limit, typeReference, mapOf(
+                        "created_by_id" to citizenId,
+                        "reference" to target
+                    )
+                )
         }
     }
 
@@ -50,10 +52,12 @@ open class Vote <T : TargetI>(override var requester: Requester) : RepositoryI {
         val typeReference = object : TypeReference<List<VoteEntity<TargetRef>>>() {}
         return requester.run {
             getFunction("find_citizen_votes_by_target_ids")
-                .select(typeReference, mapOf(
-                    "citizen_id" to citizen.id,
-                    "ids" to targets
-                ))
+                .select(
+                    typeReference, mapOf(
+                        "citizen_id" to citizen.id,
+                        "ids" to targets
+                    )
+                )
         }
     }
 }

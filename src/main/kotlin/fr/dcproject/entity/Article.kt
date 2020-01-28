@@ -1,4 +1,5 @@
 package fr.dcproject.entity
+
 import fr.postgresjson.entity.immutable.*
 import fr.postgresjson.entity.mutable.EntityDeletedAt
 import fr.postgresjson.entity.mutable.EntityDeletedAtImp
@@ -62,6 +63,7 @@ interface ArticleSimpleI :
     Votable {
     var title: String
 }
+
 interface ArticleBasicI :
     ArticleSimpleI {
     var anonymous: Boolean

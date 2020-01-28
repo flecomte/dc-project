@@ -78,7 +78,8 @@ fun Application.module(env: Env = PROD) {
         convert<Article> {
             decode { values, _ ->
                 values.singleOrNull()?.let {
-                    get<RepositoryArticle>().findById(UUID.fromString(it)) ?: throw InternalError("Article $values not found")
+                    get<RepositoryArticle>().findById(UUID.fromString(it))
+                        ?: throw InternalError("Article $values not found")
                 } ?: throw NotFoundException("Article $values not found")
             }
         }
@@ -157,7 +158,7 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(Routing) {
-//        trace { application.log.trace(it.buildText()) }
+        // trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
             article(get())
             auth(get(), get(), get())

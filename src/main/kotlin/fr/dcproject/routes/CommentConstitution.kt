@@ -20,8 +20,11 @@ import fr.dcproject.repository.CommentConstitution as CommentConstitutionReposit
 
 @KtorExperimentalLocationsAPI
 object CommentConstitutionPaths {
-    @Location("/constitutions/{constitution}/comments") class ConstitutionCommentRequest(val constitution: ConstitutionEntity)
-    @Location("/citizens/{citizen}/comments/constitutions") class CitizenCommentConstitutionRequest(val citizen: Citizen)
+    @Location("/constitutions/{constitution}/comments")
+    class ConstitutionCommentRequest(val constitution: ConstitutionEntity)
+
+    @Location("/citizens/{citizen}/comments/constitutions")
+    class CitizenCommentConstitutionRequest(val citizen: Citizen)
 }
 
 @KtorExperimentalLocationsAPI

@@ -4,7 +4,7 @@ import fr.postgresjson.entity.immutable.EntityUpdatedAt
 import fr.postgresjson.entity.immutable.EntityUpdatedAtImp
 import java.util.*
 
-open class Vote <T : TargetI> (
+open class Vote<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenBasic,
     target: T,

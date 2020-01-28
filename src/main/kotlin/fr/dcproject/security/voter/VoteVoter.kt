@@ -11,9 +11,9 @@ class VoteVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return action is Action && (
-            subject is VoteEntity<*>? ||
-            subject is List<*>
-        )
+                subject is VoteEntity<*>? ||
+                        subject is List<*>
+                )
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {

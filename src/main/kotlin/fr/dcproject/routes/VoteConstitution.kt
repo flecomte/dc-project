@@ -19,10 +19,13 @@ import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 
 @KtorExperimentalLocationsAPI
 object VoteConstitutionPaths {
-    @Location("/constitutions/{constitution}/vote") class ConstitutionVoteRequest(val constitution: ConstitutionEntity) {
+    @Location("/constitutions/{constitution}/vote")
+    class ConstitutionVoteRequest(val constitution: ConstitutionEntity) {
         data class Content(var note: Int)
     }
-    @Location("/citizens/{citizen}/votes/constitutions") class CitizenVoteConstitutionRequest(val citizen: Citizen)
+
+    @Location("/citizens/{citizen}/votes/constitutions")
+    class CitizenVoteConstitutionRequest(val citizen: Citizen)
 }
 
 @KtorExperimentalLocationsAPI

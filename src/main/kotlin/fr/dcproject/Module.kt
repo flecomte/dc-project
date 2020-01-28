@@ -27,12 +27,22 @@ val Module = module {
 
     single { config }
 
-    single { Connection(host = config.host, port = config.port, database = config.database, username = config.username, password = config.password) }
+    single {
+        Connection(
+            host = config.host,
+            port = config.port,
+            database = config.database,
+            username = config.username,
+            password = config.password
+        )
+    }
 
-    single { Requester.RequesterFactory(
-        connection = get(),
-        functionsDirectory = config.sqlFiles.resolve("functions")
-    ).createRequester() }
+    single {
+        Requester.RequesterFactory(
+            connection = get(),
+            functionsDirectory = config.sqlFiles.resolve("functions")
+        ).createRequester()
+    }
 
     // TODO: create generic declaration
     single { UserRepository(get()) }

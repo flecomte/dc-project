@@ -20,22 +20,44 @@ import fr.dcproject.repository.Article as ArticleRepository
 
 @KtorExperimentalLocationsAPI
 object ArticlesPaths {
-    @Location("/articles") class ArticlesRequest(page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: RepositoryI.Direction? = null, val search: String? = null, val createdBy: String? = null) {
+    @Location("/articles")
+    class ArticlesRequest(
+        page: Int = 1,
+        limit: Int = 50,
+        val sort: String? = null,
+        val direction: RepositoryI.Direction? = null,
+        val search: String? = null,
+        val createdBy: String? = null
+    ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
-    @Location("/articles/{article}") class ArticleRequest(val article: ArticleEntity)
-    @Location("/articles/{article}/versions") class ArticleVersionsRequest(val article: ArticleEntity, page: Int = 1, limit: Int = 50, val sort: String? = null, val direction: RepositoryI.Direction? = null, val search: String? = null) {
+
+    @Location("/articles/{article}")
+    class ArticleRequest(val article: ArticleEntity)
+
+    @Location("/articles/{article}/versions")
+    class ArticleVersionsRequest(
+        val article: ArticleEntity,
+        page: Int = 1,
+        limit: Int = 50,
+        val sort: String? = null,
+        val direction: RepositoryI.Direction? = null,
+        val search: String? = null
+    ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
     }
-    @Location("/articles") class PostArticleRequest
+
+    @Location("/articles")
+    class PostArticleRequest
 }
 
 @KtorExperimentalLocationsAPI
 fun Route.article(repo: ArticleRepository) {
     get<ArticlesPaths.ArticlesRequest> {
-        val articles = repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy))
+        val articles =
+            repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy))
         assertCan(VIEW, articles.result)
         call.respond(articles)
     }

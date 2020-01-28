@@ -1009,7 +1009,7 @@ components:
         - $ref: '#/components/schemas/Votable'
 
     ArticleRequest:
-       $ref: '#/components/schemas/ArticleBase'
+      $ref: '#/components/schemas/ArticleBase'
 
     ConstitutionBase:
       type: object

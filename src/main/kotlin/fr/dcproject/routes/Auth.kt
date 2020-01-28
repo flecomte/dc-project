@@ -26,9 +26,14 @@ import fr.dcproject.repository.User as UserRepository
 
 @KtorExperimentalLocationsAPI
 object AuthPaths {
-    @Location("/login") class LoginRequest
-    @Location("/register") class RegisterRequest
-    @Location("/sso") class SsoRequest {
+    @Location("/login")
+    class LoginRequest
+
+    @Location("/register")
+    class RegisterRequest
+
+    @Location("/sso")
+    class SsoRequest {
         data class Content(val email: String, val url: String)
     }
 }
@@ -40,7 +45,7 @@ fun Route.auth(
     citizenRepo: CitizenRepository,
     ssoManager: SsoManager
 ) {
-    post <LoginRequest> {
+    post<LoginRequest> {
         try {
             val credentials = call.receive<UserPasswordCredential>()
             val user = userRepo.findByCredentials(credentials) ?: throw WrongLoginOrPassword()
@@ -52,7 +57,7 @@ fun Route.auth(
         }
     }
 
-    post <RegisterRequest> {
+    post<RegisterRequest> {
         try {
             val citizen = call.receive<CitizenEntity>()
             citizen.user.roles = listOf(ROLE_USER)

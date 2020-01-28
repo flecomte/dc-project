@@ -20,7 +20,8 @@ import fr.dcproject.repository.CommentGeneric as CommentRepository
 @KtorExperimentalLocationsAPI
 object CommentPaths {
     // TODO: change UUID by entity converter
-    @Location("/comments/{comment}") class CommentRequest(val comment: UUID)
+    @Location("/comments/{comment}")
+    class CommentRequest(val comment: UUID)
 
     @Location("/comments/{comment}/children")
     class CommentChildrenRequest(

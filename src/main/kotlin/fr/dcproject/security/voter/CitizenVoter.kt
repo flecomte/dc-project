@@ -50,7 +50,8 @@ class CitizenVoter : Voter {
         if (action == Action.UPDATE &&
             user is UserI &&
             subject is CitizenBasicI &&
-            subject.user.id == user.id) {
+            subject.user.id == user.id
+        ) {
             return Vote.GRANTED
         }
 

@@ -15,8 +15,11 @@ import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepositor
 
 @KtorExperimentalLocationsAPI
 object FollowConstitutionPaths {
-    @Location("/constitutions/{constitution}/follow") class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
-    @Location("/citizens/{citizen}/follows/constitutions") class CitizenFollowConstitutionRequest(val citizen: Citizen)
+    @Location("/constitutions/{constitution}/follow")
+    class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
+
+    @Location("/citizens/{citizen}/follows/constitutions")
+    class CitizenFollowConstitutionRequest(val citizen: Citizen)
 }
 
 @KtorExperimentalLocationsAPI
