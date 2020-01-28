@@ -32,7 +32,6 @@ Feature: constitution routes
           "id":"64b7b379-2298-43ec-b428-ba134930cabd"
        },
        "created_at":null,
-       "version_id":"3311a7af-2a62-4e31-b4cd-889f8ead9737",
        "version_number":null
     }
     """

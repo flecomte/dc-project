@@ -3,6 +3,7 @@ package feature
 import com.auth0.jwt.JWT
 import fr.dcproject.JwtConfig
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CitizenI
 import fr.dcproject.entity.User
 import fr.postgresjson.connexion.Requester
 import io.cucumber.datatable.DataTable
@@ -29,7 +30,7 @@ class KtorServerAuthSteps : En, KoinTest {
             val data = body.asMap<String, String>(String::class.java, String::class.java)
             val citizen = Citizen(
                 id = UUID.fromString(data["id"]),
-                name = Citizen.Name(data["firstName"], data["lastName"]),
+                name = CitizenI.Name(data["firstName"]!!, data["lastName"]!!),
                 email = data["email"] ?: ((data["firstName"] + "-" + data["lastName"]).toLowerCase()) + "@dc-project.com",
                 birthday = DateTime.now(),
                 user = user
@@ -52,7 +53,7 @@ class KtorServerAuthSteps : En, KoinTest {
             )
             val citizen = Citizen(
                 id = UUID.fromString(id),
-                name = Citizen.Name(firstName, lastName),
+                name = CitizenI.Name(firstName, lastName),
                 email = ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr",
                 birthday = DateTime.now(),
                 user = user
@@ -77,7 +78,7 @@ class KtorServerAuthSteps : En, KoinTest {
             )
             val citizen = Citizen(
                 id = UUID.fromString(id),
-                name = Citizen.Name(firstName, lastName),
+                name = CitizenI.Name(firstName, lastName),
                 email = "$firstName-$lastName".toLowerCase() + "@gmail.com",
                 birthday = DateTime.now(),
                 user = user,

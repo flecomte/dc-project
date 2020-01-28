@@ -1,7 +1,7 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.Citizen
-import fr.dcproject.entity.User
+import fr.dcproject.entity.CitizenBasicI
+import fr.dcproject.entity.UserI
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 
@@ -17,7 +17,7 @@ class CitizenVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is List<*> || subject is Citizen?)
+            .and(subject is List<*> || subject is CitizenBasicI?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -28,13 +28,13 @@ class CitizenVoter : Voter {
 
         if (action == Action.VIEW) {
             if (user == null) return Vote.DENIED
-            if (subject is Citizen) {
+            if (subject is CitizenBasicI) {
                 return if (subject.isDeleted()) Vote.DENIED
                 else Vote.GRANTED
             }
             if (subject is List<*>) {
                 subject.forEach {
-                    if (it !is Citizen || it.isDeleted()) {
+                    if (it !is CitizenBasicI || it.isDeleted()) {
                         return Vote.DENIED
                     }
                 }
@@ -48,14 +48,14 @@ class CitizenVoter : Voter {
         }
 
         if (action == Action.UPDATE &&
-            user is User &&
-            subject is Citizen &&
-            subject.user?.id == user.id) {
+            user is UserI &&
+            subject is CitizenBasicI &&
+            subject.user.id == user.id) {
             return Vote.GRANTED
         }
 
-        if (action == Action.CHANGE_PASSWORD && user != null && subject is Citizen) {
-            val userToChange = subject.user ?: error("Citizen must have User")
+        if (action == Action.CHANGE_PASSWORD && user != null && subject is CitizenBasicI) {
+            val userToChange = subject.user
             return if (user.id == userToChange.id) {
                 Vote.GRANTED
             } else {

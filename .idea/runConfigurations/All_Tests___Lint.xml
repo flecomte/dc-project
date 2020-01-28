@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Tests" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
+  <configuration default="false" name="All Tests + Lint" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
     <module name="dcproject.test" />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
@@ -19,6 +19,7 @@
     <dir value="$PROJECT_DIR$" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
 </component>

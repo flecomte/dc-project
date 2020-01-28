@@ -1,22 +1,22 @@
 package fr.dcproject.repository
 
+import fr.dcproject.entity.CitizenI
+import fr.dcproject.entity.TargetI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.mutable.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
-import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow <T : UuidEntity>(override var requester: Requester) : RepositoryI {
+open class Follow <T : TargetI>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<FollowEntity<T>> =
-        findByCitizen(citizen.id ?: error("The citizen must have an id"), page, limit)
+        findByCitizen(citizen.id, page, limit)
 
     open fun findByCitizen(
         citizenId: UUID,
@@ -32,24 +32,22 @@ open class Follow <T : UuidEntity>(override var requester: Requester) : Reposito
     }
 
     fun follow(follow: FollowEntity<T>) {
-        val reference = follow.target::class.simpleName!!.toLowerCase()
         requester
             .getFunction("follow")
             .sendQuery(
-                "reference" to reference,
+                "reference" to follow.target.reference,
                 "target_id" to follow.target.id,
-                "created_by_id" to follow.createdBy?.id
+                "created_by_id" to follow.createdBy.id
             )
     }
 
     fun unfollow(follow: FollowEntity<T>) {
-        val reference = follow.target::class.simpleName!!.toLowerCase()
         requester
             .getFunction("unfollow")
             .sendQuery(
-                "reference" to reference,
+                "reference" to follow.target.reference,
                 "target_id" to follow.target.id,
-                "created_by_id" to follow.createdBy?.id
+                "created_by_id" to follow.createdBy.id
             )
     }
 }

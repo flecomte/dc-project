@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
-import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
 import org.eclipse.jetty.util.resource.JarResource
 import java.io.File
 import java.util.*
@@ -46,7 +46,7 @@ object JwtConfig {
     /**
      * Produce a token for this combination of User and Account
      */
-    fun makeToken(user: User): String = JWT.create()
+    fun makeToken(user: UserI): String = JWT.create()
         .withSubject("Authentication")
         .withIssuer(issuer)
         .withClaim("id", user.id.toString())

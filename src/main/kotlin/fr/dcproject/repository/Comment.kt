@@ -1,16 +1,18 @@
 package fr.dcproject.repository
 
+import fr.dcproject.entity.ArticleRef
+import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.mutable.UuidEntity
+import fr.postgresjson.entity.immutable.UuidEntityI
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
-abstract class Comment <T : UuidEntity>(override var requester: Requester) : RepositoryI {
+abstract class Comment <T : TargetI>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
 
     abstract fun findByCitizen(
@@ -24,7 +26,7 @@ abstract class Comment <T : UuidEntity>(override var requester: Requester) : Rep
         page: Int = 1,
         limit: Int = 50
     ): Paginated<CommentEntity<T>> {
-        return findByParent(parent.id ?: error("comment must have an ID"), page, limit)
+        return findByParent(parent.id, page, limit)
     }
 
     open fun findByParent(
@@ -41,11 +43,11 @@ abstract class Comment <T : UuidEntity>(override var requester: Requester) : Rep
     }
 
     open fun findByTarget(
-        target: UuidEntity,
+        target: UuidEntityI,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<CommentEntity<T>> {
-        return findByTarget(target.id ?: error("comment must have an ID"), page, limit)
+        return findByTarget(target.id, page, limit)
     }
 
     open fun findByTarget(
@@ -65,7 +67,7 @@ abstract class Comment <T : UuidEntity>(override var requester: Requester) : Rep
         requester
             .getFunction("comment")
             .sendQuery(
-                "reference" to comment.targetReference,
+                "reference" to comment.target.reference,
                 "resource" to comment
             )
     }
@@ -80,8 +82,8 @@ abstract class Comment <T : UuidEntity>(override var requester: Requester) : Rep
     }
 }
 
-class CommentGeneric(requester: Requester) : Comment<UuidEntity>(requester) {
-    override fun findById(id: UUID): CommentEntity<UuidEntity>? {
+class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
+    override fun findById(id: UUID): CommentEntity<TargetRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -91,7 +93,7 @@ class CommentGeneric(requester: Requester) : Comment<UuidEntity>(requester) {
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<UuidEntity>> {
+    ): Paginated<CommentEntity<TargetRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(page, limit,
@@ -101,8 +103,8 @@ class CommentGeneric(requester: Requester) : Comment<UuidEntity>(requester) {
     }
 }
 
-class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
-    override fun findById(id: UUID): CommentEntity<ArticleEntity>? {
+class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
+    override fun findById(id: UUID): CommentEntity<ArticleRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -112,13 +114,12 @@ class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<ArticleEntity>> {
-        val reference = ArticleEntity::class.simpleName!!.toLowerCase()
+    ): Paginated<CommentEntity<ArticleRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(page, limit,
                     "created_by_id" to citizen.id,
-                    "reference" to reference
+                    "reference" to TargetI.getReference(ArticleRef::class)
                 )
         }
     }
@@ -136,12 +137,11 @@ class CommentConstitution(requester: Requester) : Comment<ConstitutionEntity>(re
         page: Int,
         limit: Int
     ): Paginated<CommentEntity<ConstitutionEntity>> {
-        val reference = ConstitutionEntity::class.simpleName!!.toLowerCase()
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(page, limit,
                     "created_by_id" to citizen.id,
-                    "reference" to reference
+                    "reference" to TargetI.getReference(ConstitutionEntity::class)
                 )
         }
     }

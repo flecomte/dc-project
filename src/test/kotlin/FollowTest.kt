@@ -1,7 +1,4 @@
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.Citizen
-import fr.dcproject.entity.Follow
-import fr.dcproject.entity.User
+import fr.dcproject.entity.*
 import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -53,7 +50,25 @@ class FollowTest {
     
           ],
           "created_by":{
-             "id":"4a87ad24-187a-46a8-97ab-00b30a24e561"
+             "id":"4a87ad24-187a-46a8-97ab-00b30a24e561",
+             "name":{  
+                "first_name":"Jaque",
+                "last_name":"Bono",
+                "civility":null
+             },
+             "email": "jaque.bono@gmail.com",
+             "birthday":"2019-08-09T11:42:47.168Z",
+             "user_id":null,
+             "vote_anonymous":null,
+             "follow_anonymous":null,
+             "user":{  
+                "id":"721db690-d050-46e6-92b0-056f2e8ba993",
+                "username":"jaque",
+                "blocked_at":null,
+                "plain_password":"azerty",
+                "created_at":null,
+                "updated_at":null
+             }
           },
           "version_id":"a4aa7dd4-d174-42d2-9ba5-ae6f1129ffce",
           "version_number":null,
@@ -65,8 +80,8 @@ class FollowTest {
     @Test
     fun `test Follow Article serialize`() {
         val user = User(username = "jaque", plainPassword = "azerty")
-        val citizen = Citizen(
-            name = Citizen.Name("Jaque", "Bono"),
+        val citizen = CitizenBasic(
+            name = CitizenI.Name("Jaque", "Bono"),
             email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user
@@ -87,7 +102,7 @@ class FollowTest {
 
     @Test
     fun `test Follow Article Deserialize`() {
-        val follow: Follow<Article> = followJson.deserialize()!!
+        val follow: Follow<ArticleSimple> = followJson.deserialize()!!
         follow.id.toString() `should equal` "bae81585-d985-4d7a-9b58-3a13e911688a"
     }
 }

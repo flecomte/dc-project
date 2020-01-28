@@ -1,5 +1,8 @@
 package fr.dcproject.repository
 
+import fr.dcproject.entity.CitizenBasic
+import fr.dcproject.entity.CitizenFull
+import fr.dcproject.entity.UserI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
@@ -7,7 +10,6 @@ import fr.postgresjson.repository.RepositoryI.Direction
 import net.pearx.kasechange.toSnakeCase
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
-import fr.dcproject.entity.User as UserEntity
 
 class Citizen(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID, withUser: Boolean = false): CitizenEntity? {
@@ -16,7 +18,7 @@ class Citizen(override var requester: Requester) : RepositoryI {
             .selectOne("id" to id)
     }
 
-    fun findByUser(user: UserEntity): CitizenEntity? {
+    fun findByUser(user: UserI): CitizenEntity? {
         return requester
             .getFunction("find_citizen_by_user_id")
             .selectOne("user_id" to user.id)
@@ -40,7 +42,7 @@ class Citizen(override var requester: Requester) : RepositoryI {
         sort: String? = null,
         direction: Direction? = null,
         search: String? = null
-    ): Paginated<CitizenEntity> {
+    ): Paginated<CitizenBasic> {
         return requester
             .getFunction("find_citizens")
             .select(
@@ -51,13 +53,13 @@ class Citizen(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun upsert(citizen: CitizenEntity): CitizenEntity? {
+    fun upsert(citizen: CitizenFull): CitizenEntity? {
         return requester
             .getFunction("upsert_citizen")
             .selectOne("resource" to citizen)
     }
 
-    fun insertWithUser(citizen: CitizenEntity): CitizenEntity? {
+    fun insertWithUser(citizen: CitizenFull): CitizenEntity? {
         return requester
             .getFunction("insert_citizen_with_user")
             .selectOne("resource" to citizen)

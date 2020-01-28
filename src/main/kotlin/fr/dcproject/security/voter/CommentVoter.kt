@@ -38,7 +38,7 @@ class CommentVoter : Voter {
             return Vote.DENIED
         }
 
-        if (action == Action.UPDATE && user != null && subject is Comment<*> && user.id == subject.createdBy?.userId) {
+        if (action == Action.UPDATE && user != null && subject is Comment<*> && user.id == subject.createdBy.user.id) {
             return Vote.GRANTED
         }
 

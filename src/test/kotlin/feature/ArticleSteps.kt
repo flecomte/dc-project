@@ -1,6 +1,6 @@
 package feature
 
-import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.*
 import fr.dcproject.repository.CommentArticle
 import io.cucumber.java8.En
 import org.joda.time.DateTime
@@ -18,7 +18,7 @@ class ArticleSteps : En, KoinTest {
     init {
         Given("I have article with id {string}") { id: String ->
             var citizen = Citizen(
-                name = Citizen.Name("John", "Doe"),
+                name = CitizenI.Name("John", "Doe"),
                 email = "john.doe@gmail.com",
                 birthday = DateTime.now(),
                 user = UserEntity(username = "john-doe", plainPassword = "azerty")
@@ -55,7 +55,7 @@ class ArticleSteps : En, KoinTest {
 
         Given("I have comment {string} on article {string}") { commentId: String, articleId: String ->
             var citizen = Citizen(
-                name = Citizen.Name("John", "Doe"),
+                name = CitizenI.Name("John", "Doe"),
                 email = "john.doe@gmail.com",
                 birthday = DateTime.now(),
                 user = UserEntity(username = "john-doe", plainPassword = "azerty")
@@ -76,7 +76,7 @@ class ArticleSteps : En, KoinTest {
             )
             get<ArticleRepository>().upsert(article)
 
-            val comment = CommentEntity(
+            val comment: CommentEntity<ArticleRef> = CommentEntity(
                 id = UUID.fromString(commentId),
                 createdBy = citizen,
                 target = article,

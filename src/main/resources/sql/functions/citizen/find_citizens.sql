@@ -13,7 +13,8 @@ begin
     into resource, total
     from (
         select
-            z.*
+            z.*,
+            json_build_object('id', z.user_id) as "user"
         from citizen as z
         where "search" is null or (
             (name->'first_name')::text ilike '%'||"search"||'%' or

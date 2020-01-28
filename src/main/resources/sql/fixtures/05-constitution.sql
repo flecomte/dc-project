@@ -17,20 +17,18 @@ begin
         now() + (row_number() over () * interval '7 minute 3 second')
     from citizen z;
 
-    insert into title (id, created_by_id, name, rank, constitution_id)
+    insert into title (id, name, rank, constitution_id)
     select
         uuid_in(md5('constitution_title'||row_number() over ())::cstring),
-        c.created_by_id,
         'name' || row_number() over (),
         row_number() over (),
         c.id
     from constitution c,
     lateral generate_series(1, 5) g;
 
-    insert into article_in_title (id, created_by_id, rank, title_id, article_id, constitution_id)
+    insert into article_in_title (id, rank, title_id, article_id, constitution_id)
     select
         uuid_in(md5('article_in_title'||row_number() over ())::cstring),
-        ti.created_by_id,
         row_number() over (),
         ti.id,
         a.id,

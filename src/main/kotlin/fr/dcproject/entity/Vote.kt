@@ -1,13 +1,12 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.mutable.EntityUpdatedAt
-import fr.postgresjson.entity.mutable.EntityUpdatedAtImp
-import fr.postgresjson.entity.mutable.UuidEntity
+import fr.postgresjson.entity.immutable.EntityUpdatedAt
+import fr.postgresjson.entity.immutable.EntityUpdatedAtImp
 import java.util.*
 
-open class Vote <T : UuidEntity> (
+open class Vote <T : TargetI> (
     id: UUID = UUID.randomUUID(),
-    createdBy: Citizen,
+    override val createdBy: CitizenBasic,
     target: T,
     var note: Int,
     var anonymous: Boolean = true

@@ -46,10 +46,6 @@ begin
     titles := (resource->>'titles');
 
     for _title in select json_array_elements(titles) loop
-        if _title#>>'{created_by, id}' is null then
-            _title := jsonb_set(_title::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
-        end if;
-
         perform create_title_in_constitution(_title, new_id);
     end loop;
 

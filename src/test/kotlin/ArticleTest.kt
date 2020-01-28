@@ -1,5 +1,6 @@
 import fr.dcproject.entity.Article
-import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CitizenBasic
+import fr.dcproject.entity.CitizenI
 import fr.dcproject.entity.User
 import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
@@ -57,8 +58,8 @@ class ArticleTest {
     @Test
     fun `test Article serialize`() {
         val user = User(username = "jaque", plainPassword = "azerty")
-        val citizen = Citizen(
-            name = Citizen.Name("Jaque", "Bono"),
+        val citizen = CitizenBasic(
+            name = CitizenI.Name("Jaque", "Bono"),
             birthday = DateTime.now(),
             email = "jaque.bono@gmail.com",
             user = user

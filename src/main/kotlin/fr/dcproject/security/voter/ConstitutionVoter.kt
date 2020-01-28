@@ -1,9 +1,9 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.entity.Comment
-import fr.dcproject.entity.User
+import fr.dcproject.entity.ConstitutionSimple
+import fr.dcproject.entity.UserI
 import io.ktor.application.ApplicationCall
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
 class ConstitutionVoter : Voter {
@@ -16,7 +16,7 @@ class ConstitutionVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-            .and(subject is List<*> || subject is ConstitutionEntity? || subject is VoteEntity<*> || subject is Comment<*>)
+            .and(subject is List<*> || subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is Comment<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -26,13 +26,13 @@ class ConstitutionVoter : Voter {
         }
 
         if (action == Action.VIEW) {
-            if (subject is ConstitutionEntity) {
+            if (subject is ConstitutionSimple<*, *>) {
                 return if (subject.isDeleted()) Vote.DENIED
                 else Vote.GRANTED
             }
             if (subject is List<*>) {
                 subject.forEach {
-                    if (it !is ConstitutionEntity || it.isDeleted()) {
+                    if (it !is ConstitutionSimple<*, *> || it.isDeleted()) {
                         return Vote.DENIED
                     }
                 }
@@ -41,11 +41,11 @@ class ConstitutionVoter : Voter {
             return Vote.DENIED
         }
 
-        if (action == Action.DELETE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {
+        if (action == Action.DELETE && user is UserI && subject is ConstitutionSimple<*, *> && subject.createdBy.user.id == user.id) {
             return Vote.GRANTED
         }
 
-        if (action == Action.UPDATE && user is User && subject is ConstitutionEntity && subject.createdBy?.userId == user.id) {
+        if (action == Action.UPDATE && user is UserI && subject is ConstitutionSimple<*, *> && subject.createdBy.user.id == user.id) {
             return Vote.GRANTED
         }
 
@@ -62,7 +62,7 @@ class ConstitutionVoter : Voter {
     private fun voteForVote(action: VoteVoter.Action, subject: Any?): Vote {
         if (action == VoteVoter.Action.CREATE && subject is VoteEntity<*>) {
             val target = subject.target
-            if (target !is ConstitutionEntity) {
+            if (target !is ConstitutionSimple<*, *>) {
                 return Vote.ABSTAIN
             }
             if (target.isDeleted()) {

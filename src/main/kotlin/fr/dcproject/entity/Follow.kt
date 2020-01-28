@@ -1,9 +1,8 @@
 package fr.dcproject.entity
-import fr.postgresjson.entity.mutable.UuidEntity
 import java.util.*
 
-class Follow <T : UuidEntity> (
+class Follow <T : TargetI> (
     id: UUID = UUID.randomUUID(),
-    createdBy: Citizen,
+    override val createdBy: CitizenBasic,
     target: T
 ) : Extra<T>(id, createdBy, target)

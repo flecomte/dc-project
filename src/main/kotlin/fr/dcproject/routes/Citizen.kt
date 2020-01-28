@@ -62,7 +62,7 @@ fun Route.citizen(
         assertCan(CHANGE_PASSWORD, it.citizen)
         val content = call.receive<ChangePasswordCitizenRequest.Content>()
 
-        val user = it.citizen.user ?: error("Citizen must have User")
+        val user = it.citizen.user
 
         user.plainPassword = content.password
         userRepository.changePassword(user)

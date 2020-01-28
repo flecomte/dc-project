@@ -4,12 +4,10 @@ $$
 declare
     _title alias for title;
     _constitution_id uuid = coalesce(constitution_id, (title#>>'{constitution_id}')::uuid);
-    _author_id uuid = (title#>>'{created_by, id}')::uuid;
     new_id uuid;
 begin
-    insert into title (created_by_id, name, rank, constitution_id)
+    insert into title (name, rank, constitution_id)
     select
-        _author_id,
         ti.name,
         row_number() OVER (),
         _constitution_id
@@ -17,9 +15,8 @@ begin
     returning id into new_id;
 
     if (_title->'articles' is not null) then
-        insert into article_in_title (created_by_id, rank, title_id, article_id, constitution_id)
+        insert into article_in_title (rank, title_id, article_id, constitution_id)
         select
-            _author_id,
             row_number() over (),
             new_id,
             id,

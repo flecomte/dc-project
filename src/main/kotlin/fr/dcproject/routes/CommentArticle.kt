@@ -1,6 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.entity.ArticleRef
 import fr.dcproject.entity.Citizen
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
@@ -14,7 +15,6 @@ import io.ktor.locations.post
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.request.Comment as CommentEntityRequest
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
@@ -23,7 +23,7 @@ import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 object CommentArticlePaths {
     @Location("/articles/{article}/comments")
     class ArticleCommentRequest(
-        val article: ArticleEntity,
+        val article: ArticleRef,
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null

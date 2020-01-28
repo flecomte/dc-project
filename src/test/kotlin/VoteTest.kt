@@ -1,7 +1,4 @@
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.Citizen
-import fr.dcproject.entity.User
-import fr.dcproject.entity.Vote
+import fr.dcproject.entity.*
 import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -40,11 +37,12 @@ class VoteTest {
           "blocked_at": null,
           "plain_password": "azerty",
           "roles": [],
-          "created_at": null,
-          "updated_at": null
+          "created_at": "2019-10-01T10:59:40.570Z",
+          "updated_at": "2019-10-01T10:59:40.570Z"
         },
         "deleted": false,
-        "created_at": null,
+        "created_at": "2019-10-01T10:59:40.570Z",
+        "updated_at": "2019-10-01T10:59:40.570Z",
         "deleted_at": null
       },
       "target": {
@@ -90,20 +88,20 @@ class VoteTest {
         "version_id": "48dad61e-c54b-4f4c-9f66-428f90b94045",
         "version_number": null,
         "deleted": false,
-        "created_at": null,
-        "deleted_at": null
+        "created_at": "2019-10-01T10:59:40.570Z",
+        "deleted_at": "2019-10-01T10:59:40.570Z"
       },
       "note": -1,
       "anonymous": true,
-      "updated_at": null,
-      "created_at": null
+      "updated_at": "2019-10-01T10:59:40.570Z",
+      "created_at": "2019-10-01T10:59:40.570Z"
     }""".trimIndent()
 
     @Test
     fun `test Vote Article serialize`() {
         val user = User(username = "jaque", plainPassword = "azerty")
-        val citizen = Citizen(
-            name = Citizen.Name("Jaque", "Bono"),
+        val citizen = CitizenBasic(
+            name = CitizenI.Name("Jaque", "Bono"),
             email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user

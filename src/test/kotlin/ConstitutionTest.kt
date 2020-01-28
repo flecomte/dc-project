@@ -1,4 +1,5 @@
-import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CitizenBasic
+import fr.dcproject.entity.CitizenI
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.User
 import fr.postgresjson.serializer.deserialize
@@ -78,8 +79,8 @@ class ConstitutionTest {
     @Test
     fun `test Constitution serialize`() {
         val user = User(username = "jaque", plainPassword = "azerty")
-        val citizen = Citizen(
-            name = Citizen.Name("Jaque", "Bono"),
+        val citizen = CitizenBasic(
+            name = CitizenI.Name("Jaque", "Bono"),
             email = "jaque.bono@gmail.com",
             birthday = DateTime.now(),
             user = user
@@ -90,7 +91,7 @@ class ConstitutionTest {
         val constitution = Constitution(
             title = "Hello world!",
             anonymous = true,
-            titles = listOf(title1),
+            titles = mutableListOf(title1),
             createdBy = citizen
         )
         println(constitution.serialize())

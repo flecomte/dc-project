@@ -1,5 +1,7 @@
 package fr.dcproject.repository
 
+import fr.dcproject.entity.ArticleFull
+import fr.dcproject.entity.ArticleSimple
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
@@ -28,7 +30,7 @@ class Article(override var requester: Requester) : RepositoryI {
         direction: Direction? = null,
         search: String? = null,
         filter: Filter = Filter()
-    ): Paginated<ArticleEntity> {
+    ): Paginated<ArticleSimple> {
         return requester
             .getFunction("find_articles")
             .select(
@@ -40,7 +42,7 @@ class Article(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun upsert(article: ArticleEntity): ArticleEntity? {
+    fun upsert(article: ArticleFull): ArticleEntity? {
         return requester
             .getFunction("upsert_article")
             .selectOne("resource" to article)

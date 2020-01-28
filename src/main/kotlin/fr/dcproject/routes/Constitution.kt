@@ -1,6 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.entity.request.Constitution
 import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
 import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -41,8 +42,7 @@ fun Route.constitution(repo: ConstitutionRepository) {
     }
 
     post<ConstitutionPaths.PostConstitutionRequest> {
-        val constitution = call.receive<ConstitutionEntity>()
-        constitution.createdBy = citizen
+        val constitution = call.receive<Constitution>().create(citizen)
         assertCan(CREATE, constitution)
 
         repo.upsert(constitution)

@@ -47,7 +47,7 @@ class FollowVoter : Voter {
     }
 
     private fun voteView(user: UserEntity?, subject: FollowEntity<*>): Vote {
-        return if ((user != null && subject.createdBy?.user?.id == user.id) || subject.createdBy?.followAnonymous == false) Vote.GRANTED
+        return if ((user != null && subject.createdBy.user.id == user.id) || !subject.createdBy.followAnonymous) Vote.GRANTED
         else Vote.DENIED
     }
 }

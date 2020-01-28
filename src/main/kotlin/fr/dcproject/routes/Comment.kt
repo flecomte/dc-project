@@ -73,7 +73,6 @@ fun Route.comment(repo: CommentRepository) {
         assertCan(CREATE, newComment)
         repo.comment(newComment)
 
-
         call.respond(HttpStatusCode.Created, newComment)
     }
 

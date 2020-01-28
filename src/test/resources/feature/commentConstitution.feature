@@ -1,9 +1,9 @@
 Feature: comment Constitution
 
   Scenario: Can comment an constitution
-    Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
-    And I have constitution with id "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
-    When I send a POST request to "/constitutions/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/comments" with body:
+    Given I am authenticated as John Toe with id "a6eb1f5a-8c02-42f4-8e8e-a722f26841ef"
+    And I have constitution with id "d7e20f0b-3fdd-4638-817a-bbd87054eb82" created by "john-toe"
+    When I send a POST request to "/constitutions/d7e20f0b-3fdd-4638-817a-bbd87054eb82/comments" with body:
     """
     Hello mister
     """

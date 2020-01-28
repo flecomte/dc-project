@@ -1,34 +1,25 @@
 package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
+import fr.dcproject.entity.*
 import fr.dcproject.entity.Article
 import fr.dcproject.entity.Comment
 import fr.dcproject.entity.Constitution
-import fr.dcproject.entity.VoteAggregation
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.mutable.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
-open class Vote <T : UuidEntity>(override var requester: Requester) : RepositoryI {
+open class Vote <T : TargetI>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteEntity<T>): VoteAggregation {
-        val target = vote.target
-        val reference = if (target is Comment<*>) {
-            target::class.simpleName!!.toLowerCase() +
-            "_on_" +
-            target.targetReference
-        } else {
-            target::class.simpleName!!.toLowerCase()
-        }
-        val author = vote.createdBy ?: error("vote must be contain an author")
+        val author = vote.createdBy
         val anonymous = author.voteAnonymous
         return requester
             .getFunction("vote")
             .selectOne(
-                "reference" to reference,
+                "reference" to vote.target.reference,
                 "target_id" to vote.target.id,
                 "note" to vote.note,
                 "created_by_id" to author.id,
@@ -56,12 +47,11 @@ open class Vote <T : UuidEntity>(override var requester: Requester) : Repository
         citizen: CitizenEntity,
         targets: List<UUID>
     ): List<VoteEntity<*>> {
-        val typeReference = object : TypeReference<List<VoteEntity<UuidEntity>>>() {}
+        val typeReference = object : TypeReference<List<VoteEntity<TargetRef>>>() {}
         return requester.run {
-            val citizenId = citizen.id ?: error("The citizen must have an id")
             getFunction("find_citizen_votes_by_target_ids")
                 .select(typeReference, mapOf(
-                    "citizen_id" to citizenId,
+                    "citizen_id" to citizen.id,
                     "ids" to targets
                 ))
         }
@@ -75,7 +65,7 @@ class VoteArticle(requester: Requester) : Vote<Article>(requester) {
         limit: Int = 50
     ): Paginated<VoteEntity<Article>> =
         findByCitizen(
-            citizen.id ?: error("The citizen must have an id"),
+            citizen.id,
             "article",
             object : TypeReference<List<VoteEntity<Article>>>() {},
             page,
@@ -90,7 +80,7 @@ class VoteArticleComment(requester: Requester) : Vote<Comment<Article>>(requeste
         limit: Int = 50
     ): Paginated<VoteEntity<Comment<Article>>> =
         findByCitizen(
-            citizen.id ?: error("The citizen must have an id"),
+            citizen.id,
             "article",
             object : TypeReference<List<VoteEntity<Comment<Article>>>>() {},
             page,
@@ -98,16 +88,16 @@ class VoteArticleComment(requester: Requester) : Vote<Comment<Article>>(requeste
         )
 }
 
-class VoteComment(requester: Requester) : Vote<Comment<UuidEntity>>(requester) {
+class VoteComment(requester: Requester) : Vote<Comment<TargetRef>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<VoteEntity<Comment<UuidEntity>>> =
+    ): Paginated<VoteEntity<Comment<TargetRef>>> =
         findByCitizen(
-            citizen.id ?: error("The citizen must have an id"),
+            citizen.id,
             "article",
-            object : TypeReference<List<VoteEntity<Comment<UuidEntity>>>>() {},
+            object : TypeReference<List<VoteEntity<Comment<TargetRef>>>>() {},
             page,
             limit
         )
@@ -120,7 +110,7 @@ class VoteConstitution(requester: Requester) : Vote<Constitution>(requester) {
         limit: Int = 50
     ): Paginated<VoteEntity<Constitution>> =
         findByCitizen(
-            citizen.id ?: error("The citizen must have an id"),
+            citizen.id,
             "constitution",
             object : TypeReference<List<VoteEntity<Constitution>>>() {},
             page,

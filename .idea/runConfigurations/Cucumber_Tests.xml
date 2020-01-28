@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Cucumber Tests" type="JUnit" factoryName="JUnit">
-    <output_file path="$PROJECT_DIR$/var/log/test/cucumber.out.log" is_save="true" />
+    <output_file path="$PROJECT_DIR$/var/log/test/cucumber.out.log" />
     <module name="dcproject.test" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="RunCucumberTest" />
-    <option name="METHOD_NAME" value="testArticle" />
+    <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="PARAMETERS" value="" />
     <envs>

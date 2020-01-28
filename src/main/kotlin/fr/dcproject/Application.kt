@@ -8,10 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.Env.PROD
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.Citizen
-import fr.dcproject.entity.Constitution
-import fr.dcproject.entity.User
+import fr.dcproject.entity.*
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.postgresjson.migration.Migrations
@@ -80,9 +77,16 @@ fun Application.module(env: Env = PROD) {
         // TODO: create generic convert for entityI
         convert<Article> {
             decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryArticle>().findById(id) ?: throw InternalError("Article $values not found")
+                values.singleOrNull()?.let {
+                    get<RepositoryArticle>().findById(UUID.fromString(it)) ?: throw InternalError("Article $values not found")
+                } ?: throw NotFoundException("Article $values not found")
+            }
+        }
+        convert<ArticleRef> {
+            decode { values, _ ->
+                values.singleOrNull()?.let {
+                    ArticleRef(UUID.fromString(it))
+                } ?: throw NotFoundException("Article $values not found")
             }
         }
 
@@ -90,7 +94,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryConstitution>().findById(id) ?: throw InternalError("Constitution $values not found")
+                get<RepositoryConstitution>().findById(id) ?: throw NotFoundException("Constitution $values not found")
             }
         }
 
@@ -98,7 +102,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryCitizen>().findById(id, true) ?: throw InternalError("Citizen $values not found")
+                get<RepositoryCitizen>().findById(id, true) ?: throw NotFoundException("Citizen $values not found")
             }
         }
     }
@@ -178,6 +182,9 @@ fun Application.module(env: Env = PROD) {
             } else {
                 throw e
             }
+        }
+        exception<NotFoundException> { e ->
+            call.respond(HttpStatusCode.BadRequest, e.message!!)
         }
     }
 

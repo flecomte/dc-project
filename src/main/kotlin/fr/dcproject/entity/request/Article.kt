@@ -1,5 +1,6 @@
 package fr.dcproject.entity.request
 
+import fr.dcproject.entity.ArticleFull
 import fr.dcproject.entity.Citizen
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
@@ -7,7 +8,7 @@ import fr.dcproject.entity.Article as ArticleEntity
 class Article(
     val id: UUID?,
     val title: String,
-    val anonymous: Boolean? = true,
+    val anonymous: Boolean = true,
     val content: String,
     val description: String,
     val tags: List<String> = emptyList(),
@@ -16,7 +17,7 @@ class Article(
 ) :
     Request {
 
-    fun merge(article: ArticleEntity) {
+    fun merge(article: ArticleFull) {
         article.title = this.title
         article.content = this.content
         article.description = this.description

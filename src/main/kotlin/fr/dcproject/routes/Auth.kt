@@ -1,8 +1,9 @@
 package fr.dcproject.routes
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.JwtConfig
-import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI.Roles.ROLE_USER
 import fr.dcproject.messages.SsoManager
 import fr.dcproject.routes.AuthPaths.LoginRequest
 import fr.dcproject.routes.AuthPaths.RegisterRequest
@@ -52,12 +53,14 @@ fun Route.auth(
     }
 
     post <RegisterRequest> {
-        val citizen = call.receive<CitizenEntity>()
-        citizen.user?.roles = listOf(User.Roles.ROLE_USER)
-        // TODO implement with validator
-        citizen.email ?: throw BadRequestException("Bad request")
-        val created = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
-        call.respondText(JwtConfig.makeToken(created))
+        try {
+            val citizen = call.receive<CitizenEntity>()
+            citizen.user.roles = listOf(ROLE_USER)
+            val created = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
+            call.respondText(JwtConfig.makeToken(created))
+        } catch (e: MissingKotlinParameterException) {
+            call.respond(HttpStatusCode.BadRequest)
+        }
     }
 
     post<SsoRequest> {

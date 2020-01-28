@@ -274,7 +274,6 @@ create table title
 (
     id              uuid        default uuid_generate_v4() not null primary key,
     created_at      timestamptz default now()              not null,
-    created_by_id   uuid                                   not null references citizen (id),
     name            text                                   not null check ( name != '' ),
     rank            int                                    not null check ( rank >= 0 ),
     constitution_id uuid                                   not null references constitution (id)
@@ -284,7 +283,6 @@ create table article_in_title
 (
     id              uuid        default uuid_generate_v4() not null primary key,
     created_at      timestamptz default now()              not null,
-    created_by_id   uuid                                   not null references citizen (id),
     rank            int                                    not null check ( rank >= 0 ),
     title_id        uuid                                   not null references title (id),
     article_id      uuid                                   not null references article (id),

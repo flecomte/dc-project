@@ -24,7 +24,7 @@ class VoteVoter : Voter {
 
         if (action == Action.VIEW && user != null) {
             if (subject is VoteEntity<*>) {
-                return if (subject.createdBy?.userId != user.id) {
+                return if (subject.createdBy.user.id != user.id) {
                     Vote.DENIED
                 } else {
                     Vote.GRANTED
@@ -33,7 +33,7 @@ class VoteVoter : Voter {
 
             if (subject is List<*>) {
                 subject.forEach {
-                    if (it !is VoteEntity<*> || it.createdBy?.userId != user.id) {
+                    if (it !is VoteEntity<*> || it.createdBy.user.id != user.id) {
                         return Vote.DENIED
                     }
                 }

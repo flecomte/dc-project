@@ -1,5 +1,6 @@
 package fr.dcproject.repository
 
+import fr.dcproject.entity.UserFull
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.auth.UserPasswordCredential
@@ -30,7 +31,7 @@ class User(override var requester: Requester) : RepositoryI {
             .selectOne("resource" to user)
     }
 
-    fun changePassword(user: UserEntity) {
+    fun changePassword(user: UserFull) {
         requester
             .getFunction("change_user_password")
             .sendQuery("resource" to user)
