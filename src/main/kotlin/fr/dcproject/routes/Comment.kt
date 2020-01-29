@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Comment
+import fr.dcproject.entity.CommentRef
 import fr.dcproject.routes.CommentPaths.CreateCommentRequest.Content
 import fr.dcproject.security.voter.CommentVoter.Action.*
 import fr.dcproject.security.voter.assertCan
@@ -19,9 +20,8 @@ import fr.dcproject.repository.CommentGeneric as CommentRepository
 
 @KtorExperimentalLocationsAPI
 object CommentPaths {
-    // TODO: change UUID by entity converter
     @Location("/comments/{comment}")
-    class CommentRequest(val comment: UUID)
+    class CommentRequest(val comment: CommentRef)
 
     @Location("/comments/{comment}/children")
     class CommentChildrenRequest(
@@ -35,7 +35,7 @@ object CommentPaths {
     }
 
     @Location("/comments/{comment}/children")
-    class CreateCommentRequest(val comment: UUID) {
+    class CreateCommentRequest(val comment: CommentRef) {
         class Content(val content: String)
     }
 }
@@ -44,7 +44,7 @@ object CommentPaths {
 @KtorExperimentalLocationsAPI
 fun Route.comment(repo: CommentRepository) {
     get<CommentPaths.CommentRequest> {
-        val comment = repo.findById(it.comment)!!
+        val comment = repo.findById(it.comment.id)!!
         assertCan(VIEW, comment)
 
         call.respond(HttpStatusCode.OK, comment)
@@ -64,7 +64,7 @@ fun Route.comment(repo: CommentRepository) {
     }
 
     post<CommentPaths.CreateCommentRequest> {
-        val parent = repo.findById(it.comment) ?: throw NotFoundException("Comment not found")
+        val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
         val newComment = Comment(
             content = call.receive<Content>().content,
             createdBy = citizen,
@@ -78,7 +78,7 @@ fun Route.comment(repo: CommentRepository) {
     }
 
     put<CommentPaths.CommentRequest> {
-        val comment = repo.findById(it.comment)!!
+        val comment = repo.findById(it.comment.id)!!
         assertCan(UPDATE, comment)
 
         comment.content = call.receiveText()

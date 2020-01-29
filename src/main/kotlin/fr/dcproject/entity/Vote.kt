@@ -1,16 +1,18 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.EntityUpdatedAt
-import fr.postgresjson.entity.immutable.EntityUpdatedAtImp
+import fr.postgresjson.entity.immutable.*
 import java.util.*
 
 open class Vote<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenBasic,
-    target: T,
+    override var target: T,
     var note: Int,
     var anonymous: Boolean = true
-) : Extra<T>(id, createdBy, target),
+) : ExtraI<T>,
+    UuidEntity(id),
+    EntityCreatedAt by EntityCreatedAtImp(),
+    EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
     EntityUpdatedAt by EntityUpdatedAtImp() {
     init {
         if (note > 1 && note < -1) {

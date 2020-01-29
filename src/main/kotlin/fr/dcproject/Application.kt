@@ -79,7 +79,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 values.singleOrNull()?.let {
                     get<RepositoryArticle>().findById(UUID.fromString(it))
-                        ?: throw InternalError("Article $values not found")
+                        ?: throw NotFoundException("Article $values not found")
                 } ?: throw NotFoundException("Article $values not found")
             }
         }
@@ -88,6 +88,14 @@ fun Application.module(env: Env = PROD) {
                 values.singleOrNull()?.let {
                     ArticleRef(UUID.fromString(it))
                 } ?: throw NotFoundException("Article $values not found")
+            }
+        }
+
+        convert<CommentRef> {
+            decode { values, _ ->
+                values.singleOrNull()?.let {
+                    CommentRef(UUID.fromString(it))
+                } ?: throw NotFoundException("Comment $values not found")
             }
         }
 

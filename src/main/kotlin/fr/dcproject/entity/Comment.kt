@@ -1,7 +1,6 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.EntityUpdatedAt
-import fr.postgresjson.entity.immutable.EntityUpdatedAtImp
+import fr.postgresjson.entity.immutable.*
 import fr.postgresjson.entity.mutable.EntityDeletedAt
 import fr.postgresjson.entity.mutable.EntityDeletedAtImp
 import java.util.*
@@ -9,13 +8,16 @@ import java.util.*
 open class Comment<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenBasic,
-    target: T,
+    override var target: T,
     var content: String,
     val responses: List<Comment<T>>? = null,
     var parent: Comment<T>? = null,
     val parentsIds: List<UUID>? = null,
     val childrenCount: Int? = null
-) : Extra<T>(id, createdBy, target),
+) : ExtraI<T>,
+    CommentRef(id),
+    EntityCreatedAt by EntityCreatedAtImp(),
+    EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
     EntityUpdatedAt by EntityUpdatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp(),
     Votable by VotableImp(),
@@ -33,3 +35,7 @@ open class Comment<T : TargetI>(
 
     override val reference get() = TargetI.getReference(this)
 }
+
+open class CommentRef(id: UUID = UUID.randomUUID()) : CommentS(id)
+
+sealed class CommentS(id: UUID) : UuidEntity(id)

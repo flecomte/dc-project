@@ -1,6 +1,9 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.*
+import fr.postgresjson.entity.immutable.EntityCreatedAt
+import fr.postgresjson.entity.immutable.EntityCreatedBy
+import fr.postgresjson.entity.immutable.UuidEntity
+import fr.postgresjson.entity.immutable.UuidEntityI
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSuperclassOf
@@ -9,18 +12,8 @@ interface ExtraI<T : TargetI> :
     UuidEntityI,
     EntityCreatedAt,
     EntityCreatedBy<CitizenBasicI> {
-    var target: T
+    val target: T
 }
-
-abstract class Extra<T : TargetI>(
-    id: UUID = UUID.randomUUID(),
-    override val createdBy: CitizenBasic,
-    override var target: T
-) :
-    ExtraI<T>,
-    UuidEntity(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy)
 
 open class TargetRef(id: UUID = UUID.randomUUID()) : TargetI, UuidEntity(id) {
     override val reference: String = ""
