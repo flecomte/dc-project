@@ -1,6 +1,7 @@
 package fr.dcproject.repository
 
 import fr.dcproject.entity.ArticleRef
+import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.entity.TargetI
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
@@ -10,7 +11,6 @@ import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 
 abstract class Comment<T : TargetI>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
@@ -127,10 +127,24 @@ class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
                 )
         }
     }
+
+    override fun findByTarget(
+        target: UuidEntityI,
+        page: Int,
+        limit: Int
+    ): Paginated<CommentEntity<ArticleRef>> {
+        return requester.run {
+            getFunction("find_comments_by_target")
+                .select(
+                    page, limit,
+                    "target_id" to target.id
+                )
+        }
+    }
 }
 
-class CommentConstitution(requester: Requester) : Comment<ConstitutionEntity>(requester) {
-    override fun findById(id: UUID): CommentEntity<ConstitutionEntity>? {
+class CommentConstitution(requester: Requester) : Comment<ConstitutionRef>(requester) {
+    override fun findById(id: UUID): CommentEntity<ConstitutionRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -140,13 +154,27 @@ class CommentConstitution(requester: Requester) : Comment<ConstitutionEntity>(re
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<ConstitutionEntity>> {
+    ): Paginated<CommentEntity<ConstitutionRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
                     page, limit,
                     "created_by_id" to citizen.id,
-                    "reference" to TargetI.getReference(ConstitutionEntity::class)
+                    "reference" to TargetI.getReference(ConstitutionRef::class)
+                )
+        }
+    }
+
+    override fun findByTarget(
+        target: UuidEntityI,
+        page: Int,
+        limit: Int
+    ): Paginated<CommentEntity<ConstitutionRef>> {
+        return requester.run {
+            getFunction("find_comments_by_target")
+                .select(
+                    page, limit,
+                    "target_id" to target.id
                 )
         }
     }

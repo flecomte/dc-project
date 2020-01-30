@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -15,13 +16,12 @@ import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import fr.dcproject.entity.Comment as CommentEntity
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 
 @KtorExperimentalLocationsAPI
 object CommentConstitutionPaths {
     @Location("/constitutions/{constitution}/comments")
-    class ConstitutionCommentRequest(val constitution: ConstitutionEntity)
+    class ConstitutionCommentRequest(val constitution: ConstitutionRef)
 
     @Location("/citizens/{citizen}/comments/constitutions")
     class CitizenCommentConstitutionRequest(val citizen: Citizen)

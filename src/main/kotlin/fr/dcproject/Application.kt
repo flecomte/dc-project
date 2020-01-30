@@ -98,6 +98,13 @@ fun Application.module(env: Env = PROD) {
                 } ?: throw NotFoundException("Comment $values not found")
             }
         }
+        convert<ConstitutionRef> {
+            decode { values, _ ->
+                values.singleOrNull()?.let {
+                    ConstitutionRef(UUID.fromString(it))
+                } ?: throw NotFoundException("Constitution $values not found")
+            }
+        }
 
         convert<Constitution> {
             decode { values, _ ->
