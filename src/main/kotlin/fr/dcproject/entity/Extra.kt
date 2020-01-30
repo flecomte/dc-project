@@ -42,9 +42,7 @@ interface TargetI : UuidEntityI {
         fun getReference(t: TargetI): String {
             val ref = this.getReference(t::class)
             return if (t is ExtraI<*>) {
-                ref +
-                        "_on_" +
-                        t.target.reference
+                "${ref}_on_${t.target.reference}"
             } else {
                 ref
             }

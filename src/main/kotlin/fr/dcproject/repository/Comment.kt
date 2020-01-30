@@ -104,6 +104,20 @@ class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
                 )
         }
     }
+
+    override fun findByParent(
+        parentId: UUID,
+        page: Int,
+        limit: Int
+    ): Paginated<CommentEntity<TargetRef>> {
+        return requester.run {
+            getFunction("find_comments_by_parent")
+                .select(
+                    page, limit,
+                    "parent_id" to parentId
+                )
+        }
+    }
 }
 
 class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {

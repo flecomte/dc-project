@@ -38,4 +38,4 @@ open class Comment<T : TargetI>(
 
 open class CommentRef(id: UUID = UUID.randomUUID()) : CommentS(id)
 
-sealed class CommentS(id: UUID) : UuidEntity(id)
+sealed class CommentS(id: UUID) : TargetRef(id)
