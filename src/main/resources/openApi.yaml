@@ -154,7 +154,13 @@ paths:
           application/json:
             schema:
               properties:
-                password:
+                old_password:
+                  type: string
+                  format: password
+                  required: true
+                  example:
+                    azerty
+                new_password:
                   type: string
                   format: password
                   required: true

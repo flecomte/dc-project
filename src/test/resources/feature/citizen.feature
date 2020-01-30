@@ -39,7 +39,19 @@ Feature: citizens routes
     When I send a PUT request to "/citizens/c211dca6-aa21-45c2-95ba-c7f2179ee37e/password/change" with body:
     """
     {
-      "password": "qwerty"
+      "old_password": "azerty",
+      "new_password": "qwerty"
     }
     """
     Then the response status code should be 201
+
+  Scenario: If a send bad request when a change password, that return a 400 Bad request
+    Given I am authenticated as Joe Carotte with id "19110bb5-58a2-4ef1-9497-0207d4b4f48f"
+    When I send a PUT request to "/citizens/19110bb5-58a2-4ef1-9497-0207d4b4f48f/password/change" with body:
+    """
+    {
+      "plup": "azerty",
+      "gloup": "qwerty"
+    }
+    """
+    Then the response status code should be 400

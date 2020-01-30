@@ -1,5 +1,6 @@
 package fr.dcproject.routes
 
+import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
 import fr.dcproject.routes.CitizenPaths.ChangePasswordCitizenRequest
@@ -11,6 +12,7 @@ import fr.dcproject.security.voter.CitizenVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
 import fr.postgresjson.repository.RepositoryI.Direction
 import io.ktor.application.call
+import io.ktor.auth.UserPasswordCredential
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -44,7 +46,7 @@ object CitizenPaths {
 
     @Location("/citizens/{citizen}/password/change")
     class ChangePasswordCitizenRequest(val citizen: Citizen) {
-        data class Content(val password: String)
+        data class Content(val oldPassword: String, val newPassword: String)
     }
 }
 
@@ -73,13 +75,20 @@ fun Route.citizen(
 
     put<ChangePasswordCitizenRequest> {
         assertCan(CHANGE_PASSWORD, it.citizen)
-        val content = call.receive<ChangePasswordCitizenRequest.Content>()
+        try {
+            val content = call.receive<ChangePasswordCitizenRequest.Content>()
+            val currentUser = userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword))
+            val user = it.citizen.user
+            if (currentUser == null || currentUser.id != user.id) {
+                call.respond(HttpStatusCode.BadRequest, "Bad password")
+            } else {
+                user.plainPassword = content.newPassword
+                userRepository.changePassword(user)
 
-        val user = it.citizen.user
-
-        user.plainPassword = content.password
-        userRepository.changePassword(user)
-
-        call.respond(HttpStatusCode.Created)
+                call.respond(HttpStatusCode.Created)
+            }
+        } catch (e: MissingKotlinParameterException) {
+            call.respond(HttpStatusCode.BadRequest, "Request format is not correct")
+        }
     }
 }
