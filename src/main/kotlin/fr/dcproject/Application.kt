@@ -186,6 +186,7 @@ fun Application.module(env: Env = PROD) {
             commentConstitution(get())
             voteArticle(get(), get(), get())
             voteConstitution(get())
+            definition()
         }
     }
 
