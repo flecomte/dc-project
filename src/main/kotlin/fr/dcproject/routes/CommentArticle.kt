@@ -3,6 +3,7 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.ArticleRef
 import fr.dcproject.entity.Citizen
+import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
@@ -26,10 +27,12 @@ object CommentArticlePaths {
         val article: ArticleRef,
         page: Int = 1,
         limit: Int = 50,
-        val search: String? = null
+        val search: String? = null,
+        sort: String = Sort.CREATED_AT.sql
     ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+        val sort: Sort = Sort.fromString(sort) ?: Sort.CREATED_AT
     }
 
     @Location("/citizens/{citizen}/comments/articles")
@@ -39,7 +42,7 @@ object CommentArticlePaths {
 @KtorExperimentalLocationsAPI
 fun Route.commentArticle(repo: CommentArticleRepository) {
     get<CommentArticlePaths.ArticleCommentRequest> {
-        val comment = repo.findByTarget(it.article, it.page, it.limit)
+        val comment = repo.findByTarget(it.article, it.page, it.limit, it.sort)
         assertCan(VIEW, comment.result)
         call.respond(HttpStatusCode.OK, comment)
     }

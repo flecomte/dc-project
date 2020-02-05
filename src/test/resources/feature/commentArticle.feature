@@ -17,6 +17,14 @@ Feature: comment Article
     When I send a GET request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/comments"
     Then the response status code should be 200
 
+  Scenario: Can get all comment on article sorted by votes
+    Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
+    And I have article with id "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
+    When I send a GET request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/comments?sort=votes"
+    Then the response status code should be 200
+    And the response should contain object:
+      | result[1].votes.up | 1 |
+
   Scenario: Can get comments on articles of the current citizen
     Given I have citizen John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     And I have article with id "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b"
@@ -33,11 +41,11 @@ Feature: comment Article
     Hello boy
     """
     Then the response status code should be 200
-  And the JSON should contain:
-    | content | Hello boy |
+    And the JSON should contain:
+      | content | Hello boy |
 
   Scenario: Can get comment by its ID
     When I send a GET request to "/comments/2f01c257-cf20-3466-fb10-a3b8eff12a97"
     Then the response status code should be 200
-  And the JSON should contain:
-    | content | Hello boy |
+    And the JSON should contain:
+      | content | Hello boy |

@@ -46,21 +46,24 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
     open fun findByTarget(
         target: UuidEntityI,
         page: Int = 1,
-        limit: Int = 50
+        limit: Int = 50,
+        sort: CommentArticle.Sort = CommentArticle.Sort.CREATED_AT
     ): Paginated<CommentEntity<T>> {
-        return findByTarget(target.id, page, limit)
+        return findByTarget(target.id, page, limit, sort)
     }
 
     open fun findByTarget(
         targetId: UUID,
         page: Int = 1,
-        limit: Int = 50
+        limit: Int = 50,
+        sort: CommentArticle.Sort = CommentArticle.Sort.CREATED_AT
     ): Paginated<CommentEntity<T>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
                     page, limit,
-                    "target_id" to targetId
+                    "target_id" to targetId,
+                    "sort" to sort.sql
                 )
         }
     }
@@ -145,14 +148,25 @@ class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
     override fun findByTarget(
         target: UuidEntityI,
         page: Int,
-        limit: Int
+        limit: Int,
+        sort: Sort
     ): Paginated<CommentEntity<ArticleRef>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
                     page, limit,
-                    "target_id" to target.id
+                    "target_id" to target.id,
+                    "sort" to sort.sql
                 )
+        }
+    }
+
+    enum class Sort(val sql: String) {
+        CREATED_AT("created_at"), VOTES("votes");
+        companion object {
+            fun fromString(string: String): Sort? {
+                return values().firstOrNull { it.sql == string }
+            }
         }
     }
 }
@@ -182,13 +196,15 @@ class CommentConstitution(requester: Requester) : Comment<ConstitutionRef>(reque
     override fun findByTarget(
         target: UuidEntityI,
         page: Int,
-        limit: Int
+        limit: Int,
+        sort: CommentArticle.Sort
     ): Paginated<CommentEntity<ConstitutionRef>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
                     page, limit,
-                    "target_id" to target.id
+                    "target_id" to target.id,
+                    "sort" to sort.sql
                 )
         }
     }

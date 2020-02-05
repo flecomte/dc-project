@@ -2,6 +2,7 @@ create or replace function find_comments_by_target(
     _target_id uuid,
     "limit" int default 50,
     "offset" int default 0,
+    "sort" text default 'created_at',
     out resource json,
     out total int
 ) language plpgsql as
@@ -18,7 +19,15 @@ begin
             count_vote(com.id) as votes
         from "comment" as com
         where com.target_id = _target_id
-        order by created_at asc,
+        order by
+            case sort
+                when 'votes' then (count_vote(com.id)->>'percent')::int
+                else null
+            end desc,
+            case sort
+                when 'created_at' then com.created_at::text
+                else null
+            end desc,
         com.created_at desc
         limit "limit" offset "offset"
     ) as t;

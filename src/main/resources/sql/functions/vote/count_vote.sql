@@ -5,6 +5,7 @@ declare
     agg jsonb;
     empty jsonb = '{"down":0,"neutral":0,"up":0,"total":0,"score":0}'::jsonb;
     score int;
+    percent numeric;
     total int;
 begin
     select jsonb_object_agg(t.label, t.total)
@@ -25,12 +26,14 @@ begin
 
     agg = empty || coalesce(agg, empty);
     score = ((agg->>'up')::int - (agg->>'down')::int);
+    percent = ((agg->>'up')::int - (agg->>'down')::int);
     total = ((agg->>'up')::int + (agg->>'down')::int + (agg->>'neutral')::int);
 
     resource = agg ||
                jsonb_build_object('updated_at', now()) ||
                jsonb_build_object('total', total) ||
-               jsonb_build_object('score', score);
+               jsonb_build_object('score', score) ||
+               jsonb_build_object('percent', percent);
 end;
 $$;
 
