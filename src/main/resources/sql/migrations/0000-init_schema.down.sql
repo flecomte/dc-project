@@ -2,6 +2,10 @@
 drop table if exists resource_view;
 
 -- Extra resources
+drop table if exists opinion_on_article;
+drop table if exists opinion;
+drop table if exists opinion_list;
+
 drop table if exists follow_article;
 drop table if exists follow_constitution;
 drop table if exists follow_citizen;
