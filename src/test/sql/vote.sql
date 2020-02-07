@@ -22,7 +22,7 @@ declare
         "last_name": "MICHEL2"
       },
       "birthday": "2001-01-02",
-      "email":"george.michel@gmail.com"
+      "email":"george.michel2@gmail.com"
     }
     $json$;
     created_article  json := $json$

@@ -5,7 +5,7 @@ declare
     created_user               json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     _user_id                   uuid;
     created_citizen            json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com"}';
-    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
+    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
     selected_citizen           json;
 begin
     -- insert user for context

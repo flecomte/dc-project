@@ -2,6 +2,7 @@
   <configuration default="false" name="All Tests + Lint" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
     <module name="dcproject.test" />
+    <useClassPathOnly />
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="11" />
     <option name="PACKAGE_NAME" value="fr.dcproject" />
@@ -20,6 +21,7 @@
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint" run_configuration_type="GradleRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Test All SQL" run_configuration_type="RunSql" />
     </method>
   </configuration>
 </component>
