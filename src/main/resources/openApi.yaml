@@ -1029,6 +1029,7 @@ components:
         - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/lastVersion'
         - $ref: '#/components/schemas/Votable'
+        - $ref: '#/components/schemas/Opinionable'
 
     ArticleRequest:
       $ref: '#/components/schemas/ArticleBase'
@@ -1210,6 +1211,15 @@ components:
       properties:
         votes:
           $ref: '#/components/schemas/VoteAggregation'
+    Opinionable:
+      type: object
+      properties:
+        opinions:
+          type: string
+          additionalProperties: true
+          example:
+            Opinion1: 1
+            Opinion2: 55
 
 
 

@@ -3,7 +3,7 @@ create or replace function count_opinion(_target_id uuid, out resource json)
 $$
 declare
     agg jsonb;
-    empty jsonb = '[]'::jsonb;
+    empty jsonb = '{}'::jsonb;
 begin
     select jsonb_object_agg(t.label, t.total)
     into agg
@@ -18,10 +18,10 @@ begin
         order by ol.name
     ) t;
 
-    resource = empty || coalesce(agg, empty);
+    resource = coalesce(agg, empty);
 end;
 $$;
 
 -- drop function if exists count_opinion(uuid);
 
--- select * from count_opinion('ced1563f-ecf5-4f11-8518-8aeceff3c13a');
+-- select * from count_opinion('d91aa0cd-61d6-83cc-41bb-8d5656e130f7');

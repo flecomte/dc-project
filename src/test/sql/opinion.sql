@@ -76,6 +76,22 @@ begin
     assert (select count(*) = 1 from opinion_on_article), 'opinion must be inserted';
     assert (select opinion = opinion1 from opinion_on_article limit 1), 'opinion must be inserted';
 
+    assert(select (a#>>'{opinions, Opinion1}')::int = 1
+    from find_article_by_id((created_article->>'id')::uuid) a), 'the article must be have a opinion';
+
+    assert(
+        select (o#>>'{0, name}') = 'Opinion1'
+        from find_citizen_opinions_by_target_id(_citizen_id, (created_article->>'id')::uuid) o),
+            'The opinion must have a name';
+
+    raise notice '%', (
+        select o
+        from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o);
+
+    assert(
+        select (o#>>'{0, 0, name}') = 'Opinion1'
+        from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o),
+            'The first opinion must have a name';
 
     -- delete vote and context
     delete from opinion;
@@ -85,5 +101,5 @@ begin
     delete from "user";
 
     raise notice 'opinion test pass';
-end;
+end
 $$;

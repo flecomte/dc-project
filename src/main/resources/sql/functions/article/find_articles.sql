@@ -23,6 +23,7 @@ begin
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by,
             count_vote(a.id) as votes,
+            count_opinion(a.id) as opinions,
             zdb.score(a.ctid) _score
         from article as a
         where (
@@ -60,3 +61,4 @@ end;
 $$;
 
 -- drop function if exists find_articles(text, json, text, text, int, int);
+-- select find_article_by_id('d91aa0cd-61d6-83cc-41bb-8d5656e130f7');
