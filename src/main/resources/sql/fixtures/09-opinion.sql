@@ -8,7 +8,7 @@ begin
     delete from opinion_list;
 
     insert into opinion_list (id, name, target)
-    select uuid_in(md5('opinion_list'||row_number() over ())::cstring), 'Opinion'||row_number() over (), 'article'
+    select uuid_in(md5('opinion_list'||row_number() over ())::cstring), 'Opinion'||row_number() over (), '{article}'
         from generate_series(0,20);
 
     for i in 0..9 loop

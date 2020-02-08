@@ -59,13 +59,13 @@ begin
 
 
     insert into opinion_list(id, name, target)
-    values (opinion1, 'Opinion1', (created_article->>'id')::uuid);
+    values (opinion1, 'Opinion1', '{article}');
 
     insert into opinion_list(id, name, target)
-    values (opinion2, 'Opinion2', (created_article->>'id')::uuid);
+    values (opinion2, 'Opinion2', '{article}');
 
     insert into opinion_list(name, target)
-    values ('Opinion3', (created_article->>'id')::uuid);
+    values ('Opinion3', '{article}');
 
     perform opinion(
         reference => 'article'::regclass,
@@ -84,12 +84,8 @@ begin
         from find_citizen_opinions_by_target_id(_citizen_id, (created_article->>'id')::uuid) o),
             'The opinion must have a name';
 
-    raise notice '%', (
-        select o
-        from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o);
-
     assert(
-        select (o#>>'{0, 0, name}') = 'Opinion1'
+        select (o#>>'{0, name}') = 'Opinion1'
         from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o),
             'The first opinion must have a name';
 

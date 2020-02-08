@@ -506,8 +506,8 @@ create table resource_view
 create table opinion_list
 (
     id         uuid        default uuid_generate_v4() not null primary key,
-    name       text                                   not null,
-    target     text                                   null,
+    name       text                                   not null unique,
+    target     text[]                                 null,
     created_at timestamptz default now()              not null,
     deleted_at timestamptz                            null
 );
