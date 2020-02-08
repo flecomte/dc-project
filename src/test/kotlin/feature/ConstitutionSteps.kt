@@ -17,6 +17,7 @@ class ConstitutionSteps : En, KoinTest {
     init {
         Given("I have constitution with id {string}") { id: String ->
             var citizen = Citizen(
+                id = UUID.fromString(id),
                 name = CitizenI.Name("John", "Doe"),
                 email = "john.doe@gmail.com",
                 birthday = DateTime.now(),

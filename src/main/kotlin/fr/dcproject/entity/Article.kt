@@ -46,7 +46,8 @@ open class ArticleSimple(
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp(),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(),
-    Votable by VotableImp()
+    Votable by VotableImp(),
+    Opinionable by OpinionableImp()
 
 open class ArticleRef(
     id: UUID = UUID.randomUUID()
