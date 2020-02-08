@@ -93,6 +93,10 @@ begin
         from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o),
             'The first opinion must have a name';
 
+    assert(
+        select find_opinions()#>>'{0, name}' = 'Opinion1'
+        ), 'find_opinions mst be return all opinions';
+
     -- delete vote and context
     delete from opinion;
     delete from opinion_list;
