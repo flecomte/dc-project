@@ -15,6 +15,7 @@ import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
+import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.User as UserRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 import fr.dcproject.repository.VoteComment as VoteCommentRepository
@@ -57,6 +58,7 @@ val Module = module {
     single { VoteArticleRepository(get()) }
     single { VoteConstitutionRepository(get()) }
     single { VoteCommentRepository(get()) }
+    single { OpinionChoiceRepository(get()) }
 
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 

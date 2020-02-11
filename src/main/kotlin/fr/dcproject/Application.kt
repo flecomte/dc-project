@@ -39,6 +39,7 @@ import java.util.concurrent.CompletionException
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
 import fr.dcproject.repository.Constitution as RepositoryConstitution
+import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.User as UserRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
@@ -121,6 +122,14 @@ fun Application.module(env: Env = PROD) {
                 get<RepositoryCitizen>().findById(id, true) ?: throw NotFoundException("Citizen $values not found")
             }
         }
+
+        convert<OpinionChoice> {
+            decode { values, _ ->
+                val id = values.singleOrNull()?.let { UUID.fromString(it) }
+                    ?: throw InternalError("Cannot convert $values to UUID")
+                get<OpinionChoiceRepository>().findOpinionChoiceById(id) ?: throw NotFoundException("OpinionChoice $values not found")
+            }
+        }
     }
 
     install(Locations) {
@@ -133,7 +142,8 @@ fun Application.module(env: Env = PROD) {
             CitizenVoter(),
             CommentVoter(),
             VoteVoter(),
-            FollowVoter()
+            FollowVoter(),
+            OpinionChoiceVoter()
         )
     }
 
@@ -186,6 +196,7 @@ fun Application.module(env: Env = PROD) {
             commentConstitution(get())
             voteArticle(get(), get(), get())
             voteConstitution(get())
+            opinionChoice(get())
             definition()
         }
     }

@@ -90,8 +90,12 @@ begin
             'The first opinion must have a name';
 
     assert(
-        select find_opinions()#>>'{0, name}' = 'Opinion1'
-        ), 'find_opinions mst be return all opinions';
+        select find_opinion_choices()#>>'{0, name}' = 'Opinion1'
+        ), 'find_opinion_choices mst be return all opinions';
+
+    assert(
+        select (find_opinion_choice_by_id(opinion1)->>'name') = 'Opinion1'
+        ), 'find_opinion_choice_by_id must return the opinion_choice';
 
     -- delete vote and context
     delete from opinion;
