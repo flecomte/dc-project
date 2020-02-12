@@ -3,9 +3,9 @@ create or replace function opinion(reference regclass, _target_id uuid, _created
 $$
 begin
     if reference = 'article'::regclass then
-        insert into opinion_on_article (created_by_id, target_id, opinion)
+        insert into opinion_on_article (created_by_id, target_id, choice_id)
         values (_created_by_id, _target_id, _opinion)
-        on conflict (created_by_id, target_id, opinion) do nothing;
+        on conflict (created_by_id, target_id, choice_id) do nothing;
     else
         raise exception '% no implemented for opinion', reference::text;
     end if;

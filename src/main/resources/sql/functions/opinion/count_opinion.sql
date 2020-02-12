@@ -9,10 +9,10 @@ begin
     into agg
     from (
         select
-            count(o.opinion) as total,
+            count(o) as total,
             ol.name as label
         from opinion o
-        join opinion_list ol on o.opinion = ol.id
+        join opinion_choice ol on o.choice_id = ol.id
         where o.target_id = _target_id
         group by ol.name
         order by ol.name

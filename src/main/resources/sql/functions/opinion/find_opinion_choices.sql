@@ -6,10 +6,9 @@ begin
     into resource
     from (
         select ol.*
-        from opinion_list ol
-        where (ol.deleted_at <= now()
-           or ol.deleted_at is null)
-           and (ol.target is null or array_length(targets) = 0 or ol.target = any(targets))
+        from opinion_choice ol
+        where (ol.deleted_at is null or ol.deleted_at > now())
+           and (ol.target is null or targets is null or array_length(targets, 1) = 0 or ol.target && targets)
 
         order by ol.name
     ) t;

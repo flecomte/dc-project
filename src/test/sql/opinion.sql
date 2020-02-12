@@ -58,13 +58,13 @@ begin
     select upsert_article(created_article) into created_article;
 
 
-    insert into opinion_list(id, name, target)
+    insert into opinion_choice(id, name, target)
     values (opinion1, 'Opinion1', '{article}');
 
-    insert into opinion_list(id, name, target)
+    insert into opinion_choice(id, name, target)
     values (opinion2, 'Opinion2', '{article}');
 
-    insert into opinion_list(name, target)
+    insert into opinion_choice(name, target)
     values ('Opinion3', '{article}');
 
     perform opinion(
@@ -73,33 +73,51 @@ begin
         _created_by_id => _citizen_id,
         _opinion => opinion1
     );
-    assert (select count(*) = 1 from opinion_on_article), 'opinion must be inserted';
-    assert (select opinion = opinion1 from opinion_on_article limit 1), 'opinion must be inserted';
+    perform opinion(
+        reference => 'article'::regclass,
+        _target_id => (created_article->>'id')::uuid,
+        _created_by_id => _citizen_id,
+        _opinion => opinion2
+    );
+    assert (select count(*) = 2 from opinion_on_article), 'opinions must be inserted';
+    assert (select choice_id = opinion1 from opinion_on_article limit 1), 'opinion must be inserted';
 
     assert(select (a#>>'{opinions, Opinion1}')::int = 1
     from find_article_by_id((created_article->>'id')::uuid) a), 'the article must be have a opinion';
 
     assert(
-        select (o#>>'{0, name}') = 'Opinion1'
+        select (o#>>'{0, choice, name}') = 'Opinion1'
         from find_citizen_opinions_by_target_id(_citizen_id, (created_article->>'id')::uuid) o),
             'The opinion must have a name';
 
     assert(
-        select (o#>>'{0, name}') = 'Opinion1'
+        select (o#>>'{0, choice, name}') = 'Opinion1'
         from find_citizen_opinions_by_target_ids(_citizen_id, array[(created_article->>'id')::uuid]) o),
             'The first opinion must have a name';
 
     assert(
         select find_opinion_choices()#>>'{0, name}' = 'Opinion1'
-        ), 'find_opinion_choices mst be return all opinions';
+        ), 'find_opinion_choices must be return all opinions';
 
     assert(
         select (find_opinion_choice_by_id(opinion1)->>'name') = 'Opinion1'
         ), 'find_opinion_choice_by_id must return the opinion_choice';
 
+    assert(
+        select json_array_length(resource) = 1 from find_citizen_opinions(_citizen_id, null, null, 1, 1)
+    ), 'find_citizen_opinions must return only 1 result if limit is set to 1';
+
+    assert(
+        select total = 2 from find_citizen_opinions(_citizen_id, null, null, 2, 1)
+    ), 'find_citizen_opinions must return the total and it should be 2';
+
+    assert(
+        select (resource#>>'{0, choice, name}') = 'Opinion1' from find_citizen_opinions(_citizen_id, null, null, 1, 0)
+    ), 'find_citizen_opinions must return a list of opinion with name';
+
     -- delete vote and context
     delete from opinion;
-    delete from opinion_list;
+    delete from opinion_choice;
     delete from article;
     delete from citizen;
     delete from "user";

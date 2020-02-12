@@ -9,9 +9,9 @@ begin
     from (
         select
             o.*,
-            ol.name
+            to_json(ol) as choice
         from opinion as o
-        join opinion_list ol on o.opinion = ol.id
+        join opinion_choice ol on o.choice_id = ol.id
 
         where target_id = any(_ids)
             and created_by_id = _citizen_id

@@ -143,6 +143,7 @@ fun Application.module(env: Env = PROD) {
             CommentVoter(),
             VoteVoter(),
             FollowVoter(),
+            OpinionVoter(),
             OpinionChoiceVoter()
         )
     }

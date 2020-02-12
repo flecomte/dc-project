@@ -11,6 +11,10 @@ class OpinionChoice(
     id: UUID,
     val name: String,
     val target: List<String>
-) : UuidEntity(id),
+) : OpinionChoiceRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp()
+
+open class OpinionChoiceRef(
+    id: UUID
+) : UuidEntity(id)

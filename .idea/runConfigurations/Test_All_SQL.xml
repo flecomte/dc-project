@@ -49,10 +49,12 @@
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_citizen_votes_by_target_ids.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_votes_by_citizen.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinions.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/user.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/citizen.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/article.sql" />

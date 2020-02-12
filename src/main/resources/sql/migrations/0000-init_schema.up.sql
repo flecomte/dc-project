@@ -503,7 +503,7 @@ create table resource_view
     ip            cidr                                   null
 );
 
-create table opinion_list
+create table opinion_choice
 (
     id         uuid        default uuid_generate_v4() not null primary key,
     name       text                                   not null unique,
@@ -514,20 +514,20 @@ create table opinion_list
 
 create table opinion
 (
-    opinion uuid not null references opinion_list (id),
+    choice_id uuid not null references opinion_choice (id),
     foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (created_by_id, target_id, opinion)
+    unique (created_by_id, target_id, choice_id)
 ) inherits (extra);
 
 create table opinion_on_article
 (
     target_reference regclass default 'article'::regclass not null,
-    foreign key (opinion) references opinion_list (id),
+    foreign key (choice_id) references opinion_choice (id),
     foreign key (target_id) references article (id),
     foreign key (created_by_id) references citizen (id),
     primary key (id),
-    unique (created_by_id, target_id, opinion)
+    unique (created_by_id, target_id, choice_id)
 ) inherits (opinion);
 
 

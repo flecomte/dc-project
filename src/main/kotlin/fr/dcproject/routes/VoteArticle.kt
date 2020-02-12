@@ -9,6 +9,7 @@ import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.dcproject.security.voter.VoteVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
+import fr.dcproject.utils.toUUID
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -45,10 +46,7 @@ object VoteArticlePaths {
 
     @Location("/citizens/{citizen}/votes")
     class CitizenVotesByIdsRequest(val citizen: Citizen, id: List<String>) {
-        val id: List<UUID> = id
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .map { UUID.fromString(it) }
+        val id: List<UUID> = id.toUUID()
     }
 }
 
