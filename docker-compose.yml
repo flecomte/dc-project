@@ -2,6 +2,13 @@
 # Add the "-d" flag at the end for detached execution
 version: '3.7'
 services:
+  sonarqube:
+    container_name: sonarqube_${NAME}
+    image: sonarqube
+    restart: always
+    ports:
+    - 9000:9000
+
   openapi:
     container_name: openapi_${NAME}
     image: swaggerapi/swagger-ui
