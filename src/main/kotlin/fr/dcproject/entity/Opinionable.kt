@@ -3,13 +3,13 @@ package fr.dcproject.entity
 import fr.postgresjson.entity.EntityI
 
 class OpinionAggregation(
-    override val entries: Set<Map.Entry<String, Int>> = emptySet()
-) : AbstractMap<String, Int>(), EntityI
+    private val underlying: MutableMap<String, Any> = mutableMapOf()
+) : MutableMap<String, Any> by underlying, EntityI
 
 interface Opinionable {
-    val opinions: MutableMap<String, Int>
+    var opinions: MutableMap<String, Int>
 }
 
 class OpinionableImp : Opinionable {
-    override val opinions: MutableMap<String, Int> = mutableMapOf()
+    override var opinions: MutableMap<String, Int> = mutableMapOf()
 }

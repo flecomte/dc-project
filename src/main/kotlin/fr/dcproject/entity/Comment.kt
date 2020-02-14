@@ -32,8 +32,6 @@ open class Comment<T : TargetI>(
         target = parent.target,
         content = content
     )
-
-    override val reference get() = TargetI.getReference(this)
 }
 
 open class CommentRef(id: UUID = UUID.randomUUID()) : CommentS(id)

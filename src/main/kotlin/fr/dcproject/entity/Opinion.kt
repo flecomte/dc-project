@@ -1,6 +1,9 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.*
+import fr.postgresjson.entity.immutable.EntityCreatedAt
+import fr.postgresjson.entity.immutable.EntityCreatedAtImp
+import fr.postgresjson.entity.immutable.EntityCreatedBy
+import fr.postgresjson.entity.immutable.EntityCreatedByImp
 import java.util.*
 
 open class Opinion<T : TargetI>(
@@ -9,11 +12,16 @@ open class Opinion<T : TargetI>(
     override val target: T,
     val choice: OpinionChoice
 ) : ExtraI<T>,
-    UuidEntity(id),
+    TargetRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy) {
 
     fun getName(): String = choice.name
 }
 
-typealias OpinionArticle = Opinion<Article>
+class OpinionArticle(
+    id: UUID = UUID.randomUUID(),
+    createdBy: CitizenBasic,
+    target: ArticleRef,
+    choice: OpinionChoice
+) : Opinion<ArticleRef>(id, createdBy, target, choice)

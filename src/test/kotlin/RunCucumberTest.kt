@@ -6,8 +6,8 @@ import fr.dcproject.utils.LoggerDelegate
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
-import io.cucumber.core.api.Scenario
 import io.cucumber.java8.En
+import io.cucumber.java8.Scenario
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI

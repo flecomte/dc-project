@@ -19,6 +19,7 @@ Feature: citizens routes
     And the response should contain object:
       | id | 64b7b379-2298-43ec-b428-ba134930cabd |
 
+  @online
   Scenario: Can be connect with SSO
     Given I have citizen:
       | id        | c606110c-ff0e-4d09-a79e-74632d7bf7bd |

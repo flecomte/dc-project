@@ -5,6 +5,7 @@ import fr.dcproject.JwtConfig
 import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.CitizenI
 import fr.dcproject.entity.User
+import fr.dcproject.utils.toUUID
 import fr.postgresjson.connexion.Requester
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -64,6 +65,38 @@ class KtorServerAuthSteps : En, KoinTest {
             } catch (e: CompletionException) {
                 // Nothing
             }
+
+            KtorServerContext.defaultServer.addPreRequestSetup {
+                addHeader(HttpHeaders.Authorization, "Bearer $jwtAsString")
+            }
+        }
+
+        Given("I have citizen {word} {word}") { firstName: String, lastName: String, extraInfo: DataTable? ->
+            val id: UUID = extraInfo?.asMap<String, String>(String::class.java, String::class.java)?.get("id")?.toUUID() ?: UUID.randomUUID()
+
+            val user = User(
+                id = id,
+                username = "$firstName-$lastName".toLowerCase(),
+                plainPassword = "azerty"
+            )
+            val citizen = Citizen(
+                id = id,
+                name = CitizenI.Name(firstName, lastName),
+                email = ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr",
+                birthday = DateTime.now(),
+                user = user
+            )
+
+            get<CitizenRepository>().insertWithUser(citizen)
+        }
+
+        Given("I am authenticated as {word} {word}") { firstName: String, lastName: String ->
+            val username = "$firstName-$lastName".toLowerCase()
+            val citizen = get<CitizenRepository>().findByUsername(username) ?: error("Cititzen not exist with username $username")
+            val jwtAsString: String = JWT.create()
+                .withIssuer("dc-project.fr")
+                .withClaim("id", citizen.id.toString())
+                .sign(JwtConfig.algorithm)
 
             KtorServerContext.defaultServer.addPreRequestSetup {
                 addHeader(HttpHeaders.Authorization, "Bearer $jwtAsString")

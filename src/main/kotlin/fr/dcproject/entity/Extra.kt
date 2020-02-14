@@ -6,7 +6,7 @@ import fr.postgresjson.entity.immutable.UuidEntity
 import fr.postgresjson.entity.immutable.UuidEntityI
 import java.util.*
 import kotlin.reflect.KClass
-import kotlin.reflect.full.isSuperclassOf
+import kotlin.reflect.full.isSubclassOf
 
 interface ExtraI<T : TargetI> :
     UuidEntityI,
@@ -26,16 +26,18 @@ interface TargetI : UuidEntityI {
     enum class TargetName(val targetReference: String) {
         Article("article"),
         Constitution("constitution"),
-        Comment("comment")
+        Comment("comment"),
+        Opinion("opinion")
     }
 
     companion object {
         fun <T : TargetI> getReference(t: KClass<T>): String {
             return when {
-                t.isSuperclassOf(Article::class) -> TargetName.Article.targetReference
-                t.isSuperclassOf(Constitution::class) -> TargetName.Constitution.targetReference
-                t.isSuperclassOf(Comment::class) -> TargetName.Comment.targetReference
-                else -> throw error("target not implemented")
+                t.isSubclassOf(ArticleRef::class) -> TargetName.Article.targetReference
+                t.isSubclassOf(ConstitutionRef::class) -> TargetName.Constitution.targetReference
+                t.isSubclassOf(CommentRef::class) -> TargetName.Comment.targetReference
+                t.isSubclassOf(Opinion::class) -> TargetName.Opinion.targetReference
+                else -> throw error("target not implemented: ${t.qualifiedName}")
             }
         }
 

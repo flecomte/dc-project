@@ -41,20 +41,20 @@ class KtorServerRestSteps : En {
         }
     }
 
-    private fun findJsonElement(node: String): JsonElement {
+    private fun findJsonElement(path: String): JsonElement {
         var jsonElement: JsonElement = responseJsonElement
-        val elements = node.split(".")
 
-        elements.forEach {
-            val asArrayIndex = """\d+""".toRegex().find(it)
-
-            jsonElement = if (asArrayIndex != null) {
-                val index = asArrayIndex.groups.first()!!
-                jsonElement.jsonArray.get(index.value.toInt())
-            } else {
-                jsonElement.jsonObject.get(it) ?: throw AssertionError("\"$node\" element not found on json response")
+        path
+            .split("].", "]", "[", ".")
+            .filter { it.trim().isNotBlank() }
+            .map { it.trim() }
+            .forEach {
+                jsonElement = if (jsonElement is JsonArray) {
+                    jsonElement.jsonArray[it.toInt()]
+                } else {
+                    jsonElement.jsonObject[it]
+                } ?: throw AssertionError("\"$path\" element not found on json response")
             }
-        }
 
         return jsonElement
     }

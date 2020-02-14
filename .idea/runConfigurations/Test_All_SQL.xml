@@ -38,7 +38,7 @@
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/find_reference_by_id.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/random_between.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/opinion.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/change_user_password.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/check_user.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/find_user_by_id.sql" />
@@ -52,9 +52,11 @@
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
         <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/opinion.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_id.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/user.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/citizen.sql" />
         <option value="$PROJECT_DIR$/src/test/sql/article.sql" />

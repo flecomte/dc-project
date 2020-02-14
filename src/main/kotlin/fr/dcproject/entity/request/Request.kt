@@ -1,14 +1,11 @@
 package fr.dcproject.entity.request
 
-import fr.dcproject.entity.CitizenRef
-import fr.postgresjson.entity.EntityI
+import io.ktor.application.ApplicationCall
 
 interface Request
 
-interface RequestBuilder<E: EntityI> : Request {
-    fun create(): E
+interface RequestBuilder<E> {
+    suspend fun getContent(call: ApplicationCall): E
 }
 
-interface RequestBuilderWithCreator<C: CitizenRef, E: EntityI> : Request {
-    fun create(citizen: C): E
-}
+suspend fun <E> ApplicationCall.getContent(builder: RequestBuilder<E>) = builder.getContent(this)

@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
+import fr.dcproject.security.voter.OpinionChoiceVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -17,7 +17,7 @@ object OpinionChoicePaths {
     class OpinionChoiceRequest(val opinionChoice: OpinionChoice)
 
     @Location("/opinions")
-    class OpinionChoicesRequest(val targets: List<String>)
+    class OpinionChoicesRequest(val targets: List<String> = emptyList())
 }
 
 @KtorExperimentalLocationsAPI

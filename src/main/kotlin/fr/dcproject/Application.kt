@@ -197,6 +197,7 @@ fun Application.module(env: Env = PROD) {
             commentConstitution(get())
             voteArticle(get(), get(), get())
             voteConstitution(get())
+            opinionArticle(get())
             opinionChoice(get())
             definition()
         }
@@ -214,6 +215,9 @@ fun Application.module(env: Env = PROD) {
         }
         exception<NotFoundException> { e ->
             call.respond(HttpStatusCode.BadRequest, e.message!!)
+        }
+        exception<ForbiddenException> {
+            call.respond(HttpStatusCode.Forbidden)
         }
     }
 

@@ -2,6 +2,8 @@ package feature
 
 import fr.dcproject.entity.*
 import fr.dcproject.repository.CommentArticle
+import fr.dcproject.utils.toUUID
+import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime
 import org.koin.test.KoinTest
@@ -16,6 +18,9 @@ import fr.dcproject.repository.Citizen as CitizenRepository
 
 class ArticleSteps : En, KoinTest {
     init {
+        /**
+         * @deprecated
+         */
         Given("I have article with id {string}") { id: String ->
             var citizen = Citizen(
                 name = CitizenI.Name("John", "Doe"),
@@ -38,6 +43,23 @@ class ArticleSteps : En, KoinTest {
                 createdBy = citizen
             )
             get<ArticleRepository>().upsert(article)
+        }
+
+        Given("I have article") { extraData: DataTable ->
+            extraData.asMap<String, String>(String::class.java, String::class.java).let { params ->
+                val username = params["createdBy"]?.toLowerCase()?.replace(' ', '-') ?: error("You must provide the 'createdBy' parameter")
+                val citizen = get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
+                val id = params["id"]?.toUUID() ?: UUID.randomUUID()
+                val article = ArticleEntity(
+                    id = id,
+                    title = "hello",
+                    content = "bla bla bla",
+                    description = "A super article",
+                    createdBy = citizen
+                )
+                get<ArticleRepository>().upsert(article)
+            }
+
         }
 
         Given("I have article with id {string} created by {string}") { id: String, username: String ->

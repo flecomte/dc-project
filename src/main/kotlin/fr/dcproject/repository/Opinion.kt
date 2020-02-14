@@ -11,6 +11,7 @@ import net.pearx.kasechange.toSnakeCase
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Opinion as OpinionEntity
+import fr.dcproject.entity.OpinionArticle as OpinionArticleEntity
 import fr.dcproject.entity.OpinionChoice as OpinionChoiceEntity
 
 open class OpinionChoice(override val requester: Requester) : RepositoryI {
@@ -24,6 +25,14 @@ open class OpinionChoice(override val requester: Requester) : RepositoryI {
             .select(
                 "targets" to targets
             )
+
+    /**
+     * find opinion choices by name
+     */
+    fun findOpinionsChoiceByName(name: String): OpinionChoiceEntity? =
+        findOpinionsChoices().first {
+            it.name == name
+        }
 
     /**
      * find one opinion choices by id
@@ -104,9 +113,18 @@ open class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requeste
             .select(page, limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
-                "citizen" to citizen.id
+                "citizen_id" to citizen.id
             )
     }
 }
 
-class OpinionArticle(requester: Requester) : Opinion<Article>(requester)
+class OpinionArticle(requester: Requester) : Opinion<Article>(requester) {
+    /**
+     * Create an Opinion on Article
+     */
+    fun opinion(opinion: OpinionArticleEntity): OpinionArticleEntity {
+        return requester
+            .getFunction("upsert_opinion")
+            .selectOne(opinion) ?: error("query 'upsert_opinion' return null")
+    }
+}

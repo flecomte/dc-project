@@ -650,6 +650,123 @@ paths:
         401:
           $ref: '#/components/responses/401'
 
+  /articles/{article}/opinions:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Add Opinion on one article
+      tags:
+        - opinion
+        - article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ArticleOpinionRequest'
+      responses:
+        201:
+          description: Return the opinion
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Opinion'
+        401:
+          $ref: '#/components/responses/401'
+  /opinions:
+    get:
+      summary: Get all opinions choices
+      tags:
+        - opinion
+      parameters:
+        - in: query
+          required: false
+          name: targets
+          description: opinion available for defined target
+          example:
+            - article
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        200:
+          description: return
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpinionChoices'
+  /opinions/{opinion}:
+    parameters:
+      - $ref: '#/components/parameters/opinion'
+    get:
+      summary: Get one opinion Choices
+      tags:
+        - opinion
+      responses:
+        200:
+          description: return
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpinionChoice'
+  /citizens/{citizen}/opinions:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get all opinions of citizen filtered by target ids
+      tags:
+        - opinion
+        - citizen
+      parameters:
+        - in: query
+          required: true
+          name: id
+          description: target ids
+          example:
+            - 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        200:
+          description: Opinions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Opinion'
+  /citizens/{citizen}/opinions/articles:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get all opinions of one citizen
+      tags:
+        - opinion
+        - citizen
+      responses:
+        200:
+          description: Opinions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Opinion'
+
 
   /citizens/{citizen}/votes/articles:
     parameters:
@@ -789,7 +906,7 @@ components:
       name: citizen
       in: path
       description: ID of citizen
-      example: 4d673bfa-eaef-4290-b52f-85a9c8a7eba5
+      example: 6434f4f9-f570-f22a-c134-8668350651ff
       required: true
       schema:
         type: string
@@ -801,6 +918,15 @@ components:
       required: true
       description: the ID of article
       example: d91aa0cd-61d6-83cc-41bb-8d5656e130f7
+      schema:
+        type: string
+        format: uuid
+    opinion:
+      in: path
+      required: true
+      name: opinion
+      description: Opinion ID
+      example: 6e978eb5-3c48-0def-b093-e01f43983adb
       schema:
         type: string
         format: uuid
@@ -861,6 +987,13 @@ components:
         updated_at:
           type: string
           format: 'date-time'
+    DeletedAt:
+      properties:
+        deleted_at:
+          type: string
+          format: 'date-time'
+        deleted:
+          type: boolean
 
     versionId:
       properties:
@@ -1221,7 +1354,70 @@ components:
             Opinion1: 1
             Opinion2: 55
 
+    ArticleOpinionRequest:
+      type: object
+      properties:
+        opinion_choice:
+          type: string
+          format: uuid
+          example: 6e978eb5-3c48-0def-b093-e01f43983adb
 
+    OpinionChoices:
+      description: Opinion Choice
+      type: array
+      items:
+        $ref: '#/components/schemas/OpinionChoice'
+
+    OpinionChoice:
+      description: Opinion Choice
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: opinion1
+            target:
+              type: array
+              required: false
+              nullable: true
+              items:
+                type: string
+                description: the name of the target
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/DeletedAt'
+
+    Opinion:
+      description: Opinion
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: opinion1
+            target:
+              type: object
+              properties:
+                  id:
+                    type: string
+                    format: uuid
+                  reference:
+                    type: string
+                    example: article
+            choice:
+              type: object
+              allOf:
+                - $ref: '#/components/schemas/OpinionChoice'
+            reference:
+              type: string
+              example: opinion_on_article
+        - $ref: '#/components/schemas/CreatedBy'
+        - $ref: '#/components/schemas/CreatedAt'
 
 
 
@@ -1243,11 +1439,7 @@ components:
       required: true
 
 servers:
-  - description: localhost 80
-    url: http://localhost
-  - description: localhost 8080
+  - description: localhost
     url: http://localhost:8080
   - description: production
     url: http://dc-project.fr
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/flecomte/dc-project/0.1

@@ -10,7 +10,7 @@ import java.util.*
 class OpinionChoice(
     id: UUID,
     val name: String,
-    val target: List<String>
+    val target: List<String>?
 ) : OpinionChoiceRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp()

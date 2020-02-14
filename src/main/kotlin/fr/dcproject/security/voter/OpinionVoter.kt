@@ -37,9 +37,10 @@ class OpinionVoter : Voter {
         }
 
         if (action == Action.DELETE) {
-            return if (subject is Opinion<*>
-                && user != null
-                && subject.createdBy.user.id == user.id)
+            return if (subject is Opinion<*> &&
+                user != null &&
+                subject.createdBy.user.id == user.id
+            )
                 Vote.GRANTED
             else Vote.DENIED
         }

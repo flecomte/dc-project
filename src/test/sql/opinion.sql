@@ -38,8 +38,9 @@ declare
       "draft":false
     }
     $json$;
-    opinion1 uuid = uuid_generate_v4();
-    opinion2 uuid = uuid_generate_v4();
+    opinion_choice1_id uuid = uuid_generate_v4();
+    opinion_choice2_id uuid = uuid_generate_v4();
+    opinion2 json;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -59,31 +60,37 @@ begin
 
 
     insert into opinion_choice(id, name, target)
-    values (opinion1, 'Opinion1', '{article}');
+    values (opinion_choice1_id, 'Opinion1', '{article}');
 
-    insert into opinion_choice(id, name, target)
-    values (opinion2, 'Opinion2', '{article}');
+    insert into opinion_choice(id, name)
+    values (opinion_choice2_id, 'Opinion2');
 
     insert into opinion_choice(name, target)
     values ('Opinion3', '{article}');
 
-    perform opinion(
-        reference => 'article'::regclass,
-        _target_id => (created_article->>'id')::uuid,
-        _created_by_id => _citizen_id,
-        _opinion => opinion1
+    perform upsert_opinion(
+        resource => json_build_object(
+            'target', json_build_object('id', (created_article->'id'), 'reference', 'article'),
+            'created_by', json_build_object('id', _citizen_id),
+            'choice', json_build_object('id', opinion_choice1_id)
+        )
     );
-    perform opinion(
-        reference => 'article'::regclass,
-        _target_id => (created_article->>'id')::uuid,
-        _created_by_id => _citizen_id,
-        _opinion => opinion2
-    );
+    select upsert_opinion(
+        resource => json_build_object(
+            'target', json_build_object('id', (created_article->'id'), 'reference', 'article'),
+            'created_by', json_build_object('id', _citizen_id),
+            'choice', json_build_object('id', opinion_choice2_id)
+        )
+    ) into opinion2;
     assert (select count(*) = 2 from opinion_on_article), 'opinions must be inserted';
-    assert (select choice_id = opinion1 from opinion_on_article limit 1), 'opinion must be inserted';
+    assert (select choice_id = opinion_choice1_id from opinion_on_article limit 1), 'opinion must be inserted';
 
     assert(select (a#>>'{opinions, Opinion1}')::int = 1
     from find_article_by_id((created_article->>'id')::uuid) a), 'the article must be have a opinion';
+
+    raise notice '%', opinion2;
+    assert(select (opinion2#>>'{choice, id}')::uuid = opinion_choice2_id), 'opinion2 is not inserted';
+    assert(select (opinion2#>>'{choice, name}') = 'Opinion2'), 'no name for opinion2';
 
     assert(
         select (o#>>'{0, choice, name}') = 'Opinion1'
@@ -100,7 +107,11 @@ begin
         ), 'find_opinion_choices must be return all opinions';
 
     assert(
-        select (find_opinion_choice_by_id(opinion1)->>'name') = 'Opinion1'
+        select find_opinion_choices('{}')#>>'{0, name}' = 'Opinion1'
+        ), 'find_opinion_choices must be return all opinions if no target is defined';
+
+    assert(
+        select (find_opinion_choice_by_id(opinion_choice1_id)->>'name') = 'Opinion1'
         ), 'find_opinion_choice_by_id must return the opinion_choice';
 
     assert(

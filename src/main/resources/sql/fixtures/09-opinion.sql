@@ -7,7 +7,10 @@ begin
     delete from opinion_choice;
 
     insert into opinion_choice (id, name, target)
-    select uuid_in(md5('opinion_choice'||row_number() over ())::cstring), 'Opinion'||row_number() over (), '{article}'
+    select
+           uuid_in(md5('opinion_choice'||row_number() over ())::cstring),
+           'Opinion'||row_number() over (),
+           case when row_number() over () % 5 = 0 then null else '{article}'::text[] end
         from generate_series(0,20);
 
     for i in 0..9 loop

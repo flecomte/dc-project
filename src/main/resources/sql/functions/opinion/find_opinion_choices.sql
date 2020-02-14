@@ -8,7 +8,11 @@ begin
         select ol.*
         from opinion_choice ol
         where (ol.deleted_at is null or ol.deleted_at > now())
-           and (ol.target is null or targets is null or array_length(targets, 1) = 0 or ol.target && targets)
+           and (
+               ol.target is null or array_length(ol.target, 1) is null  -- if choice is compatible with all target
+            or targets is null or array_length(targets, 1) is null -- if no target defined
+            or (ol.target && targets) -- if target is compatible
+           )
 
         order by ol.name
     ) t;
@@ -17,4 +21,4 @@ $$;
 
 -- drop function if exists find_opinions();
 
--- select find_opinions();
+-- select find_opinion_choices('{}');
