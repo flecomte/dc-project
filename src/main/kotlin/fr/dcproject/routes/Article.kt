@@ -1,11 +1,14 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.event.ArticleUpdate
+import fr.dcproject.event.EntityEvent
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
 import fr.postgresjson.repository.RepositoryI
+import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -83,6 +86,7 @@ fun Route.article(repo: ArticleRepository) {
         assertCan(CREATE, article)
 
         repo.upsert(article)
+        application.environment.monitor.raise(EntityEvent.Type.UPDATE_ARTICLE.event, ArticleUpdate(article))
 
         call.respond(article)
     }

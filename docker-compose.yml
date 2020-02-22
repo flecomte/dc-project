@@ -7,7 +7,7 @@ services:
     image: sonarqube
     restart: always
     ports:
-    - 9000:9000
+      - ${SONARQUBE_PORT}:9000
 
   openapi:
     container_name: openapi_${NAME}
@@ -17,6 +17,21 @@ services:
       - ${OPENAPI_PORT}:8080
     environment:
       URL: "http://localhost:8080"
+
+  rabbitmq:
+    container_name: rabbitmq_${NAME}
+    image: rabbitmq:management-alpine
+    restart: always
+    ports:
+      - ${RABBITMQ_PORT}:5672
+      - ${RABBITMQ_MANAGEMENT_PORT}:15672
+
+  redis:
+    container_name: redis_${NAME}
+    image: redis:6.0-rc-alpine
+    restart: always
+    ports:
+      - ${REDIS_PORT}:6379
 
   app:
     container_name: app_${NAME}
@@ -29,9 +44,13 @@ services:
     environment:
       DB_HOST: db
       SEND_GRID_KEY: ${SEND_GRID_KEY}
+      REDIS_CONNECTION: redis://redis:6379
+      RABBITMQ_CONNECTION: amqp://rabbitmq:5671
     depends_on:
       - elasticsearch
       - db
+      - redis
+      - rabbitmq
 
   elasticsearch:
     container_name: elasticsearch_${NAME}

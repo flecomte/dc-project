@@ -1132,7 +1132,7 @@ components:
               required: true
               example:
                 Lorem upsum...
-            descritption:
+            description:
               type: string
               required: true
               example:

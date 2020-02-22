@@ -1,11 +1,21 @@
 package fr.dcproject
 
+import com.fasterxml.jackson.databind.DeserializationFeature
+import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.SerializationFeature
+import com.fasterxml.jackson.databind.module.SimpleModule
+import com.fasterxml.jackson.datatype.joda.JodaModule
+import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.SsoManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
 import io.ktor.util.KtorExperimentalAPI
+import io.lettuce.core.RedisClient
+import io.lettuce.core.api.reactive.RedisReactiveCommands
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
@@ -37,6 +47,25 @@ val Module = module {
             username = config.username,
             password = config.password
         )
+    }
+
+    single<RedisReactiveCommands<String, String>> {
+        RedisClient.create(config.redis).connect()?.reactive() ?: error("Unable to connect to redis")
+    }
+
+    single<ConnectionFactory> {
+        ConnectionFactory().apply { setUri(config.rabbitmq) }
+    }
+
+    single<ObjectMapper> {
+        jacksonObjectMapper().apply {
+            registerModule(SimpleModule())
+            propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+
+            registerModule(JodaModule())
+            disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
+        }
     }
 
     single {

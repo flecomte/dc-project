@@ -3,6 +3,7 @@ import org.owasp.dependencycheck.reporting.ReportGenerator
 
 val ktor_version: String by project
 val kotlin_version: String by project
+val coroutinesVersion: String by project
 val logback_version: String by project
 val koinVersion: String by project
 val postgresjson_version: String by project
@@ -66,6 +67,8 @@ repositories {
 
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:${coroutinesVersion}")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:${coroutinesVersion}")
     implementation("io.ktor:ktor-server-jetty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-core:$ktor_version")
@@ -83,6 +86,8 @@ dependencies {
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
+    implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
+    implementation("com.rabbitmq:amqp-client:5.8.0")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")

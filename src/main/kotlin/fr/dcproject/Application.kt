@@ -7,8 +7,12 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
+import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.Env.PROD
 import fr.dcproject.entity.*
+import fr.dcproject.event.EntityEvent
+import fr.dcproject.event.EventNotification
+import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.postgresjson.migration.Migrations
@@ -27,7 +31,9 @@ import io.ktor.jackson.jackson
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.response.respond
+import io.ktor.response.respondText
 import io.ktor.routing.Routing
+import io.ktor.routing.get
 import io.ktor.util.KtorExperimentalAPI
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.ktor.ext.Koin
@@ -148,6 +154,25 @@ fun Application.module(env: Env = PROD) {
         )
     }
 
+    install(EventNotification) {
+        /* Config Rabbit */
+        val exchangeName = config.exchangeNotificationName
+        get<ConnectionFactory>().newConnection().use { connection -> connection.createChannel().use { channel ->
+            channel.queueDeclare("sse", true, false, false, null)
+            channel.queueDeclare("email", true, false, false, null)
+            channel.exchangeDeclare(exchangeName, "direct")
+            channel.queueBind("sse", exchangeName, "")
+            channel.queueBind("email", exchangeName, "")
+        }}
+
+        /* Declare publisher on event */
+        val publisher = Publisher(get(), get())
+        subscribe(EntityEvent.Type.UPDATE_ARTICLE.event) {
+            println("Article is updated ${it.target.id}")
+            publisher.publish(it)
+        }
+    }
+
     install(Authentication) {
         /**
          * Setup the JWT authentication to be used in [Routing].
@@ -200,6 +225,20 @@ fun Application.module(env: Env = PROD) {
             opinionArticle(get())
             opinionChoice(get())
             definition()
+            get("/sse") {
+//                environment.monitor.raise(EntityEvent.Type.UPDATE_ARTICLE.event, ArticleUpdate(ArticleRef()))
+//                val redis = this@authenticate.getKoin().get<RedisReactiveCommands<String, String>>()
+//                redis.set("key", "test").awaitSingle()
+//                redis.lpush("list", "test2").asFlow().map {
+//                    println(it)
+//                }.collect()
+//                redis.get("key").asFlow().collect { println(it) }
+//                redis.rpop("list").asFlow().collect {
+//                    println(it)
+//                    call.respondText { it }
+//                }
+                call.respondText("OK")
+            }
         }
     }
 
