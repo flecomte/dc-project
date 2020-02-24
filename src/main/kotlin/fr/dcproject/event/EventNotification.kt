@@ -1,6 +1,7 @@
 package fr.dcproject.event
 
 import fr.dcproject.entity.Article
+import fr.postgresjson.entity.Serializable
 import fr.postgresjson.entity.immutable.UuidEntity
 import io.ktor.application.*
 import io.ktor.util.AttributeKey
@@ -12,11 +13,11 @@ abstract class Notification(
     val type: String,
     val createdAt: DateTime = DateTime.now()
 )
-abstract class EntityEvent(
+open class EntityEvent(
     val target: UuidEntity,
     type: String,
     val action: String
-) : Notification(type) {
+) : Notification(type), Serializable {
     enum class Type(val event: EventDefinition<ArticleUpdate>) {
         UPDATE_ARTICLE(EventDefinition<ArticleUpdate>())
     }

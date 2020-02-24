@@ -15,7 +15,7 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
-import io.lettuce.core.api.reactive.RedisReactiveCommands
+import io.lettuce.core.api.async.RedisAsyncCommands
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
@@ -49,8 +49,10 @@ val Module = module {
         )
     }
 
-    single<RedisReactiveCommands<String, String>> {
-        RedisClient.create(config.redis).connect()?.reactive() ?: error("Unable to connect to redis")
+    single { Migrations(connection = get(), directory = config.sqlFiles) }
+
+    single<RedisAsyncCommands<String, String>> {
+        RedisClient.create(config.redis).connect()?.async() ?: error("Unable to connect to redis")
     }
 
     single<ConnectionFactory> {
@@ -90,8 +92,6 @@ val Module = module {
     single { VoteCommentRepository(get()) }
     single { OpinionChoiceRepository(get()) }
     single { OpinionArticleRepository(get()) }
-
-    single { Migrations(connection = get(), directory = config.sqlFiles) }
 
     single { Mailer(config.sendGridKey) }
     single { SsoManager(get<Mailer>(), config.domain, get()) }

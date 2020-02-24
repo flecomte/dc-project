@@ -11,7 +11,7 @@ open class Opinion<T : TargetI>(
     override val createdBy: CitizenBasic,
     override val target: T,
     val choice: OpinionChoice
-) : ExtraI<T>,
+) : ExtraI<T,CitizenBasicI>,
     TargetRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy) {

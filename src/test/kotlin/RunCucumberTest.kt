@@ -13,6 +13,7 @@ import io.cucumber.junit.CucumberOptions
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 import org.koin.test.get
@@ -20,6 +21,7 @@ import org.slf4j.Logger
 
 var unitialized: Boolean = false
 
+@InternalCoroutinesApi
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @RunWith(Cucumber::class)
@@ -27,6 +29,7 @@ var unitialized: Boolean = false
 class RunCucumberTest : En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
 
+    @InternalCoroutinesApi
     val ktorContext = KtorServerContext {
         module(CUCUMBER)
     }

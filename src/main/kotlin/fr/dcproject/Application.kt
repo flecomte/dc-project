@@ -7,15 +7,18 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
-import com.rabbitmq.client.ConnectionFactory
+import com.rabbitmq.client.*
+import com.rabbitmq.client.BuiltinExchangeType.DIRECT
 import fr.dcproject.Env.PROD
 import fr.dcproject.entity.*
 import fr.dcproject.event.EntityEvent
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.publisher.Publisher
+import fr.dcproject.repository.FollowArticle
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.postgresjson.migration.Migrations
+import fr.postgresjson.serializer.deserialize
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -35,10 +38,18 @@ import io.ktor.response.respondText
 import io.ktor.routing.Routing
 import io.ktor.routing.get
 import io.ktor.util.KtorExperimentalAPI
+import io.lettuce.core.api.async.RedisAsyncCommands
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.util.log.Slf4jLog
+import org.joda.time.DateTime
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
+import java.io.IOException
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
@@ -52,6 +63,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
 enum class Env { PROD, TEST, CUCUMBER }
 
+@InternalCoroutinesApi
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @Suppress("unused") // Referenced in application.conf
@@ -133,7 +145,8 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
-                get<OpinionChoiceRepository>().findOpinionChoiceById(id) ?: throw NotFoundException("OpinionChoice $values not found")
+                get<OpinionChoiceRepository>().findOpinionChoiceById(id)
+                    ?: throw NotFoundException("OpinionChoice $values not found")
             }
         }
     }
@@ -157,19 +170,76 @@ fun Application.module(env: Env = PROD) {
     install(EventNotification) {
         /* Config Rabbit */
         val exchangeName = config.exchangeNotificationName
-        get<ConnectionFactory>().newConnection().use { connection -> connection.createChannel().use { channel ->
-            channel.queueDeclare("sse", true, false, false, null)
-            channel.queueDeclare("email", true, false, false, null)
-            channel.exchangeDeclare(exchangeName, "direct")
-            channel.queueBind("sse", exchangeName, "")
-            channel.queueBind("email", exchangeName, "")
-        }}
+        get<ConnectionFactory>().newConnection().use { connection ->
+            connection.createChannel().use { channel ->
+                channel.queueDeclare("sse", true, false, false, null)
+                channel.queueDeclare("email", true, false, false, null)
+                channel.exchangeDeclare(exchangeName, DIRECT, true)
+                channel.queueBind("sse", exchangeName, "")
+                channel.queueBind("email", exchangeName, "")
+            }
+        }
 
         /* Declare publisher on event */
         val publisher = Publisher(get(), get())
         subscribe(EntityEvent.Type.UPDATE_ARTICLE.event) {
             println("Article is updated ${it.target.id}")
             publisher.publish(it)
+        }
+
+        /* Launch Consumer */
+        GlobalScope.launch {
+            val connection = get<ConnectionFactory>().newConnection()
+            val channel = connection.createChannel()
+            val redis = get<RedisAsyncCommands<String, String>>()
+            val consumerSSE: Consumer = object : DefaultConsumer(channel) {
+                @Throws(IOException::class)
+                override fun handleDelivery(
+                    consumerTag: String,
+                    envelope: Envelope,
+                    properties: AMQP.BasicProperties,
+                    body: ByteArray
+                ) {
+                    val message = body.toString(Charsets.UTF_8)
+                    val event =
+                        message.deserialize<EntityEvent>() ?: error("Unable to unserialise event message from rabbit")
+
+                    val followRepo = when (event.type) {
+                        "article" -> get<FollowArticle>()
+                        else -> error("type of event not supported")
+                    }
+
+                    runBlocking {
+                        followRepo
+                            .findFollowsByTarget(event.target)
+                            .collect { follow ->
+                                redis.zadd(
+                                    "notification:${follow.createdBy.id}",
+                                    DateTime.now().millis.toDouble(),
+                                    message
+                                )
+                            }
+                    }
+                    channel.basicAck(envelope.deliveryTag, false)
+                }
+            }
+
+            val consumerEmail: Consumer = object : DefaultConsumer(channel) {
+                @Throws(IOException::class)
+                override fun handleDelivery(
+                    consumerTag: String,
+                    envelope: Envelope,
+                    properties: AMQP.BasicProperties,
+                    body: ByteArray
+                ) {
+                    val message = body.toString(Charsets.UTF_8)
+                    println("The message is receive for send email: $message")
+                    // TODO implement email sender
+                    channel.basicAck(envelope.deliveryTag, false)
+                }
+            }
+            channel.basicConsume("sse", false, consumerSSE)
+            channel.basicConsume("email", false, consumerEmail)
         }
     }
 
@@ -226,17 +296,7 @@ fun Application.module(env: Env = PROD) {
             opinionChoice(get())
             definition()
             get("/sse") {
-//                environment.monitor.raise(EntityEvent.Type.UPDATE_ARTICLE.event, ArticleUpdate(ArticleRef()))
-//                val redis = this@authenticate.getKoin().get<RedisReactiveCommands<String, String>>()
-//                redis.set("key", "test").awaitSingle()
-//                redis.lpush("list", "test2").asFlow().map {
-//                    println(it)
-//                }.collect()
-//                redis.get("key").asFlow().collect { println(it) }
-//                redis.rpop("list").asFlow().collect {
-//                    println(it)
-//                    call.respondText { it }
-//                }
+
                 call.respondText("OK")
             }
         }

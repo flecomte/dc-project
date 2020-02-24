@@ -1,10 +1,12 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.CitizenI
-import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.*
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
+import fr.postgresjson.entity.immutable.UuidEntity
 import fr.postgresjson.repository.RepositoryI
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.flow
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
@@ -66,6 +68,32 @@ class FollowArticle(requester: Requester) : Follow<ArticleEntity>(requester) {
                     "created_by_id" to citizenId
                 )
         }
+    }
+
+    fun findFollowsByTarget(
+        target: UuidEntity,
+        page: Int = 1,
+        limit: Int = 300
+    ): Paginated<FollowSimple<ArticleRef, CitizenRef>> {
+        return requester
+            .getFunction("find_follows_article_by_target")
+            .select(page, limit,
+                "target_id" to target.id
+            )
+    }
+
+    fun findFollowsByTarget(
+        target: UuidEntity,
+        limit: Int = 300
+    ): Flow<FollowSimple<ArticleRef, CitizenRef>> = flow {
+        var nextPage = 1
+        do {
+            val paginate = findFollowsByTarget(target, nextPage, limit)
+            paginate.result.forEach {
+                emit(it)
+            }
+            nextPage = paginate.currentPage+1
+        } while (!paginate.isLastPage())
     }
 }
 

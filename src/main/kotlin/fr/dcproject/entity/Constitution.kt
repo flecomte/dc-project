@@ -31,7 +31,7 @@ class Constitution(
     ) : ConstitutionSimple.TitleSimple<ArticleSimple>(id, name, rank)
 }
 
-open class ConstitutionSimple<Cr : CitizenRef, T : ConstitutionSimple.TitleSimple<*>>(
+open class ConstitutionSimple<Cr : CitizenRefWithUser, T : ConstitutionSimple.TitleSimple<*>>(
     id: UUID = UUID.randomUUID(),
     var title: String,
     var anonymous: Boolean = true,

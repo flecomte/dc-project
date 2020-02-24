@@ -9,7 +9,7 @@ open class Vote<T : TargetI>(
     override var target: T,
     var note: Int,
     var anonymous: Boolean = true
-) : ExtraI<T>,
+) : ExtraI<T, CitizenBasicI>,
     UuidEntity(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),

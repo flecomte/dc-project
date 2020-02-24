@@ -8,18 +8,21 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-interface ExtraI<T : TargetI> :
+interface ExtraI<T : TargetI, C: CitizenI> :
     UuidEntityI,
     EntityCreatedAt,
-    EntityCreatedBy<CitizenBasicI> {
+    EntityCreatedBy<C> {
     val target: T
 }
 
-open class TargetRef(id: UUID = UUID.randomUUID()) : TargetI, UuidEntity(id) {
-    override val reference: String = ""
-        get() {
-            return if (field != "") field else TargetI.getReference(this)
-        }
+open class TargetRef(id: UUID = UUID.randomUUID(), reference: String = "") : TargetI, UuidEntity(id) {
+
+    final override val reference: String
+        get() = if (field != "") field else TargetI.getReference(this)
+
+    init {
+        this.reference = reference
+    }
 }
 
 interface TargetI : UuidEntityI {
@@ -43,7 +46,7 @@ interface TargetI : UuidEntityI {
 
         fun getReference(t: TargetI): String {
             val ref = this.getReference(t::class)
-            return if (t is ExtraI<*>) {
+            return if (t is ExtraI<*, *>) {
                 "${ref}_on_${t.target.reference}"
             } else {
                 ref

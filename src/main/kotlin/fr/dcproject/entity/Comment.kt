@@ -14,7 +14,7 @@ open class Comment<T : TargetI>(
     var parent: Comment<T>? = null,
     val parentsIds: List<UUID>? = null,
     val childrenCount: Int? = null
-) : ExtraI<T>,
+) : ExtraI<T, CitizenBasicI>,
     CommentRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),

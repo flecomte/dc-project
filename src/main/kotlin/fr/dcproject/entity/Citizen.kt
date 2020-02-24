@@ -37,14 +37,18 @@ open class CitizenSimple(
     id: UUID = UUID.randomUUID(),
     var name: Name,
     user: UserRef
-) : CitizenRef(id, user)
+) : CitizenRefWithUser(id, user)
 
-open class CitizenRef(
+open class CitizenRefWithUser(
     id: UUID = UUID.randomUUID(),
     open val user: UserRef
-) : UuidEntity(id),
-    CitizenI,
+) : CitizenRef(id),
     EntityDeletedAt by EntityDeletedAtImp()
+
+open class CitizenRef(
+    id: UUID = UUID.randomUUID()
+) : UuidEntity(id),
+    CitizenI
 
 interface CitizenI : UuidEntityI {
     data class Name(
