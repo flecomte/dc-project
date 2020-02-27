@@ -12,7 +12,7 @@ begin
     from (
         select
             v.*,
-            find_reference_by_id(v.target_id, _reference) as target,
+            find_reference_by_id(v.target_id, v.target_reference) as target,
             find_citizen_by_id(v.created_by_id) as created_by
 
         from vote as v

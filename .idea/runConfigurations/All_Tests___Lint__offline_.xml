@@ -8,7 +8,6 @@
     <option name="TEST_OBJECT" value="tags" />
     <option name="VM_PARAMETERS" value="-ea -Dcucumber.options=&quot;--tags ~@online&quot;" />
     <option name="PARAMETERS" value="" />
-    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="wholeProject" />
     </option>
