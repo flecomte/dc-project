@@ -533,6 +533,22 @@ paths:
   /articles/{article}/follows:
     parameters:
       - $ref: '#/components/parameters/article'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Return Follow or nothing if you not follow
+      tags:
+        - follow
+        - article
+      responses:
+        200:
+          description: Return your follow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponse'
+        404:
+          description: You not follow this article
     post:
       security:
         - JWTAuth: []

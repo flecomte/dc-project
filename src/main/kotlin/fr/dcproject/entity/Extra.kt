@@ -40,7 +40,7 @@ interface TargetI : UuidEntityI {
                 t.isSubclassOf(ConstitutionRef::class) -> TargetName.Constitution.targetReference
                 t.isSubclassOf(CommentRef::class) -> TargetName.Comment.targetReference
                 t.isSubclassOf(Opinion::class) -> TargetName.Opinion.targetReference
-                else -> throw error("target not implemented: ${t.qualifiedName}")
+                else -> throw error("target not implemented: ${t.qualifiedName} \nImplement it or return 'reference' from SQL")
             }
         }
 

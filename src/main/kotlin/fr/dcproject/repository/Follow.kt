@@ -12,7 +12,7 @@ import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow<T : TargetI>(override var requester: Requester) : RepositoryI {
+open class Follow<T : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenI,
         page: Int = 1,
@@ -25,13 +25,12 @@ open class Follow<T : TargetI>(override var requester: Requester) : RepositoryI 
         page: Int = 1,
         limit: Int = 50
     ): Paginated<FollowEntity<T>> {
-        return requester.run {
-            getFunction("find_follows_by_citizen")
+        return requester
+            .getFunction("find_follows_by_citizen")
                 .select(
                     page, limit,
                     "created_by_id" to citizenId
                 )
-        }
     }
 
     fun follow(follow: FollowEntity<T>) {
@@ -53,6 +52,17 @@ open class Follow<T : TargetI>(override var requester: Requester) : RepositoryI 
                 "created_by_id" to follow.createdBy.id
             )
     }
+
+    open fun findFollow(
+        citizen: CitizenI,
+        target: UuidEntity
+    ): FollowEntity<T>? =
+        requester
+            .getFunction("find_follow")
+            .selectOne(
+                "citizen_id" to citizen.id,
+                "target_id" to target.id
+            )
 }
 
 class FollowArticle(requester: Requester) : Follow<ArticleEntity>(requester) {
