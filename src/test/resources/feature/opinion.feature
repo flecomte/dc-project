@@ -14,8 +14,10 @@ Feature: Opinion
       | [0]name | Opinion1 |
 
   Scenario: Can create opinion on article
-    Given I have citizen Isaac Newton
-      | id | 2f414045-95d9-42ca-a3a9-8cdde52ad253 |
+    Given I have citizen:
+      | id        | 2f414045-95d9-42ca-a3a9-8cdde52ad253 |
+      | firstName | Isaac                                |
+      | lastName  | Newton                               |
     And I am authenticated as Isaac Newton
     And I have article
       | id        | 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7 |
@@ -45,8 +47,10 @@ Feature: Opinion
       | opinions.Opinion2 | 1 |
 
   Scenario: Can get all opinion of one citizen
-    Given I have citizen Albert Einstein
-      | id | c1542096-3431-432d-8e35-9dc071d4c818 |
+    Given I have citizen:
+      | id        | c1542096-3431-432d-8e35-9dc071d4c818 |
+      | firstName | Albert                               |
+      | lastName  | Einstein                             |
     And I am authenticated as Albert Einstein
     And I have an opinion
       | opinion   | Opinion1                             |
