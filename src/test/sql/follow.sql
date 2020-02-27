@@ -28,6 +28,7 @@ declare
 
     created_article  json := '{"version_id":"933b6a1b-50c9-42b6-989f-c02a57814ef9", "title": "Love the world", "anonymous": false, "content": "bla bal bla", "tags": ["love", "test"], "draft":false}';
     first_article_id uuid;
+    first_article_updated_id uuid;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -61,6 +62,17 @@ begin
     perform follow('article'::regclass, first_article_id, _citizen_id);
     assert (select following = true from find_follow(first_article_id, _citizen_id)), 'find_follow must return the following';
     assert (select following = false from find_follow(first_article_id, _citizen_id2)), 'find_follow must not return the following if not followinf';
+    assert (select count(*) = 1 from follow), 'must have 1 following';
+
+    -- add new version for article, then unfollow the new one
+    select upsert_article(created_article) into created_article;
+    first_article_updated_id = (created_article->>'id')::uuid;
+    assert first_article_id != first_article_updated_id;
+
+    perform unfollow('article'::regclass, first_article_id, _citizen_id);
+--     perform unfollow('article'::regclass, first_article_updated_id, _citizen_id);
+    assert (select count(*) = 0 from follow), 'follow must be deleted after unfollow, event if article is on other version';
+
 
     -- delete follow and context
     delete from follow;
