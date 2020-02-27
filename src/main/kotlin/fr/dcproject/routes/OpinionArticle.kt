@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.OpinionArticle
 import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.entity.request.RequestBuilder
@@ -36,7 +37,7 @@ object OpinionArticlePaths {
      */
     @Location("/citizens/{citizen}/opinions/articles")
     class CitizenOpinionArticleRequest(
-        val citizen: CitizenEntity,
+        val citizen: CitizenRef,
         page: Int = 1,
         limit: Int = 50
     ) : PaginatedRequestI by PaginatedRequest(page, limit)

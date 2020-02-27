@@ -142,6 +142,14 @@ fun Application.module(env: Env = PROD) {
             }
         }
 
+        convert<CitizenRef> {
+            decode { values, _ ->
+                values.singleOrNull()?.let {
+                    CitizenRef(UUID.fromString(it))
+                } ?: throw NotFoundException("Citizen $values not found")
+            }
+        }
+
         convert<OpinionChoice> {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }

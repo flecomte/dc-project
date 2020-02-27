@@ -12,19 +12,19 @@ import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow<T : TargetRef>(override var requester: Requester) : RepositoryI {
+open class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenI,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<FollowEntity<T>> =
+    ): Paginated<FollowEntity<OUT>> =
         findByCitizen(citizen.id, page, limit)
 
     open fun findByCitizen(
         citizenId: UUID,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<FollowEntity<T>> {
+    ): Paginated<FollowEntity<OUT>> {
         return requester
             .getFunction("find_follows_by_citizen")
                 .select(
@@ -33,7 +33,7 @@ open class Follow<T : TargetRef>(override var requester: Requester) : Repository
                 )
     }
 
-    fun follow(follow: FollowEntity<T>) {
+    fun follow(follow: FollowEntity<IN>) {
         requester
             .getFunction("follow")
             .sendQuery(
@@ -43,7 +43,7 @@ open class Follow<T : TargetRef>(override var requester: Requester) : Repository
             )
     }
 
-    fun unfollow(follow: FollowEntity<T>) {
+    fun unfollow(follow: FollowEntity<IN>) {
         requester
             .getFunction("unfollow")
             .sendQuery(
@@ -56,7 +56,7 @@ open class Follow<T : TargetRef>(override var requester: Requester) : Repository
     open fun findFollow(
         citizen: CitizenI,
         target: UuidEntity
-    ): FollowEntity<T>? =
+    ): FollowEntity<OUT>? =
         requester
             .getFunction("find_follow")
             .selectOne(
@@ -65,7 +65,7 @@ open class Follow<T : TargetRef>(override var requester: Requester) : Repository
             )
 }
 
-class FollowArticle(requester: Requester) : Follow<ArticleEntity>(requester) {
+class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleEntity>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,
@@ -107,7 +107,7 @@ class FollowArticle(requester: Requester) : Follow<ArticleEntity>(requester) {
     }
 }
 
-class FollowConstitution(requester: Requester) : Follow<ConstitutionEntity>(requester) {
+class FollowConstitution(requester: Requester) : Follow<ConstitutionRef, ConstitutionEntity>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,

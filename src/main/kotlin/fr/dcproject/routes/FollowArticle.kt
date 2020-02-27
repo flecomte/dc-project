@@ -1,6 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.entity.ArticleRef
 import fr.dcproject.entity.Citizen
 import fr.dcproject.security.voter.FollowVoter.Action.*
 import fr.dcproject.security.voter.assertCan
@@ -9,14 +10,13 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.*
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
 @KtorExperimentalLocationsAPI
 object FollowArticlePaths {
     @Location("/articles/{article}/follows")
-    class ArticleFollowRequest(val article: ArticleEntity)
+    class ArticleFollowRequest(val article: ArticleRef)
 
     @Location("/citizens/{citizen}/follows/articles")
     class CitizenFollowArticleRequest(val citizen: Citizen)

@@ -1,7 +1,8 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CitizenRef
+import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.FollowVoter.Action.*
 import fr.dcproject.security.voter.assertCan
 import io.ktor.application.call
@@ -9,17 +10,16 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.*
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 
 @KtorExperimentalLocationsAPI
 object FollowConstitutionPaths {
     @Location("/constitutions/{constitution}/follow")
-    class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
+    class ConstitutionFollowRequest(val constitution: ConstitutionRef)
 
     @Location("/citizens/{citizen}/follows/constitutions")
-    class CitizenFollowConstitutionRequest(val citizen: Citizen)
+    class CitizenFollowConstitutionRequest(val citizen: CitizenRef)
 }
 
 @KtorExperimentalLocationsAPI
