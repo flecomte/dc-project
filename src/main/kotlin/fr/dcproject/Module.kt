@@ -13,9 +13,12 @@ import fr.dcproject.messages.SsoManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
+import io.ktor.client.HttpClient
+import io.ktor.client.features.websocket.WebSockets
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
@@ -39,6 +42,7 @@ val Module = module {
 
     single { config }
 
+    // SQL connection
     single {
         Connection(
             host = config.host,
@@ -49,16 +53,20 @@ val Module = module {
         )
     }
 
+    // Launch Database migration
     single { Migrations(connection = get(), directory = config.sqlFiles) }
 
+    // Redis client
     single<RedisAsyncCommands<String, String>> {
         RedisClient.create(config.redis).connect()?.async() ?: error("Unable to connect to redis")
     }
 
+    // RabbitMQ
     single<ConnectionFactory> {
         ConnectionFactory().apply { setUri(config.rabbitmq) }
     }
 
+    // JsonSerializer
     single<ObjectMapper> {
         jacksonObjectMapper().apply {
             registerModule(SimpleModule())
@@ -70,6 +78,14 @@ val Module = module {
         }
     }
 
+    // Client HTTP for WebSockets
+    single(named("ws")) {
+        HttpClient {
+            install(WebSockets)
+        }
+    }
+
+    // SQL Requester (postgresJson)
     single {
         Requester.RequesterFactory(
             connection = get(),
@@ -77,7 +93,7 @@ val Module = module {
         ).createRequester()
     }
 
-    // TODO: create generic declaration
+    // Repositories
     single { UserRepository(get()) }
     single { ArticleRepository(get()) }
     single { CitizenRepository(get()) }
@@ -93,6 +109,9 @@ val Module = module {
     single { OpinionChoiceRepository(get()) }
     single { OpinionArticleRepository(get()) }
 
+    // Mailler
     single { Mailer(config.sendGridKey) }
+
+    // SSO Manager for connection
     single { SsoManager(get<Mailer>(), config.domain, get()) }
 }

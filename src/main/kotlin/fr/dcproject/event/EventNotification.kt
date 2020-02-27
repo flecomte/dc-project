@@ -9,15 +9,16 @@ import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.DisposableHandle
 import org.joda.time.DateTime
 
-abstract class Notification(
+open class Notification(
     val type: String,
     val createdAt: DateTime = DateTime.now()
-)
+) : Serializable
+
 open class EntityEvent(
     val target: UuidEntity,
     type: String,
     val action: String
-) : Notification(type), Serializable {
+) : Notification(type) {
     enum class Type(val event: EventDefinition<ArticleUpdate>) {
         UPDATE_ARTICLE(EventDefinition<ArticleUpdate>())
     }

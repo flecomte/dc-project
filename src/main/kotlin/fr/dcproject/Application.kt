@@ -26,26 +26,28 @@ import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.auth.authenticate
 import io.ktor.auth.jwt.jwt
+import io.ktor.client.HttpClient
+import io.ktor.client.engine.jetty.Jetty
 import io.ktor.features.*
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
+import io.ktor.http.auth.HttpAuthHeader
 import io.ktor.jackson.jackson
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.response.respond
-import io.ktor.response.respondText
 import io.ktor.routing.Routing
-import io.ktor.routing.get
 import io.ktor.util.KtorExperimentalAPI
+import io.ktor.websocket.WebSockets
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.joda.time.DateTime
+import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
@@ -63,7 +65,6 @@ fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
 enum class Env { PROD, TEST, CUCUMBER }
 
-@InternalCoroutinesApi
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @Suppress("unused") // Referenced in application.conf
@@ -167,6 +168,18 @@ fun Application.module(env: Env = PROD) {
         )
     }
 
+    HttpClient(Jetty) {
+        engine {
+        }
+    }
+
+    install(WebSockets) {
+        pingPeriod = Duration.ofSeconds(5) // Disabled (null) by default
+        timeout = Duration.ofSeconds(3)
+        maxFrameSize = Long.MAX_VALUE // Disabled (max value). The connection will be closed if surpassed this length.
+        masking = false
+    }
+
     install(EventNotification) {
         /* Config Rabbit */
         val exchangeName = config.exchangeNotificationName
@@ -258,6 +271,21 @@ fun Application.module(env: Env = PROD) {
                 }
             }
         }
+
+        jwt("url") {
+            verifier(JwtConfig.verifier)
+            realm = "dc-project.fr"
+            authHeader { call ->
+                call.request.queryParameters.get("token")?.let {
+                    HttpAuthHeader.Single("Bearer", it)
+                }
+            }
+            validate {
+                it.payload.getClaim("id").asString()?.let { id ->
+                    get<UserRepository>().findById(UUID.fromString(id))
+                }
+            }
+        }
     }
 
     install(AutoHeadResponse)
@@ -295,10 +323,10 @@ fun Application.module(env: Env = PROD) {
             opinionArticle(get())
             opinionChoice(get())
             definition()
-            get("/sse") {
+        }
 
-                call.respondText("OK")
-            }
+        authenticate("url") {
+            notificationArticle(get(), get(named("ws")))
         }
     }
 
