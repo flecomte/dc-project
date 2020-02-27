@@ -1,0 +1,18 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Clean Dev Database" type="RunSql" factoryName="Run SQL" folderName="SQL DEV">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
+      </list>
+    </option>
+    <option name="targets">
+      <list>
+        <Target>
+          <option name="dsId" value="28368159-3c2d-4612-8719-e55ce11b962a" />
+          <option name="namespace" value="database/&quot;dc-project&quot;/schema/&quot;public&quot;" />
+        </Target>
+      </list>
+    </option>
+    <method v="2" />
+  </configuration>
+</component>

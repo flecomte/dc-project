@@ -1,0 +1,27 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Test Follow" type="RunSql" factoryName="Run SQL" folderName="SQL TEST">
+    <option name="files">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follow.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_article_by_citizen.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_article_by_target.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_by_citizen.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_constitution_by_citizen.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/follow.sql" />
+        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/unfollow.sql" />
+        <option value="$PROJECT_DIR$/src/test/sql/follow.sql" />
+      </list>
+    </option>
+    <option name="targets">
+      <list>
+        <Target>
+          <option name="dsId" value="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" />
+          <option name="namespace" value="database/&quot;test&quot;" />
+        </Target>
+      </list>
+    </option>
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset database" run_configuration_type="RunSql" />
+    </method>
+  </configuration>
+</component>

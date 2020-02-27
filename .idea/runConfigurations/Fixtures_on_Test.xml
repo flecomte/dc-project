@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Fixtures on Test" type="RunSql" factoryName="Run SQL">
+  <configuration default="false" name="Fixtures on Test" type="RunSql" factoryName="Run SQL" folderName="SQL TEST">
     <option name="files">
       <list>
         <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />

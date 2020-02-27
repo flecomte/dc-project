@@ -25,6 +25,9 @@ declare
       "email":"george.michel2@gmail.com"
     }
     $json$;
+
+    created_article  json := '{"version_id":"933b6a1b-50c9-42b6-989f-c02a57814ef9", "title": "Love the world", "anonymous": false, "content": "bla bal bla", "tags": ["love", "test"], "draft":false}';
+    first_article_id uuid;
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -41,15 +44,27 @@ begin
 
 
     perform follow('citizen'::regclass, _citizen_id, _citizen_id2);
-    assert (select count(*) > 0 from follow), 'follow must be inserted';
+    assert (select count(*) = 1 from follow), 'follow must be inserted';
+    assert (select following = true from find_follow(_citizen_id, _citizen_id2)), 'find_follow must return the following';
 
     perform follow('citizen'::regclass, _citizen_id, _citizen_id2);
-    assert (select count(*) > 0 from follow), 'follow must be inserted';
+    assert (select count(*) = 1 from follow), 'follow must be inserted';
 
     perform unfollow('citizen'::regclass, _citizen_id, _citizen_id2);
     assert (select count(*) = 0 from follow), 'follow must be deleted after unfollow';
 
+    -- upsert article
+    created_article := jsonb_set(created_article::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
+    select upsert_article(created_article) into created_article;
+    first_article_id = (created_article->>'id')::uuid;
+
+    perform follow('article'::regclass, first_article_id, _citizen_id);
+    assert (select following = true from find_follow(first_article_id, _citizen_id)), 'find_follow must return the following';
+    assert (select following = false from find_follow(first_article_id, _citizen_id2)), 'find_follow must not return the following if not followinf';
+
     -- delete follow and context
+    delete from follow;
+    delete from article;
     delete from citizen;
     delete from "user";
 
