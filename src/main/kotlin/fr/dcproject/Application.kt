@@ -359,6 +359,7 @@ fun Application.module(env: Env = PROD) {
     install(CORS) {
         method(HttpMethod.Options)
         method(HttpMethod.Put)
+        method(HttpMethod.Delete)
         header(HttpHeaders.Authorization)
         anyHost()
         // host("localhost:4200", schemes = listOf("http", "https"))
