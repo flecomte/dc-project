@@ -1,3 +1,4 @@
+@follow
 Feature: follow Article and Constitution
 
   # Article
@@ -37,3 +38,13 @@ Feature: follow Article and Constitution
     Given I am authenticated as John Doe with id "64b7b379-2298-43ec-b428-ba134930cabd"
     When I send a DELETE request to "/constitutions/72aa1ee1-4963-eb44-c9e0-5ce6e0f18f00/follow"
     Then the response status code should be 204
+
+  Scenario: I can know if I follow an article
+    Given I have article with id "3ee4e6d0-f312-4940-872d-1f578c8d824c"
+    And I have citizen Marie Curie
+    And I am authenticated as Marie Curie
+    And The citizen Marie Curie follow article "3ee4e6d0-f312-4940-872d-1f578c8d824c"
+    When I send a GET request to "/articles/3ee4e6d0-f312-4940-872d-1f578c8d824c/follows"
+    Then the response status code should be 200
+    And the JSON should contain:
+      | target.id | 3ee4e6d0-f312-4940-872d-1f578c8d824c |
