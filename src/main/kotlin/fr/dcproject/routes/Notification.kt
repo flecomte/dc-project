@@ -21,10 +21,9 @@ import kotlinx.coroutines.launch
 fun Route.notificationArticle(redis: RedisAsyncCommands<String, String>, client: HttpClient) {
     webSocket("/notifications") {
         val citizenId = call.citizen.id
-
-        launch {
+        val job = launch {
             var score = 0.0
-            while (true) {
+            while (!outgoing.isClosedForSend) {
                 val result = redis.zrangebyscoreWithScores(
                     "notification:$citizenId",
                     Range.from(
@@ -41,6 +40,7 @@ fun Route.notificationArticle(redis: RedisAsyncCommands<String, String>, client:
                 // TODO terminate coroutine after connection close !
             }
         }
+        job.join()
 
         // TODO mark notification as read
         incoming.consumeAsFlow().mapNotNull { it as? Frame.Text }.collect {

@@ -182,8 +182,8 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(WebSockets) {
-        pingPeriod = Duration.ofSeconds(5) // Disabled (null) by default
-        timeout = Duration.ofSeconds(3)
+        pingPeriod = Duration.ofSeconds(60) // Disabled (null) by default
+        timeout = Duration.ofSeconds(15)
         maxFrameSize = Long.MAX_VALUE // Disabled (max value). The connection will be closed if surpassed this length.
         masking = false
     }
@@ -204,7 +204,6 @@ fun Application.module(env: Env = PROD) {
         /* Declare publisher on event */
         val publisher = Publisher(get(), get())
         subscribe(EntityEvent.Type.UPDATE_ARTICLE.event) {
-            println("Article is updated ${it.target.id}")
             publisher.publish(it)
         }
 
