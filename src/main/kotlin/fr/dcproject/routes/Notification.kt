@@ -1,6 +1,8 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.event.Notification
+import fr.postgresjson.serializer.deserialize
 import io.ktor.client.HttpClient
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
@@ -21,32 +23,36 @@ import kotlinx.coroutines.launch
 fun Route.notificationArticle(redis: RedisAsyncCommands<String, String>, client: HttpClient) {
     webSocket("/notifications") {
         val citizenId = call.citizen.id
-        val job = launch {
-            var score = 0.0
-            while (!outgoing.isClosedForSend) {
-                val result = redis.zrangebyscoreWithScores(
+
+        launch {
+            incoming.consumeAsFlow().mapNotNull { it as? Frame.Text }.collect {
+                val notificationMessage = it.readText().deserialize<Notification>() ?: error("unable to deserialize message")
+
+                redis.zremrangebyscore(
                     "notification:$citizenId",
                     Range.from(
-                        Range.Boundary.excluding(score),
-                        Range.Boundary.including(Double.POSITIVE_INFINITY)
+                        Range.Boundary.including(notificationMessage.id),
+                        Range.Boundary.including(notificationMessage.id)
                     )
                 )
-
-                result.get().forEach {
-                    outgoing.send(Frame.Text(it.value))
-                    if (it.score > score) score = it.score
-                }
-                delay(1000)
-                // TODO terminate coroutine after connection close !
             }
         }
-        job.join()
 
-        // TODO mark notification as read
-        incoming.consumeAsFlow().mapNotNull { it as? Frame.Text }.collect {
-            val text = it.readText()
-            outgoing.send(Frame.Text(text))
-            delay(100)
+        var score = 0.0
+        while (!outgoing.isClosedForSend) {
+            val result = redis.zrangebyscoreWithScores(
+                "notification:$citizenId",
+                Range.from(
+                    Range.Boundary.excluding(score),
+                    Range.Boundary.including(Double.POSITIVE_INFINITY)
+                )
+            )
+
+            result.get().forEach {
+                outgoing.send(Frame.Text(it.value))
+                if (it.score > score) score = it.score
+            }
+            delay(1000)
         }
     }
 }

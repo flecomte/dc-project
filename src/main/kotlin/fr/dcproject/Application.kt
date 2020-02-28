@@ -13,7 +13,9 @@ import fr.dcproject.Env.PROD
 import fr.dcproject.entity.*
 import fr.dcproject.event.EntityEvent
 import fr.dcproject.event.EventNotification
+import fr.dcproject.event.Notification
 import fr.dcproject.event.publisher.Publisher
+import fr.dcproject.repository.Follow
 import fr.dcproject.repository.FollowArticle
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
@@ -41,12 +43,10 @@ import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
 import io.lettuce.core.api.async.RedisAsyncCommands
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.util.log.Slf4jLog
-import org.joda.time.DateTime
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
@@ -193,10 +193,10 @@ fun Application.module(env: Env = PROD) {
         val exchangeName = config.exchangeNotificationName
         get<ConnectionFactory>().newConnection().use { connection ->
             connection.createChannel().use { channel ->
-                channel.queueDeclare("sse", true, false, false, null)
+                channel.queueDeclare("push", true, false, false, null)
                 channel.queueDeclare("email", true, false, false, null)
                 channel.exchangeDeclare(exchangeName, DIRECT, true)
-                channel.queueBind("sse", exchangeName, "")
+                channel.queueBind("push", exchangeName, "")
                 channel.queueBind("email", exchangeName, "")
             }
         }
@@ -208,43 +208,40 @@ fun Application.module(env: Env = PROD) {
         }
 
         /* Launch Consumer */
-        GlobalScope.launch {
-            val connection = get<ConnectionFactory>().newConnection()
-            val channel = connection.createChannel()
+        launch {
+            val rabbitChannel = get<ConnectionFactory>().newConnection().createChannel()
             val redis = get<RedisAsyncCommands<String, String>>()
-            val consumerSSE: Consumer = object : DefaultConsumer(channel) {
+
+            val consumerPush: Consumer = object : DefaultConsumer(rabbitChannel) {
                 @Throws(IOException::class)
                 override fun handleDelivery(
                     consumerTag: String,
                     envelope: Envelope,
                     properties: AMQP.BasicProperties,
                     body: ByteArray
-                ) {
+                ) = runBlocking {
                     val message = body.toString(Charsets.UTF_8)
-                    val event =
-                        message.deserialize<EntityEvent>() ?: error("Unable to unserialise event message from rabbit")
+                    val msg = message.deserialize<EntityEvent>() ?: error("Unable to unserialise event message from rabbit")
 
-                    val followRepo = when (event.type) {
-                        "article" -> get<FollowArticle>()
-                        else -> error("type of event not supported")
+                    let {
+                        when (msg.type) {
+                            Notification.Type.ARTICLE -> get<FollowArticle>()
+                        } as Follow<*,*>
+                    }
+                    .findFollowsByTarget(msg.target)
+                    .collect { follow ->
+                        redis.zadd(
+                            "notification:${follow.createdBy.id}",
+                            msg.id,
+                            message
+                        )
                     }
 
-                    runBlocking {
-                        followRepo
-                            .findFollowsByTarget(event.target)
-                            .collect { follow ->
-                                redis.zadd(
-                                    "notification:${follow.createdBy.id}",
-                                    DateTime.now().millis.toDouble(),
-                                    message
-                                )
-                            }
-                    }
-                    channel.basicAck(envelope.deliveryTag, false)
+                    rabbitChannel.basicAck(envelope.deliveryTag, false)
                 }
             }
 
-            val consumerEmail: Consumer = object : DefaultConsumer(channel) {
+            val consumerEmail: Consumer = object : DefaultConsumer(rabbitChannel) {
                 @Throws(IOException::class)
                 override fun handleDelivery(
                     consumerTag: String,
@@ -255,11 +252,11 @@ fun Application.module(env: Env = PROD) {
                     val message = body.toString(Charsets.UTF_8)
                     println("The message is receive for send email: $message")
                     // TODO implement email sender
-                    channel.basicAck(envelope.deliveryTag, false)
+                    rabbitChannel.basicAck(envelope.deliveryTag, false)
                 }
             }
-            channel.basicConsume("sse", false, consumerSSE)
-            channel.basicConsume("email", false, consumerEmail)
+            rabbitChannel.basicConsume("push", false, consumerPush) // The front consume the redis via Websocket
+            rabbitChannel.basicConsume("email", false, consumerEmail)
         }
     }
 

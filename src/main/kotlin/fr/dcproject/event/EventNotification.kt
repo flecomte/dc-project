@@ -1,5 +1,6 @@
 package fr.dcproject.event
 
+import com.fasterxml.jackson.annotation.JsonValue
 import fr.dcproject.entity.Article
 import fr.postgresjson.entity.Serializable
 import fr.postgresjson.entity.immutable.UuidEntity
@@ -8,15 +9,27 @@ import io.ktor.util.AttributeKey
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.DisposableHandle
 import org.joda.time.DateTime
+import kotlin.random.Random.Default.nextInt
+
+sealed class NotificationS
 
 open class Notification(
-    val type: String,
+    val type: Type,
     val createdAt: DateTime = DateTime.now()
-) : Serializable
+) : NotificationS(), Serializable {
+    val id: Double = randId(createdAt.millis)
+    enum class Type(@JsonValue val type: String) {
+        ARTICLE("article");
+    }
+
+    private fun randId(time: Long): Double {
+        return (time.toString() + nextInt(1000, 9999).toString()).toDouble()
+    }
+}
 
 open class EntityEvent(
     val target: UuidEntity,
-    type: String,
+    type: Notification.Type,
     val action: String
 ) : Notification(type) {
     enum class Type(val event: EventDefinition<ArticleUpdate>) {
@@ -26,7 +39,7 @@ open class EntityEvent(
 
 class ArticleUpdate(
     target: Article
-) : EntityEvent(target, "article", "update")
+) : EntityEvent(target, Notification.Type.ARTICLE, "update")
 
 /**
  * Installation Class

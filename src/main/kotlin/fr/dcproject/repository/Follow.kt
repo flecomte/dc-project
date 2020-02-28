@@ -12,7 +12,7 @@ import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
-open class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
+sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenI,
         page: Int = 1,
@@ -63,6 +63,26 @@ open class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Reque
                 "citizen_id" to citizen.id,
                 "target_id" to target.id
             )
+
+    fun findFollowsByTarget(
+        target: UuidEntity,
+        bulkSize: Int = 300
+    ): Flow<FollowSimple<IN, CitizenRef>> = flow {
+        var nextPage = 1
+        do {
+            val paginate = findFollowsByTarget(target, nextPage, bulkSize)
+            paginate.result.forEach {
+                emit(it)
+            }
+            nextPage = paginate.currentPage+1
+        } while (!paginate.isLastPage())
+    }
+
+    abstract fun findFollowsByTarget(
+        target: UuidEntity,
+        page: Int = 1,
+        limit: Int = 300
+    ): Paginated<FollowSimple<IN, CitizenRef>>
 }
 
 class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleEntity>(requester) {
@@ -80,30 +100,16 @@ class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleEntity>(re
         }
     }
 
-    fun findFollowsByTarget(
+    override fun findFollowsByTarget(
         target: UuidEntity,
-        page: Int = 1,
-        limit: Int = 300
+        page: Int,
+        limit: Int
     ): Paginated<FollowSimple<ArticleRef, CitizenRef>> {
         return requester
             .getFunction("find_follows_article_by_target")
             .select(page, limit,
                 "target_id" to target.id
             )
-    }
-
-    fun findFollowsByTarget(
-        target: UuidEntity,
-        limit: Int = 300
-    ): Flow<FollowSimple<ArticleRef, CitizenRef>> = flow {
-        var nextPage = 1
-        do {
-            val paginate = findFollowsByTarget(target, nextPage, limit)
-            paginate.result.forEach {
-                emit(it)
-            }
-            nextPage = paginate.currentPage+1
-        } while (!paginate.isLastPage())
     }
 }
 
@@ -120,5 +126,13 @@ class FollowConstitution(requester: Requester) : Follow<ConstitutionRef, Constit
                     "created_by_id" to citizenId
                 )
         }
+    }
+
+    override fun findFollowsByTarget(
+        target: UuidEntity,
+        page: Int,
+        limit: Int
+    ): Paginated<FollowSimple<ConstitutionRef, CitizenRef>> {
+        TODO("Not yet implemented")
     }
 }
