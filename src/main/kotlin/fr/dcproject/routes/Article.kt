@@ -2,7 +2,6 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.event.ArticleUpdate
-import fr.dcproject.event.EntityEvent
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
@@ -86,7 +85,7 @@ fun Route.article(repo: ArticleRepository) {
         assertCan(CREATE, article)
 
         repo.upsert(article)
-        application.environment.monitor.raise(EntityEvent.Type.UPDATE_ARTICLE.event, ArticleUpdate(article))
+        application.environment.monitor.raise(ArticleUpdate.event, ArticleUpdate(article))
 
         call.respond(article)
     }

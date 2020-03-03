@@ -23,7 +23,7 @@
       </list>
     </option>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset database" run_configuration_type="RunSql" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset Test database" run_configuration_type="RunSql" />
     </method>
   </configuration>
 </component>

@@ -1,7 +1,5 @@
 package fr.dcproject.event
 
-import com.fasterxml.jackson.annotation.JsonValue
-import fr.dcproject.entity.Article
 import fr.postgresjson.entity.Serializable
 import fr.postgresjson.entity.immutable.UuidEntity
 import io.ktor.application.*
@@ -11,59 +9,46 @@ import kotlinx.coroutines.DisposableHandle
 import org.joda.time.DateTime
 import kotlin.random.Random.Default.nextInt
 
-sealed class NotificationS
-
-open class Notification(
-    val type: Type,
+abstract class Event(
+    val type: String,
     val createdAt: DateTime = DateTime.now()
-) : NotificationS(), Serializable {
+) : Serializable {
     val id: Double = randId(createdAt.millis)
-    enum class Type(@JsonValue val type: String) {
-        ARTICLE("article");
-    }
 
     private fun randId(time: Long): Double {
         return (time.toString() + nextInt(1000, 9999).toString()).toDouble()
     }
 }
 
-open class EntityEvent(
+abstract class EntityEvent(
     val target: UuidEntity,
-    type: Notification.Type,
+    type: String,
     val action: String
-) : Notification(type) {
-    enum class Type(val event: EventDefinition<ArticleUpdate>) {
-        UPDATE_ARTICLE(EventDefinition<ArticleUpdate>())
-    }
-}
-
-class ArticleUpdate(
-    target: Article
-) : EntityEvent(target, Notification.Type.ARTICLE, "update")
+) : Event(type)
 
 /**
  * Installation Class
  */
-class EventNotification {
+class EventSubscriber {
     class Configuration(private val monitor: ApplicationEvents) {
         private val subscribers = mutableListOf<DisposableHandle>()
-        fun <T: Notification> subscribe(definition: EventDefinition<T>, handler: EventHandler<T>): DisposableHandle {
+        fun <T: Event> subscribe(definition: EventDefinition<T>, handler: EventHandler<T>): DisposableHandle {
             return monitor.subscribe(definition, handler).also {
                 subscribers.add(it)
             }
         }
     }
 
-    companion object Feature : ApplicationFeature<Application, Configuration, EventNotification> {
-        override val key = AttributeKey<EventNotification>("EventNotification")
+    companion object Feature : ApplicationFeature<Application, Configuration, EventSubscriber> {
+        override val key = AttributeKey<EventSubscriber>("EventSubscriber")
 
         @KtorExperimentalAPI
         override fun install(
             pipeline: Application,
             configure: Configuration.() -> Unit
-        ): EventNotification {
+        ): EventSubscriber {
             Configuration(pipeline.environment.monitor).apply(configure)
-            return EventNotification()
+            return EventSubscriber()
         }
     }
 }

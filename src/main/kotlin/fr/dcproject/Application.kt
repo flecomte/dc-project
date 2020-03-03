@@ -7,20 +7,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
-import com.rabbitmq.client.*
-import com.rabbitmq.client.BuiltinExchangeType.DIRECT
 import fr.dcproject.Env.PROD
 import fr.dcproject.entity.*
-import fr.dcproject.event.EntityEvent
-import fr.dcproject.event.EventNotification
-import fr.dcproject.event.Notification
-import fr.dcproject.event.publisher.Publisher
-import fr.dcproject.repository.Follow
-import fr.dcproject.repository.FollowArticle
+import fr.dcproject.event.EventSubscriber
+import fr.dcproject.event.configEvent
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.postgresjson.migration.Migrations
-import fr.postgresjson.serializer.deserialize
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -42,16 +35,11 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
-import io.lettuce.core.api.async.RedisAsyncCommands
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
-import java.io.IOException
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
@@ -188,76 +176,8 @@ fun Application.module(env: Env = PROD) {
         masking = false
     }
 
-    install(EventNotification) {
-        /* Config Rabbit */
-        val exchangeName = config.exchangeNotificationName
-        get<ConnectionFactory>().newConnection().use { connection ->
-            connection.createChannel().use { channel ->
-                channel.queueDeclare("push", true, false, false, null)
-                channel.queueDeclare("email", true, false, false, null)
-                channel.exchangeDeclare(exchangeName, DIRECT, true)
-                channel.queueBind("push", exchangeName, "")
-                channel.queueBind("email", exchangeName, "")
-            }
-        }
-
-        /* Declare publisher on event */
-        val publisher = Publisher(get(), get())
-        subscribe(EntityEvent.Type.UPDATE_ARTICLE.event) {
-            publisher.publish(it)
-        }
-
-        /* Launch Consumer */
-        launch {
-            val rabbitChannel = get<ConnectionFactory>().newConnection().createChannel()
-            val redis = get<RedisAsyncCommands<String, String>>()
-
-            val consumerPush: Consumer = object : DefaultConsumer(rabbitChannel) {
-                @Throws(IOException::class)
-                override fun handleDelivery(
-                    consumerTag: String,
-                    envelope: Envelope,
-                    properties: AMQP.BasicProperties,
-                    body: ByteArray
-                ) = runBlocking {
-                    val message = body.toString(Charsets.UTF_8)
-                    val msg = message.deserialize<EntityEvent>() ?: error("Unable to unserialise event message from rabbit")
-
-                    let {
-                        when (msg.type) {
-                            Notification.Type.ARTICLE -> get<FollowArticle>()
-                        } as Follow<*,*>
-                    }
-                    .findFollowsByTarget(msg.target)
-                    .collect { follow ->
-                        redis.zadd(
-                            "notification:${follow.createdBy.id}",
-                            msg.id,
-                            message
-                        )
-                    }
-
-                    rabbitChannel.basicAck(envelope.deliveryTag, false)
-                }
-            }
-
-            val consumerEmail: Consumer = object : DefaultConsumer(rabbitChannel) {
-                @Throws(IOException::class)
-                override fun handleDelivery(
-                    consumerTag: String,
-                    envelope: Envelope,
-                    properties: AMQP.BasicProperties,
-                    body: ByteArray
-                ) {
-                    val message = body.toString(Charsets.UTF_8)
-                    println("The message is receive for send email: $message")
-                    // TODO implement email sender
-                    rabbitChannel.basicAck(envelope.deliveryTag, false)
-                }
-            }
-            rabbitChannel.basicConsume("push", false, consumerPush) // The front consume the redis via Websocket
-            rabbitChannel.basicConsume("email", false, consumerEmail)
-        }
+    install(EventSubscriber) {
+        configEvent(get(), get(), get(), get())
     }
 
     install(Authentication) {

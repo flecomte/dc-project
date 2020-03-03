@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.event.Notification
+import fr.dcproject.event.Event
 import fr.postgresjson.serializer.deserialize
 import io.ktor.client.HttpClient
 import io.ktor.http.cio.websocket.Frame
@@ -26,7 +26,7 @@ fun Route.notificationArticle(redis: RedisAsyncCommands<String, String>, client:
 
         launch {
             incoming.consumeAsFlow().mapNotNull { it as? Frame.Text }.collect {
-                val notificationMessage = it.readText().deserialize<Notification>() ?: error("unable to deserialize message")
+                val notificationMessage = it.readText().deserialize<Event>() ?: error("unable to deserialize message")
 
                 redis.zremrangebyscore(
                     "notification:$citizenId",
