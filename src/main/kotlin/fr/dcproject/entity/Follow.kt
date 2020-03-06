@@ -10,7 +10,7 @@ class Follow<T : TargetI>(
 ) : ExtraI<T, CitizenBasicI>,
     FollowSimple<T, CitizenBasicI>(id, createdBy, target)
 
-open class FollowSimple<T : TargetI, C: CitizenI>(
+open class FollowSimple<T : TargetI, C : CitizenI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: C,
     override var target: T

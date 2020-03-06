@@ -17,7 +17,6 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.io.errors.IOException
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
-
 class ArticleUpdate(
     target: Article
 ) : EntityEvent(target, "article", "update") {

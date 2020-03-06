@@ -47,7 +47,8 @@ class ArticleSteps : En, KoinTest {
 
         Given("I have article") { extraData: DataTable ->
             extraData.asMap<String, String>(String::class.java, String::class.java).let { params ->
-                val username = params["createdBy"]?.toLowerCase()?.replace(' ', '-') ?: error("You must provide the 'createdBy' parameter")
+                val username = params["createdBy"]?.toLowerCase()?.replace(' ', '-')
+                    ?: error("You must provide the 'createdBy' parameter")
                 val citizen = get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
                 val id = params["id"]?.toUUID() ?: UUID.randomUUID()
                 val article = ArticleEntity(
@@ -59,7 +60,6 @@ class ArticleSteps : En, KoinTest {
                 )
                 get<ArticleRepository>().upsert(article)
             }
-
         }
 
         Given("I have article with id {string} created by {string}") { id: String, username: String ->

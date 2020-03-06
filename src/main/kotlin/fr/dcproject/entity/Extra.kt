@@ -8,7 +8,7 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
-interface ExtraI<T : TargetI, C: CitizenI> :
+interface ExtraI<T : TargetI, C : CitizenI> :
     UuidEntityI,
     EntityCreatedAt,
     EntityCreatedBy<C> {

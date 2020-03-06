@@ -27,10 +27,10 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
     ): Paginated<FollowEntity<OUT>> {
         return requester
             .getFunction("find_follows_by_citizen")
-                .select(
-                    page, limit,
-                    "created_by_id" to citizenId
-                )
+            .select(
+                page, limit,
+                "created_by_id" to citizenId
+            )
     }
 
     fun follow(follow: FollowEntity<IN>) {
@@ -74,7 +74,7 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
             paginate.result.forEach {
                 emit(it)
             }
-            nextPage = paginate.currentPage+1
+            nextPage = paginate.currentPage + 1
         } while (!paginate.isLastPage())
     }
 
@@ -107,7 +107,8 @@ class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleEntity>(re
     ): Paginated<FollowSimple<ArticleRef, CitizenRef>> {
         return requester
             .getFunction("find_follows_article_by_target")
-            .select(page, limit,
+            .select(
+                page, limit,
                 "target_id" to target.id
             )
     }

@@ -15,12 +15,14 @@ class Publisher(
     private val factory: ConnectionFactory,
     private val logger: Logger = LoggerFactory.getLogger(Publisher::class.qualifiedName)
 ) {
-    fun <T: EntityEvent>publish(it: T): Job {
+    fun <T : EntityEvent> publish(it: T): Job {
         return GlobalScope.launch {
-            factory.newConnection().use { connection -> connection.createChannel().use { channel ->
-                channel.basicPublish(config.exchangeNotificationName, "", null, it.serialize().toByteArray())
-                logger.debug("Publish message ${it.target.id}")
-            } }
+            factory.newConnection().use { connection ->
+                connection.createChannel().use { channel ->
+                    channel.basicPublish(config.exchangeNotificationName, "", null, it.serialize().toByteArray())
+                    logger.debug("Publish message ${it.target.id}")
+                }
+            }
         }
     }
 

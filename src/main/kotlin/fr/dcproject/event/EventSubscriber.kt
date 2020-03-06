@@ -32,7 +32,7 @@ abstract class EntityEvent(
 class EventSubscriber {
     class Configuration(private val monitor: ApplicationEvents) {
         private val subscribers = mutableListOf<DisposableHandle>()
-        fun <T: Event> subscribe(definition: EventDefinition<T>, handler: EventHandler<T>): DisposableHandle {
+        fun <T : Event> subscribe(definition: EventDefinition<T>, handler: EventHandler<T>): DisposableHandle {
             return monitor.subscribe(definition, handler).also {
                 subscribers.add(it)
             }
