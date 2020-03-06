@@ -1,32 +1,6 @@
 do
 $$
 declare
-    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
-    created_user2    json  := '{"username": "john", "plain_password": "qwerty", "roles": ["ROLE_USER"]}';
-    _citizen_id      uuid;
-    created_citizen json := $json$
-    {
-      "name": {
-        "first_name": "George",
-        "last_name": "MICHEL"
-      },
-      "birthday": "2001-01-01",
-      "email":"george.michel@gmail.com"
-    }
-    $json$;
-    created_article  json := $json$
-    {
-      "version_id": "933b6a1b-50c9-42b6-989f-c02a57814ef9",
-      "title": "Love the world",
-      "anonymous": false,
-      "content": "bla bal bla",
-      "tags": [
-        "love",
-        "test"
-      ],
-      "draft":false
-    }
-    $json$;
     _comment_id uuid;
     _comment_id_response uuid;
     _comment_id_response2 uuid;
@@ -36,24 +10,12 @@ declare
     _find_comments_by_parent_result json;
     _find_comments_by_id_result json;
     _comment json;
+    _article_id uuid := fixture_article();
+    _citizen_id uuid := fixture_citizen('john');
 begin
-    -- insert user for context
-    select insert_user(created_user) into created_user;
-    select insert_user(created_user2) into created_user2;
-    created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', created_user->>'id'), true)::json;
-
-    -- insert new citizen for context
-    select upsert_citizen(created_citizen) into created_citizen;
-    _citizen_id := created_citizen->>'id';
-    created_article := jsonb_set(created_article::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
-    assert created_article#>>'{created_by, id}' = _citizen_id::text, format('citizenId in article must be the same as citizen, %s != %s', created_article#>>'{created_by, id}', _citizen_id::text);
-    -- upsert article
-    select upsert_article(created_article) into created_article;
-
-
     _comment = json_build_object(
         'id', 'a2962f49-74e6-4f20-9c13-36f3ccbc4ad7',
-        'target', jsonb_build_object('id', created_article->>'id'),
+        'target', jsonb_build_object('id', _article_id),
         'created_by', jsonb_build_object('id', _citizen_id),
         'content', 'Ho my god !'
     );
@@ -97,7 +59,7 @@ begin
 
     _comment = json_build_object(
         'id', '50962646-07b6-42a3-9798-d756b9b6e2ba',
-        'target', jsonb_build_object('id', created_article->>'id'),
+        'target', jsonb_build_object('id', _article_id),
         'created_by', jsonb_build_object('id', _citizen_id),
         'content', 'God not exist',
         'parent', json_build_object('id', _comment_id)
@@ -110,7 +72,7 @@ begin
 
     _comment = json_build_object(
             'id', 'ce82e683-23a8-4977-92fb-8d61a3ec995a',
-            'target', jsonb_build_object('id', created_article->>'id'),
+            'target', jsonb_build_object('id', _article_id),
             'created_by', jsonb_build_object('id', _citizen_id),
             'content', 'are you really sure ?',
             'parent', json_build_object('id', _comment_id_response)
@@ -125,7 +87,7 @@ begin
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);
 
     select resource into _find_comments_by_target_result
-    from find_comments_by_target((created_article->>'id')::uuid);
+    from find_comments_by_target((_article_id)::uuid);
     assert json_array_length(_find_comments_by_target_result) = 1,
         'the result should contain 1 comment, ' || json_array_length(_find_comments_by_target_result) || ' returned';
     assert (_find_comments_by_target_result#>>'{0,content}') = 'edited content', 'the first content must contain "edited content", "' || (_find_comments_by_target_result#>>'{0,content}') || '" returned';
@@ -136,15 +98,7 @@ begin
         'the result should contain 1 comment, ' || json_array_length(_find_comments_by_parent_result) || ' returned';
     assert (_find_comments_by_parent_result#>>'{0,content}') = 'are you really sure ?', 'the third content must contain "are you really sure ?", "' || (_find_comments_by_parent_result#>>'{1,content}') || '" returned';
 
-    -- delete comment and context
-    delete from "comment";
-    delete from article;
-    delete from citizen;
-    delete from "user";
-
+    rollback;
     raise notice 'comment test pass';
-end;
+end
 $$;
-
-
--- select uuid_generate_v4();

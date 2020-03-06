@@ -31,11 +31,7 @@ begin
     select check_user('george', 'qwerty') into exist_user;
     assert exist_user->>'username' = 'george', format('the function change_user_password must change password: %s', exist_user::text);
 
-    -- delete user and check if user is really not exists
-    delete from "user" where username = 'george';
-    select check_user('george', 'azerty') into exist_user;
-    assert exist_user is null, format('the function check_user must be return null if user not exist, %s is return', exist_user::text);
-
+    rollback;
     raise notice 'user test pass';
 end;
 $$;

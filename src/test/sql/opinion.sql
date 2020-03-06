@@ -126,13 +126,7 @@ begin
         select (resource#>>'{0, choice, name}') = 'Opinion1' from find_citizen_opinions(_citizen_id, null, null, 1, 0)
     ), 'find_citizen_opinions must return a list of opinion with name';
 
-    -- delete vote and context
-    delete from opinion;
-    delete from opinion_choice;
-    delete from article;
-    delete from citizen;
-    delete from "user";
-
+    rollback;
     raise notice 'opinion test pass';
 end
 $$;

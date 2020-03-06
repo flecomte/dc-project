@@ -2,15 +2,11 @@ do
 $$
 declare
     wrong_citizen              json;
-    created_user               json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
-    _user_id                   uuid;
+    _user_id                   uuid := fixture_user();
     created_citizen            json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com"}';
     created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
     selected_citizen           json;
 begin
-    -- insert user for context
-    select insert_user(created_user) into created_user;
-    _user_id := created_user->>'id';
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', _user_id::text), true)::json;
     assert created_citizen#>>'{user, id}' = _user_id::text, format('userId in citizen must be the same as user, %s = %s', created_citizen#>>'{user, id}', _user_id::text);
 
@@ -39,9 +35,7 @@ begin
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
-    -- delete citizen
-    delete from citizen;
-    delete from "user";
+    rollback;
 
     -- check if fint by id return null if citizen not exist
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
