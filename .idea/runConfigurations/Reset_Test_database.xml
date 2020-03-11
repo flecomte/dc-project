@@ -1,19 +1,9 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Reset Test database" type="RunSql" factoryName="Run SQL" folderName="SQL TEST">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
-      </list>
-    </option>
-    <option name="targets">
-      <list>
-        <Target>
-          <option name="dsId" value="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" />
-          <option name="namespace" value="database/&quot;test&quot;/schema/&quot;public&quot;" />
-        </Target>
-      </list>
-    </option>
+  <configuration default="false" name="Reset Test database" type="DatabaseScript" folderName="SQL TEST">
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
     <method v="2" />
   </configuration>
 </component>

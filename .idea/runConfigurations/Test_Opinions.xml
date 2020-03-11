@@ -1,29 +1,19 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test Opinions" type="RunSql" factoryName="Run SQL" folderName="SQL TEST">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
-      </list>
-    </option>
-    <option name="targets">
-      <list>
-        <Target>
-          <option name="dsId" value="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" />
-          <option name="namespace" value="database/&quot;test&quot;/schema/&quot;public&quot;" />
-        </Target>
-      </list>
-    </option>
+  <configuration default="false" name="Test Opinions" type="DatabaseScript" folderName="SQL TEST">
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset Test database" run_configuration_type="RunSql" />
+      <option name="RunConfigurationTask" enabled="true" />
     </method>
   </configuration>
 </component>

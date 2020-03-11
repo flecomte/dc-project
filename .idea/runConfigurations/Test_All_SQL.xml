@@ -1,80 +1,70 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test All SQL" type="RunSql" factoryName="Run SQL" folderName="SQL TEST">
-    <option name="files">
-      <list>
-        <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_version_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_last_article_by_version_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/article/upsert_article.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_email.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_id_with_user.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_user_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_username.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizens.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/insert_citizen_with_user.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/upsert_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/comment.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/edit_comment.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comment_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_parent.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_target.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/create_title_in_constitution.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_title_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_titles_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitutions.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/upsert_constitution.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_article_by_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_by_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_constitution_by_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/follow.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/unfollow.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/find_reference_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/random_between.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/change_user_password.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/check_user.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/find_user_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/find_user_by_username.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/user/insert_user.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/vote.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/count_vote.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_citizen_votes_by_target_ids.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_votes_by_citizen.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_id.sql" />
-        <option value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/user.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/citizen.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/article.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/constitution.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/comment.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/follow.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/vote.sql" />
-        <option value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
-      </list>
-    </option>
-    <option name="targets">
-      <list>
-        <Target>
-          <option name="dsId" value="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" />
-          <option name="namespace" value="database/&quot;test&quot;/schema/&quot;public&quot;" />
-        </Target>
-      </list>
-    </option>
+  <configuration default="false" name="Test All SQL" type="DatabaseScript" folderName="SQL TEST" editBeforeRun="true">
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_version_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_last_article_by_version_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/upsert_article.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_email.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_id_with_user.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_user_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizen_by_username.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/find_citizens.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/insert_citizen_with_user.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/citizen/upsert_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/comment.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/edit_comment.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comment_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_parent.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/comment/find_comments_by_target.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/create_title_in_constitution.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_title_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitution_titles_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/find_constitutions.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/constitution/upsert_constitution.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_article_by_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_by_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/find_follows_constitution_by_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/follow.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/follow/unfollow.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/find_reference_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/helpers/random_between.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/user/change_user_password.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/user/check_user.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/user/find_user_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/user/find_user_by_username.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/user/insert_user.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/vote.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/count_vote.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_citizen_votes_by_target_ids.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/vote/find_votes_by_citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/count_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_citizen_opinions_by_target_ids.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choice_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/user.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/citizen.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/article.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/constitution.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/comment.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/follow.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/vote.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
+    <script-mode>FILE</script-mode>
+    <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
     <method v="2" />
   </configuration>
 </component>

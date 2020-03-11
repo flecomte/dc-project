@@ -17,7 +17,7 @@
     <method v="2">
       <option name="Make" enabled="true" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint" run_configuration_type="GradleRunConfiguration" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Test All SQL" run_configuration_type="RunSql" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Test All SQL" run_configuration_type="DatabaseScript" />
     </method>
   </configuration>
 </component>
