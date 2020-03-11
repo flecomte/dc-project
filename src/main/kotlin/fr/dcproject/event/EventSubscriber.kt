@@ -20,7 +20,7 @@ abstract class Event(
     }
 }
 
-abstract class EntityEvent(
+open class EntityEvent(
     val target: UuidEntity,
     type: String,
     val action: String

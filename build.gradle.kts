@@ -90,6 +90,8 @@ dependencies {
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.8.0")
+    implementation("org.elasticsearch.client:elasticsearch-rest-client:6.7.1")
+    implementation("com.jayway.jsonpath:json-path:2.4.0")
 
     testImplementation("io.ktor:ktor-server-tests:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")

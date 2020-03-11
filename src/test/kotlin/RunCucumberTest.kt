@@ -25,7 +25,7 @@ var unitialized: Boolean = false
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @RunWith(Cucumber::class)
-@CucumberOptions(plugin = ["pretty"])
+@CucumberOptions(plugin = ["pretty"], strict = true)
 class RunCucumberTest : En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
 

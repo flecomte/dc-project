@@ -1,3 +1,4 @@
+@article
 Feature: articles routes
 
   Scenario: The route for get articles must response a 200

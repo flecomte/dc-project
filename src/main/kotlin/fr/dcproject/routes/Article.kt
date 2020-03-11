@@ -1,11 +1,13 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.citizenOrNull
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
+import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.application
 import io.ktor.application.call
@@ -16,6 +18,7 @@ import io.ktor.locations.post
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import kotlinx.coroutines.launch
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.request.Article as ArticleEntityRequest
 import fr.dcproject.repository.Article as ArticleRepository
@@ -56,7 +59,7 @@ object ArticlesPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.article(repo: ArticleRepository) {
+fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
     get<ArticlesPaths.ArticlesRequest> {
         val articles =
             repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy))
@@ -67,7 +70,13 @@ fun Route.article(repo: ArticleRepository) {
     get<ArticlesPaths.ArticleRequest> {
         assertCan(VIEW, it.article)
 
+        it.article.views = viewManager.getViewsCount(it.article)
+
         call.respond(it.article)
+
+        launch {
+            viewManager.addView(call.request.local.remoteHost, it.article, citizenOrNull)
+        }
     }
 
     get<ArticlesPaths.ArticleVersionsRequest> {

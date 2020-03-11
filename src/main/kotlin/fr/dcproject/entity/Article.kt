@@ -18,7 +18,8 @@ class Article(
     override var lastVersion: Boolean = false,
     createdBy: CitizenBasic
 ) : ArticleFull,
-    ArticleBasic(id, title, anonymous, content, description, tags, createdBy)
+    ArticleBasic(id, title, anonymous, content, description, tags, createdBy),
+    Viewable by ViewableImp()
 
 open class ArticleBasic(
     id: UUID = UUID.randomUUID(),
@@ -41,13 +42,19 @@ open class ArticleSimple(
     override var title: String,
     override val createdBy: CitizenBasic
 ) : ArticleSimpleI,
-    ArticleRef(id),
+    ArticleRefVersioning(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp(),
-    EntityVersioning<UUID, Int> by UuidEntityVersioning(),
     Votable by VotableImp(),
     Opinionable by OpinionableImp()
+
+open class ArticleRefVersioning(
+    id: UUID = UUID.randomUUID(),
+    versionNumber: Int? = null,
+    versionId: UUID = UUID.randomUUID()
+) : ArticleRef(id),
+    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionNumber, versionId)
 
 open class ArticleRef(
     id: UUID = UUID.randomUUID()

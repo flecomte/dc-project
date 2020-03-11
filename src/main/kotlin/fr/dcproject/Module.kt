@@ -10,6 +10,7 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.SsoManager
+import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -18,6 +19,8 @@ import io.ktor.client.features.websocket.WebSockets
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands
+import org.apache.http.HttpHost
+import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import fr.dcproject.repository.Article as ArticleRepository
@@ -108,6 +111,15 @@ val Module = module {
     single { VoteCommentRepository(get()) }
     single { OpinionChoiceRepository(get()) }
     single { OpinionArticleRepository(get()) }
+
+    // Elasticsearch Client
+    single<RestClient> {
+        RestClient.builder(
+            HttpHost("localhost", 9200, "http")
+        ).build()
+    }
+
+    single { ArticleViewManager(get()) }
 
     // Mailler
     single { Mailer(config.sendGridKey) }

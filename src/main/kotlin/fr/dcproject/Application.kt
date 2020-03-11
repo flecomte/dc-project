@@ -36,6 +36,8 @@ import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
 import org.eclipse.jetty.util.log.Slf4jLog
+import org.elasticsearch.client.Request
+import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
@@ -169,6 +171,57 @@ fun Application.module(env: Env = PROD) {
         }
     }
 
+    /* Create index if not exist */
+    get<RestClient>().run {
+        if (performRequest(Request("HEAD", "/views?include_type_name=false")).statusLine.statusCode == 404) {
+            Request(
+                "PUT",
+                "/views?include_type_name=false"
+            ).apply {
+                //language=JSON
+                setJsonEntity(
+                    """
+                {
+                  "settings": {
+                    "number_of_shards": 5
+                  },
+                  "mappings": {
+                    "properties": {
+                      "logged": {
+                        "type": "boolean"
+                      },
+                      "type": {
+                        "type": "keyword"
+                      },
+                      "user_ref": {
+                        "type": "keyword"
+                      },
+                      "id": {
+                        "type": "keyword"
+                      },
+                      "version_id": {
+                        "type": "keyword"
+                      },
+                      "ip": {
+                        "type": "keyword"
+                      },
+                      "citizen_id": {
+                        "type": "keyword"
+                      },
+                      "view_at": {
+                        "type": "date"
+                      }
+                    }
+                  }
+                }
+            """.trimIndent()
+                )
+            }.let {
+                performRequest(it)
+            }
+        }
+    }
+
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(60) // Disabled (null) by default
         timeout = Duration.ofSeconds(15)
@@ -233,7 +286,7 @@ fun Application.module(env: Env = PROD) {
     install(Routing) {
         // trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
-            article(get())
+            article(get(), get())
             auth(get(), get(), get())
             citizen(get(), get())
             constitution(get())
