@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Fixtures on Test" type="DatabaseScript" folderName="SQL TEST">
-    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/fixtures/01-user.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/fixtures/02-citizen.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/fixtures/03-workgroup.sql" />
@@ -13,6 +11,8 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/fixtures/09-opinion.sql" />
     <script-mode>FILE</script-mode>
     <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset Test database" run_configuration_type="DatabaseScript" />
+    </method>
   </configuration>
 </component>

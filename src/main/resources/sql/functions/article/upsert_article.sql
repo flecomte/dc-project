@@ -19,6 +19,8 @@ begin
 
     if (_existing_draft_id is not null) then
         update article a2 set
+            created_by_id = (resource#>>'{created_by, id}')::uuid,
+            workgroup_id = (resource#>>'{workgroup, id}')::uuid,
             title = a.title,
             anonymous = a.anonymous,
             content = a.content,
@@ -29,12 +31,13 @@ begin
         where a2.id = (_existing_draft_id)::uuid
         returning a2.id into new_id;
     else
-        insert into article (id, version_id, created_by_id, title, anonymous, content, description, tags, draft)
+        insert into article (id, version_id, created_by_id, workgroup_id, title, anonymous, content, description, tags, draft)
         select
             case when _id_exist then uuid_generate_v4()
                  else coalesce(id, uuid_generate_v4()) end,
             coalesce(version_id, uuid_generate_v4()),
             (resource#>>'{created_by, id}')::uuid,
+            (resource#>>'{workgroup, id}')::uuid,
             title,
             anonymous,
             content,

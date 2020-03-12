@@ -1,7 +1,5 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Test All SQL" type="DatabaseScript" folderName="SQL TEST" editBeforeRun="true">
-    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
-    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.up.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_id.sql" />
@@ -55,6 +53,10 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_id.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/find_workgroup_by_id.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/find_workgroups.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/upsert_workgroup.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/find_workgroup_members.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/user.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/citizen.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/article.sql" />
@@ -63,8 +65,11 @@
     <script-file value="$PROJECT_DIR$/src/test/sql/follow.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/vote.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/test/sql/workgroup.sql" />
     <script-mode>FILE</script-mode>
     <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset Test database" run_configuration_type="DatabaseScript" />
+    </method>
   </configuration>
 </component>

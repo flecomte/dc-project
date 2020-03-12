@@ -27,6 +27,7 @@ create table workgroup
     id            uuid        default uuid_generate_v4() not null primary key,
     created_at    timestamptz default now()              not null,
     updated_at    timestamptz default now()              not null check ( updated_at >= created_at ),
+    deleted_at    timestamptz                            null     check ( deleted_at is null or deleted_at >= updated_at ),
     created_by_id uuid                                   not null references citizen (id),
     name          varchar(128)                           not null,
     description   text                                   null,
@@ -194,6 +195,7 @@ create table article
     id             uuid          default uuid_generate_v4() not null primary key,
     created_at     timestamptz   default now()              not null,
     created_by_id  uuid                                     not null references citizen (id),
+    workgroup_id   uuid                                     null     references workgroup (id),
     version_id     uuid          default uuid_generate_v4() not null,
     version_number int                                      not null,
     title          text                                     not null check ( length(title) < 128 ),
@@ -741,3 +743,24 @@ create index citizen_idx
     with (alias ='citizen_idx');
 
 reindex index citizen_idx;
+
+
+-- INDEX workgroup table
+select zdb.define_field_mapping('workgroup', 'name', '{
+  "type": "text",
+  "analyzer": "name_analyzer",
+  "search_analyzer": "name_analyzer"
+}');
+
+select zdb.define_field_mapping('workgroup', 'description', '{
+  "type": "text",
+  "analyzer": "fr_analyzer",
+  "search_analyzer": "fr_analyzer"
+}');
+
+create index workgroup_idx
+    on workgroup
+        using zombodb ((workgroup.*))
+    with (alias ='workgroup_idx');
+
+reindex index workgroup_idx;

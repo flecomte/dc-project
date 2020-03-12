@@ -8,6 +8,7 @@ begin
         select
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by,
+            find_workgroup_by_id(a.workgroup_id) as workgroup,
             count_vote(a.id) as votes
         into resource
         from article as a

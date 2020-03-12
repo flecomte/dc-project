@@ -11,7 +11,7 @@
     <script-mode>FILE</script-mode>
     <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Reset Test database" run_configuration_type="DatabaseScript" />
     </method>
   </configuration>
 </component>

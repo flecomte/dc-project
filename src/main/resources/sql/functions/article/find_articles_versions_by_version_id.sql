@@ -15,6 +15,7 @@ begin
         select
             a.*,
             find_citizen_by_id(a.created_by_id) as created_by,
+            find_workgroup_by_id(a.workgroup_id) as workgroup,
             count_vote(a.id) as votes
         from article as a
         where a.version_id = _version_id
