@@ -4,7 +4,6 @@ import fr.dcproject.entity.*
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField
 import fr.dcproject.utils.toIso
-import io.ktor.util.sha1
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient
@@ -14,7 +13,6 @@ import java.util.*
 class ArticleViewManager(private val restClient: RestClient) : ViewManager<ArticleRefVersioning> {
     override fun addView(ip: String, article: ArticleRefVersioning, citizen: CitizenRef?, dateTime: DateTime): Response? {
         val isLogged = (citizen != null).toString()
-        sha1("plop".toByteArray())
         val ref = citizen?.id ?: UUID.nameUUIDFromBytes(ip.toByteArray())!!
         val request = Request(
             "POST",

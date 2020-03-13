@@ -1,9 +1,6 @@
 package feature
 
-import com.google.gson.JsonArray
-import com.google.gson.JsonElement
-import com.google.gson.JsonParser
-import com.google.gson.JsonPrimitive
+import com.jayway.jsonpath.JsonPath
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import io.ktor.http.ContentType
@@ -14,7 +11,6 @@ import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlin.test.assertEquals
-import kotlin.test.fail
 
 @ImplicitReflectionSerializer
 @KtorExperimentalAPI
@@ -50,8 +46,7 @@ class KtorServerRequestSteps : En {
 
         Then("the response should contain object:") { expected: DataTable ->
             expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
-                val jsonPrimitive = findJsonElement(key) as? JsonPrimitive ?: fail("\"$key\" element isn't json primitive")
-                assertEquals(valueExpected, jsonPrimitive.asString)
+                assertEquals(valueExpected, JsonPath.read<Any>(response, key)?.toString() ?: throw AssertionError("\"$key\" element not found on json response"))
             }
         }
 
@@ -60,24 +55,6 @@ class KtorServerRequestSteps : En {
         }
     }
 
-    private fun findJsonElement(path: String): JsonElement {
-        var jsonElement: JsonElement = responseJsonElement
-
-        path
-            .split("].", "[", ".")
-            .filter { it.trim().isNotBlank() }
-            .map { it.trim() }
-            .forEach {
-                jsonElement = if (jsonElement is JsonArray) {
-                    jsonElement.asJsonArray.get(it.toInt())
-                } else {
-                    jsonElement.asJsonObject.get(it)
-                } ?: throw AssertionError("\"$path\" element not found on json response")
-            }
-
-        return jsonElement
-    }
-
-    private val responseJsonElement: JsonElement
-        get() = JsonParser().parse(KtorServerContext.defaultServer.call?.response?.content)
+    private val response: String?
+        get() = KtorServerContext.defaultServer.call?.response?.content
 }
