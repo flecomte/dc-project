@@ -21,6 +21,11 @@ begin
         logo = excluded.logo,
         owner_id = excluded.owner_id;
 
+--     insert into citizen_in_workgroup (citizen_id, workgroup_id)
+--     select
+--         (resource->>'id')::uuid,
+--         new_id::uuid
+--     from json_populate_recordset(null::workgroup, resource->'members');
 
     select find_workgroup_by_id(new_id) into resource;
 end;

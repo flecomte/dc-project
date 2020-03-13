@@ -2,15 +2,17 @@ create or replace function fixture_user(in name text default 'george', out user_
     language plpgsql as
 $$
 declare
-    created_user1 json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
-    created_user2 json  := '{"username": "john", "plain_password": "qwerty", "roles": ["ROLE_USER"]}';
+    created_user json;
 begin
     if (name = 'george') then
-        select insert_user(created_user1) into created_user1;
-        user_id := created_user1->>'id';
+        created_user = '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     elseif (name = 'john') then
-        select insert_user(created_user2) into created_user2;
-        user_id := created_user2->>'id';
+        created_user = '{"username": "john", "plain_password": "qwerty", "roles": ["ROLE_USER"]}';
+    elseif (name = 'tesla') then
+        created_user = '{"username": "tesla", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
     end if;
+
+    select insert_user(created_user) into created_user;
+    user_id := created_user->>'id';
 end
 $$
