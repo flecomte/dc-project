@@ -45,11 +45,13 @@ import org.slf4j.event.Level
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
+import fr.dcproject.entity.Workgroup as WorkgroupEntity
 import fr.dcproject.repository.Article as RepositoryArticle
 import fr.dcproject.repository.Citizen as RepositoryCitizen
 import fr.dcproject.repository.Constitution as RepositoryConstitution
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.User as UserRepository
+import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -97,7 +99,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 values.singleOrNull()?.let {
                     ArticleRef(UUID.fromString(it))
-                } ?: throw NotFoundException("Article $values not found")
+            } ?: throw NotFoundException("""UUID "$values" is not valid for Article""")
             }
         }
 
@@ -105,14 +107,14 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 values.singleOrNull()?.let {
                     CommentRef(UUID.fromString(it))
-                } ?: throw NotFoundException("Comment $values not found")
+                } ?: throw NotFoundException("""UUID "$values" is not valid for Comment""")
             }
         }
         convert<ConstitutionRef> {
             decode { values, _ ->
                 values.singleOrNull()?.let {
                     ConstitutionRef(UUID.fromString(it))
-                } ?: throw NotFoundException("Constitution $values not found")
+                } ?: throw NotFoundException("""UUID "$values" is not valid for Constitution""")
             }
         }
 
@@ -136,7 +138,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 values.singleOrNull()?.let {
                     CitizenRef(UUID.fromString(it))
-                } ?: throw NotFoundException("Citizen $values not found")
+                } ?: throw NotFoundException("""UUID "$values" is not valid for Citizen""")
             }
         }
 
@@ -146,6 +148,23 @@ fun Application.module(env: Env = PROD) {
                     ?: throw InternalError("Cannot convert $values to UUID")
                 get<OpinionChoiceRepository>().findOpinionChoiceById(id)
                     ?: throw NotFoundException("OpinionChoice $values not found")
+            }
+        }
+
+        convert<CitizenRef> {
+            decode { values, _ ->
+                values.singleOrNull()?.let {
+                    CitizenRef(UUID.fromString(it))
+                } ?: throw NotFoundException("""UUID "$values" is not valid for Workgroup""")
+            }
+        }
+
+        convert<WorkgroupEntity> {
+            decode { values, _ ->
+                val id = values.singleOrNull()?.let { UUID.fromString(it) }
+                    ?: throw InternalError("Cannot convert $values to UUID")
+                get<WorkgroupRepository>().findById(id)
+                    ?: throw NotFoundException("Workgroup $values not found")
             }
         }
     }
@@ -162,7 +181,8 @@ fun Application.module(env: Env = PROD) {
             VoteVoter(),
             FollowVoter(),
             OpinionVoter(),
-            OpinionChoiceVoter()
+            OpinionChoiceVoter(),
+            WorkgroupVoter()
         )
     }
 
@@ -299,6 +319,7 @@ fun Application.module(env: Env = PROD) {
             voteConstitution(get())
             opinionArticle(get())
             opinionChoice(get())
+            workgroup(get())
             definition()
         }
 

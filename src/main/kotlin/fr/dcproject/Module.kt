@@ -37,6 +37,7 @@ import fr.dcproject.repository.User as UserRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 import fr.dcproject.repository.VoteComment as VoteCommentRepository
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
+import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 val config = Config()
 
@@ -111,6 +112,7 @@ val Module = module {
     single { VoteCommentRepository(get()) }
     single { OpinionChoiceRepository(get()) }
     single { OpinionArticleRepository(get()) }
+    single { WorkgroupRepository(get()) }
 
     // Elasticsearch Client
     single<RestClient> {

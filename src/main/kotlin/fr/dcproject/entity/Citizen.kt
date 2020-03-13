@@ -41,8 +41,9 @@ open class CitizenSimple(
 
 open class CitizenRefWithUser(
     id: UUID = UUID.randomUUID(),
-    open val user: UserRef
-) : CitizenRef(id),
+    override val user: UserRef
+) : CitizenWithUserI,
+    CitizenRef(id),
     EntityDeletedAt by EntityDeletedAtImp()
 
 open class CitizenRef(
@@ -58,15 +59,18 @@ interface CitizenI : UuidEntityI {
     )
 }
 
-interface CitizenBasicI : CitizenI, EntityDeletedAt {
+interface CitizenBasicI : CitizenWithUserI, EntityDeletedAt {
     var name: Name
     var email: String
     var birthday: DateTime
     var voteAnonymous: Boolean
     var followAnonymous: Boolean
-    val user: UserI
 }
 
 interface CitizenFull : CitizenBasicI {
     override val user: User
+}
+
+interface CitizenWithUserI : CitizenI {
+    val user: UserI
 }
