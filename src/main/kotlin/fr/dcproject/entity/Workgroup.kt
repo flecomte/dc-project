@@ -43,16 +43,19 @@ open class WorkgroupRef(
     id: UUID?
 ) : UuidEntity(id ?: UUID.randomUUID()), WorkgroupI
 
-interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupI, EntityCreatedBy<Z>, EntityDeletedAt {
+interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, EntityCreatedBy<Z>, EntityDeletedAt {
     val anonymous: Boolean
     val owner: Z
-    var members: List<Z>
 
     fun isMember(user: UserI): Boolean =
         members.map { it.user.id }.contains(user.id) || owner.user.id == user.id
 
     fun isMember(citizen: CitizenWithUserI): Boolean =
         isMember(citizen.user)
+}
+
+interface WorkgroupWithMembersI<Z : CitizenI> : WorkgroupI {
+    var members: List<Z>
 }
 
 interface WorkgroupI : UuidEntityI

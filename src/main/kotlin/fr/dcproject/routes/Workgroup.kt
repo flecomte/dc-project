@@ -8,7 +8,9 @@ import fr.dcproject.entity.request.getContent
 import fr.dcproject.repository.Workgroup.Filter
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
+import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
 import fr.dcproject.security.voter.assertCan
+import fr.dcproject.utils.toUUID
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -17,6 +19,8 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.locations.post
+import io.ktor.locations.put
+import io.ktor.locations.delete
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
@@ -73,6 +77,22 @@ object WorkgroupsPaths {
 }
 
 @KtorExperimentalLocationsAPI
+object WorkgroupsMembersPaths {
+    @Location("/workgroups/members/{workgroup}")
+    class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) : RequestBuilder<List<CitizenRef>> {
+        class Content : MutableList<Content.Item> by mutableListOf() {
+            class Item(val id: String)
+        }
+
+        override suspend fun getContent(call: ApplicationCall): List<CitizenRef> {
+            return call.receive<Content>().map {
+                CitizenRef(it.id.toUUID())
+            }
+        }
+    }
+}
+
+@KtorExperimentalLocationsAPI
 fun Route.workgroup(repo: WorkgroupRepository) {
     get<WorkgroupsPaths.WorkgroupsRequest> {
         val workgroups =
@@ -94,6 +114,39 @@ fun Route.workgroup(repo: WorkgroupRepository) {
                 repo.upsert(workgroup)
             }.let {
                 call.respond(HttpStatusCode.Created, it)
+            }
+    }
+
+    /* Add members to workgroup */
+    post<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
+        call.getContent(it)
+            .let { members ->
+                assertCan(UPDATE, it.workgroup)
+                repo.addMembers(it.workgroup, members)
+            }.let {
+                call.respond(HttpStatusCode.OK, it)
+            }
+    }
+
+    /* Delete members of workgroup */
+    delete<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
+        call.getContent(it)
+            .let { members ->
+                assertCan(UPDATE, it.workgroup)
+                repo.removeMembers(it.workgroup, members)
+            }.let {
+                call.respond(HttpStatusCode.OK, it)
+            }
+    }
+
+    /* Update members of workgroup */
+    put<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
+        call.getContent(it)
+            .let { members ->
+                assertCan(UPDATE, it.workgroup)
+                repo.updateMembers(it.workgroup, members)
+            }.let {
+                call.respond(HttpStatusCode.OK, it)
             }
     }
 }

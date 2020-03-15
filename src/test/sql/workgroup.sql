@@ -76,6 +76,13 @@ begin
     assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id2)),
         'Members must NOT contain citizen2';
 
+    select m into members from find_workgroup_members((created_workgroup->>'id')::uuid) m;
+    assert json_array_length(members) = 1, 'The members count must be equal to 1';
+    assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id)),
+        'Members must contain citizen1';
+    assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id2)),
+        'Members must NOT contain citizen2';
+
     rollback;
     raise notice 'workgroup test pass';
 end

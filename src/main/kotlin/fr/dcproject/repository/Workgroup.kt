@@ -1,12 +1,12 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.CitizenRef
-import fr.dcproject.entity.WorkgroupSimple
+import fr.dcproject.entity.*
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
 import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
+import fr.postgresjson.serializer.serialize
 import net.pearx.kasechange.toSnakeCase
 import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
@@ -39,6 +39,41 @@ class Workgroup(override var requester: Requester) : RepositoryI {
     fun upsert(workgroup: WorkgroupSimple<CitizenRef>): WorkgroupEntity = requester
         .getFunction("upsert_workgroup")
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
+
+    fun addMember(workgroup: WorkgroupI, member: CitizenI): List<CitizenBasic> =
+        addMembers(workgroup, listOf(member))
+
+    fun addMembers(workgroup: WorkgroupI, members: List<CitizenI>): List<CitizenBasic> = requester
+        .getFunction("add_workgroup_members")
+        .select(
+            "id" to workgroup.id,
+            "resource" to members.serialize()
+        )
+
+    fun removeMember(workgroup: WorkgroupI, memberToDelete: CitizenI): List<CitizenBasic> =
+        removeMembers(workgroup, listOf(memberToDelete))
+
+    fun removeMembers(workgroup: WorkgroupI, membersToDelete: List<CitizenI>): List<CitizenBasic> = requester
+        .getFunction("remove_workgroup_members")
+        .select(
+            "id" to workgroup.id,
+            "resource" to membersToDelete
+        )
+
+    fun updateMembers(workgroup: WorkgroupI, members: List<CitizenI>): List<CitizenBasic> = requester
+        .getFunction("update_workgroup_members")
+        .select(
+            "id" to workgroup.id,
+            "resource" to members
+        )
+
+    fun <W : WorkgroupWithMembersI<CitizenI>> updateMembers(workgroup: W): W {
+        updateMembers(workgroup, workgroup.members).let {
+            workgroup.members = it
+        }
+
+        return workgroup
+    }
 
     class Filter(
         val createdById: String? = null

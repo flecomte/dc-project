@@ -1,6 +1,7 @@
 package feature
 
 import fr.dcproject.entity.*
+import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime
@@ -12,12 +13,19 @@ import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 class WorkgroupSteps : En, KoinTest {
     init {
+        When("I have members in workgroup {string}:") { workgroupId: String, members: DataTable ->
+            val membersRefs = members.asList()
+                .map { CitizenRef(it.toUUID()) }
+
+            get<WorkgroupRepository>().addMembers(WorkgroupRef(workgroupId.toUUID()), membersRefs)
+        }
+
         When("I have workgroup:") { body: DataTable ->
             val data = body.asMap<String, String>(String::class.java, String::class.java)
 
-            val creator = if (data["created_by"] != null) {
-                CitizenRef(UUID.fromString(data["created_by"]))
-            } else {
+            val creator = data["created_by"]?.let {
+                get<CitizenRepository>().findByUsername(it.toLowerCase().replace(' ', '-'))
+            } ?: kotlin.run {
                 val username = "paul-langevin".toLowerCase() + UUID.randomUUID()
                 val user = User(
                     username = username,
@@ -32,13 +40,12 @@ class WorkgroupSteps : En, KoinTest {
                     get<CitizenRepository>().insertWithUser(it)
                 }
             }
-            val owner = if (data["owner"] != null) {
-                CitizenRef(UUID.fromString(data["owner"]))
-            } else {
-                creator
-            }
 
-            val workgroup = WorkgroupSimple(
+            val owner = data["owner"]?.let {
+                get<CitizenRepository>().findByUsername(it.toLowerCase().replace(' ', '-'))
+            } ?: creator
+
+            val workgroup = WorkgroupSimple<CitizenRef>(
                 id = UUID.fromString(data["id"] ?: UUID.randomUUID().toString()),
                 name = data["name"] ?: "Les Incoruptible",
                 description = data["description"] ?: "La vie est notre jeux",

@@ -151,10 +151,10 @@ fun Application.module(env: Env = PROD) {
             }
         }
 
-        convert<CitizenRef> {
+        convert<WorkgroupRef> {
             decode { values, _ ->
                 values.singleOrNull()?.let {
-                    CitizenRef(UUID.fromString(it))
+                    WorkgroupRef(UUID.fromString(it))
                 } ?: throw NotFoundException("""UUID "$values" is not valid for Workgroup""")
             }
         }
@@ -288,7 +288,6 @@ fun Application.module(env: Env = PROD) {
     install(AutoHeadResponse)
 
     install(ContentNegotiation) {
-        // TODO move to postgresJson lib
         jackson {
             propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
 

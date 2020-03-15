@@ -11,6 +11,7 @@ import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlin.test.assertEquals
+import kotlin.test.assertNotEquals
 
 @ImplicitReflectionSerializer
 @KtorExperimentalAPI
@@ -47,6 +48,12 @@ class KtorServerRequestSteps : En {
         Then("the response should contain object:") { expected: DataTable ->
             expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
                 assertEquals(valueExpected, JsonPath.read<Any>(response, key)?.toString() ?: throw AssertionError("\"$key\" element not found on json response"))
+            }
+        }
+
+        Then("the response should not contain object:") { expected: DataTable ->
+            expected.asMap<String, String>(String::class.java, String::class.java).forEach { (key, valueExpected) ->
+                assertNotEquals(valueExpected, JsonPath.read<Any>(response, key)?.toString() ?: throw AssertionError("\"$key\" element not found on json response"))
             }
         }
 
