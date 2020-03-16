@@ -19,10 +19,13 @@ interface Voter {
 }
 
 fun List<Voter>.can(action: ActionI, call: ApplicationCall, subject: Any? = null): Boolean {
-    val votes = this
-        .filter { it.supports(action, call, subject) }
-        .ifEmpty { throw NoVoterException(action) }
-        .map { it.vote(action, call, subject) }
+    val listOfSubject: List<Any?> = if (subject !is List<*>) listOf(subject) else subject
+    val votes: List<Vote> = listOfSubject.flatMap { subject ->
+        this
+            .filter { it.supports(action, call, subject) }
+            .ifEmpty { throw NoVoterException(action) }
+            .map { it.vote(action, call, subject) }
+    }
 
     return votes.all { it in listOf(Vote.GRANTED, Vote.ABSTAIN) } and votes.any { it == Vote.GRANTED }
 }
