@@ -38,7 +38,7 @@ class ArticleSteps : En, KoinTest {
     private fun createArticle(extraData: DataTable? = null) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val createdByUsername = params?.get("createdBy")
-        val username = (createdByUsername ?: UUID.randomUUID().toString())
+        val username = (createdByUsername ?: "username"+UUID.randomUUID().toString())
             .toLowerCase().replace(' ', '-')
 
         val createdBy = if (createdByUsername != null) {
@@ -77,7 +77,7 @@ class ArticleSteps : En, KoinTest {
         val citizen = get<CitizenRepository>().findByUsername(("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')) ?: error("Citizen not exist")
 
         val comment: CommentEntity<ArticleRef> = CommentEntity(
-            id = params?.get("commentId")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
+            id = params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
             createdBy = citizen,
             target = article,
             content = params?.get("content") ?: "hello"
