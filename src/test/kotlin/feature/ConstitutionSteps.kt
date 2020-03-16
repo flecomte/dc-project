@@ -9,11 +9,10 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.User as UserEntity
-import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
+import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 class ConstitutionSteps : En, KoinTest {
     init {
@@ -27,6 +26,10 @@ class ConstitutionSteps : En, KoinTest {
             createConstitution(extraData)
         }
 
+        Given("I have constitution with ID {string}") { id: String? ->
+            createConstitution(id = UUID.fromString(id))
+        }
+
         Given("I have comment created by {word} {word} on constitution {string}:") { firstName: String, lastName: String, constitutionId: String, extraData: DataTable? ->
             commentConstitution(constitutionId, firstName, lastName, extraData)
         }
@@ -35,7 +38,7 @@ class ConstitutionSteps : En, KoinTest {
         }
     }
 
-    private fun createConstitution(extraData: DataTable? = null) {
+    private fun createConstitution(extraData: DataTable? = null, id: UUID? = null) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val createdByUsername = params?.get("createdBy")
         val username = (createdByUsername ?: "username"+UUID.randomUUID().toString())
@@ -64,7 +67,7 @@ class ConstitutionSteps : En, KoinTest {
         )
 
         val constitution = ConstitutionSimple<CitizenSimple, ConstitutionSimple.TitleSimple<ArticleRef>>(
-            id = params?.get("id")?.toUUID() ?: UUID.randomUUID(),
+            id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
             title = "hello",
             titles = mutableListOf(title1),
             anonymous = false,
