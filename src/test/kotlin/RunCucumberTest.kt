@@ -42,7 +42,6 @@ class RunCucumberTest : En, KoinTest {
 
             withTestApplication({ module(CUCUMBER) }) {
                 migrations()
-                fixtures()
             }
             unitialized = true
         }
