@@ -97,7 +97,7 @@ dependencies {
     testImplementation("io.ktor:ktor-client-mock:$ktor_version")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktor_version")
     testImplementation("org.koin:koin-test:$koinVersion")
-    testImplementation("io.mockk:mockk:1.9")
+    testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
     testImplementation("org.amshove.kluent:kluent:1.4")
     testImplementation("io.cucumber:cucumber-java8:$cucumber_version")

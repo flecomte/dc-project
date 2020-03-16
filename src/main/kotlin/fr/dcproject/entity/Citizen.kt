@@ -29,7 +29,7 @@ open class CitizenBasic(
     override var birthday: DateTime,
     override var voteAnonymous: Boolean = true,
     override var followAnonymous: Boolean = true,
-    user: UserRef
+    override val user: User
 ) : CitizenBasicI,
     CitizenSimple(id, name, user)
 

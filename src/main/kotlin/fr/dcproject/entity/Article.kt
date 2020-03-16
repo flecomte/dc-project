@@ -10,28 +10,17 @@ import java.util.*
 class Article(
     id: UUID = UUID.randomUUID(),
     title: String,
-    anonymous: Boolean = true,
-    content: String,
-    description: String,
-    tags: List<String> = emptyList(),
-    override var draft: Boolean = false,
-    override var lastVersion: Boolean = false,
-    createdBy: CitizenBasic
-) : ArticleFull,
-    ArticleBasic(id, title, anonymous, content, description, tags, createdBy),
-    Viewable by ViewableImp()
-
-open class ArticleBasic(
-    id: UUID = UUID.randomUUID(),
-    title: String,
     override var anonymous: Boolean = true,
     override var content: String,
     override var description: String,
     override var tags: List<String> = emptyList(),
+    draft: Boolean = false,
+    override var lastVersion: Boolean = false,
     override val createdBy: CitizenBasic
-) : ArticleBasicI,
-    ArticleSimple(id, title, createdBy) {
-
+) : ArticleFull,
+    ArticleAuthI<CitizenBasicI>,
+    ArticleSimple(id, title, createdBy, draft),
+    Viewable by ViewableImp() {
     init {
         tags = tags.distinct()
     }
@@ -40,8 +29,10 @@ open class ArticleBasic(
 open class ArticleSimple(
     id: UUID = UUID.randomUUID(),
     override var title: String,
-    override val createdBy: CitizenBasic
+    override val createdBy: CitizenBasic,
+    override var draft: Boolean = false
 ) : ArticleSimpleI,
+    ArticleAuthI<CitizenBasicI>,
     ArticleRefVersioning(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
@@ -84,4 +75,11 @@ interface ArticleFull :
     ArticleBasicI {
     var draft: Boolean
     var lastVersion: Boolean
+}
+
+interface ArticleAuthI<U : CitizenWithUserI> :
+    ArticleI,
+    EntityCreatedBy<U>,
+    EntityDeletedAt {
+    var draft: Boolean
 }

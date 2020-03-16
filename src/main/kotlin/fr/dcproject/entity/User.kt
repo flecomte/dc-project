@@ -10,7 +10,7 @@ class User(
     id: UUID = UUID.randomUUID(),
     username: String,
     blockedAt: DateTime? = null,
-    override var plainPassword: String?,
+    override var plainPassword: String? = null,
     override var roles: List<Roles> = emptyList()
 ) : UserFull, UserBasic(id, username, blockedAt),
     EntityCreatedAt by EntityCreatedAtImp(),

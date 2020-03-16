@@ -14,7 +14,7 @@ begin
     from (
         select
             z.*,
-            json_build_object('id', z.user_id) as "user"
+            find_user_by_id(z.user_id) as "user"
         from citizen as z
         where "search" is null or (
             (name->'first_name')::text ilike '%'||"search"||'%' or
