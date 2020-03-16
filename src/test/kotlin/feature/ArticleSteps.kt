@@ -9,7 +9,6 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import java.util.concurrent.CompletionException
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.User as UserEntity
@@ -28,36 +27,11 @@ class ArticleSteps : En, KoinTest {
             createArticle(extraData)
         }
 
-        Given("I have comment {string} on article {string}") { commentId: String, articleId: String ->
-            var citizen = Citizen(
-                name = CitizenI.Name("John", "Doe"),
-                email = "john.doe@gmail.com",
-                birthday = DateTime.now(),
-                user = UserEntity(username = "john-doe", plainPassword = "azerty")
-            )
-
-            try {
-                get<CitizenRepository>().insertWithUser(citizen)
-            } catch (e: CompletionException) {
-                citizen = get<CitizenRepository>().findByUsername("john-doe")!!
-            }
-
-            val article = ArticleEntity(
-                id = UUID.fromString(articleId),
-                title = "hello",
-                content = "bla bla bla",
-                description = "A super article",
-                createdBy = citizen
-            )
-            get<ArticleRepository>().upsert(article)
-
-            val comment: CommentEntity<ArticleRef> = CommentEntity(
-                id = UUID.fromString(commentId),
-                createdBy = citizen,
-                target = article,
-                content = "hello"
-            )
-            get<CommentArticle>().comment(comment)
+        Given("I have comment created by {word} {word} on article {string}:") { firstName: String, lastName: String, articleId: String, extraData: DataTable? ->
+            commentArticle(articleId, firstName, lastName, extraData)
+        }
+        Given("I have comment created by {word} {word} on article {string}") { firstName: String, lastName: String, articleId: String ->
+            commentArticle(articleId, firstName, lastName)
         }
     }
 
@@ -93,5 +67,21 @@ class ArticleSteps : En, KoinTest {
             createdBy = createdBy
         )
         get<ArticleRepository>().upsert(article)
+    }
+
+    private fun commentArticle(articleId: String, firstName: String, lastName: String, extraData: DataTable? = null) {
+        val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
+
+        val article = get<ArticleRepository>().findById(UUID.fromString(articleId)) ?: error("Article not exist")
+
+        val citizen = get<CitizenRepository>().findByUsername(("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')) ?: error("Citizen not exist")
+
+        val comment: CommentEntity<ArticleRef> = CommentEntity(
+            id = params?.get("commentId")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
+            createdBy = citizen,
+            target = article,
+            content = params?.get("content") ?: "hello"
+        )
+        get<CommentArticle>().comment(comment)
     }
 }
