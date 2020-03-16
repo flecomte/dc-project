@@ -43,6 +43,12 @@ open class OpinionChoice(override val requester: Requester) : RepositoryI {
             .selectOne(
                 "id" to id
             )
+
+    fun upsertOpinionChoice(opinionChoice: OpinionChoiceEntity): OpinionChoiceEntity = requester
+        .getFunction("upsert_opinion_choice")
+        .selectOne(
+            "resource" to opinionChoice
+        )!!
 }
 
 open class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requester) {

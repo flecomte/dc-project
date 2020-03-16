@@ -58,15 +58,10 @@ begin
     -- upsert article
     select upsert_article(created_article) into created_article;
 
-
-    insert into opinion_choice(id, name, target)
-    values (opinion_choice1_id, 'Opinion1', '{article}');
-
-    insert into opinion_choice(id, name)
-    values (opinion_choice2_id, 'Opinion2');
-
-    insert into opinion_choice(name, target)
-    values ('Opinion3', '{article}');
+    select (h->>'id')::uuid into opinion_choice1_id from upsert_opinion_choice('{"name": "Opinion1", "target":["article"]}') h;
+    assert opinion_choice1_id is not null, 'Opinion choice must be return json with id';
+    select (h->>'id')::uuid into opinion_choice2_id from upsert_opinion_choice('{"name": "Opinion2"}') h;
+    perform upsert_opinion_choice('{"name": "Opinion3", "target":["article"]}') h;
 
     perform upsert_opinion(
         resource => json_build_object(

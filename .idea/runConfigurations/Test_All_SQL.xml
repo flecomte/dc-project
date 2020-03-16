@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Test All SQL" type="DatabaseScript" folderName="SQL TEST" editBeforeRun="true">
+  <configuration default="false" name="Test All SQL" type="DatabaseScript" folderName="SQL TEST">
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_article_by_id.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/article/find_articles_versions_by_id.sql" />
@@ -53,6 +53,7 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_id.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion_choice.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/find_workgroup_by_id.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/find_workgroups.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/workgroup/upsert_workgroup.sql" />

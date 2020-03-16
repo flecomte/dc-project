@@ -8,7 +8,7 @@ import fr.postgresjson.entity.mutable.EntityDeletedAtImp
 import java.util.*
 
 class OpinionChoice(
-    id: UUID,
+    id: UUID? = null,
     val name: String,
     val target: List<String>?
 ) : OpinionChoiceRef(id),
@@ -16,5 +16,5 @@ class OpinionChoice(
     EntityDeletedAt by EntityDeletedAtImp()
 
 open class OpinionChoiceRef(
-    id: UUID
-) : UuidEntity(id)
+    id: UUID?
+) : UuidEntity(id ?: UUID.randomUUID())
