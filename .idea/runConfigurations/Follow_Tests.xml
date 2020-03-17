@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Follow Tests" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
+  <configuration default="false" name="Follow Tests" type="JUnit" factoryName="JUnit" folderName="Cucumber" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
     <module name="dcproject.test" />
     <useClassPathOnly />

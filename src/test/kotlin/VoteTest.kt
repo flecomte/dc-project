@@ -72,12 +72,12 @@ class VoteTest {
             "blocked_at": null,
             "plain_password": "azerty",
             "roles": [],
-            "created_at": null,
-            "updated_at": null
+            "created_at": "2019-08-09T11:42:47.168Z",
+            "updated_at": "2019-08-09T11:42:47.168Z"
           },
           "deleted": false,
-          "created_at": null,
-          "deleted_at": null
+          "created_at": "2019-08-09T11:42:47.168Z",
+          "deleted_at": "2019-08-09T11:42:47.168Z"
         },
         "votes": {
           "up": 0,
