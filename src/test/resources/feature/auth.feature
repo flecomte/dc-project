@@ -1,3 +1,4 @@
+@auth
 Feature: Auth routes
 
   Scenario: The route for create citizen must response a 200 and return object
@@ -34,10 +35,11 @@ Feature: Auth routes
     Then the response status code should be 400
 
   Scenario: The route for create citizen must response a 200 and return object
+    Given I have citizen Niels Bohr
     When I send a POST request to "/login" with body:
     """
     {
-      "name": "username-1",
+      "name": "niels-bohr",
       "password": "azerty"
     }
     """

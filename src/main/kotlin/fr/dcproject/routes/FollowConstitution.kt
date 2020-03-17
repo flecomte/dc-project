@@ -15,7 +15,7 @@ import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepositor
 
 @KtorExperimentalLocationsAPI
 object FollowConstitutionPaths {
-    @Location("/constitutions/{constitution}/follow")
+    @Location("/constitutions/{constitution}/follows")
     class ConstitutionFollowRequest(val constitution: ConstitutionRef)
 
     @Location("/citizens/{citizen}/follows/constitutions")
@@ -36,6 +36,13 @@ fun Route.followConstitution(repo: FollowConstitutionRepository) {
         assertCan(DELETE, follow)
         repo.unfollow(follow)
         call.respond(HttpStatusCode.NoContent)
+    }
+
+    get<FollowConstitutionPaths.ConstitutionFollowRequest> {
+        repo.findFollow(citizen, it.constitution)?.let { follow ->
+            assertCan(VIEW, follow)
+            call.respond(follow)
+        } ?: call.respond(HttpStatusCode.NotFound)
     }
 
     get<FollowConstitutionPaths.CitizenFollowConstitutionRequest> {

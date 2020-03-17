@@ -2,7 +2,6 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.entity.ArticleAuthI
 import fr.dcproject.entity.ArticleI
-import fr.dcproject.entity.ArticleSimpleI
 import fr.dcproject.entity.UserI
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Comment as CommentEntity
@@ -27,7 +26,7 @@ class ArticleVoter : Voter {
         if (action == Action.VIEW) return view(subject, user)
         if (action == Action.DELETE) return delete(subject, user)
         if (action == Action.UPDATE) return update(subject, user)
-        if (action is CommentVoter.Action) return voteForComment(action)
+        if (action is CommentVoter.Action) return voteForComment(action, subject)
         if (action is VoteVoter.Action) return voteForVote(action, subject)
         if (action is Action) return Vote.DENIED
 
@@ -67,23 +66,36 @@ class ArticleVoter : Voter {
     private fun voteForVote(action: VoteVoter.Action, subject: Any?): Vote {
         if (action == VoteVoter.Action.CREATE && subject is VoteEntity<*>) {
             val target = subject.target
-            if (target !is ArticleSimpleI) {
-                return Vote.ABSTAIN
-            }
-            if (target.isDeleted()) {
+            if (target is ArticleAuthI<*>) {
+                if (target.isDeleted()) {
+                    return Vote.DENIED
+                }
+            } else if (target is ArticleI) {
                 return Vote.DENIED
             }
         }
         return Vote.ABSTAIN
     }
 
-    private fun voteForComment(action: CommentVoter.Action): Vote {
-        if (action == CommentVoter.Action.CREATE) {
-            return Vote.GRANTED
-        }
+    private fun voteForComment(action: CommentVoter.Action, subject: Any?): Vote {
+        if (subject is CommentEntity<*>) {
+            val target = subject.target
+            if (target is ArticleAuthI<*>) {
+                if (target.isDeleted()) {
+                    return Vote.DENIED
+                }
+            } else if (target is ArticleI) {
+                return Vote.DENIED
+            }
+            if (action == CommentVoter.Action.CREATE) {
+                return Vote.GRANTED
+            }
 
-        if (action == CommentVoter.Action.VIEW) {
-            return Vote.GRANTED
+            if (action == CommentVoter.Action.VIEW) {
+                return Vote.GRANTED
+            }
+        } else {
+            return Vote.DENIED
         }
 
         return Vote.ABSTAIN

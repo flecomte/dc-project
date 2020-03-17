@@ -34,9 +34,6 @@ object ConstitutionPaths {
     @Location("/constitutions/{constitution}")
     class ConstitutionRequest(val constitution: ConstitutionEntity)
 
-    @Location("/constitutions/{constitution}/follow")
-    class ConstitutionFollowRequest(val constitution: ConstitutionEntity)
-
     @Location("/constitutions")
     class PostConstitutionRequest
 }

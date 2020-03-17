@@ -15,7 +15,7 @@ class WorkgroupVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is List<*> || subject is WorkgroupI?)
+            .and(subject is WorkgroupI?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -31,14 +31,6 @@ class WorkgroupVoter : Voter {
                 else if (subject.anonymous && user != null && subject.isMember(user)) Vote.GRANTED
                 else Vote.DENIED
             }
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is WorkgroupWithAuthI<*> || it.isDeleted()) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
-            }
             return Vote.DENIED
         }
 
@@ -52,10 +44,9 @@ class WorkgroupVoter : Voter {
             }
 
             return Vote.DENIED
-        }
-
-        if (action is Action) {
-            return Vote.DENIED
+        } else if (subject !is WorkgroupWithAuthI<*> && (action == Action.DELETE || action == Action.UPDATE)) {
+            throw object :
+                VoterException("Unable to define if your are granted, the subject must implement 'WorkgroupWithAuthI'") {}
         }
 
         return Vote.ABSTAIN

@@ -1,12 +1,19 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="All Tests + Lint (offline)" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
+  <configuration default="false" name="Cucumber Tests (offline)" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
+    <module name="dcproject.test" />
     <useClassPathOnly />
-    <option name="PACKAGE_NAME" value="fr.dcproject" />
-    <option name="MAIN_CLASS_NAME" value="" />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="fr.dcproject.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="RunCucumberTest" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="tags" />
-    <option name="VM_PARAMETERS" value="-ea -Dcucumber.options=&quot;--tags ~@online&quot; -Djdk.attach.allowAttachSelf=true" />
+    <option name="TEST_OBJECT" value="class" />
+    <option name="VM_PARAMETERS" value="-ea -Dcucumber.filter.tags=&quot; not @online&quot; -Djdk.attach.allowAttachSelf=true" />
     <option name="PARAMETERS" value="" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="wholeProject" />
@@ -18,7 +25,6 @@
     <tag value="!online" />
     <method v="2">
       <option name="Make" enabled="true" />
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint" run_configuration_type="GradleRunConfiguration" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Test All SQL" run_configuration_type="DatabaseScript" />
     </method>
   </configuration>

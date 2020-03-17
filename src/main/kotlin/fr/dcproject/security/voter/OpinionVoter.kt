@@ -12,7 +12,7 @@ class OpinionVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is Opinion<*>? || subject is List<*>)
+            .and(subject is Opinion<*>?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -25,14 +25,6 @@ class OpinionVoter : Voter {
             if (subject is Opinion<*>) {
                 return Vote.GRANTED
             }
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is Opinion<*>) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
-            }
             return Vote.DENIED
         }
 
@@ -43,10 +35,6 @@ class OpinionVoter : Voter {
             )
                 Vote.GRANTED
             else Vote.DENIED
-        }
-
-        if (action is Action) {
-            return Vote.DENIED
         }
 
         return Vote.ABSTAIN

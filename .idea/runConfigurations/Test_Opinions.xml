@@ -9,6 +9,7 @@
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_choices.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion.sql" />
     <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/find_opinion_by_opinion.sql" />
+    <script-file value="$PROJECT_DIR$/src/main/resources/sql/functions/opinion/upsert_opinion_choice.sql" />
     <script-file value="$PROJECT_DIR$/src/test/sql/opinion.sql" />
     <script-mode>FILE</script-mode>
     <data-source id="a9a6d0e9-327d-4e7d-9b93-3cb6f7948866" namespace="database/&quot;test&quot;/schema/&quot;public&quot;" />

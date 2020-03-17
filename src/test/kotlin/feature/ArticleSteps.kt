@@ -9,7 +9,6 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import java.util.concurrent.CompletionException
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.User as UserEntity
@@ -18,93 +17,77 @@ import fr.dcproject.repository.Citizen as CitizenRepository
 
 class ArticleSteps : En, KoinTest {
     init {
-        /**
-         * @deprecated
-         */
-        Given("I have article with id {string}") { id: String ->
-            var citizen = Citizen(
-                name = CitizenI.Name("John", "Doe"),
-                email = "john.doe@gmail.com",
+        Given("I have {int} article") { nb: Int ->
+            repeat(nb) {
+                createArticle()
+            }
+        }
+
+        Given("I have article") { extraData: DataTable? ->
+            createArticle(extraData)
+        }
+
+        Given("I have article with ID {string}") { id: String ->
+            createArticle(id = UUID.fromString(id))
+        }
+
+        Given("I have comment created by {word} {word} on article {string}:") { firstName: String, lastName: String, articleId: String, extraData: DataTable? ->
+            commentArticle(articleId, firstName, lastName, extraData)
+        }
+        Given("I have comment created by {word} {word} on article {string}") { firstName: String, lastName: String, articleId: String ->
+            commentArticle(articleId, firstName, lastName)
+        }
+    }
+
+    private fun createArticle(extraData: DataTable? = null, id: UUID? = null) {
+        val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
+        val createdByUsername = params?.get("createdBy")
+        val username = (createdByUsername ?: "username" + UUID.randomUUID().toString())
+            .toLowerCase().replace(' ', '-')
+
+        val createdBy = if (createdByUsername != null) {
+            get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
+        } else {
+            val first = "firstName" + UUID.randomUUID().toString()
+            val last = "lastName" + UUID.randomUUID().toString()
+            Citizen(
                 birthday = DateTime.now(),
-                user = UserEntity(username = "john-doe", plainPassword = "azerty")
-            )
-
-            try {
-                get<CitizenRepository>().insertWithUser(citizen)
-            } catch (e: CompletionException) {
-                citizen = get<CitizenRepository>().findByUsername("john-doe")!!
-            }
-
-            val article = ArticleEntity(
-                id = UUID.fromString(id),
-                title = "hello",
-                content = "bla bla bla",
-                description = "A super article",
-                createdBy = citizen
-            )
-            get<ArticleRepository>().upsert(article)
-        }
-
-        Given("I have article") { extraData: DataTable ->
-            extraData.asMap<String, String>(String::class.java, String::class.java).let { params ->
-                val username = params["createdBy"]?.toLowerCase()?.replace(' ', '-')
-                    ?: error("You must provide the 'createdBy' parameter")
-                val citizen = get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
-                val id = params["id"]?.toUUID() ?: UUID.randomUUID()
-                val article = ArticleEntity(
-                    id = id,
-                    title = "hello",
-                    content = "bla bla bla",
-                    description = "A super article",
-                    createdBy = citizen
-                )
-                get<ArticleRepository>().upsert(article)
+                name = CitizenI.Name(
+                    first,
+                    last
+                ),
+                email = "$first@fakeemail.com",
+                user = UserEntity(username = username, plainPassword = "azerty")
+            ).also {
+                get<CitizenRepository>().insertWithUser(it)
             }
         }
 
-        Given("I have article with id {string} created by {string}") { id: String, username: String ->
-            val citizen = get<CitizenRepository>().findByUsername(username)!!
+        val article = ArticleEntity(
+            id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
+            title = "hello",
+            content = "bla bla bla",
+            description = "A super article",
+            createdBy = createdBy
+        )
+        get<ArticleRepository>().upsert(article)
+    }
 
-            val article = ArticleEntity(
-                id = UUID.fromString(id),
-                title = "hello",
-                content = "bla bla bla",
-                description = "A super article",
-                createdBy = citizen
-            )
-            get<ArticleRepository>().upsert(article)
-        }
+    private fun commentArticle(articleId: String, firstName: String, lastName: String, extraData: DataTable? = null, id: UUID? = null) {
+        val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
 
-        Given("I have comment {string} on article {string}") { commentId: String, articleId: String ->
-            var citizen = Citizen(
-                name = CitizenI.Name("John", "Doe"),
-                email = "john.doe@gmail.com",
-                birthday = DateTime.now(),
-                user = UserEntity(username = "john-doe", plainPassword = "azerty")
-            )
+        val article = get<ArticleRepository>().findById(UUID.fromString(articleId)) ?: error("Article not exist")
 
-            try {
-                get<CitizenRepository>().insertWithUser(citizen)
-            } catch (e: CompletionException) {
-                citizen = get<CitizenRepository>().findByUsername("john-doe")!!
-            }
+        val citizen = get<CitizenRepository>().findByUsername(
+            ("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')
+        ) ?: error("Citizen not exist")
 
-            val article = ArticleEntity(
-                id = UUID.fromString(articleId),
-                title = "hello",
-                content = "bla bla bla",
-                description = "A super article",
-                createdBy = citizen
-            )
-            get<ArticleRepository>().upsert(article)
-
-            val comment: CommentEntity<ArticleRef> = CommentEntity(
-                id = UUID.fromString(commentId),
-                createdBy = citizen,
-                target = article,
-                content = "hello"
-            )
-            get<CommentArticle>().comment(comment)
-        }
+        val comment: CommentEntity<ArticleRef> = CommentEntity(
+            id = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
+            createdBy = citizen,
+            target = article,
+            content = params?.get("content") ?: "hello"
+        )
+        get<CommentArticle>().comment(comment)
     }
 }

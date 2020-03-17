@@ -6,7 +6,7 @@ import fr.postgresjson.entity.mutable.EntityDeletedAtImp
 import java.util.*
 
 class Workgroup(
-    id: UUID?,
+    id: UUID? = null,
     name: String,
     description: String,
     logo: String? = null,
@@ -28,7 +28,7 @@ class Workgroup(
     EntityUpdatedAt by EntityUpdatedAtImp()
 
 open class WorkgroupSimple<Z : CitizenRef>(
-    id: UUID?,
+    id: UUID? = null,
     var name: String,
     var description: String,
     var logo: String? = null,
@@ -40,7 +40,7 @@ open class WorkgroupSimple<Z : CitizenRef>(
     EntityDeletedAt by EntityDeletedAtImp()
 
 open class WorkgroupRef(
-    id: UUID?
+    id: UUID? = null
 ) : UuidEntity(id ?: UUID.randomUUID()), WorkgroupI
 
 interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, EntityCreatedBy<Z>, EntityDeletedAt {

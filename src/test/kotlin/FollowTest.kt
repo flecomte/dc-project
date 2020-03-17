@@ -35,10 +35,10 @@ class FollowTest {
              "username":"jaque",
              "blocked_at":null,
              "plain_password":"azerty",
-             "created_at":null,
-             "updated_at":null
+             "created_at":"2019-08-09T11:42:47.168Z",
+             "updated_at":"2019-08-09T11:42:47.168Z"
           },
-          "created_at":null
+          "created_at":"2019-08-09T11:42:47.168Z"
        },
        "target":{  
           "id":"34588ea7-c180-4694-801b-1b5c5a6ed73f",
@@ -66,15 +66,15 @@ class FollowTest {
                 "username":"jaque",
                 "blocked_at":null,
                 "plain_password":"azerty",
-                "created_at":null,
-                "updated_at":null
+                "created_at":"2019-08-09T11:42:47.168Z",
+                "updated_at":"2019-08-09T11:42:47.168Z"
              }
           },
           "version_id":"a4aa7dd4-d174-42d2-9ba5-ae6f1129ffce",
           "version_number":null,
           "created_at":null
        },
-       "created_at":null
+       "created_at":"2019-08-09T11:42:47.168Z"
     }""".trimIndent()
 
     @Test
