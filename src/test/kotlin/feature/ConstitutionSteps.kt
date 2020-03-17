@@ -41,14 +41,14 @@ class ConstitutionSteps : En, KoinTest {
     private fun createConstitution(extraData: DataTable? = null, id: UUID? = null) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val createdByUsername = params?.get("createdBy")
-        val username = (createdByUsername ?: "username"+UUID.randomUUID().toString())
+        val username = (createdByUsername ?: "username" + UUID.randomUUID().toString())
             .toLowerCase().replace(' ', '-')
 
         val createdBy = if (createdByUsername != null) {
             get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
         } else {
-            val first = "firstName"+UUID.randomUUID().toString()
-            val last = "lastName"+UUID.randomUUID().toString()
+            val first = "firstName" + UUID.randomUUID().toString()
+            val last = "lastName" + UUID.randomUUID().toString()
             Citizen(
                 birthday = DateTime.now(),
                 name = CitizenI.Name(
@@ -76,12 +76,20 @@ class ConstitutionSteps : En, KoinTest {
         get<ConstitutionRepository>().upsert(constitution)
     }
 
-    private fun commentConstitution(constitutionId: String, firstName: String, lastName: String, extraData: DataTable? = null) {
+    private fun commentConstitution(
+        constitutionId: String,
+        firstName: String,
+        lastName: String,
+        extraData: DataTable? = null
+    ) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
 
-        val constitution = get<ConstitutionRepository>().findById(UUID.fromString(constitutionId)) ?: error("Constitution not exist")
+        val constitution =
+            get<ConstitutionRepository>().findById(UUID.fromString(constitutionId)) ?: error("Constitution not exist")
 
-        val citizen = get<CitizenRepository>().findByUsername(("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')) ?: error("Citizen not exist")
+        val citizen = get<CitizenRepository>().findByUsername(
+            ("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')
+        ) ?: error("Citizen not exist")
 
         val comment: CommentEntity<ConstitutionRef> = CommentEntity(
             id = params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),

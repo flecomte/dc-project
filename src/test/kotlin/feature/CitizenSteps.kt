@@ -16,8 +16,8 @@ class CitizenSteps : En, KoinTest {
         Given("I have citizen") { extraData: DataTable? ->
             val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
             createCitizen(
-                params?.get("firstName") ?: "firstName"+UUID.randomUUID(),
-                params?.get("lastName") ?: "lastName"+UUID.randomUUID(),
+                params?.get("firstName") ?: "firstName" + UUID.randomUUID(),
+                params?.get("lastName") ?: "lastName" + UUID.randomUUID(),
                 extraData
             )
         }
@@ -31,11 +31,11 @@ class CitizenSteps : En, KoinTest {
         }
     }
 
-    private fun createCitizen (firstName: String, lastName: String, extraData: DataTable? = null, id: UUID? = null) {
+    private fun createCitizen(firstName: String, lastName: String, extraData: DataTable? = null, id: UUID? = null) {
 
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val id: UUID = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID()
-        val email = params?.get("email")  ?: ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr"
+        val email = params?.get("email") ?: ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr"
 
         val user = User(
             id = id,

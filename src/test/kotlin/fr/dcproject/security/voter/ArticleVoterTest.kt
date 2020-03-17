@@ -50,7 +50,6 @@ internal class ArticleVoterTest {
     @Test
     fun `other user can be view the article`() = ArticleVoter().run {
         val article = getArticle(tesla)
-        val article2 = getArticle(tesla)
 
         mockk<ApplicationCall> {
             every { user } returns einstein.user
