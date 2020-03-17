@@ -73,7 +73,7 @@ class ArticleSteps : En, KoinTest {
         get<ArticleRepository>().upsert(article)
     }
 
-    private fun commentArticle(articleId: String, firstName: String, lastName: String, extraData: DataTable? = null) {
+    private fun commentArticle(articleId: String, firstName: String, lastName: String, extraData: DataTable? = null, id: UUID? = null) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
 
         val article = get<ArticleRepository>().findById(UUID.fromString(articleId)) ?: error("Article not exist")
@@ -83,7 +83,7 @@ class ArticleSteps : En, KoinTest {
         ) ?: error("Citizen not exist")
 
         val comment: CommentEntity<ArticleRef> = CommentEntity(
-            id = params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
+            id = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
             createdBy = citizen,
             target = article,
             content = params?.get("content") ?: "hello"
