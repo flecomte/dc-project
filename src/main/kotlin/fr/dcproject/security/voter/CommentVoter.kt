@@ -18,19 +18,27 @@ class CommentVoter : Voter {
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
         val user = call.user
-        if (action == Action.CREATE && user != null) {
+
+        if (subject !is Comment<*> ) {
+            return Vote.DENIED
+        }
+
+        if (action == Action.CREATE) {
+            if (user == null) {
+                return Vote.DENIED
+            }
+            if (subject.createdBy.user.id != user.id) {
+                return Vote.DENIED
+            }
             return Vote.GRANTED
         }
 
         if (action == Action.VIEW) {
-            if (subject is Comment<*>) {
-                return if (subject.isDeleted()) Vote.DENIED
-                else Vote.GRANTED
-            }
-            return Vote.DENIED
+            return if (subject.isDeleted()) Vote.DENIED
+            else Vote.GRANTED
         }
 
-        if (action == Action.UPDATE && user != null && subject is Comment<*> && user.id == subject.createdBy.user.id) {
+        if (action == Action.UPDATE && user != null && user.id == subject.createdBy.user.id) {
             return Vote.GRANTED
         }
 

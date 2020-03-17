@@ -108,4 +108,40 @@ internal class CommentVoterTest {
             can(CommentVoter.Action.DELETE, it, comment1) `should be` false
         }
     }
+
+    @Test
+    fun `can be create a comment`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, comment1) `should be` true
+        }
+    }
+
+    @Test
+    fun `can not be create a comment with other creator`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns einstein.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, comment1) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be create a comment if is null`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns einstein.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, null) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be create a comment if not connected`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns null
+        }.let {
+            can(CommentVoter.Action.CREATE, it, comment1) `should be` false
+        }
+    }
 }
