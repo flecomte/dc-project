@@ -10,10 +10,7 @@ class VoteVoter : Voter {
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return action is Action && (
-                subject is VoteEntity<*>? ||
-                        subject is List<*>
-                )
+        return action is Action && subject is VoteEntity<*>?
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -30,16 +27,6 @@ class VoteVoter : Voter {
                     Vote.GRANTED
                 }
             }
-
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is VoteEntity<*> || it.createdBy.user.id != user.id) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
-            }
-
             return Vote.DENIED
         }
 
