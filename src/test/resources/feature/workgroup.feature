@@ -45,8 +45,8 @@ Feature: Workgroup
 
   Scenario: Can add member to workgroup
     Given I have citizen Blaise Pascal
-    And I have citizen Roger Penrose with id "6d883fe7-5fc0-4a50-8858-72230673eba4"
-    And I have citizen Alessandro Volta with id "b5bac515-45d4-4aeb-9b6d-2627a0bbc419"
+    And I have citizen Roger Penrose with ID "6d883fe7-5fc0-4a50-8858-72230673eba4"
+    And I have citizen Alessandro Volta with ID "b5bac515-45d4-4aeb-9b6d-2627a0bbc419"
     And I am authenticated as Blaise Pascal
     And I have workgroup:
       | id    | b0ea1922-3bc6-44e2-aa7c-40158998cfbb |
@@ -63,8 +63,8 @@ Feature: Workgroup
 
   Scenario: Can remove member to workgroup
     Given I have citizen Heinrich Hertz
-    And I have citizen William Thomson with id "87909ba3-2069-431c-9924-219fd8411cf2"
-    And I have citizen Paul Dirac with id "1baf48bb-02bc-4d8f-ac86-33335354f5e7"
+    And I have citizen William Thomson with ID "87909ba3-2069-431c-9924-219fd8411cf2"
+    And I have citizen Paul Dirac with ID "1baf48bb-02bc-4d8f-ac86-33335354f5e7"
     And I am authenticated as Heinrich Hertz
     And I have workgroup:
       | id    | b6c975df-dd44-4e99-adc1-f605746b0e11 |
@@ -85,15 +85,15 @@ Feature: Workgroup
     And the JSON should have 1 items
 
   Scenario: Can update members on workgroup
-    Given I have citizen John Dalton
-    And I have citizen Sadi Carnot with id "be3b0926-8628-4426-804a-75188a6eb315"
-    And I have citizen Joseph Fourier with id "d9671eca-abaf-4b67-9230-3ece700c1ddb"
-    And I have citizen Georg Ohm with id "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"
-    And I am authenticated as John Dalton
+    Given I have citizen Leon Foucault
+    And I have citizen Sadi Carnot with ID "be3b0926-8628-4426-804a-75188a6eb315"
+    And I have citizen Joseph Fourier with ID "d9671eca-abaf-4b67-9230-3ece700c1ddb"
+    And I have citizen Georg Ohm with ID "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"
+    And I am authenticated as Leon Foucault
     And I have workgroup:
       | id    | 784fe6bc-7635-4ae2-b080-3a4743b998bf |
       | name  | Les Tacos                            |
-      | owner | John Dalton                          |
+      | owner | Leon Foucault                        |
     And I have members in workgroup "784fe6bc-7635-4ae2-b080-3a4743b998bf":
       | be3b0926-8628-4426-804a-75188a6eb315 |
       | d9671eca-abaf-4b67-9230-3ece700c1ddb |
