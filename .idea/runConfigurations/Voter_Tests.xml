@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Voter Tests" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
+    <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
+    <useClassPathOnly />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="fr.dcproject.security.voter.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
+    <option name="PACKAGE_NAME" value="fr.dcproject" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="tags" />
+    <option name="VM_PARAMETERS" value="-ea -Djdk.attach.allowAttachSelf=true" />
+    <option name="PARAMETERS" value="" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="wholeProject" />
+    </option>
+    <envs>
+      <env name="SEND_GRID_KEY" value="$SEND_GRID_KEY$" />
+    </envs>
+    <dir value="$PROJECT_DIR$" />
+    <tag value="voter" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
