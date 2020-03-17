@@ -51,9 +51,13 @@ class RunCucumberTest : En, KoinTest {
             config.username = "test"
             config.password = "test"
             ktorContext.start()
+            //language=PostgreSQL
+            get<Connection>().sendQuery("start transaction;", listOf())
         }
 
         After { _: Scenario ->
+            //language=PostgreSQL
+            get<Connection>().sendQuery("rollback;", listOf())
             ktorContext.stop()
         }
     }
