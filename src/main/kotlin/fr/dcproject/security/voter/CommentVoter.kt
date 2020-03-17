@@ -13,7 +13,7 @@ class CommentVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is Comment<*>? || subject is List<*>)
+            .and(subject is Comment<*>?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -26,14 +26,6 @@ class CommentVoter : Voter {
             if (subject is Comment<*>) {
                 return if (subject.isDeleted()) Vote.DENIED
                 else Vote.GRANTED
-            }
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is Comment<*> || it.isDeleted()) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
             }
             return Vote.DENIED
         }

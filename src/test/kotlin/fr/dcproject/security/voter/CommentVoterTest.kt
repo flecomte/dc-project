@@ -1,0 +1,109 @@
+package fr.dcproject.security.voter
+
+import fr.dcproject.entity.*
+import io.ktor.application.ApplicationCall
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.mockkStatic
+import org.amshove.kluent.`should be`
+import org.joda.time.DateTime
+import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestInstance
+
+@KtorExperimentalLocationsAPI
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+internal class CommentVoterTest {
+    private val tesla = CitizenBasic(
+        user = User(
+            username = "nicolas-tesla",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        birthday = DateTime.now(),
+        email = "tesla@best.com",
+        name = CitizenI.Name("Nicolas", "Tesla")
+    )
+    private val einstein = CitizenBasic(
+        user = User(
+            username = "albert-einstein",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        birthday = DateTime.now(),
+        email = "einstein@best.com",
+        name = CitizenI.Name("Albert", "Einstein")
+    )
+
+    private val article1 = Article(
+        content = "Hi",
+        createdBy = einstein,
+        description = "blablabla",
+        title = "Super article"
+    )
+
+    private val comment1 = Comment(
+        content = "Hello",
+        createdBy = tesla,
+        target = article1
+    )
+
+    init {
+        mockkStatic("fr.dcproject.security.voter.VoterKt")
+    }
+
+    @Test
+    fun `support comment`() = CommentVoter().run {
+        val p = object : ActionI {}
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            supports(CommentVoter.Action.VIEW, it, comment1) `should be` true
+            supports(CommentVoter.Action.VIEW, it, article1) `should be` false
+            supports(p, it, comment1) `should be` false
+        }
+    }
+
+    @Test
+    fun `can be view the comment`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.VIEW, it, comment1) `should be` true
+        }
+    }
+
+    @Test
+    fun `can be view the comment list`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns einstein.user
+        }.let {
+            can(CommentVoter.Action.VIEW, it, listOf(comment1)) `should be` true
+        }
+    }
+
+    @Test
+    fun `can be update your comment`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.UPDATE, it, comment1) `should be` true
+        }
+    }
+
+    @Test
+    fun `can not be update other comment`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns einstein.user
+        }.let {
+            can(CommentVoter.Action.UPDATE, it, comment1) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be delete your comment`() = listOf(CommentVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.DELETE, it, comment1) `should be` false
+        }
+    }
+}
