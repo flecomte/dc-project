@@ -13,7 +13,7 @@ class FollowVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is List<*> || subject is FollowEntity<*>?)
+            .and(subject is FollowEntity<*>?)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -31,14 +31,6 @@ class FollowVoter : Voter {
         if (action == Action.VIEW) {
             if (subject is FollowEntity<*>) {
                 return voteView(user, subject)
-            }
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is FollowEntity<*> || voteView(user, it) == Vote.DENIED) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
             }
             return Vote.DENIED
         }
