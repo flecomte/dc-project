@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.ArticleRef
+import fr.dcproject.entity.Article
 import fr.dcproject.entity.Citizen
 import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
@@ -24,7 +24,7 @@ import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 object CommentArticlePaths {
     @Location("/articles/{article}/comments")
     class ArticleCommentRequest(
-        val article: ArticleRef,
+        val article: Article,
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null,

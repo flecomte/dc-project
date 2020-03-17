@@ -30,7 +30,7 @@ Feature: comment Article
     And I am authenticated as Pierre Curie
     And I have article
       | id | 5e209f63-57ce-43ca-922a-273b0d62f567 |
-    And I have comment created by Enrico Fermi on article "5e209f63-57ce-43ca-922a-273b0d62f567"
+    And I have comment created by Pierre Curie on article "5e209f63-57ce-43ca-922a-273b0d62f567"
     When I send a GET request to "/articles/5e209f63-57ce-43ca-922a-273b0d62f567/comments?sort=votes"
     Then the response status code should be 200
     And the response should contain object:

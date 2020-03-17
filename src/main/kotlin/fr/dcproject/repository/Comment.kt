@@ -11,6 +11,7 @@ import fr.postgresjson.repository.RepositoryI
 import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 import fr.dcproject.entity.Comment as CommentEntity
+import fr.dcproject.entity.Article as ArticleEntity
 
 abstract class Comment<T : TargetI>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentEntity<T>?
@@ -68,7 +69,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
         }
     }
 
-    fun comment(comment: CommentEntity<T>) {
+    fun <I : T> comment(comment: CommentEntity<I>) {
         requester
             .getFunction("comment")
             .sendQuery(
@@ -77,7 +78,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
             )
     }
 
-    fun edit(comment: CommentEntity<T>) {
+    fun <I : T> edit(comment: CommentEntity<I>) {
         requester
             .getFunction("edit_comment")
             .sendQuery(
@@ -123,8 +124,8 @@ class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
     }
 }
 
-class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
-    override fun findById(id: UUID): CommentEntity<ArticleRef>? {
+class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
+    override fun findById(id: UUID): CommentEntity<ArticleEntity>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -134,7 +135,7 @@ class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
         citizen: CitizenEntity,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<ArticleRef>> {
+    ): Paginated<CommentEntity<ArticleEntity>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
@@ -150,19 +151,17 @@ class CommentArticle(requester: Requester) : Comment<ArticleRef>(requester) {
         page: Int,
         limit: Int,
         sort: Sort
-    ): Paginated<CommentEntity<ArticleRef>> {
-        return requester.run {
-            getFunction("find_comments_by_target")
-                .select(
-                    page, limit,
-                    "target_id" to target.id,
-                    "sort" to sort.sql
-                )
-        }
-    }
+    ): Paginated<CommentEntity<ArticleEntity>> = requester
+        .getFunction("find_comments_by_target")
+        .select(
+            page, limit,
+            "target_id" to target.id,
+            "sort" to sort.sql
+        )
 
     enum class Sort(val sql: String) {
         CREATED_AT("created_at"), VOTES("votes");
+
         companion object {
             fun fromString(string: String): Sort? {
                 return values().firstOrNull { it.sql == string }

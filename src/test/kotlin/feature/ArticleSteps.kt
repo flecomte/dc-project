@@ -82,7 +82,7 @@ class ArticleSteps : En, KoinTest {
             ("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')
         ) ?: error("Citizen not exist")
 
-        val comment: CommentEntity<ArticleRef> = CommentEntity(
+        val comment: CommentEntity<ArticleEntity> = CommentEntity(
             id = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
             createdBy = citizen,
             target = article,
