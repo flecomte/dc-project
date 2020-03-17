@@ -48,6 +48,23 @@ internal class CommentVoterTest {
         target = article1
     )
 
+    private val commentTargetDeleted = Comment(
+        content = "Hello",
+        createdBy = tesla,
+        target = Article(
+            content = "Hi",
+            createdBy = einstein,
+            description = "blablabla",
+            title = "Super article"
+        ).apply { deletedAt = DateTime.now() }
+    )
+
+    private val commentTargetNoUser = Comment(
+        content = "Hello",
+        createdBy = tesla,
+        target = ArticleRef()
+    )
+
     init {
         mockkStatic("fr.dcproject.security.voter.VoterKt")
     }
@@ -65,7 +82,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can be view the comment`() = listOf(CommentVoter()).run {
+    fun `can be view the comment`() = listOf(CommentVoter(), ArticleVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -110,11 +127,29 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can be create a comment`() = listOf(CommentVoter()).run {
+    fun `can be create a comment`() = listOf(CommentVoter(), ArticleVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
             can(CommentVoter.Action.CREATE, it, comment1) `should be` true
+        }
+    }
+
+    @Test
+    fun `can not be create a comment if target is deleted`() = listOf(CommentVoter(), ArticleVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, commentTargetDeleted) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be create a comment if target has no user`() = listOf(CommentVoter(), ArticleVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, commentTargetNoUser) `should be` false
         }
     }
 

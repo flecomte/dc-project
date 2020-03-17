@@ -52,6 +52,23 @@ internal class VoteVoterTest {
         note = 1
     )
 
+    private val voteOnDeleted = VoteEntity(
+        createdBy = tesla,
+        target = Article(
+            content = "Hi",
+            createdBy = einstein,
+            description = "blablabla",
+            title = "Super article"
+        ).apply { deletedAt = DateTime.now() },
+        note = 1
+    )
+
+    private val voteWithoutUser = VoteEntity(
+        createdBy = tesla,
+        target = ArticleRef(),
+        note = 1
+    )
+
     init {
         mockkStatic("fr.dcproject.security.voter.VoterKt")
     }
@@ -105,7 +122,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can be vote an article`() = listOf(VoteVoter()).run {
+    fun `can be vote an article`() = listOf(VoteVoter(), ArticleVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -119,6 +136,33 @@ internal class VoteVoterTest {
             every { user } returns null
         }.let {
             can(VoteVoter.Action.CREATE, it, vote1) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be vote an article if article is deleted`() = listOf(VoteVoter(), ArticleVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(VoteVoter.Action.CREATE, it, voteOnDeleted) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be vote an article if article have no user`() = listOf(VoteVoter(), ArticleVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(VoteVoter.Action.CREATE, it, voteWithoutUser) `should be` false
+        }
+    }
+
+    @Test
+    fun `can not be comment an article if article is deleted`() = listOf(VoteVoter(), ArticleVoter()).run {
+        mockk<ApplicationCall> {
+            every { user } returns tesla.user
+        }.let {
+            can(CommentVoter.Action.CREATE, it, voteOnDeleted) `should be` false
         }
     }
 }

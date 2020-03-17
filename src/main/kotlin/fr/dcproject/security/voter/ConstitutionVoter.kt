@@ -16,7 +16,7 @@ class ConstitutionVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-            .and(subject is List<*> || subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is Comment<*>)
+            .and(subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is Comment<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
@@ -29,14 +29,6 @@ class ConstitutionVoter : Voter {
             if (subject is ConstitutionSimple<*, *>) {
                 return if (subject.isDeleted()) Vote.DENIED
                 else Vote.GRANTED
-            }
-            if (subject is List<*>) {
-                subject.forEach {
-                    if (it !is ConstitutionSimple<*, *> || it.isDeleted()) {
-                        return Vote.DENIED
-                    }
-                }
-                return Vote.GRANTED
             }
             return Vote.DENIED
         }

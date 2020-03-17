@@ -19,7 +19,7 @@ class CommentVoter : Voter {
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
         val user = call.user
 
-        if (subject !is Comment<*> ) {
+        if (subject !is Comment<*>) {
             return Vote.DENIED
         }
 
