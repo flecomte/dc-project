@@ -54,6 +54,3 @@ begin
     ) as t;
 end;
 $$;
-
--- drop function if exists find_workgroups(text, json, text, text, int, int);
--- select * from find_workgroups('49', "limit" := 2)

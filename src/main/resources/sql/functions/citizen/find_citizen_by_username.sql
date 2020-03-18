@@ -15,4 +15,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_citizen_by_username(text, out json);

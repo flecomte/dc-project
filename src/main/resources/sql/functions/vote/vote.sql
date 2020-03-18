@@ -38,4 +38,3 @@ begin
 end;
 $$;
 
--- drop function if exists vote(regclass,uuid,uuid,integer,boolean);

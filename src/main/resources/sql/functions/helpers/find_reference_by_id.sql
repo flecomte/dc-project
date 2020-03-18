@@ -23,7 +23,3 @@ begin
     resource = resource::jsonb || jsonb_build_object('reference', _reference);
 end
 $$;
-
--- drop function if exists find_reference_by_id(uuid, regclass, out json);
-
--- select find_reference_by_id('8944221c-3766-f952-7064-9f229c288049'::uuid, 'constitution'::regclass)

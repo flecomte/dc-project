@@ -17,4 +17,3 @@ begin
 end;
 $$;
 
--- drop function if exists insert_user(inout json);

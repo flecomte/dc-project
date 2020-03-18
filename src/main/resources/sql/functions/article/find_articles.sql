@@ -60,6 +60,3 @@ begin
     ) as t;
 end;
 $$;
-
--- drop function if exists find_articles(text, json, text, text, int, int);
--- select find_article_by_id('d91aa0cd-61d6-83cc-41bb-8d5656e130f7');

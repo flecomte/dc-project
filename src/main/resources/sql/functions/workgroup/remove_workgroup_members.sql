@@ -14,4 +14,3 @@ begin
 end
 $$;
 
--- drop procedure if exists remove_workgroup_members(in uuid, inout json);

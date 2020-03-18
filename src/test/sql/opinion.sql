@@ -83,7 +83,6 @@ begin
     assert(select (a#>>'{opinions, Opinion1}')::int = 1
     from find_article_by_id((created_article->>'id')::uuid) a), 'the article must be have a opinion';
 
-    raise notice '%', opinion2;
     assert(select (opinion2#>>'{choice, id}')::uuid = opinion_choice2_id), 'opinion2 is not inserted';
     assert(select (opinion2#>>'{choice, name}') = 'Opinion2'), 'no name for opinion2';
 

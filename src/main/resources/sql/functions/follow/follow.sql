@@ -20,4 +20,3 @@ begin
 end;
 $$;
 
--- drop function if exists follow(regclass, uuid, uuid);

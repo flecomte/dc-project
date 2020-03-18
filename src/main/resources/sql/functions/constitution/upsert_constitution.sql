@@ -52,5 +52,3 @@ begin
     select find_constitution_by_id(new_id) into resource;
 end;
 $$;
-
--- drop function if exists upsert_constitution(inout json);

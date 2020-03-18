@@ -19,4 +19,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_opinion_by_id(uuid, out json);
+

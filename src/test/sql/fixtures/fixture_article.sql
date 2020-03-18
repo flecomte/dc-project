@@ -24,4 +24,4 @@ begin
         select (a->>'id')::uuid into _article_id from upsert_article(created_article) a;
     end if;
 end;
-$$
+$$;

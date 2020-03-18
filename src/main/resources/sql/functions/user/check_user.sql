@@ -15,4 +15,3 @@ begin
 end;
 $$;
 
--- drop function if exists check_user(text, text, out json);

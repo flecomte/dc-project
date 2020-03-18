@@ -18,5 +18,5 @@ begin
 end;
 $$;
 
--- drop function if exists find_workgroup_by_id(uuid, out json);
+
 -- select * from find_workgroup_by_id('d011ad4c-fa1b-40a3-593b-7816479ff33b')

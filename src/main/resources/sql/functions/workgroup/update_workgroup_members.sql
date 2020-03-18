@@ -23,4 +23,3 @@ begin
 end;
 $$;
 
--- drop procedure if exists update_workgroup_members(in uuid, inout json);

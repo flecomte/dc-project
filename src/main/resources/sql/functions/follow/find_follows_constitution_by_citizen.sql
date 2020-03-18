@@ -23,4 +23,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_follows_constitution_by_citizen(uuid, int, int);
+

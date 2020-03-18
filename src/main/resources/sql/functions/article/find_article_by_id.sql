@@ -18,4 +18,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_article_by_id(uuid, out json);
+

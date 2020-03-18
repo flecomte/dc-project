@@ -21,7 +21,3 @@ begin
     resource = coalesce(agg, empty);
 end;
 $$;
-
--- drop function if exists count_opinion(uuid);
-
--- select * from count_opinion('d91aa0cd-61d6-83cc-41bb-8d5656e130f7');

@@ -44,5 +44,3 @@ begin
     ) t;
 end
 $$;
-
--- select * from find_citizen_opinions('6434f4f9-f570-f22a-c134-8668350651ff', null, null, 2, 2);

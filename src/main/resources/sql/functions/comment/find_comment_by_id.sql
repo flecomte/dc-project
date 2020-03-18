@@ -18,4 +18,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_comment_by_id(uuid, out json);
+

@@ -29,4 +29,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_citizen_votes_by_target_ids(uuid, uuid[], regclass);
+

@@ -29,4 +29,3 @@ begin
 end;
 $$;
 
--- drop function if exists create_title_in_constitution(out json);

@@ -21,4 +21,4 @@ begin
     select upsert_citizen(created_citizen) into created_citizen;
     _citizen_id := created_citizen->>'id';
 end
-$$
+$$;

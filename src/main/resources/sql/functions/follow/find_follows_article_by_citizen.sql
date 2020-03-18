@@ -22,5 +22,3 @@ begin
     ) as t;
 end;
 $$;
-
--- drop function if exists find_follows_article_by_citizen(uuid, int, int);

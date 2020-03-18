@@ -9,4 +9,3 @@ begin
 end;
 $$;
 
--- drop function if exists change_user_password(json);

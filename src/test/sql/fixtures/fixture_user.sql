@@ -15,4 +15,4 @@ begin
     select insert_user(created_user) into created_user;
     user_id := created_user->>'id';
 end
-$$
+$$;

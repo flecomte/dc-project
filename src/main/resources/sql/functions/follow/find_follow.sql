@@ -21,5 +21,3 @@ begin
     select resource is not null into following;
 end;
 $$;
-
--- drop function if exists find_follow(uuid, uuid);

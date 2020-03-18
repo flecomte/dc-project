@@ -21,4 +21,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_constitution_title_by_id(uuid, out json);

@@ -31,4 +31,3 @@ begin
 end;
 $$;
 
--- drop procedure if exists upsert_workgroup(inout json);

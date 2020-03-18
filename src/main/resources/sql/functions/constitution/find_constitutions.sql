@@ -39,5 +39,3 @@ begin
     ) as t;
 end;
 $$;
-
--- drop function if exists find_constitutions(text, text, text, int, int);

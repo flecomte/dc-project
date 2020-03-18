@@ -21,4 +21,3 @@ begin
 end;
 $$;
 
--- drop function if exists comment(regclass, uuid, uuid, text, uuid);

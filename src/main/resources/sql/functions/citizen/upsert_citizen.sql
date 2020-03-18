@@ -27,4 +27,3 @@ begin
 end;
 $$;
 
--- drop function if exists upsert_citizen(inout json);

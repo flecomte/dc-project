@@ -64,4 +64,3 @@ begin
 end;
 $$;
 
--- drop procedure if exists upsert_article(inout json);

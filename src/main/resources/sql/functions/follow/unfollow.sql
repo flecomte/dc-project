@@ -37,4 +37,3 @@ begin
 end;
 $$;
 
--- drop function if exists unfollow(regclass, uuid, uuid);

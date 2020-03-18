@@ -26,4 +26,4 @@ begin
     select upsert_workgroup(created_workgroup) into created_workgroup;
     assert created_workgroup->>'description' is not null, 'description should not be null';
 end;
-$$
+$$;

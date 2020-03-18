@@ -18,7 +18,3 @@ begin
     ) t;
 end;
 $$;
-
--- drop function if exists find_opinions();
-
--- select find_opinion_choices('{}');

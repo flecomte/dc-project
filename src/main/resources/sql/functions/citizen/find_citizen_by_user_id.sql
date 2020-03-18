@@ -14,4 +14,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_citizen_by_user_id(uuid, inout json);

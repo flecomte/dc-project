@@ -37,5 +37,3 @@ begin
     ) as t;
 end;
 $$;
-
--- drop function if exists find_comments_by_citizen(uuid, regclass, int, int);

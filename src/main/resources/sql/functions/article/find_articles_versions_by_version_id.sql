@@ -25,4 +25,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_articles_versions_by_version_id(uuid, int, int, out json);
+

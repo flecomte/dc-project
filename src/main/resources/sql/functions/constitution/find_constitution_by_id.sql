@@ -16,4 +16,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_constitution_by_id(uuid, out json);

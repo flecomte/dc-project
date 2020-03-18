@@ -9,4 +9,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_user_by_id(uuid, out json);

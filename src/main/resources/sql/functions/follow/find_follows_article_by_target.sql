@@ -30,8 +30,3 @@ begin
     ) as t;
 end
 $$;
-
--- drop function if exists find_follows_article_by_target(uuid, int, int);
--- select * from find_follows_article_by_target('32518c76-5c58-3cd1-00cd-7f9d0bb872cd', 20, 0);
--- select * from find_follows_article_by_target('24a373f4-c321-4006-8d05-3c50f95a561b', 100, 0);
--- SELECT * FROM find_follows_article_by_target ("_target_id" := '24a373f4-c321-4006-8d05-3c50f95a561b'::uuid, "offset" := 0::int, "limit" := 300::int)

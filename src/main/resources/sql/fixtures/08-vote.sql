@@ -7,7 +7,7 @@ begin
     delete from vote_for_constitution;
     delete from vote_for_comment_on_article;
     delete from vote_for_comment_on_constitution;
-raise notice '%', article_count;
+
     insert into vote_for_article (id, created_by_id, target_id, note, anonymous)
     select
         uuid_in(md5('vote_for_article'||row_number() over ())::cstring),

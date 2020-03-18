@@ -37,4 +37,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_votes_by_citizen(uuid, regclass, int, int);
+

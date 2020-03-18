@@ -21,4 +21,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_last_article_by_version_id(uuid, inout json);

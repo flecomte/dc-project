@@ -30,6 +30,3 @@ begin
     raise notice 'constitution test pass';
 end
 $$;
-
-
--- select uuid_generate_v4();

@@ -25,8 +25,6 @@ begin
         join (select *, row_number() over () rn from article) a using (rn);
     end loop;
 
-    raise notice '% opinion inserted', (select count(*) from opinion_on_article);
-
     raise notice 'opinions fixtures done';
 end;
 $$;

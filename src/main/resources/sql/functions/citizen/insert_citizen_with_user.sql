@@ -30,4 +30,3 @@ begin
 end;
 $$;
 
--- drop function if exists create_citizen_with_user(inout json);

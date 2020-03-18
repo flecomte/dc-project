@@ -24,4 +24,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_opinion_by_opinion(json);
+

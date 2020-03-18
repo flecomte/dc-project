@@ -20,4 +20,3 @@ begin
 end;
 $$;
 
--- drop function if exists upsert_opinion(json);

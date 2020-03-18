@@ -34,4 +34,4 @@ begin
 end;
 $$;
 
--- drop function if exists find_comments_by_target(uuid, int, int);
+

@@ -12,4 +12,3 @@ begin
 end;
 $$;
 
--- drop function if exists find_citizen_by_email(text, out json);
