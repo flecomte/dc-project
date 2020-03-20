@@ -86,8 +86,9 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
 
     get<VoteArticlePaths.CitizenVotesByIdsRequest> {
         val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
-        assertCan(VIEW, votes)
-
+        if (votes.isNotEmpty()) {
+            assertCan(VIEW, votes)
+        }
         call.respond(votes)
     }
 }

@@ -42,12 +42,14 @@ fun Route.followArticle(repo: FollowArticleRepository) {
         repo.findFollow(citizen, it.article)?.let { follow ->
             assertCan(VIEW, follow)
             call.respond(follow)
-        } ?: call.respond(HttpStatusCode.NotFound)
+        } ?: call.respond(HttpStatusCode.NoContent)
     }
 
     get<FollowArticlePaths.CitizenFollowArticleRequest> {
         val follows = repo.findByCitizen(it.citizen)
-        assertCan(VIEW, follows.result)
+        if (follows.result.isNotEmpty()) {
+            assertCan(VIEW, follows.result)
+        }
         call.respond(follows)
     }
 }

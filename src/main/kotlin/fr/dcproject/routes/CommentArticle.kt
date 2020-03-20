@@ -43,7 +43,9 @@ object CommentArticlePaths {
 fun Route.commentArticle(repo: CommentArticleRepository) {
     get<CommentArticlePaths.ArticleCommentRequest> {
         val comment = repo.findByTarget(it.article, it.page, it.limit, it.sort)
-        assertCan(VIEW, comment.result)
+        if (comment.result.isNotEmpty()) {
+            assertCan(VIEW, comment.result)
+        }
         call.respond(HttpStatusCode.OK, comment)
     }
 
