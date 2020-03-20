@@ -9,7 +9,7 @@ import kotlinx.coroutines.DisposableHandle
 import org.joda.time.DateTime
 import kotlin.random.Random.Default.nextInt
 
-abstract class Event(
+open class Event(
     val type: String,
     val createdAt: DateTime = DateTime.now()
 ) : Serializable {
