@@ -24,6 +24,10 @@ begin
             ol.name
         limit 100
     ) as t;
+
+    if (resource is null) then
+        resource = '[]'::json;
+    end if;
 end;
 $$;
 
