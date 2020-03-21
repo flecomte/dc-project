@@ -1,19 +1,16 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.CitizenRef
-import fr.dcproject.entity.OpinionArticle
 import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.entity.request.RequestBuilder
 import fr.dcproject.entity.request.getContent
-import fr.dcproject.repository.OpinionChoice
+import fr.dcproject.security.voter.OpinionVoter.Action.CREATE
 import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
 import fr.dcproject.security.voter.assertCan
 import fr.dcproject.utils.toUUID
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
-import io.ktor.features.BadRequestException
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -47,25 +44,14 @@ object OpinionArticlePaths {
      */
     @Location("/articles/{article}/opinions")
     @KtorExperimentalAPI
-    class ArticleOpinion(val article: ArticleEntity) : RequestBuilder<OpinionArticle> {
+    class ArticleOpinion(val article: ArticleEntity) : RequestBuilder<List<OpinionChoiceRef>> {
 
-        private class Content(
-            opinionChoice: String
-        ) : KoinComponent {
-            val opinionChoice = OpinionChoiceRef(opinionChoice.toUUID())
-
-            fun create(citizen: Citizen, article: ArticleEntity): OpinionArticle {
-                return OpinionArticle(
-                    choice = get<OpinionChoice>().findOpinionChoiceById(opinionChoice.id) ?: throw BadRequestException("OpinionChoice not exist: id(${opinionChoice.id})"),
-                    target = article,
-                    createdBy = citizen
-                )
-            }
+        private class Content(ids: List<String>) : KoinComponent {
+            val ids = ids.map { it.toUUID() }
         }
 
-        override suspend fun getContent(call: ApplicationCall): OpinionArticle {
-            return call.receive<Content>().create(call.citizen, article)
-        }
+        override suspend fun getContent(call: ApplicationCall): List<OpinionChoiceRef> =
+            call.receive<Content>().ids.map { OpinionChoiceRef(it) }
     }
 
     /**
@@ -95,9 +81,9 @@ fun Route.opinionArticle(repo: OpinionArticleRepository) {
 
     put<OpinionArticlePaths.ArticleOpinion> {
         call.getContent(it)
-            .let { opinion ->
-                assertCan(VIEW, opinion)
-                repo.opinion(opinion)
+            .let { choices ->
+                assertCan(CREATE, it.article)
+                repo.updateOpinions(choices, citizen, it.article)
             }.let {
                 call.respond(HttpStatusCode.Created, it)
             }

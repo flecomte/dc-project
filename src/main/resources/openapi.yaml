@@ -1376,10 +1376,12 @@ components:
     ArticleOpinionRequest:
       type: object
       properties:
-        opinion_choice:
-          type: string
-          format: uuid
-          example: 6e978eb5-3c48-0def-b093-e01f43983adb
+        ids:
+          type: array
+          items:
+            type: string
+            format: uuid
+            example: 6e978eb5-3c48-0def-b093-e01f43983adb
 
     OpinionChoices:
       description: Opinion Choice

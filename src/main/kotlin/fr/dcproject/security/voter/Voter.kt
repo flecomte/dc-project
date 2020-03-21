@@ -38,14 +38,15 @@ enum class Vote {
 
 private val votersAttributeKey = AttributeKey<List<Voter>>("voters")
 
-fun ApplicationCall.assertCan(action: ActionI, subject: Any? = null) {
-    if (!can(action, subject)) {
+fun ApplicationCall.assertCan(action: ActionI, subject: Any? = null, agreeIfNullOrEmpty: Boolean = true) {
+    val isNullOrEmpty = (subject == null || (subject is Collection<*> && subject.isNullOrEmpty()))
+    if (!can(action, subject) && !agreeIfNullOrEmpty && isNullOrEmpty) {
         throw UnauthorizedException(action)
     }
 }
 
-fun PipelineContext<Unit, ApplicationCall>.assertCan(action: ActionI, subject: Any? = null) =
-    context.assertCan(action, subject)
+fun PipelineContext<Unit, ApplicationCall>.assertCan(action: ActionI, subject: Any? = null, agreeIfNullOrEmpty: Boolean = true) =
+    context.assertCan(action, subject, agreeIfNullOrEmpty)
 
 fun PipelineContext<Unit, ApplicationCall>.can(action: ActionI, subject: Any? = null) =
     context.can(action, subject)

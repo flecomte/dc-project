@@ -1,8 +1,9 @@
 package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
-import fr.dcproject.entity.Article
-import fr.dcproject.entity.OpinionAggregation
+import fr.dcproject.entity.ArticleRef
+import fr.dcproject.entity.CitizenRef
+import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -44,6 +45,16 @@ open class OpinionChoice(override val requester: Requester) : RepositoryI {
                 "id" to id
             )
 
+    /**
+     * find one opinion choices by id
+     */
+    fun findOpinionChoicesByIds(ids: List<UUID>): List<OpinionChoiceEntity> =
+        requester
+            .getFunction("find_opinion_choices_by_ids")
+            .select(
+                "ids" to ids
+            )
+
     fun upsertOpinionChoice(opinionChoice: OpinionChoiceEntity): OpinionChoiceEntity = requester
         .getFunction("upsert_opinion_choice")
         .selectOne(
@@ -51,20 +62,13 @@ open class OpinionChoice(override val requester: Requester) : RepositoryI {
         )!!
 }
 
-open class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requester) {
+abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requester) {
     /**
      * Create an Opinion on target (article,...)
      */
-    fun opinion(opinion: OpinionEntity<T>): OpinionAggregation {
-        return requester
-            .getFunction("opinion")
-            .selectOne(
-                "reference" to opinion.target.reference,
-                "target_id" to opinion.target.id,
-                "opinion" to opinion.id,
-                "created_by_id" to opinion.createdBy
-            )!!
-    }
+    abstract fun updateOpinions(choices: List<OpinionChoiceRef>, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>>
+    fun updateOpinions(choice: OpinionChoiceRef, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>> =
+        updateOpinions(listOf(choice), citizen, target)
 
     /**
      * Find opinions of one citizen filtered by target ids
@@ -124,13 +128,18 @@ open class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requeste
     }
 }
 
-class OpinionArticle(requester: Requester) : Opinion<Article>(requester) {
+class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
     /**
-     * Create an Opinion on Article
+     * Create an Opinions on Article
      */
-    fun opinion(opinion: OpinionArticleEntity): OpinionArticleEntity {
+    override fun updateOpinions(choices: List<OpinionChoiceRef>, citizen: CitizenRef, target: TargetRef): List<OpinionArticleEntity> {
         return requester
-            .getFunction("upsert_opinion")
-            .selectOne(opinion) ?: error("query 'upsert_opinion' return null")
+            .getFunction("update_citizen_opinions_by_target_id")
+            .select(
+                "choices_ids" to choices.map { it.id },
+                "citizen_id" to citizen.id,
+                "target_id" to target.id,
+                "target_reference" to target.reference
+            )
     }
 }

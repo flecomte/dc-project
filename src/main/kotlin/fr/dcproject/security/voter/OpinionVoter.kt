@@ -1,5 +1,6 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.entity.ArticleAuthI
 import fr.dcproject.entity.Opinion
 import io.ktor.application.ApplicationCall
 
@@ -12,13 +13,17 @@ class OpinionVoter : Voter {
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
         return (action is Action)
-            .and(subject is Opinion<*>?)
+            .and(subject is Opinion<*>? || subject is ArticleAuthI<*>)
     }
 
     override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
         val user = call.user
         if (action == Action.CREATE) {
-            return if (user != null) Vote.GRANTED else Vote.DENIED
+            return if (user != null && (
+                (subject is ArticleAuthI<*> && !subject.isDeleted()) ||
+                (subject is Opinion<*> && subject.createdBy.user.id == user.id)
+            )) Vote.GRANTED
+            else Vote.DENIED
         }
 
         if (action == Action.VIEW) {

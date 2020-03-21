@@ -65,7 +65,8 @@ internal class OpinionVoterTest {
             every { user } returns tesla.user
         }.let {
             supports(OpinionVoter.Action.VIEW, it, opinion1) `should be` true
-            supports(OpinionVoter.Action.VIEW, it, article1) `should be` false
+            supports(OpinionVoter.Action.VIEW, it, article1) `should be` true
+            supports(OpinionVoter.Action.VIEW, it, einstein) `should be` false
             supports(p, it, opinion1) `should be` false
         }
     }

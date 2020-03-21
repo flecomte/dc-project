@@ -41,6 +41,8 @@ declare
     opinion_choice1_id uuid = uuid_generate_v4();
     opinion_choice2_id uuid = uuid_generate_v4();
     opinion2 json;
+    _opinions json;
+    _opinions_deleted_ids uuid[];
 begin
     -- insert user for context
     select insert_user(created_user) into created_user;
@@ -120,6 +122,46 @@ begin
         select (resource#>>'{0, choice, name}') = 'Opinion1' from find_citizen_opinions(_citizen_id, null, null, 1, 0)
     ), 'find_citizen_opinions must return a list of opinion with name';
 
+    -- test update_citizen_opinions_by_target_id
+    select opinions into _opinions
+    from update_citizen_opinions_by_target_id(
+            array[opinion_choice1_id]::uuid[],
+        _citizen_id,
+        (created_article->>'id')::uuid,
+        'article'
+    );
+    assert (json_array_length(_opinions) = 1), format('Opinions updated must be count of 1. instead of: %s', json_array_length(_opinions));
+    assert(select (_opinions#>>'{0, choice, id}')::uuid = opinion_choice1_id), 'opinion1 is not inserted';
+    assert(
+        select (o#>>'{0, choice, name}') = 'Opinion1'
+        from find_citizen_opinions_by_target_id(_citizen_id, (created_article->>'id')::uuid) o),
+        'The opinion must have a name';
+
+    -- test update_citizen_opinions_by_target_id with multiple ids
+    select opinions into _opinions
+    from update_citizen_opinions_by_target_id(
+            array[opinion_choice1_id, opinion_choice2_id]::uuid[],
+        _citizen_id,
+        (created_article->>'id')::uuid,
+        'article'
+    );
+    assert (json_array_length(_opinions) = 2), format('(on multi update) Opinions updated must be count of 1. instead of: %s', json_array_length(_opinions));
+    assert(select (_opinions#>>'{0, choice, id}')::uuid = opinion_choice1_id), '(on multi update) opinion1 is not inserted';
+    assert(select (_opinions#>>'{1, choice, id}')::uuid = opinion_choice2_id), '(on multi update) opinion2 is not inserted';
+    assert(
+        select (o#>>'{0, choice, name}') = 'Opinion1'
+        from find_citizen_opinions_by_target_id(_citizen_id, (created_article->>'id')::uuid) o),
+        '(on multi update) The opinion must have a name';
+
+    -- test update_citizen_opinions_by_target_id if empty
+    select opinions, ids_deleted into _opinions, _opinions_deleted_ids
+    from update_citizen_opinions_by_target_id(
+            '{}'::uuid[],
+        _citizen_id,
+        (created_article->>'id')::uuid,
+        'article'
+    );
+    assert json_array_length(_opinions) = 0;
     rollback;
     raise notice 'opinion test pass';
 end

@@ -45,15 +45,22 @@ class OpinionSteps : En, KoinTest {
         }
     }
 
-    private fun createOpinion(opinionChoiceName: String, articleId: String, firstName: String, lastName: String, id: String? = null) {
+    private fun createOpinion(
+        opinionChoiceName: String,
+        articleId: String,
+        firstName: String,
+        lastName: String,
+        id: String? = null
+    ) {
         val opinion = OpinionArticle(
             id = id?.toUUID() ?: UUID.randomUUID(),
             choice = get<OpinionChoiceRepository>().findOpinionsChoiceByName(opinionChoiceName)
                 ?: error("Opinion Choice not exist"),
             target = get<ArticleRepository>().findById(articleId.toUUID()) ?: error("Article not exist"),
-            createdBy = get<CitizenRepository>().findByUsername("$firstName-$lastName".toLowerCase().replace(' ', '-')) ?: error("Citizen not exist")
+            createdBy = get<CitizenRepository>().findByUsername("$firstName-$lastName".toLowerCase().replace(' ', '-'))
+                ?: error("Citizen not exist")
         )
-        get<OpinionRepository>().opinion(opinion)
+        get<OpinionRepository>().updateOpinions(opinion.choice, opinion.createdBy, opinion.target)
     }
 
     private fun createOpinionOnArticle(extraInfo: DataTable? = null) {
@@ -69,6 +76,6 @@ class OpinionSteps : En, KoinTest {
             } ?: error("You must provide the 'article' parameter"),
             createdBy = get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
         )
-        get<OpinionRepository>().opinion(opinion)
+        get<OpinionRepository>().updateOpinions(opinion.choice, opinion.createdBy, opinion.target)
     }
 }
