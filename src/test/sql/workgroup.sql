@@ -87,7 +87,3 @@ begin
     raise notice 'workgroup test pass';
 end
 $$;
-
-
-
--- select w->>'id' from json_array_elements('[{"id":"plop"}]') w

@@ -55,13 +55,14 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
 
     open fun findFollow(
         citizen: CitizenI,
-        target: UuidEntity
+        target: TargetRef
     ): FollowEntity<OUT>? =
         requester
             .getFunction("find_follow")
             .selectOne(
                 "citizen_id" to citizen.id,
-                "target_id" to target.id
+                "target_id" to target.id,
+                "target_reference" to target.reference
             )
 
     fun findFollowsByTarget(
