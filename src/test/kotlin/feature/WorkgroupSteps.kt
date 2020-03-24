@@ -5,6 +5,7 @@ import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime
+import org.junit.Assert
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
@@ -55,6 +56,10 @@ class WorkgroupSteps : En, KoinTest {
             )
 
             get<WorkgroupRepository>().upsert(workgroup)
+        }
+
+        Then("The workgroup {string} exists") { id: String ->
+            Assert.assertNotNull(get<CitizenRepository>().findById(id.toUUID()))
         }
     }
 }

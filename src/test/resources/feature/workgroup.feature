@@ -32,6 +32,15 @@ Feature: Workgroup
       | description | La vie est belle                     |
       | anonymous   | false                                |
 
+  Scenario: Can delete a workgroup
+    Given I have citizen Werner Heisenberg
+    And I am authenticated as Werner Heisenberg
+    And I have workgroup:
+      | id | ab469134-bf14-4856-b093-ae1aa990f977 |
+    When I send a DELETE request to "/workgroups/ab469134-bf14-4856-b093-ae1aa990f977"
+    Then the response status code should be 204
+    And The workgroup "ab469134-bf14-4856-b093-ae1aa990f977" exists
+
   Scenario: Can get workgroups list
     Given I have citizen Max Planck
     And I am authenticated as Max Planck
@@ -52,7 +61,7 @@ Feature: Workgroup
       | id    | b0ea1922-3bc6-44e2-aa7c-40158998cfbb |
       | name  | Les bonobos                          |
       | owner | Blaise Pascal                        |
-    When I send a POST request to "/workgroups/members/b0ea1922-3bc6-44e2-aa7c-40158998cfbb" with body:
+    When I send a POST request to "/workgroups/b0ea1922-3bc6-44e2-aa7c-40158998cfbb/members" with body:
       """
       [
         {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
@@ -73,7 +82,7 @@ Feature: Workgroup
     And I have members in workgroup "b6c975df-dd44-4e99-adc1-f605746b0e11":
       | 87909ba3-2069-431c-9924-219fd8411cf2 |
       | 1baf48bb-02bc-4d8f-ac86-33335354f5e7 |
-    When I send a DELETE request to "/workgroups/members/b6c975df-dd44-4e99-adc1-f605746b0e11" with body:
+    When I send a DELETE request to "/workgroups/b6c975df-dd44-4e99-adc1-f605746b0e11/members" with body:
       """
       [
         {"id":"87909ba3-2069-431c-9924-219fd8411cf2"}
@@ -97,7 +106,7 @@ Feature: Workgroup
     And I have members in workgroup "784fe6bc-7635-4ae2-b080-3a4743b998bf":
       | be3b0926-8628-4426-804a-75188a6eb315 |
       | d9671eca-abaf-4b67-9230-3ece700c1ddb |
-    When I send a PUT request to "/workgroups/members/784fe6bc-7635-4ae2-b080-3a4743b998bf" with body:
+    When I send a PUT request to "/workgroups/784fe6bc-7635-4ae2-b080-3a4743b998bf/members" with body:
       """
       [
         {"id":"be3b0926-8628-4426-804a-75188a6eb315"},

@@ -1,8 +1,7 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.UserI
-import fr.dcproject.entity.WorkgroupI
-import fr.dcproject.entity.WorkgroupWithAuthI
+import fr.dcproject.citizenOrNull
+import fr.dcproject.entity.*
 import io.ktor.application.ApplicationCall
 
 class WorkgroupVoter : Voter {
@@ -10,11 +9,18 @@ class WorkgroupVoter : Voter {
         CREATE,
         UPDATE,
         VIEW,
-        DELETE
+        DELETE,
+    }
+
+    enum class ActionMembers : ActionI {
+        ADD,
+        UPDATE,
+        VIEW,
+        REMOVE,
     }
 
     override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action)
+        return (action is Action || action is ActionMembers)
             .and(subject is WorkgroupI?)
     }
 
@@ -47,6 +53,36 @@ class WorkgroupVoter : Voter {
         } else if (subject !is WorkgroupWithAuthI<*> && (action == Action.DELETE || action == Action.UPDATE)) {
             throw object :
                 VoterException("Unable to define if your are granted, the subject must implement 'WorkgroupWithAuthI'") {}
+        }
+
+        if (action == ActionMembers.ADD) {
+            val citizen = call.citizenOrNull
+            // TODO create ROLES
+            return Vote.isGranted {
+                citizen != null &&
+                subject is WorkgroupWithMembersI<*> &&
+                subject.members.asCitizen(citizen)
+            }
+        }
+
+        if (action == ActionMembers.UPDATE) {
+            val citizen = call.citizenOrNull
+            // TODO create ROLES
+            return Vote.isGranted {
+                citizen != null &&
+                subject is WorkgroupWithMembersI<*> &&
+                subject.members.asCitizen(citizen)
+            }
+        }
+
+        if (action == ActionMembers.REMOVE) {
+            val citizen = call.citizenOrNull
+            // TODO create ROLES
+            return Vote.isGranted {
+                citizen != null &&
+                subject is WorkgroupWithMembersI<*> &&
+                subject.members.asCitizen(citizen)
+            }
         }
 
         return Vote.ABSTAIN

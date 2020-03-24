@@ -33,7 +33,13 @@ fun List<Voter>.can(action: ActionI, call: ApplicationCall, subject: Any? = null
 enum class Vote {
     GRANTED,
     ABSTAIN,
-    DENIED
+    DENIED;
+
+    companion object {
+        fun isGranted(lambda: () -> Boolean): Vote {
+            return if (lambda()) GRANTED else DENIED
+        }
+    }
 }
 
 private val votersAttributeKey = AttributeKey<List<Voter>>("voters")

@@ -58,4 +58,6 @@ interface WorkgroupWithMembersI<Z : CitizenI> : WorkgroupI {
     var members: List<Z>
 }
 
+fun List<CitizenI>.asCitizen(citizen: CitizenI): Boolean = this.map { it.id }.contains(citizen.id)
+
 interface WorkgroupI : UuidEntityI

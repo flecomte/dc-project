@@ -9,6 +9,9 @@ import fr.dcproject.repository.Workgroup.Filter
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
 import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.ADD as ADD_MEMBERS
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.UPDATE as UPDATE_MEMBERS
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.REMOVE as REMOVE_MEMBERS
 import fr.dcproject.security.voter.assertCan
 import fr.dcproject.utils.toUUID
 import fr.postgresjson.repository.RepositoryI
@@ -48,14 +51,14 @@ object WorkgroupsPaths {
     class WorkgroupRequest(val workgroup: WorkgroupEntity)
 
     @Location("/workgroups")
-    class PostWorkgroupRequest : RequestBuilder<WorkgroupSimple<CitizenRef>> {
+    open class PostWorkgroupRequest : RequestBuilder<WorkgroupSimple<CitizenRef>> {
         class Content(
             val id: UUID?,
             val name: String,
             val description: String,
             val logo: String?,
             val anonymous: Boolean?,
-            val owner: CitizenRef?
+            val owner: UUID?
         ) : KoinComponent {
             fun create(creator: CitizenRef): WorkgroupSimple<CitizenRef> {
                 return WorkgroupSimple(
@@ -64,7 +67,7 @@ object WorkgroupsPaths {
                     description,
                     logo,
                     anonymous ?: true,
-                    owner ?: creator,
+                    owner?.let { CitizenRef(it) } ?: creator,
                     creator
                 )
             }
@@ -74,11 +77,38 @@ object WorkgroupsPaths {
             return call.receive<Content>().create(call.citizen)
         }
     }
+
+    @Location("/workgroups/{workgroup}")
+    class PutWorkgroupRequest(val workgroup: WorkgroupEntity) : RequestBuilder<WorkgroupEntity> {
+        class Content(
+            val name: String?,
+            val description: String?,
+            val logo: String?,
+            val anonymous: Boolean?,
+            val owner: UUID?
+        ) : KoinComponent {
+            fun update(workgroup: WorkgroupEntity): WorkgroupEntity {
+                name?.let { workgroup.name = it }
+                description?.let { workgroup.description = it }
+                logo?.let { workgroup.logo = it }
+                anonymous?.let { workgroup.anonymous = it }
+
+                return workgroup
+            }
+        }
+
+        override suspend fun getContent(call: ApplicationCall): WorkgroupEntity {
+            return call.receive<Content>().update(workgroup)
+        }
+    }
+
+    @Location("/workgroups/{workgroup}")
+    class DeleteWorkgroupRequest(val workgroup: WorkgroupEntity)
 }
 
 @KtorExperimentalLocationsAPI
 object WorkgroupsMembersPaths {
-    @Location("/workgroups/members/{workgroup}")
+    @Location("/workgroups/{workgroup}/members")
     class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) : RequestBuilder<List<CitizenRef>> {
         class Content : MutableList<Content.Item> by mutableListOf() {
             class Item(val id: String)
@@ -117,14 +147,30 @@ fun Route.workgroup(repo: WorkgroupRepository) {
             }
     }
 
+    put<WorkgroupsPaths.PutWorkgroupRequest> {
+        call.getContent(it)
+            .let { workgroup ->
+                assertCan(UPDATE, workgroup)
+                repo.upsert(workgroup as WorkgroupSimple<CitizenRef>)
+            }.let {
+                call.respond(HttpStatusCode.OK, it)
+            }
+    }
+
+    delete<WorkgroupsPaths.DeleteWorkgroupRequest> {
+        assertCan(UPDATE, it.workgroup)
+        repo.delete(it.workgroup)
+        call.respond(HttpStatusCode.NoContent, it)
+    }
+
     /* Add members to workgroup */
     post<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
         call.getContent(it)
             .let { members ->
-                assertCan(UPDATE, it.workgroup)
+                assertCan(ADD_MEMBERS, it.workgroup)
                 repo.addMembers(it.workgroup, members)
             }.let {
-                call.respond(HttpStatusCode.OK, it)
+                call.respond(HttpStatusCode.Created, it)
             }
     }
 
@@ -132,7 +178,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     delete<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
         call.getContent(it)
             .let { members ->
-                assertCan(UPDATE, it.workgroup)
+                assertCan(REMOVE_MEMBERS, it.workgroup)
                 repo.removeMembers(it.workgroup, members)
             }.let {
                 call.respond(HttpStatusCode.OK, it)
@@ -143,7 +189,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     put<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
         call.getContent(it)
             .let { members ->
-                assertCan(UPDATE, it.workgroup)
+                assertCan(UPDATE_MEMBERS, it.workgroup)
                 repo.updateMembers(it.workgroup, members)
             }.let {
                 call.respond(HttpStatusCode.OK, it)

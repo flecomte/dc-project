@@ -338,7 +338,7 @@ fun Application.module(env: Env = PROD) {
             }
         }
         exception<NotFoundException> { e ->
-            call.respond(HttpStatusCode.BadRequest, e.message!!)
+            call.respond(HttpStatusCode.NotFound, e.message!!)
         }
         exception<ForbiddenException> {
             call.respond(HttpStatusCode.Forbidden)
