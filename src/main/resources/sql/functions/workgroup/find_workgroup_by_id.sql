@@ -8,10 +8,10 @@ begin
         select
             w.*,
             find_citizen_by_id(w.created_by_id) as created_by,
-            find_citizen_by_id(w.owner_id) as owner
+            find_citizen_by_id(w.owner_id) as owner,
+            find_workgroup_members(w.id) as members
         into resource
         from workgroup as w
-        left join citizen_in_workgroup ciw on w.id = ciw.workgroup_id
         where w.id = _id
          and deleted_at is null
     ) as t;

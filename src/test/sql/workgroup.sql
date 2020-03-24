@@ -82,6 +82,9 @@ begin
         'Members must contain citizen1';
     assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id2)),
         'Members must NOT contain citizen2';
+    -- Check if find_workgroup_by_id return members
+    select find_workgroup_by_id((created_workgroup->>'id')::uuid) into selected_workgroup;
+    assert json_array_length(selected_workgroup->'members') = 1, 'Workgroup must have members';
 
     rollback;
     raise notice 'workgroup test pass';
