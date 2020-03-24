@@ -842,6 +842,246 @@ paths:
         401:
           $ref: '#/components/responses/401'
 
+  /workgroups:
+    get:
+      security:
+        - {}
+        - JWTAuth: []
+      tags:
+        - workgroup
+      responses:
+        200:
+          description: paginated list of workgroup
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/WorkgroupSimple'
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                name:
+                  type: string
+                  example: Les partisants du RIC
+                  required: true
+                description:
+                  type: string
+                  example: Group formé pour la conception d'un RIC
+                logo:
+                  type: string
+                  nullable: true
+                anonymous:
+                  type: boolean
+                  example: false
+                  nullable: true
+                  default: true
+                owner:
+                  type: string
+                  format: uuid
+                  example: 6434f4f9-f570-f22a-c134-8668350651ff
+                  nullable: true
+      responses:
+        201:
+          description: Workgroup created
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                    example: Les partisants du RIC
+                  description:
+                    type: string
+                    example: Group formé pour la conception d'un RIC
+                  logo:
+                    type: string
+                  anonymous:
+                    type: boolean
+                    example: false
+                  owner:
+                    type: string
+                    format: uuid
+  /workgroups/{workgroup}:
+    parameters:
+      - $ref: '#/components/parameters/workgroup'
+    get:
+      security:
+        - {}
+        - JWTAuth: []
+      tags:
+        - workgroup
+      responses:
+        200:
+          description: Workgroup
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Workgroup'
+    put:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: Les partisants du RIC
+                  required: true
+                description:
+                  type: string
+                  example: Group formé pour la conception d'un RIC
+                logo:
+                  type: string
+                  nullable: true
+                anonymous:
+                  type: boolean
+                  example: false
+                  nullable: true
+                  default: true
+                owner:
+                  type: string
+                  format: uuid
+                  example: 6434f4f9-f570-f22a-c134-8668350651ff
+                  nullable: true
+      responses:
+        200:
+          description: Workgroup updated
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                    example: Les partisants du RIC
+                  description:
+                    type: string
+                    example: Group formé pour la conception d'un RIC
+                  logo:
+                    type: string
+                  anonymous:
+                    type: boolean
+                    example: false
+                  owner:
+                    type: string
+                    format: uuid
+    delete:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      responses:
+        204:
+          description: Workgroup deleted
+  /workgroups/{workgroup}/members:
+    parameters:
+      - $ref: '#/components/parameters/workgroup'
+    post:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+      responses:
+        201:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CitizenResponse'
+    put:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+      responses:
+        201:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CitizenResponse'
+    delete:
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+      responses:
+        200:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CitizenResponse'
+
 components:
   responses:
     401:
@@ -965,6 +1205,16 @@ components:
       in: path
       description: The ID of comment
       example: 701dc504-db49-7e3a-2c0a-32542507ea57
+      required: true
+      schema:
+        type: string
+        format: uuid
+
+    workgroup:
+      name: workgroup
+      in: path
+      description: ID of workgroup
+      example: 82a0e60a-bb55-dbc0-1c3d-0a804df2b5df
       required: true
       schema:
         type: string
@@ -1439,6 +1689,42 @@ components:
               example: opinion_on_article
         - $ref: '#/components/schemas/CreatedBy'
         - $ref: '#/components/schemas/CreatedAt'
+
+    WorkgroupSimple:
+      description: Workgroup
+      allOf:
+        - type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+              example: Les partisants du RIC
+            description:
+              type: string
+              example: Group formé pour la conception d'un RIC
+            logo:
+              type: string
+            anonymous:
+              type: boolean
+              example: false
+            owner:
+              $ref: '#/components/schemas/CitizenResponse'
+        - $ref: '#/components/schemas/CreatedBy'
+        - $ref: '#/components/schemas/DeletedAt'
+    Workgroup:
+      description: Workgroup
+      allOf:
+        - $ref: '#/components/schemas/WorkgroupSimple'
+        - type: object
+          properties:
+            members:
+              type: array
+              items:
+                $ref: '#/components/schemas/CitizenResponse'
+        - $ref: '#/components/schemas/CreatedAt'
+        - $ref: '#/components/schemas/UpdatedAt'
 
 
 
