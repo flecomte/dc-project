@@ -40,6 +40,10 @@ class Workgroup(override var requester: Requester) : RepositoryI {
         .getFunction("upsert_workgroup")
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
 
+    fun delete(workgroup: WorkgroupRef) = requester
+            .getFunction("delete_workgroup")
+            .perform("id" to workgroup.id)
+
     fun addMember(workgroup: WorkgroupI, member: CitizenI): List<CitizenBasic> =
         addMembers(workgroup, listOf(member))
 

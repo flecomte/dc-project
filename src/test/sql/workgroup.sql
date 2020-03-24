@@ -86,6 +86,12 @@ begin
     select find_workgroup_by_id((created_workgroup->>'id')::uuid) into selected_workgroup;
     assert json_array_length(selected_workgroup->'members') = 1, 'Workgroup must have members';
 
+    perform delete_workgroup((created_workgroup->>'id')::uuid);
+    select find_workgroup_by_id((created_workgroup->>'id')::uuid) into selected_workgroup;
+    assert selected_workgroup is null, 'Workgroup must be null after deleted';
+    select m into members from find_workgroup_members((created_workgroup->>'id')::uuid) m;
+    assert json_array_length(members) = 0, 'The members count must be equal to 0 on deleted workgroup';
+
     rollback;
     raise notice 'workgroup test pass';
 end
