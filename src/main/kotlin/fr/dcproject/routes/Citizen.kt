@@ -9,7 +9,7 @@ import fr.dcproject.routes.CitizenPaths.CitizensRequest
 import fr.dcproject.routes.CitizenPaths.CurrentCitizenRequest
 import fr.dcproject.security.voter.CitizenVoter.Action.CHANGE_PASSWORD
 import fr.dcproject.security.voter.CitizenVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.postgresjson.repository.RepositoryI.Direction
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential

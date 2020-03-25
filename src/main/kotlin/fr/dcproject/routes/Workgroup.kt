@@ -12,7 +12,7 @@ import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.ADD as ADD_MEMBERS
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.UPDATE as UPDATE_MEMBERS
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.REMOVE as REMOVE_MEMBERS
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.dcproject.utils.toUUID
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall

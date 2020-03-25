@@ -6,7 +6,7 @@ import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.application

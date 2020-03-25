@@ -7,7 +7,7 @@ import fr.dcproject.entity.request.RequestBuilder
 import fr.dcproject.entity.request.getContent
 import fr.dcproject.security.voter.OpinionVoter.Action.CREATE
 import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.dcproject.utils.toUUID
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call

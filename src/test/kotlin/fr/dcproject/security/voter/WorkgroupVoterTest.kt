@@ -1,6 +1,10 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.entity.*
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.VoterException
+import fr.ktorVoter.can
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -66,7 +70,7 @@ internal class WorkgroupVoterTest {
     private val workgroupref = WorkgroupRef()
 
     init {
-        mockkStatic("fr.dcproject.security.voter.VoterKt")
+        mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test

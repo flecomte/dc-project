@@ -4,7 +4,7 @@ import fr.dcproject.citizen
 import fr.dcproject.entity.request.Constitution
 import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
 import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI

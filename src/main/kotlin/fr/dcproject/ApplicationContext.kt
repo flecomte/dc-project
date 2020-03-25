@@ -1,7 +1,8 @@
 package fr.dcproject
 
+import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
-import fr.dcproject.security.voter.ForbiddenException
+import fr.ktorVoter.ForbiddenException
 import io.ktor.application.ApplicationCall
 import io.ktor.auth.authentication
 import io.ktor.util.AttributeKey
@@ -26,3 +27,5 @@ val ApplicationCall.citizenOrNull: CitizenEntity?
 
 val PipelineContext<Unit, ApplicationCall>.citizen get() = context.citizen
 val PipelineContext<Unit, ApplicationCall>.citizenOrNull get() = context.citizenOrNull
+
+val ApplicationCall.user get() = authentication.principal<User>()

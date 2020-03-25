@@ -1,7 +1,9 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.entity.*
-import fr.dcproject.entity.Vote as VoteEntity
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.can
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -12,6 +14,7 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import fr.dcproject.entity.Vote as VoteEntity
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -70,7 +73,7 @@ internal class VoteVoterTest {
     )
 
     init {
-        mockkStatic("fr.dcproject.security.voter.VoterKt")
+        mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test

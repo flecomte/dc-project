@@ -2,6 +2,11 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.citizenOrNull
 import fr.dcproject.entity.*
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
+import fr.ktorVoter.Voter
+import fr.ktorVoter.VoterException
 import io.ktor.application.ApplicationCall
 
 class WorkgroupVoter : Voter {

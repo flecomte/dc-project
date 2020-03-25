@@ -5,7 +5,7 @@ import fr.dcproject.entity.Citizen
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI

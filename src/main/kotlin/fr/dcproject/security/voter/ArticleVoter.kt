@@ -3,6 +3,11 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.ArticleAuthI
 import fr.dcproject.entity.ArticleI
 import fr.dcproject.entity.UserI
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
+import fr.ktorVoter.Voter
+import fr.ktorVoter.checkClass
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.Vote as VoteEntity

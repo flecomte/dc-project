@@ -2,7 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionChoiceVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location

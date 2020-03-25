@@ -1,5 +1,9 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
+import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Vote as VoteEntity
 

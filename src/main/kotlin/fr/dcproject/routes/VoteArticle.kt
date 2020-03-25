@@ -8,7 +8,7 @@ import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
 import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.dcproject.security.voter.VoteVoter.Action.VIEW
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import fr.dcproject.utils.toUUID
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode

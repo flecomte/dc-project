@@ -4,7 +4,7 @@ import fr.dcproject.citizen
 import fr.dcproject.entity.ArticleRef
 import fr.dcproject.entity.Citizen
 import fr.dcproject.security.voter.FollowVoter.Action.*
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.*

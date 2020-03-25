@@ -1,6 +1,12 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.*
+import fr.dcproject.entity.CitizenBasic
+import fr.dcproject.entity.CitizenI
+import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
+import fr.dcproject.user
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.can
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -46,7 +52,7 @@ internal class CitizenVoterTest {
     ).apply { deletedAt = DateTime.now() }
 
     init {
-        mockkStatic("fr.dcproject.security.voter.VoterKt")
+        mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test

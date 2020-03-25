@@ -1,6 +1,9 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.entity.*
+import fr.dcproject.user
+import fr.ktorVoter.Vote
+import fr.ktorVoter.can
 import io.ktor.application.ApplicationCall
 import io.mockk.every
 import io.mockk.mockk
@@ -34,7 +37,7 @@ internal class ArticleVoterTest {
     )
 
     init {
-        mockkStatic("fr.dcproject.security.voter.VoterKt")
+        mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test

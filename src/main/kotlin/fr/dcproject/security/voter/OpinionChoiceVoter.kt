@@ -1,6 +1,9 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.entity.OpinionChoice
+import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
+import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 
 class OpinionChoiceVoter : Voter {

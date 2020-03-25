@@ -5,7 +5,7 @@ import fr.dcproject.entity.Comment
 import fr.dcproject.entity.CommentRef
 import fr.dcproject.routes.CommentPaths.CreateCommentRequest.Content
 import fr.dcproject.security.voter.CommentVoter.Action.*
-import fr.dcproject.security.voter.assertCan
+import fr.ktorVoter.assertCan
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode

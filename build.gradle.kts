@@ -87,6 +87,7 @@ dependencies {
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
     implementation("fr.postgresjson:postgresjson:$postgresjson_version")
+    implementation("fr.ktor-voter:ktor-voter:1.0.0")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.8.0")

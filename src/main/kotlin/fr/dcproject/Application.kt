@@ -13,6 +13,8 @@ import fr.dcproject.event.EventSubscriber
 import fr.dcproject.event.configEvent
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
+import fr.ktorVoter.AuthorizationVoter
+import fr.ktorVoter.ForbiddenException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.ApplicationCall
