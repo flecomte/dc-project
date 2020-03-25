@@ -6,7 +6,6 @@ val kotlin_version: String by project
 val coroutinesVersion: String by project
 val logback_version: String by project
 val koinVersion: String by project
-val postgresjson_version: String by project
 val jackson_version: String by project
 val cucumber_version: String by project
 
@@ -32,7 +31,7 @@ application {
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = "11"
     }
 }
 tasks.withType<Jar> {
@@ -63,6 +62,7 @@ repositories {
     mavenLocal()
     jcenter()
     maven { url = uri("https://kotlin.bintray.com/ktor") }
+    maven { url = uri("https://jitpack.io") }
 }
 
 dependencies {
@@ -86,8 +86,8 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
-    implementation("fr.postgresjson:postgresjson:$postgresjson_version")
-    implementation("fr.ktor-voter:ktor-voter:1.0.0")
+    implementation("com.github.flecomte:postgres-json:1.0.4")
+    implementation("com.github.flecomte:ktor-voter:1.0.1")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.8.0")
