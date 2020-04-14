@@ -7,6 +7,7 @@ import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.ktorVoter.assertCan
+import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -17,7 +18,6 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import fr.dcproject.entity.Comment as CommentEntity
-import fr.dcproject.entity.request.Comment as CommentEntityRequest
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 
 @KtorExperimentalLocationsAPI
@@ -35,6 +35,23 @@ object CommentArticlePaths {
         val sort: Sort = Sort.fromString(sort) ?: Sort.CREATED_AT
     }
 
+    @Location("/articles/{article}/comments")
+    class PostArticleCommentRequest(
+        val article: Article
+    ) {
+        class Comment(
+            val content: String
+        )
+
+        suspend fun getComment(call: ApplicationCall) = call.receive<Comment>().run {
+            CommentEntity(
+                target = article,
+                createdBy = call.citizen,
+                content = content
+            )
+        }
+    }
+
     @Location("/citizens/{citizen}/comments/articles")
     class CitizenCommentArticleRequest(val citizen: Citizen)
 }
@@ -49,23 +66,18 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
         call.respond(HttpStatusCode.OK, comment)
     }
 
-    post<CommentArticlePaths.ArticleCommentRequest> {
-        val content = call.receive<CommentEntityRequest>().content
-        val comment = CommentEntity(
-            target = it.article,
-            createdBy = citizen,
-            content = content
-        )
-
-        assertCan(CREATE, comment)
-        repo.comment(comment)
-
-        call.respond(HttpStatusCode.Created, comment)
+    post<CommentArticlePaths.PostArticleCommentRequest> {
+        it.getComment(call).let { comment ->
+            assertCan(CREATE, comment)
+            repo.comment(comment)
+            call.respond(HttpStatusCode.Created, comment)
+        }
     }
 
     get<CommentArticlePaths.CitizenCommentArticleRequest> {
-        val comments = repo.findByCitizen(it.citizen)
-        assertCan(VIEW, comments.result)
-        call.respond(comments)
+        repo.findByCitizen(it.citizen).let { comments ->
+            assertCan(VIEW, comments.result)
+            call.respond(comments)
+        }
     }
 }

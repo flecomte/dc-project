@@ -3,13 +3,10 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.OpinionChoiceRef
-import fr.dcproject.entity.request.RequestBuilder
-import fr.dcproject.entity.request.getContent
 import fr.dcproject.security.voter.OpinionVoter.Action.CREATE
 import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
 import fr.ktorVoter.assertCan
 import fr.dcproject.utils.toUUID
-import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -44,14 +41,10 @@ object OpinionArticlePaths {
      */
     @Location("/articles/{article}/opinions")
     @KtorExperimentalAPI
-    class ArticleOpinion(val article: ArticleEntity) : RequestBuilder<List<OpinionChoiceRef>> {
-
-        private class Content(ids: List<String>) : KoinComponent {
-            val ids = ids.map { it.toUUID() }
+    class ArticleOpinion(val article: ArticleEntity) {
+        class Body(ids: List<String>) {
+            val ids = ids.map { OpinionChoiceRef(it.toUUID()) }
         }
-
-        override suspend fun getContent(call: ApplicationCall): List<OpinionChoiceRef> =
-            call.receive<Content>().ids.map { OpinionChoiceRef(it) }
     }
 
     /**
@@ -80,12 +73,11 @@ fun Route.opinionArticle(repo: OpinionArticleRepository) {
     }
 
     put<OpinionArticlePaths.ArticleOpinion> {
-        call.getContent(it)
-            .let { choices ->
-                assertCan(CREATE, it.article)
-                repo.updateOpinions(choices, citizen, it.article)
-            }.let {
-                call.respond(HttpStatusCode.Created, it)
-            }
+        call.receive<OpinionArticlePaths.ArticleOpinion.Body>().ids.let { choices ->
+            assertCan(CREATE, it.article)
+            repo.updateOpinions(choices, citizen, it.article)
+        }.let {
+            call.respond(HttpStatusCode.Created, it)
+        }
     }
 }

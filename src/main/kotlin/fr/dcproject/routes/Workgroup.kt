@@ -3,8 +3,6 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.WorkgroupSimple
-import fr.dcproject.entity.request.RequestBuilder
-import fr.dcproject.entity.request.getContent
 import fr.dcproject.repository.Workgroup.Filter
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
@@ -27,7 +25,6 @@ import io.ktor.locations.delete
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.koin.core.KoinComponent
 import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
@@ -51,54 +48,44 @@ object WorkgroupsPaths {
     class WorkgroupRequest(val workgroup: WorkgroupEntity)
 
     @Location("/workgroups")
-    open class PostWorkgroupRequest : RequestBuilder<WorkgroupSimple<CitizenRef>> {
-        class Content(
+    open class PostWorkgroupRequest {
+        class Body(
             val id: UUID?,
             val name: String,
             val description: String,
             val logo: String?,
             val anonymous: Boolean?,
             val owner: UUID?
-        ) : KoinComponent {
-            fun create(creator: CitizenRef): WorkgroupSimple<CitizenRef> {
-                return WorkgroupSimple(
-                    id ?: UUID.randomUUID(),
-                    name,
-                    description,
-                    logo,
-                    anonymous ?: true,
-                    owner?.let { CitizenRef(it) } ?: creator,
-                    creator
-                )
-            }
-        }
+        )
 
-        override suspend fun getContent(call: ApplicationCall): WorkgroupSimple<CitizenRef> {
-            return call.receive<Content>().create(call.citizen)
+        suspend fun getNewWorkgroup(call: ApplicationCall): WorkgroupSimple<CitizenRef> = call.receive<Body>().run {
+            WorkgroupSimple(
+                id ?: UUID.randomUUID(),
+                name,
+                description,
+                logo,
+                anonymous ?: true,
+                owner?.let { CitizenRef(it) } ?: call.citizen,
+                call.citizen
+            )
         }
     }
 
     @Location("/workgroups/{workgroup}")
-    class PutWorkgroupRequest(val workgroup: WorkgroupEntity) : RequestBuilder<WorkgroupEntity> {
-        class Content(
+    class PutWorkgroupRequest(val workgroup: WorkgroupEntity) {
+        class Body(
             val name: String?,
             val description: String?,
             val logo: String?,
             val anonymous: Boolean?,
             val owner: UUID?
-        ) : KoinComponent {
-            fun update(workgroup: WorkgroupEntity): WorkgroupEntity {
-                name?.let { workgroup.name = it }
-                description?.let { workgroup.description = it }
-                logo?.let { workgroup.logo = it }
-                anonymous?.let { workgroup.anonymous = it }
+        )
 
-                return workgroup
-            }
-        }
-
-        override suspend fun getContent(call: ApplicationCall): WorkgroupEntity {
-            return call.receive<Content>().update(workgroup)
+        suspend fun updateWorkgroup(call: ApplicationCall): Unit = call.receive<Body>().run {
+            name?.let { workgroup.name = it }
+            description?.let { workgroup.description = it }
+            logo?.let { workgroup.logo = it }
+            anonymous?.let { workgroup.anonymous = it }
         }
     }
 
@@ -109,15 +96,15 @@ object WorkgroupsPaths {
 @KtorExperimentalLocationsAPI
 object WorkgroupsMembersPaths {
     @Location("/workgroups/{workgroup}/members")
-    class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) : RequestBuilder<List<CitizenRef>> {
-        class Content : MutableList<Content.Item> by mutableListOf() {
-            class Item(val id: String)
+    class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) {
+        class Body : MutableList<Body.Item> by mutableListOf() {
+            class Item(id: String) {
+                val id = id.toUUID()
+            }
         }
 
-        override suspend fun getContent(call: ApplicationCall): List<CitizenRef> {
-            return call.receive<Content>().map {
-                CitizenRef(it.id.toUUID())
-            }
+        suspend fun getMembers(call: ApplicationCall): List<CitizenRef> = call.receive<Body>().map {
+            CitizenRef(it.id)
         }
     }
 }
@@ -138,7 +125,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     }
 
     post<WorkgroupsPaths.PostWorkgroupRequest> {
-        call.getContent(it)
+        it.getNewWorkgroup(call)
             .let { workgroup ->
                 assertCan(CREATE, workgroup)
                 repo.upsert(workgroup)
@@ -148,13 +135,12 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     }
 
     put<WorkgroupsPaths.PutWorkgroupRequest> {
-        call.getContent(it)
-            .let { workgroup ->
-                assertCan(UPDATE, workgroup)
-                repo.upsert(workgroup as WorkgroupSimple<CitizenRef>)
-            }.let {
-                call.respond(HttpStatusCode.OK, it)
-            }
+        it.updateWorkgroup(call).let { workgroup ->
+            assertCan(UPDATE, workgroup)
+            repo.upsert(workgroup as WorkgroupSimple<CitizenRef>)
+        }.let {
+            call.respond(HttpStatusCode.OK, it)
+        }
     }
 
     delete<WorkgroupsPaths.DeleteWorkgroupRequest> {
@@ -165,7 +151,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
 
     /* Add members to workgroup */
     post<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        call.getContent(it)
+        it.getMembers(call)
             .let { members ->
                 assertCan(ADD_MEMBERS, it.workgroup)
                 repo.addMembers(it.workgroup, members)
@@ -176,7 +162,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
 
     /* Delete members of workgroup */
     delete<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        call.getContent(it)
+        it.getMembers(call)
             .let { members ->
                 assertCan(REMOVE_MEMBERS, it.workgroup)
                 repo.removeMembers(it.workgroup, members)
@@ -187,7 +173,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
 
     /* Update members of workgroup */
     put<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        call.getContent(it)
+        it.getMembers(call)
             .let { members ->
                 assertCan(UPDATE_MEMBERS, it.workgroup)
                 repo.updateMembers(it.workgroup, members)

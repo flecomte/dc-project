@@ -6,9 +6,10 @@ import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
-import fr.ktorVoter.assertCan
 import fr.dcproject.views.ArticleViewManager
+import fr.ktorVoter.assertCan
 import fr.postgresjson.repository.RepositoryI
+import io.ktor.application.ApplicationCall
 import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -19,8 +20,8 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import kotlinx.coroutines.launch
+import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
-import fr.dcproject.entity.request.Article as ArticleEntityRequest
 import fr.dcproject.repository.Article as ArticleRepository
 
 @KtorExperimentalLocationsAPI
@@ -55,7 +56,33 @@ object ArticlesPaths {
     }
 
     @Location("/articles")
-    class PostArticleRequest
+    class PostArticleRequest {
+        class Article(
+            val id: UUID?,
+            val title: String,
+            val anonymous: Boolean = true,
+            val content: String,
+            val description: String,
+            val tags: List<String> = emptyList(),
+            val draft: Boolean = false,
+            val versionId: UUID?
+        )
+
+        suspend fun getNewArticle(call: ApplicationCall): ArticleEntity = call.receive<Article>().run {
+            ArticleEntity(
+                id ?: UUID.randomUUID(),
+                title,
+                anonymous,
+                content,
+                description,
+                tags,
+                draft,
+                createdBy = call.citizen
+            ).also {
+                it.versionId = versionId ?: UUID.randomUUID()
+            }
+        }
+    }
 }
 
 @KtorExperimentalLocationsAPI
@@ -82,20 +109,17 @@ fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
     get<ArticlesPaths.ArticleVersionsRequest> {
         assertCan(VIEW, it.article)
 
-        val versions = repo.findVerionsByVersionsId(it.page, it.limit, it.article.versionId)
-
-        call.respond(versions)
+        repo.findVerionsByVersionsId(it.page, it.limit, it.article.versionId).let {
+            call.respond(it)
+        }
     }
 
     post<ArticlesPaths.PostArticleRequest> {
-        val request = call.receive<ArticleEntityRequest>()
-        val article = request.create(citizen)
-
-        assertCan(CREATE, article)
-
-        repo.upsert(article)
-        application.environment.monitor.raise(ArticleUpdate.event, ArticleUpdate(article))
-
-        call.respond(article)
+        it.getNewArticle(call).also { article ->
+            assertCan(CREATE, article)
+            repo.upsert(article)
+            call.respond(article)
+            application.environment.monitor.raise(ArticleUpdate.event, ArticleUpdate(article))
+        }
     }
 }

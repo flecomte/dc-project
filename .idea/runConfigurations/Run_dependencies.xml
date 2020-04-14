@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Build and start Docker" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Run dependencies" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envVars">
@@ -11,11 +11,17 @@
           </list>
         </option>
         <option name="commandLineOptions" value="--build" />
+        <option name="services">
+          <list>
+            <option value="db" />
+            <option value="elasticsearch" />
+            <option value="rabbitmq" />
+            <option value="redis" />
+          </list>
+        </option>
         <option name="sourceFilePath" value="docker-compose.yml" />
       </settings>
     </deployment>
-    <method v="2">
-      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
-    </method>
+    <method v="2" />
   </configuration>
 </component>

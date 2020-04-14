@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Docker" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
+  <configuration default="false" name="Build and start all Docker" type="docker-deploy" factoryName="docker-compose.yml" server-name="Docker">
     <deployment type="docker-compose.yml">
       <settings>
         <option name="envVars">
@@ -14,6 +14,8 @@
         <option name="sourceFilePath" value="docker-compose.yml" />
       </settings>
     </deployment>
-    <method v="2" />
+    <method v="2">
+      <option name="Gradle.BeforeRunTask" enabled="true" tasks="build" externalProjectPath="$PROJECT_DIR$" vmOptions="" scriptParameters="" />
+    </method>
   </configuration>
 </component>
