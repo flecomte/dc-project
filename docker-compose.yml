@@ -42,10 +42,11 @@ services:
     ports:
       - ${APP_PORT}:8080
     environment:
-      DB_HOST: db
+      DB_HOST: ${DB_HOST}
       SEND_GRID_KEY: ${SEND_GRID_KEY}
-      REDIS_CONNECTION: redis://redis:6379
-      RABBITMQ_CONNECTION: amqp://rabbitmq:5671
+      REDIS_CONNECTION: ${REDIS_CONNECTION}
+      RABBITMQ_CONNECTION: ${RABBITMQ_CONNECTION}
+      ELASTICSEARCH_CONNECTION: ${ELASTICSEARCH_CONNECTION}
     depends_on:
       - elasticsearch
       - db

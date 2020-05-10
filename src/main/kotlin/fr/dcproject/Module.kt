@@ -39,35 +39,33 @@ import fr.dcproject.repository.VoteComment as VoteCommentRepository
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
-val config = Config()
-
 @KtorExperimentalAPI
 val Module = module {
 
-    single { config }
+    single { Config }
 
     // SQL connection
     single {
         Connection(
-            host = config.host,
-            port = config.port,
-            database = config.database,
-            username = config.username,
-            password = config.password
+            host = Config.host,
+            port = Config.port,
+            database = Config.database,
+            username = Config.username,
+            password = Config.password
         )
     }
 
     // Launch Database migration
-    single { Migrations(connection = get(), directory = config.sqlFiles) }
+    single { Migrations(get(), Config.Sql.migrationFiles, Config.Sql.functionFiles) }
 
     // Redis client
     single<RedisAsyncCommands<String, String>> {
-        RedisClient.create(config.redis).connect()?.async() ?: error("Unable to connect to redis")
+        RedisClient.create(Config.redis).connect()?.async() ?: error("Unable to connect to redis")
     }
 
     // RabbitMQ
     single<ConnectionFactory> {
-        ConnectionFactory().apply { setUri(config.rabbitmq) }
+        ConnectionFactory().apply { setUri(Config.rabbitmq) }
     }
 
     // JsonSerializer
@@ -93,7 +91,7 @@ val Module = module {
     single {
         Requester.RequesterFactory(
             connection = get(),
-            functionsDirectory = config.sqlFiles.resolve("functions")
+            functionsDirectory = Config.Sql.functionFiles
         ).createRequester()
     }
 
@@ -117,15 +115,15 @@ val Module = module {
     // Elasticsearch Client
     single<RestClient> {
         RestClient.builder(
-            HttpHost("localhost", 9200, "http")
+            HttpHost.create(Config.elasticsearch)
         ).build()
     }
 
     single { ArticleViewManager(get()) }
 
     // Mailler
-    single { Mailer(config.sendGridKey) }
+    single { Mailer(Config.sendGridKey) }
 
     // SSO Manager for connection
-    single { SsoManager(get<Mailer>(), config.domain, get()) }
+    single { SsoManager(get<Mailer>(), Config.domain, get()) }
 }

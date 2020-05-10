@@ -1,5 +1,6 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -9,7 +10,7 @@ val koinVersion: String by project
 val jackson_version: String by project
 val cucumber_version: String by project
 
-group = "fr.dcproject"
+group = "com.github.flecomte"
 version = "0.0.1"
 
 plugins {
@@ -19,7 +20,7 @@ plugins {
     id("maven-publish")
     id("org.jetbrains.kotlin.jvm") version "1.3.50"
 
-    id("com.github.johnrengelman.shadow") version "5.0.0"
+    id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "8.2.0"
     id("org.owasp.dependencycheck") version "5.1.0"
     id("org.sonarqube") version "2.7"
@@ -41,6 +42,12 @@ tasks.withType<Jar> {
                 "Main-Class" to application.mainClassName
             )
         )
+    }
+}
+
+tasks {
+    named<ShadowJar>("shadowJar") {
+        mergeServiceFiles("META-INF/services")
     }
 }
 
@@ -86,7 +93,7 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
-    implementation("com.github.flecomte:postgres-json:1.0.4")
+    implementation("com.github.flecomte:postgres-json:1.1.1")
     implementation("com.github.flecomte:ktor-voter:1.0.1")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")

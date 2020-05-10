@@ -1,6 +1,6 @@
 import feature.KtorServerContext
+import fr.dcproject.Config
 import fr.dcproject.Env.CUCUMBER
-import fr.dcproject.config
 import fr.dcproject.module
 import fr.dcproject.utils.LoggerDelegate
 import fr.postgresjson.connexion.Connection
@@ -36,9 +36,9 @@ class RunCucumberTest : En, KoinTest {
 
     init {
         if (!unitialized) {
-            config.database = "test"
-            config.username = "test"
-            config.password = "test"
+            Config.database = "test"
+            Config.username = "test"
+            Config.password = "test"
 
             withTestApplication({ module(CUCUMBER) }) {
                 migrations()
@@ -47,9 +47,9 @@ class RunCucumberTest : En, KoinTest {
         }
 
         Before(-1) { _: Scenario ->
-            config.database = "test"
-            config.username = "test"
-            config.password = "test"
+            Config.database = "test"
+            Config.username = "test"
+            Config.password = "test"
             ktorContext.start()
             //language=PostgreSQL
             get<Connection>().sendQuery("start transaction;", listOf())
@@ -63,9 +63,9 @@ class RunCucumberTest : En, KoinTest {
     }
 
     private fun migrations() {
-        config.database = "test"
-        config.username = "test"
-        config.password = "test"
+        Config.database = "test"
+        Config.username = "test"
+        Config.password = "test"
         val migrations: Migrations = get()
         migrations.forceAllDown()
         migrations.run()
@@ -89,7 +89,7 @@ class RunCucumberTest : En, KoinTest {
     private fun getFixturesRequester(): Requester {
         return Requester.RequesterFactory(
             connection = get(),
-            queriesDirectory = config.sqlFiles.resolve("fixtures")
+            queriesDirectory = Config.Sql.fixtureFiles
         ).createRequester()
     }
 }

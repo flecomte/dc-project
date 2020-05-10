@@ -3,7 +3,7 @@ package fr.dcproject.event
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.*
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
-import fr.dcproject.config
+import fr.dcproject.Config
 import fr.dcproject.entity.Article
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.repository.Follow
@@ -32,7 +32,7 @@ fun EventSubscriber.Configuration.configEvent(
     serialiser: ObjectMapper
 ) {
     /* Config Rabbit */
-    val exchangeName = config.exchangeNotificationName
+    val exchangeName = Config.exchangeNotificationName
     rabbitFactory.newConnection().use { connection ->
         connection.createChannel().use { channel ->
             channel.queueDeclare("push", true, false, false, null)

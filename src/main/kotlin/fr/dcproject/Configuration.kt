@@ -5,17 +5,16 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
 import fr.dcproject.entity.UserI
-import org.eclipse.jetty.util.resource.JarResource
-import java.io.File
 import java.util.*
+import java.net.URI
 
-class Config {
+object Config {
     private var config = ConfigFactory.load()
 
-    val sqlFiles: File = try {
-        File(this::class.java.getResource("/sql").toURI())
-    } catch (e: IllegalArgumentException) {
-        JarResource.newResource("./resources/sql").file
+    object Sql {
+        val migrationFiles: URI = this::class.java.getResource("/sql/migrations").toURI()
+        val functionFiles: URI = this::class.java.getResource("/sql/functions").toURI()
+        val fixtureFiles: URI = this::class.java.getResource("/sql/fixtures").toURI()
     }
 
     val envName: String = config.getString("app.envName")
@@ -27,6 +26,7 @@ class Config {
     var password: String = config.getString("db.password")
     val port: Int = config.getInt("db.port")
     val redis: String = config.getString("redis.connection")
+    val elasticsearch: String = config.getString("elasticsearch.connection")
     val rabbitmq: String = config.getString("rabbitmq.connection")
     val exchangeNotificationName = "notification"
     val sendGridKey: String = config.getString("mail.sendGrid.key")

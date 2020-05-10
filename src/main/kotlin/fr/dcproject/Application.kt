@@ -73,7 +73,6 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(DataConversion) {
-        // TODO move to postgresJson lib
         convert<UUID> {
             decode { values, _ ->
                 values.singleOrNull()?.let { UUID.fromString(it) }
@@ -359,7 +358,6 @@ fun Application.module(env: Env = PROD) {
         maxAge = Duration.ofDays(1)
     }
 
-    // TODO move to postgresJson lib
     if (env == PROD) {
         get<Migrations>().run()
     }
