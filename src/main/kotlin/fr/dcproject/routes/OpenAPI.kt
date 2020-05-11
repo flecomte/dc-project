@@ -13,6 +13,6 @@ import io.ktor.util.KtorExperimentalAPI
 @KtorExperimentalAPI
 fun Route.definition() {
     get("/") {
-        call.respondText("/openApi.yaml".readResource(), ContentType("text", "yaml"))
+        call.respondText("/openapi.yaml".readResource(), ContentType("text", "yaml"))
     }
 }
