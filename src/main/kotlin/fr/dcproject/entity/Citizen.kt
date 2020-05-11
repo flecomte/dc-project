@@ -20,7 +20,9 @@ class Citizen(
     override val user: User
 ) : CitizenFull,
     CitizenBasic(id, name, email, birthday, voteAnonymous, followAnonymous, user),
-    EntityCreatedAt by EntityCreatedAtImp()
+    EntityCreatedAt by EntityCreatedAtImp() {
+    var workgroups: List<WorkgroupSimple<CitizenRef>> = emptyList()
+}
 
 open class CitizenBasic(
     id: UUID = UUID.randomUUID(),

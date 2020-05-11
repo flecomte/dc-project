@@ -55,6 +55,9 @@ begin
     assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id3)),
         'Members must contain citizen3';
 
+    -- Check if "find_citizen_by_id" retrun workgroups of citizen
+    assert (select find_citizen_by_id(_citizen_id2)#>>'{workgroups, 0, id}') = (created_workgroup->>'id'), 'find_citizen_by_id must return workgroups';
+
     -- update
     select m into members from update_workgroup_members((created_workgroup->>'id')::uuid, json_build_array(
             json_build_object('id', _citizen_id2),
