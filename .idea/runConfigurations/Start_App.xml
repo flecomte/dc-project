@@ -19,6 +19,8 @@
         <option name="sourceFilePath" value="docker-compose.yml" />
       </settings>
     </deployment>
-    <method v="2" />
+    <method v="2">
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Build without test" run_configuration_type="GradleRunConfiguration" />
+    </method>
   </configuration>
 </component>

@@ -1,8 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Clean Dev Database" type="DatabaseScript" folderName="SQL DEV">
-    <script-file value="$PROJECT_DIR$/src/main/resources/sql/migrations/0000-init_schema.down.sql" />
-    <script-mode>FILE</script-mode>
-    <data-source id="28368159-3c2d-4612-8719-e55ce11b962a" namespace="database/&quot;dc-project&quot;" />
-    <method v="2" />
-  </configuration>
-</component>

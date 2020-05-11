@@ -1,5 +1,5 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Reset DB &amp; Run" type="GradleRunConfiguration" factoryName="Gradle">
+  <configuration default="false" name="Lint+Test+Sonar &amp; Run" type="GradleRunConfiguration" factoryName="Gradle">
     <ExternalSystemSettings>
       <option name="env">
         <map>
@@ -32,7 +32,8 @@
     </extension>
     <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Clean Dev Database" run_configuration_type="DatabaseScript" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="All Tests + Lint" run_configuration_type="JUnit" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Sonarqube" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
 </component>
