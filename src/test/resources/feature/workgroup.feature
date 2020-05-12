@@ -39,7 +39,7 @@ Feature: Workgroup
       | id | ab469134-bf14-4856-b093-ae1aa990f977 |
     When I send a DELETE request to "/workgroups/ab469134-bf14-4856-b093-ae1aa990f977"
     Then the response status code should be 204
-    And The workgroup "ab469134-bf14-4856-b093-ae1aa990f977" exists
+    And The workgroup "ab469134-bf14-4856-b093-ae1aa990f977" not exists
 
   Scenario: Can get workgroups list
     Given I have citizen Max Planck
@@ -68,7 +68,7 @@ Feature: Workgroup
         {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"}
       ]
       """
-    Then the response status code should be 200
+    Then the response status code should be 201
 
   Scenario: Can remove member to workgroup
     Given I have citizen Heinrich Hertz

@@ -59,7 +59,11 @@ class WorkgroupSteps : En, KoinTest {
         }
 
         Then("The workgroup {string} exists") { id: String ->
-            Assert.assertNotNull(get<CitizenRepository>().findById(id.toUUID()))
+            Assert.assertNotNull(get<WorkgroupRepository>().findById(id.toUUID()))
+        }
+
+        Then("The workgroup {string} not exists") { id: String ->
+            Assert.assertNull(get<WorkgroupRepository>().findById(id.toUUID()))
         }
     }
 }

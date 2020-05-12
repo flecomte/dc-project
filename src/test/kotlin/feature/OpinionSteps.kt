@@ -60,7 +60,7 @@ class OpinionSteps : En, KoinTest {
             createdBy = get<CitizenRepository>().findByUsername("$firstName-$lastName".toLowerCase().replace(' ', '-'))
                 ?: error("Citizen not exist")
         )
-        get<OpinionRepository>().updateOpinions(opinion.choice, opinion.createdBy, opinion.target)
+        get<OpinionRepository>().addOpinion(opinion)
     }
 
     private fun createOpinionOnArticle(extraInfo: DataTable? = null) {
