@@ -3,6 +3,7 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.citizenOrNull
 import fr.dcproject.event.ArticleUpdate
+import fr.dcproject.event.raiseEvent
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
@@ -10,7 +11,6 @@ import fr.dcproject.views.ArticleViewManager
 import fr.ktorVoter.assertCan
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall
-import io.ktor.application.application
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -119,7 +119,7 @@ fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
             assertCan(CREATE, article)
             repo.upsert(article)
             call.respond(article)
-            application.environment.monitor.raise(ArticleUpdate.event, ArticleUpdate(article))
+            raiseEvent(ArticleUpdate.event, ArticleUpdate(article))
         }
     }
 }

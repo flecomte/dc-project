@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
+import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
+import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.messages.SsoManager
 import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.connexion.Connection
@@ -126,4 +128,8 @@ val Module = module {
 
     // SSO Manager for connection
     single { SsoManager(get<Mailer>(), Config.domain, get()) }
+
+    single { Publisher(get(), get()) }
+
+    single { NotificationEmailSender(get<Mailer>(), Config.domain, get(), get()) }
 }

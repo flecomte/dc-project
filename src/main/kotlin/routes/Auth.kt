@@ -71,7 +71,7 @@ fun Route.auth(
     post<SsoRequest> {
         val content = call.receive<SsoRequest.Content>()
         try {
-            ssoManager.sendMail(content.email, content.url)
+            ssoManager.sendEmail(content.email, content.url)
         } catch (e: SsoManager.EmailNotFound) {
             call.respond(HttpStatusCode.NotFound)
         }

@@ -13,12 +13,12 @@ class SsoManager(
     private val domain: String,
     private val citizenRepo: CitizenRepository
 ) {
-    fun sendMail(email: String, url: String) {
+    fun sendEmail(email: String, url: String) {
         val citizen = citizenRepo.findByEmail(email) ?: noEmail(email)
-        sendMail(citizen, url)
+        sendEmail(citizen, url)
     }
 
-    fun sendMail(citizen: CitizenBasicI, url: String) {
+    fun sendEmail(citizen: CitizenBasicI, url: String) {
         mailer.sendEmail {
             Mail(
                 Email("sso@$domain"),

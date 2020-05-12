@@ -58,7 +58,9 @@ interface CitizenI : UuidEntityI {
         var firstName: String,
         var lastName: String,
         var civility: String? = null
-    )
+    ) {
+        fun getFullName(): String = "${civility ?: ""} $firstName $lastName".trim()
+    }
 }
 
 interface CitizenBasicI : CitizenWithUserI, EntityDeletedAt {

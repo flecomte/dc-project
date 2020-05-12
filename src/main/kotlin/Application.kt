@@ -9,8 +9,8 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.Env.PROD
 import fr.dcproject.entity.*
+import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
-import fr.dcproject.event.configEvent
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.ktorVoter.AuthorizationVoter
@@ -251,7 +251,7 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(EventSubscriber) {
-        configEvent(get(), get(), get(), get())
+        EventNotification(this, get(), get(), get(), get(), get()).config()
     }
 
     install(Authentication) {
