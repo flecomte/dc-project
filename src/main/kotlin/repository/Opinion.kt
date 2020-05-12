@@ -70,6 +70,8 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
     fun updateOpinions(choice: OpinionChoiceRef, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>> =
         updateOpinions(listOf(choice), citizen, target)
 
+    abstract fun addOpinion(opinion: OpinionEntity<T>): OpinionEntity<T>
+
     /**
      * Find opinions of one citizen filtered by target ids
      */
@@ -130,7 +132,7 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
 
 class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
     /**
-     * Create an Opinions on Article
+     * Update Opinions on Article (Delete old one)
      */
     override fun updateOpinions(choices: List<OpinionChoiceRef>, citizen: CitizenRef, target: TargetRef): List<OpinionArticleEntity> {
         return requester
@@ -141,5 +143,14 @@ class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
                 "target_id" to target.id,
                 "target_reference" to target.reference
             )
+    }
+
+    /**
+     * Add Opinions on Article
+     */
+    override fun addOpinion(opinion: OpinionEntity<ArticleRef>): OpinionArticleEntity {
+        return requester
+            .getFunction("upsert_opinion")
+            .selectOne("resource" to opinion)!!
     }
 }
