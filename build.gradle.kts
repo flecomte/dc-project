@@ -1,6 +1,7 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import org.slf4j.LoggerFactory
 
 val ktor_version: String by project
 val kotlin_version: String by project
@@ -11,7 +12,13 @@ val jackson_version: String by project
 val cucumber_version: String by project
 
 group = "com.github.flecomte"
-version = "0.0.1"
+version = versioning.info.run {
+    if (dirty) {
+        versioning.info.full
+    } else {
+        versioning.info.lastTag
+    }
+}
 
 plugins {
     jacoco
@@ -24,6 +31,7 @@ plugins {
     id("org.jlleitschuh.gradle.ktlint") version "8.2.0"
     id("org.owasp.dependencycheck") version "5.1.0"
     id("org.sonarqube") version "2.7"
+    id("net.nemerosa.versioning") version "2.13.1"
 }
 
 application {
@@ -48,6 +56,38 @@ tasks.withType<Jar> {
 tasks {
     named<ShadowJar>("shadowJar") {
         mergeServiceFiles("META-INF/services")
+        archiveFileName.set("${archiveBaseName.get()}-latest-all.${archiveExtension.get()}")
+    }
+}
+
+val sourcesJar by tasks.creating(Jar::class) {
+    archiveClassifier.set("sources")
+    from(sourceSets.getByName("main").allSource)
+}
+
+publishing {
+    if (versioning.info.dirty == false) {
+        repositories {
+            maven {
+                name = "dc-project"
+                group = "com.github.flecomte"
+                url = uri("https://maven.pkg.github.com/flecomte/dc-project")
+                credentials {
+                    username = System.getenv("GITHUB_USERNAME")
+                    password = System.getenv("GITHUB_TOKEN")
+                }
+            }
+        }
+
+        publications {
+            create<MavenPublication>("dc-project") {
+                from(components["java"])
+                artifact(sourcesJar)
+            }
+        }
+    } else {
+        LoggerFactory.getLogger("gradle")
+            .warn("The git is DIRTY !!! You cannot publish this crap! (${versioning.info.full})")
     }
 }
 

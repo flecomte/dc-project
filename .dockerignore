@@ -1,0 +1,13 @@
+build
+out
+GH_TOKEN.txt
+Makefile
+var
+gradle
+.idea
+.gradle
+docker
+gradlew
+gradlew.bat
+docker-compose.yml
+src/test

@@ -36,8 +36,8 @@ services:
   app:
     container_name: app_${NAME}
     build:
-      context: ./build
-      dockerfile: ../docker/app/Dockerfile
+      context: .
+      dockerfile: docker/app/Dockerfile
     restart: always
     ports:
       - ${APP_PORT}:8080
@@ -60,8 +60,12 @@ services:
     ports:
       - ${ELASTIC_REST}:9200
       - ${ELASTIC_NODES}:9300
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
 
-  # Database
   db:
     container_name: postgresql_${NAME}
     build:
@@ -75,11 +79,14 @@ services:
       POSTGRES_DB: ${DB_PWD}
     volumes:
       - ./var/log/postgresql:/var/log/postgresql:rw
-      - ./var/postgresql/data:/var/lib/postgresql/data:rw
+      - db-data:/var/lib/postgresql/data:rw
     depends_on:
       - elasticsearch
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://elasticsearch:9200/"]
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}" ]
       interval: 3s
       timeout: 2s
       retries: 20
+
+volumes:
+  db-data:

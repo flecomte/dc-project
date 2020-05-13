@@ -7,3 +7,5 @@
 *.iws
 dcproject.iml
 /var
+GH_TOKEN.txt
+allSQL.sql
