@@ -25,7 +25,7 @@ publish-docker: build-docker ## Publish docker image of application to Github
 run-docker: ## Build and Run all docker services
 	docker-compose up -d --build
 
-publish-jar: ## Publish JAR file to Github
+publish-maven: ## Publish JAR file to Github
 	git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
 	gradlew publish
 
