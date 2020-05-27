@@ -32,6 +32,8 @@ services:
     restart: always
     ports:
       - ${REDIS_PORT}:6379
+    volumes:
+      - redis-data:/var/lib/redis:rw
 
   app:
     container_name: app_${NAME}
@@ -90,3 +92,4 @@ services:
 
 volumes:
   db-data:
+  redis-data:
