@@ -1,6 +1,7 @@
 package fr.dcproject.repository
 
 import fr.dcproject.entity.*
+import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
@@ -44,36 +45,43 @@ class Workgroup(override var requester: Requester) : RepositoryI {
             .getFunction("delete_workgroup")
             .perform("id" to workgroup.id)
 
-    fun addMember(workgroup: WorkgroupI, member: CitizenI): List<CitizenBasic> =
-        addMembers(workgroup, listOf(member))
+    fun addMember(workgroup: WorkgroupI, member: Member<CitizenI>): Member<CitizenBasic>? =
+        addMember(workgroup, member.citizen, member.roles)
 
-    fun addMembers(workgroup: WorkgroupI, members: List<CitizenI>): List<CitizenBasic> = requester
+    fun addMember(workgroup: WorkgroupI, citizen: CitizenI, roles: List<Member.Role>): Member<CitizenBasic>? = requester
+        .getFunction("add_workgroup_member")
+        .selectOne(
+            "id" to workgroup.id,
+            "members" to Member(citizen, roles).serialize()
+        )
+
+    fun <Z : CitizenI> addMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenBasic>> = requester
         .getFunction("add_workgroup_members")
         .select(
             "id" to workgroup.id,
-            "resource" to members.serialize()
+            "members" to members.serialize()
         )
 
-    fun removeMember(workgroup: WorkgroupI, memberToDelete: CitizenI): List<CitizenBasic> =
+    fun <Z : CitizenI> removeMember(workgroup: WorkgroupI, memberToDelete: Member<Z>): List<Member<CitizenBasic>> =
         removeMembers(workgroup, listOf(memberToDelete))
 
-    fun removeMembers(workgroup: WorkgroupI, membersToDelete: List<CitizenI>): List<CitizenBasic> = requester
+    fun <Z : CitizenI> removeMembers(workgroup: WorkgroupI, membersToDelete: List<Member<Z>>): List<Member<CitizenBasic>> = requester
         .getFunction("remove_workgroup_members")
         .select(
             "id" to workgroup.id,
-            "resource" to membersToDelete
+            "members" to membersToDelete
         )
 
-    fun updateMembers(workgroup: WorkgroupI, members: List<CitizenI>): List<CitizenBasic> = requester
+    fun <Z : CitizenI> updateMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenBasic>> = requester
         .getFunction("update_workgroup_members")
         .select(
             "id" to workgroup.id,
-            "resource" to members
+            "members" to members
         )
 
-    fun <W : WorkgroupWithMembersI<CitizenI>> updateMembers(workgroup: W): W {
+    fun <W : WorkgroupWithMembersI<Z>, Z : CitizenI> updateMembers(workgroup: W): W {
         updateMembers(workgroup, workgroup.members).let {
-            workgroup.members = it
+            workgroup.members = it as List<Member<Z>>
         }
 
         return workgroup

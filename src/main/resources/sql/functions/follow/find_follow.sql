@@ -19,7 +19,7 @@ begin
             select
                 f.*,
                 json_build_object('id', f.target_id, 'reference', f.target_reference) as target,
-                find_citizen_by_id(f.created_by_id) as created_by
+                find_citizen_by_id_with_user(f.created_by_id) as created_by
             from follow as f
             where f.created_by_id = _citizen_id
               and array[f.target_id] <@ _target_ids
@@ -32,7 +32,7 @@ begin
             select
                 f.*,
                 json_build_object('id', f.target_id, 'reference', f.target_reference) as target,
-                find_citizen_by_id(f.created_by_id) as created_by
+                find_citizen_by_id_with_user(f.created_by_id) as created_by
             from follow as f
             where f.created_by_id = _citizen_id
               and f.target_id = _target_id

@@ -14,7 +14,7 @@ begin
     from (
         select
             c.*,
-            find_citizen_by_id(c.created_by_id) as created_by,
+            find_citizen_by_id_with_user(c.created_by_id) as created_by,
             find_constitution_titles_by_id(c.id) as titles,
             zdb.score(c.ctid) _score
         from constitution as c

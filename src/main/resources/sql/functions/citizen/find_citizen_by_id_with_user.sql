@@ -7,8 +7,7 @@ begin
     from (
          select 
             z.*,
-            find_user_by_id(z.user_id) as "user",
-            array_agg(find_workgroup_by_id_simple(ciw.workgroup_id)) as "workgroups"
+            find_user_by_id(z.user_id) as "user"
          from citizen as z
          left join citizen_in_workgroup ciw on z.id = ciw.citizen_id
          where z.id = _id

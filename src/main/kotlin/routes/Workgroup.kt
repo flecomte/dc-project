@@ -3,6 +3,8 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.WorkgroupSimple
+import fr.dcproject.entity.WorkgroupWithMembersI.Member
+import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
 import fr.dcproject.repository.Workgroup.Filter
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
@@ -54,8 +56,7 @@ object WorkgroupsPaths {
             val name: String,
             val description: String,
             val logo: String?,
-            val anonymous: Boolean?,
-            val owner: UUID?
+            val anonymous: Boolean?
         )
 
         suspend fun getNewWorkgroup(call: ApplicationCall): WorkgroupSimple<CitizenRef> = call.receive<Body>().run {
@@ -65,7 +66,6 @@ object WorkgroupsPaths {
                 description,
                 logo,
                 anonymous ?: true,
-                owner?.let { CitizenRef(it) } ?: call.citizen,
                 call.citizen
             )
         }
@@ -77,8 +77,7 @@ object WorkgroupsPaths {
             val name: String?,
             val description: String?,
             val logo: String?,
-            val anonymous: Boolean?,
-            val owner: UUID?
+            val anonymous: Boolean?
         )
 
         suspend fun updateWorkgroup(call: ApplicationCall): Unit = call.receive<Body>().run {
@@ -98,13 +97,19 @@ object WorkgroupsMembersPaths {
     @Location("/workgroups/{workgroup}/members")
     class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) {
         class Body : MutableList<Body.Item> by mutableListOf() {
-            class Item(id: String) {
-                val id = id.toUUID()
+            class Item(id: String, roles: List<String>) {
+                val citizen = CitizenRef(id.toUUID())
+                val roles: List<Role> = roles.map {
+                    Role.valueOf(it)
+                }
             }
         }
 
-        suspend fun getMembers(call: ApplicationCall): List<CitizenRef> = call.receive<Body>().map {
-            CitizenRef(it.id)
+        suspend fun getMembers(call: ApplicationCall): List<Member<CitizenRef>> = call.receive<Body>().map {
+            Member(
+                citizen = it.citizen,
+                roles = it.roles
+            )
         }
     }
 }

@@ -4,28 +4,27 @@ $$
 declare
     new_id uuid = coalesce((resource->>'id')::uuid, uuid_generate_v4());
 begin
-    insert into workgroup (id, created_by_id, name, description, anonymous, logo, owner_id)
+    insert into workgroup (id, created_by_id, name, description, anonymous, logo)
     select
         new_id,
         (resource#>>'{created_by, id}')::uuid,
         name,
         description,
         anonymous,
-        logo,
-        (resource#>>'{owner, id}')::uuid
+        logo
     from json_populate_record(null::workgroup, resource)
     on conflict (id) do update set
         name = excluded.name,
         description = excluded.description,
         anonymous = excluded.anonymous,
-        logo = excluded.logo,
-        owner_id = excluded.owner_id;
+        logo = excluded.logo;
 
---     insert into citizen_in_workgroup (citizen_id, workgroup_id)
---     select
---         (resource->>'id')::uuid,
---         new_id::uuid
---     from json_populate_recordset(null::workgroup, resource->'members');
+    insert into citizen_in_workgroup (workgroup_id, citizen_id, roles)
+    select
+        new_id::uuid,
+        (resource#>>'{created_by, id}')::uuid,
+        '{MASTER}'
+    from json_populate_recordset(null::workgroup, resource->'members');
 
     select find_workgroup_by_id(new_id) into resource;
 end;

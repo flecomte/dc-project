@@ -12,29 +12,21 @@ import java.util.*
 import fr.dcproject.entity.Citizen as CitizenEntity
 
 class Citizen(override var requester: Requester) : RepositoryI {
-    fun findById(id: UUID, withUser: Boolean = false): CitizenEntity? {
-        return requester
-            .getFunction(if (withUser) "find_citizen_by_id_with_user" else "find_citizen_by_id")
-            .selectOne("id" to id)
-    }
+    fun findById(id: UUID): CitizenEntity? = requester
+        .getFunction("find_citizen_by_id_with_user_and_workgroups")
+        .selectOne("id" to id)
 
-    fun findByUser(user: UserI): CitizenEntity? {
-        return requester
-            .getFunction("find_citizen_by_user_id")
-            .selectOne("user_id" to user.id)
-    }
+    fun findByUser(user: UserI): CitizenEntity? = requester
+        .getFunction("find_citizen_by_user_id")
+        .selectOne("user_id" to user.id)
 
-    fun findByUsername(unsername: String): CitizenEntity? {
-        return requester
-            .getFunction("find_citizen_by_username")
-            .selectOne("username" to unsername)
-    }
+    fun findByUsername(unsername: String): CitizenEntity? = requester
+        .getFunction("find_citizen_by_username")
+        .selectOne("username" to unsername)
 
-    fun findByEmail(email: String): CitizenEntity? {
-        return requester
-            .getFunction("find_citizen_by_email")
-            .selectOne("email" to email)
-    }
+    fun findByEmail(email: String): CitizenEntity? = requester
+        .getFunction("find_citizen_by_email")
+        .selectOne("email" to email)
 
     fun find(
         page: Int = 1,
@@ -42,8 +34,7 @@ class Citizen(override var requester: Requester) : RepositoryI {
         sort: String? = null,
         direction: Direction? = null,
         search: String? = null
-    ): Paginated<CitizenBasic> {
-        return requester
+    ): Paginated<CitizenBasic> = requester
             .getFunction("find_citizens")
             .select(
                 page, limit,
@@ -51,17 +42,12 @@ class Citizen(override var requester: Requester) : RepositoryI {
                 "direction" to direction,
                 "search" to search
             )
-    }
 
-    fun upsert(citizen: CitizenFull): CitizenEntity? {
-        return requester
+    fun upsert(citizen: CitizenFull): CitizenEntity? = requester
             .getFunction("upsert_citizen")
             .selectOne("resource" to citizen)
-    }
 
-    fun insertWithUser(citizen: CitizenFull): CitizenEntity? {
-        return requester
+    fun insertWithUser(citizen: CitizenFull): CitizenEntity? = requester
             .getFunction("insert_citizen_with_user")
             .selectOne("resource" to citizen)
-    }
 }

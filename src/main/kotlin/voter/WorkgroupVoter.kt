@@ -1,7 +1,7 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.citizenOrNull
 import fr.dcproject.entity.*
+import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
 import fr.ktorVoter.Vote
@@ -46,11 +46,11 @@ class WorkgroupVoter : Voter {
         }
 
         if (subject is WorkgroupWithAuthI<*>) {
-            if (action == Action.DELETE && user is UserI && subject.owner.user.id == user.id) {
+            if (action == Action.DELETE && user is UserI && subject.hasRole(Role.MASTER, user)) {
                 return Vote.GRANTED
             }
 
-            if (action == Action.UPDATE && user is UserI && subject.owner.user.id == user.id) {
+            if (action == Action.UPDATE && user is UserI && subject.hasRole(Role.MASTER, user)) {
                 return Vote.GRANTED
             }
 
@@ -61,32 +61,29 @@ class WorkgroupVoter : Voter {
         }
 
         if (action == ActionMembers.ADD) {
-            val citizen = call.citizenOrNull
             // TODO create ROLES
             return Vote.isGranted {
-                citizen != null &&
-                subject is WorkgroupWithMembersI<*> &&
-                subject.members.asCitizen(citizen)
+                user is UserI &&
+                subject is WorkgroupWithAuthI<*> &&
+                subject.hasRole(Role.MASTER, user)
             }
         }
 
         if (action == ActionMembers.UPDATE) {
-            val citizen = call.citizenOrNull
             // TODO create ROLES
             return Vote.isGranted {
-                citizen != null &&
-                subject is WorkgroupWithMembersI<*> &&
-                subject.members.asCitizen(citizen)
+                user is UserI &&
+                subject is WorkgroupWithAuthI<*> &&
+                subject.hasRole(Role.MASTER, user)
             }
         }
 
         if (action == ActionMembers.REMOVE) {
-            val citizen = call.citizenOrNull
             // TODO create ROLES
             return Vote.isGranted {
-                citizen != null &&
-                subject is WorkgroupWithMembersI<*> &&
-                subject.members.asCitizen(citizen)
+                user is UserI &&
+                subject is WorkgroupWithAuthI<*> &&
+                subject.hasRole(Role.MASTER, user)
             }
         }
 

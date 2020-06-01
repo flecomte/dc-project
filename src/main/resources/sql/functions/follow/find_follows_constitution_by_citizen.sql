@@ -13,7 +13,7 @@ begin
         select
             f.*,
             find_constitution_by_id(f.target_id) as target,
-            find_citizen_by_id(f.created_by_id) as created_by
+            find_citizen_by_id_with_user(f.created_by_id) as created_by
         from follow as f
         where created_by_id = _created_by_id
         order by created_at desc,

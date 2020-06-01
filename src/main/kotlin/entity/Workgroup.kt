@@ -1,5 +1,8 @@
 package fr.dcproject.entity
 
+import fr.dcproject.entity.WorkgroupWithMembersI.Member
+import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
+import fr.postgresjson.entity.EntityI
 import fr.postgresjson.entity.immutable.*
 import fr.postgresjson.entity.mutable.EntityDeletedAt
 import fr.postgresjson.entity.mutable.EntityDeletedAtImp
@@ -11,9 +14,8 @@ class Workgroup(
     description: String,
     logo: String? = null,
     anonymous: Boolean = true,
-    owner: CitizenBasic,
     createdBy: CitizenBasic,
-    override var members: List<CitizenBasic> = emptyList()
+    override var members: List<Member<CitizenBasic>> = emptyList()
 ) : WorkgroupWithAuthI<CitizenBasic>,
     WorkgroupSimple<CitizenBasic>(
         id,
@@ -21,7 +23,6 @@ class Workgroup(
         description,
         logo,
         anonymous,
-        owner,
         createdBy
     ),
     EntityCreatedAt by EntityCreatedAtImp(),
@@ -33,7 +34,6 @@ open class WorkgroupSimple<Z : CitizenRef>(
     var description: String,
     var logo: String? = null,
     var anonymous: Boolean = true,
-    var owner: Z,
     createdBy: Z
 ) : WorkgroupRef(id),
     EntityCreatedBy<Z> by EntityCreatedByImp(createdBy),
@@ -45,19 +45,51 @@ open class WorkgroupRef(
 
 interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, EntityCreatedBy<Z>, EntityDeletedAt {
     val anonymous: Boolean
-    val owner: Z
 
-    fun isMember(user: UserI): Boolean =
-        members.map { it.user.id }.contains(user.id) || owner.user.id == user.id
+    fun isMember(user: UserI): Boolean = members.isMember(user)
+    fun isMember(citizen: CitizenWithUserI): Boolean = members.isMember(citizen)
 
-    fun isMember(citizen: CitizenWithUserI): Boolean =
-        isMember(citizen.user)
+    fun hasRole(expectedRole: Role, user: UserI): Boolean = members.hasRole(expectedRole, user)
+    fun hasRole(expectedRole: Role, citizen: CitizenI): Boolean = members.hasRole(expectedRole, citizen)
+
+    fun getRoles(user: UserI): List<Role> = members.getRoles(user)
+    fun getRoles(citizen: CitizenI): List<Role> = members.getRoles(citizen)
 }
 
 interface WorkgroupWithMembersI<Z : CitizenI> : WorkgroupI {
-    var members: List<Z>
+    var members: List<Member<Z>>
+
+    class Member<C : CitizenI> (
+        val citizen: C,
+        val roles: List<Role> = emptyList()
+    ) : EntityI {
+        enum class Role {
+            MASTER,
+            MANAGER,
+            EDITOR,
+            REPORTER
+        }
+    }
 }
 
-fun List<CitizenI>.asCitizen(citizen: CitizenI): Boolean = this.map { it.id }.contains(citizen.id)
+fun List<CitizenI>.hasCitizen(citizen: CitizenI): Boolean = this.map { it.id }.contains(citizen.id)
+
+fun <Z : CitizenWithUserI> List<Member<Z>>.isMember(user: UserI): Boolean =
+    map { it.citizen.user.id }.contains(user.id)
+
+fun <Z : CitizenI> List<Member<Z>>.isMember(citizen: CitizenI): Boolean =
+    map { it.citizen.id }.contains(citizen.id)
+
+fun <Z : CitizenI> List<Member<Z>>.hasRole(expectedRole: Role, citizen: CitizenI): Boolean =
+    any { member -> member.citizen.id == citizen.id && member.roles.any { it == expectedRole } }
+
+fun <Z : CitizenWithUserI> List<Member<Z>>.hasRole(expectedRole: Role, user: UserI): Boolean =
+    any { member -> member.citizen.user.id == user.id && member.roles.any { it == expectedRole } }
+
+fun <Z : CitizenWithUserI> List<Member<Z>>.getRoles(user: UserI): List<Role> =
+    firstOrNull { it.citizen.user.id == user.id }?.roles ?: emptyList()
+
+fun <Z : CitizenWithUserI> List<Member<Z>>.getRoles(citizen: CitizenI): List<Role> =
+    firstOrNull { it.citizen.id == citizen.id }?.roles ?: emptyList()
 
 interface WorkgroupI : UuidEntityI

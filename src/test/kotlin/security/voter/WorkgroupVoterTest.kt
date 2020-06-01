@@ -55,15 +55,15 @@ internal class WorkgroupVoterTest {
         createdBy = tesla,
         description = "Super desc",
         name = "super name",
-        owner = tesla,
-        anonymous = false
+        anonymous = false,
+        members = listOf(WorkgroupWithMembersI.Member(tesla, listOf(WorkgroupWithMembersI.Member.Role.MASTER)))
     )
 
     private val workgroupAnon = WorkgroupEntity(
         createdBy = tesla,
         description = "Super desc",
         name = "super name",
-        owner = tesla,
+        members = listOf(WorkgroupWithMembersI.Member(tesla, listOf(WorkgroupWithMembersI.Member.Role.MASTER))),
         anonymous = true
     )
 

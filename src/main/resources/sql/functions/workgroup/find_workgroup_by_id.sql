@@ -7,8 +7,7 @@ begin
     from (
         select
             w.*,
-            find_citizen_by_id(w.created_by_id) as created_by,
-            find_citizen_by_id(w.owner_id) as owner,
+            find_citizen_by_id_with_user(w.created_by_id) as created_by,
             find_workgroup_members(w.id) as members
         into resource
         from workgroup as w

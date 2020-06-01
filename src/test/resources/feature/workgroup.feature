@@ -3,15 +3,21 @@ Feature: Workgroup
 
   Scenario: Can get one workgroup
     Given I have citizen Stephen Hawking
+    And I have citizen Sadi Carnot with ID "be3b0926-8628-4426-804a-75188a6eb315"
+    And I have citizen Joseph Fourier with ID "d9671eca-abaf-4b67-9230-3ece700c1ddb"
     And I am authenticated as Stephen Hawking
     And I have workgroup:
       | id   | ab469134-bf14-4856-b093-ae1aa990f977 |
       | name | Les Mousquets                        |
+    And I have members in workgroup "ab469134-bf14-4856-b093-ae1aa990f977":
+      | be3b0926-8628-4426-804a-75188a6eb315 |
+      | d9671eca-abaf-4b67-9230-3ece700c1ddb |
     When I send a GET request to "/workgroups/ab469134-bf14-4856-b093-ae1aa990f977"
     Then the response status code should be 200
-    And the JSON should contain:
-      | id   | ab469134-bf14-4856-b093-ae1aa990f977 |
-      | name | Les Mousquets                        |
+    And the response should contain object:
+      | $.id                    | ab469134-bf14-4856-b093-ae1aa990f977 |
+      | $.name                  | Les Mousquets                        |
+      | $.members[0].first_name | Sadi                                 |
 
   Scenario: Can create a workgroup
     Given I have citizen Werner Heisenberg
@@ -58,14 +64,19 @@ Feature: Workgroup
     And I have citizen Alessandro Volta with ID "b5bac515-45d4-4aeb-9b6d-2627a0bbc419"
     And I am authenticated as Blaise Pascal
     And I have workgroup:
-      | id    | b0ea1922-3bc6-44e2-aa7c-40158998cfbb |
-      | name  | Les bonobos                          |
-      | owner | Blaise Pascal                        |
+      | id   | b0ea1922-3bc6-44e2-aa7c-40158998cfbb |
+      | name | Les bonobos                          |
     When I send a POST request to "/workgroups/b0ea1922-3bc6-44e2-aa7c-40158998cfbb/members" with body:
       """
       [
-        {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
-        {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"}
+        {
+          "id":"6d883fe7-5fc0-4a50-8858-72230673eba4",
+          "roles": ["MASTER"]
+        },
+        {
+          "id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419",
+          "roles": ["MASTER"]
+        }
       ]
       """
     Then the response status code should be 201
@@ -76,21 +87,23 @@ Feature: Workgroup
     And I have citizen Paul Dirac with ID "1baf48bb-02bc-4d8f-ac86-33335354f5e7"
     And I am authenticated as Heinrich Hertz
     And I have workgroup:
-      | id    | b6c975df-dd44-4e99-adc1-f605746b0e11 |
-      | name  | Les Tacos                            |
-      | owner | Heinrich Hertz                       |
+      | id   | b6c975df-dd44-4e99-adc1-f605746b0e11 |
+      | name | Les Tacos                            |
     And I have members in workgroup "b6c975df-dd44-4e99-adc1-f605746b0e11":
       | 87909ba3-2069-431c-9924-219fd8411cf2 |
       | 1baf48bb-02bc-4d8f-ac86-33335354f5e7 |
     When I send a DELETE request to "/workgroups/b6c975df-dd44-4e99-adc1-f605746b0e11/members" with body:
       """
       [
-        {"id":"87909ba3-2069-431c-9924-219fd8411cf2"}
+        {
+          "id":"87909ba3-2069-431c-9924-219fd8411cf2",
+          "roles": ["MASTER"]
+        }
       ]
       """
     Then the response status code should be 200
     And the response should contain object:
-      | $.[0]id | 1baf48bb-02bc-4d8f-ac86-33335354f5e7 |
+      | $.[0]citizen.id | 1baf48bb-02bc-4d8f-ac86-33335354f5e7 |
     And the JSON should have 1 items
 
   Scenario: Can update members on workgroup
@@ -100,21 +113,26 @@ Feature: Workgroup
     And I have citizen Georg Ohm with ID "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"
     And I am authenticated as Leon Foucault
     And I have workgroup:
-      | id    | 784fe6bc-7635-4ae2-b080-3a4743b998bf |
-      | name  | Les Tacos                            |
-      | owner | Leon Foucault                        |
+      | id   | 784fe6bc-7635-4ae2-b080-3a4743b998bf |
+      | name | Les Tacos                            |
     And I have members in workgroup "784fe6bc-7635-4ae2-b080-3a4743b998bf":
       | be3b0926-8628-4426-804a-75188a6eb315 |
       | d9671eca-abaf-4b67-9230-3ece700c1ddb |
     When I send a PUT request to "/workgroups/784fe6bc-7635-4ae2-b080-3a4743b998bf/members" with body:
       """
       [
-        {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
-        {"id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"}
+        {
+          "id":"be3b0926-8628-4426-804a-75188a6eb315",
+          "roles": ["MASTER"]
+        },
+        {
+          "id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1",
+          "roles": ["MASTER"]
+        }
       ]
       """
     Then the response status code should be 200
     And the response should contain object:
-      | $.[0]id | be3b0926-8628-4426-804a-75188a6eb315 |
-      | $.[1]id | b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1 |
+      | $.[0]citizen.id | be3b0926-8628-4426-804a-75188a6eb315 |
+      | $.[1]citizen.id | b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1 |
     And the JSON should have 2 items

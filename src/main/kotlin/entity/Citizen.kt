@@ -21,7 +21,12 @@ class Citizen(
 ) : CitizenFull,
     CitizenBasic(id, name, email, birthday, voteAnonymous, followAnonymous, user),
     EntityCreatedAt by EntityCreatedAtImp() {
-    var workgroups: List<WorkgroupSimple<CitizenRef>> = emptyList()
+    var workgroups: List<WorkgroupAndRoles> = emptyList()
+
+    class WorkgroupAndRoles(
+        val roles: List<String>,
+        val workgroup: WorkgroupSimple<CitizenRef>
+    )
 }
 
 open class CitizenBasic(

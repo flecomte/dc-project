@@ -16,9 +16,9 @@ declare
     }';
     selected_workgroup json;
     members json;
+    selected_citizen json;
 begin
     created_workgroup := jsonb_set(created_workgroup::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
-    created_workgroup := jsonb_set(created_workgroup::jsonb, '{owner}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_workgroup#>>'{created_by, id}' = _citizen_id::text, format('citizenId in workgroup must be the same as citizen, %s != %s', created_workgroup#>>'{created_by, id}', _citizen_id::text);
 
     -- upsert workgroup
@@ -28,7 +28,6 @@ begin
 
     -- insert another workgroup
     created_workgroup_2 := jsonb_set(created_workgroup_2::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
-    created_workgroup_2 := jsonb_set(created_workgroup_2::jsonb, '{owner}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_workgroup_2#>>'{created_by, id}' = _citizen_id::text, format('citizenId in workgroup must be the same as citizen, %s != %s', created_workgroup_2#>>'{created_by, id}', _citizen_id::text);
     select upsert_workgroup(created_workgroup_2) into created_workgroup_2;
 
@@ -47,44 +46,61 @@ begin
 
     -- add
     select m into members from add_workgroup_members((created_workgroup->>'id')::uuid, json_build_array(
-        json_build_object('id', _citizen_id2),
-        json_build_object('id', _citizen_id3)
+        json_build_object('citizen', json_build_object('id', _citizen_id2), 'roles', '{MASTER}'::text[]),
+        json_build_object('citizen', json_build_object('id', _citizen_id3), 'roles', '{MASTER}'::text[])
     )) m;
 
     assert json_array_length(members) = 2, 'The members count must be equal to 2';
-    assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id3)),
+    assert (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'id', (created_workgroup->>'id'),
+            'citizen', jsonb_build_object('id', _citizen_id3),
+            'roles', jsonb_build_array('MASTER')
+        )),
         'Members must contain citizen3';
 
-    -- Check if "find_citizen_by_id" retrun workgroups of citizen
-    assert (select find_citizen_by_id(_citizen_id2)#>>'{workgroups, 0, id}') = (created_workgroup->>'id'), 'find_citizen_by_id must return workgroups';
+    -- Check if "find_citizen_by_id" retrun citizen
+    assert (select find_citizen_by_id(_citizen_id2)#>>'{id}')::uuid = _citizen_id2, 'find_citizen_by_id must return citizen';
+
+    -- Check if "find_citizen_by_id_with_user_and_workgroups" retrun workgroups of citizen
+    select find_citizen_by_id_with_user_and_workgroups(_citizen_id3) into selected_citizen;
+    assert selected_citizen#>>'{workgroups, 0, roles, 0}' = 'MASTER', format('workgroup must have MASTER role, %s', selected_citizen#>>'{workgroups, 0, roles, 0}');
 
     -- update
     select m into members from update_workgroup_members((created_workgroup->>'id')::uuid, json_build_array(
-            json_build_object('id', _citizen_id2),
-            json_build_object('id', _citizen_id)
+            json_build_object('citizen', json_build_object('id', _citizen_id2), 'roles', '{MASTER}'::text[]),
+            json_build_object('citizen', json_build_object('id', _citizen_id), 'roles', '{MASTER}'::text[])
         )) m;
     assert json_array_length(members) = 2, 'The members count must be equal to 2';
-    assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id)),
-        'Members must contain citizen2';
-    assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id3)),
-        'Members must NOT contain citizen3';
+    assert (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'id', (created_workgroup->>'id'),
+            'citizen', jsonb_build_object('id', _citizen_id),
+            'roles', jsonb_build_array('MASTER')
+        )), 'Members must contain citizen1';
+    assert not (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'citizen', jsonb_build_object('id', _citizen_id3)
+        )), 'Members must NOT contain citizen3';
 
     -- remove
-    select m into members from remove_workgroup_members((created_workgroup->>'id')::uuid, json_build_array(
-            json_build_object('id', _citizen_id2)
-        )) m;
+    select m into members from remove_workgroup_members((created_workgroup->>'id')::uuid, json_build_array(jsonb_build_object(
+            'citizen', json_build_object('id', _citizen_id2)
+        ))) m;
     assert json_array_length(members) = 1, 'The members count must be equal to 1';
-    assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id)),
-        'Members must contain citizen1';
-    assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id2)),
-        'Members must NOT contain citizen2';
+    assert (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'citizen', jsonb_build_object('id', _citizen_id)
+        )), 'Members must contain citizen1';
+    assert not (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'citizen', jsonb_build_object('id', _citizen_id2)
+        )), 'Members must NOT contain citizen2';
 
     select m into members from find_workgroup_members((created_workgroup->>'id')::uuid) m;
     assert json_array_length(members) = 1, 'The members count must be equal to 1';
-    assert members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id)),
-        'Members must contain citizen1';
-    assert not members::jsonb @> jsonb_build_array(jsonb_build_object('id', _citizen_id2)),
-        'Members must NOT contain citizen2';
+    assert (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'citizen', jsonb_build_object('id', _citizen_id)
+        )), 'Members must contain citizen1';
+    assert not (members::jsonb) @> jsonb_build_array(jsonb_build_object(
+            'citizen', jsonb_build_object('id', _citizen_id2)
+        )), 'Members must NOT contain citizen2';
+
     -- Check if find_workgroup_by_id return members
     select find_workgroup_by_id((created_workgroup->>'id')::uuid) into selected_workgroup;
     assert json_array_length(selected_workgroup->'members') = 1, 'Workgroup must have members';

@@ -7,8 +7,7 @@ begin
     from (
         select
             w.*,
-            json_build_object('id', w.created_by_id) as created_by,
-            json_build_object('id', w.owner_id) as owner
+            json_build_object('id', w.created_by_id) as created_by
         into resource
         from workgroup as w
         join citizen_in_workgroup ciw on w.id = ciw.workgroup_id

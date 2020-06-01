@@ -4,8 +4,9 @@ begin
     select json_agg(t) into resource
     from (
         select
-            z.*,
-            find_user_by_id(z.user_id) as "user"
+            w.id as id,
+            find_citizen_by_id_with_user(z.id) as citizen,
+            ciw.roles as roles
         from citizen_in_workgroup as ciw
         join workgroup as w on ciw.workgroup_id = w.id
         join citizen z on z.id = ciw.citizen_id

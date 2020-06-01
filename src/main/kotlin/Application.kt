@@ -130,7 +130,7 @@ fun Application.module(env: Env = PROD) {
             decode { values, _ ->
                 val id = values.singleOrNull()?.let { UUID.fromString(it) }
                     ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryCitizen>().findById(id, true) ?: throw NotFoundException("Citizen $values not found")
+                get<RepositoryCitizen>().findById(id) ?: throw NotFoundException("Citizen $values not found")
             }
         }
 

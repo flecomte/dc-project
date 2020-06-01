@@ -23,7 +23,7 @@ begin
         email = excluded.email
     returning id into new_id;
 
-    select find_citizen_by_id(new_id) into resource;
+    select find_citizen_by_id_with_user(new_id) into resource;
 end;
 $$;
 

@@ -32,15 +32,15 @@ create table workgroup
     name          varchar(128)                           not null,
     description   text                                   null,
     anonymous     boolean     default false              not null,
-    logo          text                                   null,
-    owner_id      uuid                                   not null references citizen (id)
+    logo          text                                   null
 );
 
 create table citizen_in_workgroup
 (
-    citizen_id   uuid                      not null references citizen (id),
-    workgroup_id uuid                      not null references workgroup (id),
-    created_at   timestamptz default now() not null,
+    citizen_id   uuid                         not null references citizen (id),
+    workgroup_id uuid                         not null references workgroup (id),
+    roles        text[]                       not null,
+    created_at   timestamptz default now()    not null,
     primary key (citizen_id, workgroup_id)
 );
 

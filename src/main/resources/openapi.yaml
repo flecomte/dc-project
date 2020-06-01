@@ -1708,8 +1708,6 @@ components:
             anonymous:
               type: boolean
               example: false
-            owner:
-              $ref: '#/components/schemas/CitizenResponse'
         - $ref: '#/components/schemas/CreatedBy'
         - $ref: '#/components/schemas/DeletedAt'
     Workgroup:
@@ -1719,11 +1717,30 @@ components:
         - type: object
           properties:
             members:
-              type: array
-              items:
-                $ref: '#/components/schemas/CitizenResponse'
+              $ref: '#/components/schemas/Members'
         - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/UpdatedAt'
+    Members:
+      description: members of workgroup
+      type: array
+      items:
+        $ref: '#/components/schemas/Member'
+    Member:
+      description: Member of workgroup
+      type: object
+      properties:
+        citizen:
+          $ref: '#/components/schemas/CitizenResponse'
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - MASTER
+              - MANAGER
+              - EDITOR
+              - REPORTER
+            example: MASTER
 
 
 

@@ -1,6 +1,7 @@
 package feature
 
 import fr.dcproject.entity.*
+import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -16,7 +17,10 @@ class WorkgroupSteps : En, KoinTest {
     init {
         When("I have members in workgroup {string}:") { workgroupId: String, members: DataTable ->
             val membersRefs = members.asList()
-                .map { CitizenRef(it.toUUID()) }
+                .map { Member(
+                    citizen = CitizenRef(it.toUUID()),
+                    roles = listOf(Member.Role.MASTER)
+                ) }
 
             get<WorkgroupRepository>().addMembers(WorkgroupRef(workgroupId.toUUID()), membersRefs)
         }
@@ -42,16 +46,11 @@ class WorkgroupSteps : En, KoinTest {
                 }
             }
 
-            val owner = data["owner"]?.let {
-                get<CitizenRepository>().findByUsername(it.toLowerCase().replace(' ', '-'))
-            } ?: creator
-
             val workgroup = WorkgroupSimple<CitizenRef>(
                 id = UUID.fromString(data["id"] ?: UUID.randomUUID().toString()),
                 name = data["name"] ?: "Les Incoruptible",
                 description = data["description"] ?: "La vie est notre jeux",
                 createdBy = creator,
-                owner = owner,
                 anonymous = (data["anonymous"] ?: false) == true
             )
 

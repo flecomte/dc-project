@@ -1,4 +1,4 @@
-create or replace function remove_workgroup_members(in _id uuid, inout resource json)
+create or replace function remove_workgroup_members(in _id uuid, inout members json)
     language plpgsql as
 $$
 begin
@@ -6,11 +6,11 @@ begin
     where workgroup_id = _id
       and citizen_id in (
         select
-            (z->>'id')::uuid
-        from json_array_elements(resource) z
+            (b#>>'{citizen, id}')::uuid
+        from json_array_elements(members) b
     );
 
-    select find_workgroup_members(_id) into resource;
+    select find_workgroup_members(_id) into members;
 end
 $$;
 

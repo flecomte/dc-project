@@ -13,7 +13,7 @@ begin
         select
             v.*,
             find_reference_by_id(v.target_id, v.target_reference) as target,
-            find_citizen_by_id(v.created_by_id) as created_by
+            find_citizen_by_id_with_user(v.created_by_id) as created_by
 
         from vote as v
 
