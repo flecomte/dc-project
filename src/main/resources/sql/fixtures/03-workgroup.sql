@@ -8,9 +8,6 @@ declare
     }
     $roles$;
 begin
-    delete from citizen_in_workgroup;
-    delete from workgroup;
-
     insert into workgroup (id, created_by_id, name, description, anonymous)
     select
         uuid_in(md5('workgroup'||rn::text)::cstring),

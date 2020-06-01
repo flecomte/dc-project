@@ -3,11 +3,6 @@ $$
 declare
     article_count int = (select count(*) from article);
 begin
-    delete from vote_for_article;
-    delete from vote_for_constitution;
-    delete from vote_for_comment_on_article;
-    delete from vote_for_comment_on_constitution;
-
     insert into vote_for_article (id, created_by_id, target_id, note, anonymous)
     select
         uuid_in(md5('vote_for_article'||row_number() over ())::cstring),

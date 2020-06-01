@@ -3,8 +3,6 @@ $$
 declare
     article_count int = (select count(*) from article);
 begin
-    delete from follow;
-
     insert into follow_article (id, created_by_id, target_id)
     select
         uuid_in(md5('follow_article'||row_number() over ())::cstring),

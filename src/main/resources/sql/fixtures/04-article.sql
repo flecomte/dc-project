@@ -11,9 +11,6 @@ declare
     _citizen_count int = (select count(z) from citizen z);
     _workgroup_count int = (select count(w) from workgroup w);
 begin
-    delete from article_relations;
-    delete from article;
-
     insert into article (id, version_id, created_by_id, workgroup_id, title, anonymous, content, description, tags, created_at, draft)
     select
         uuid_in(md5('article'||row_number() over ())::cstring),

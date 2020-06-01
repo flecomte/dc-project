@@ -3,10 +3,6 @@ $$
 declare
     article_count int = (select count(*) from article);
 begin
-    delete from article_in_title;
-    delete from title;
-    delete from constitution;
-
     insert into constitution (id, version_id, created_by_id, title, anonymous, created_at)
     select
         uuid_in(md5('constitution'||row_number() over ())::cstring),

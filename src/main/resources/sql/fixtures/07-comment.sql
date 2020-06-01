@@ -3,8 +3,6 @@ $$
 declare
     article_count int = (select count(*) from article);
 begin
-    delete from comment;
-
     insert into comment_on_article (id, created_by_id, target_id, content)
     select
         uuid_in(md5('comment_on_article'||row_number() over ())::cstring),

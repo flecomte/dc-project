@@ -3,9 +3,6 @@ $$
 declare
     article_count int = (select count(*) from article);
 begin
-    delete from opinion_on_article;
-    delete from opinion_choice;
-
     insert into opinion_choice (id, name, target)
     select
            uuid_in(md5('opinion_choice'||row_number() over ())::cstring),

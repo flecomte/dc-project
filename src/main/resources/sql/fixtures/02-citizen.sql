@@ -1,7 +1,6 @@
 do
 $$
 begin
-    delete from citizen;
     insert into citizen (id, name, birthday, user_id, vote_anonymous, follow_anonymous, email)
     select
         uuid_in(md5('citizen'||row_number() over ()::text)::cstring),
