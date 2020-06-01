@@ -25,6 +25,7 @@ begin
     select upsert_workgroup(created_workgroup) into created_workgroup;
     assert created_workgroup->>'description' is not null, 'description should not be null';
     assert (created_workgroup->>'name') = 'Le groupe des vert', format('name must be equal to "Le groupe des vert", %s instead', created_workgroup->>'name');
+    assert (created_workgroup#>>'{members, 0, citizen, id}') = _citizen_id::text, 'workgroup must have creator in members on creation';
 
     -- insert another workgroup
     created_workgroup_2 := jsonb_set(created_workgroup_2::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
@@ -50,7 +51,7 @@ begin
         json_build_object('citizen', json_build_object('id', _citizen_id3), 'roles', '{MASTER}'::text[])
     )) m;
 
-    assert json_array_length(members) = 2, 'The members count must be equal to 2';
+    assert json_array_length(members) = 3, 'The members count must be equal to 3';
     assert (members::jsonb) @> jsonb_build_array(jsonb_build_object(
             'id', (created_workgroup->>'id'),
             'citizen', jsonb_build_object('id', _citizen_id3),

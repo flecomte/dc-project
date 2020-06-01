@@ -3,6 +3,7 @@ create or replace function upsert_workgroup(inout resource json)
 $$
 declare
     new_id uuid = coalesce((resource->>'id')::uuid, uuid_generate_v4());
+    exists boolean = case when (select true from workgroup where id = new_id) is null then true else false end;
 begin
     insert into workgroup (id, created_by_id, name, description, anonymous, logo)
     select
@@ -22,9 +23,19 @@ begin
     insert into citizen_in_workgroup (workgroup_id, citizen_id, roles)
     select
         new_id::uuid,
-        (resource#>>'{created_by, id}')::uuid,
-        '{MASTER}'
-    from json_populate_recordset(null::workgroup, resource->'members');
+        citizen_id,
+        roles
+    from json_populate_recordset(null::citizen_in_workgroup, resource->'members') m;
+
+    -- insert master if no members
+    if (exists) then
+        insert into citizen_in_workgroup (workgroup_id, citizen_id, roles)
+        select
+            new_id::uuid,
+            (resource#>>'{created_by, id}')::uuid,
+            '{MASTER}'
+        on conflict do nothing;
+    end if;
 
     select find_workgroup_by_id(new_id) into resource;
 end;

@@ -6,30 +6,24 @@ import fr.dcproject.entity.WorkgroupSimple
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
 import fr.dcproject.repository.Workgroup.Filter
-import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
 import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
-import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.ADD as ADD_MEMBERS
-import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.UPDATE as UPDATE_MEMBERS
-import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.REMOVE as REMOVE_MEMBERS
+import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import fr.dcproject.utils.toUUID
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.post
-import io.ktor.locations.put
-import io.ktor.locations.delete
+import io.ktor.locations.*
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.ADD as ADD_MEMBERS
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.REMOVE as REMOVE_MEMBERS
+import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.UPDATE as UPDATE_MEMBERS
 
 @KtorExperimentalLocationsAPI
 object WorkgroupsPaths {
@@ -97,8 +91,7 @@ object WorkgroupsMembersPaths {
     @Location("/workgroups/{workgroup}/members")
     class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) {
         class Body : MutableList<Body.Item> by mutableListOf() {
-            class Item(id: String, roles: List<String>) {
-                val citizen = CitizenRef(id.toUUID())
+            class Item(val citizen: CitizenRef, roles: List<String> = emptyList()) {
                 val roles: List<Role> = roles.map {
                     Role.valueOf(it)
                 }
@@ -160,8 +153,8 @@ fun Route.workgroup(repo: WorkgroupRepository) {
             .let { members ->
                 assertCan(ADD_MEMBERS, it.workgroup)
                 repo.addMembers(it.workgroup, members)
-            }.let {
-                call.respond(HttpStatusCode.Created, it)
+            }.let { members ->
+                call.respond(HttpStatusCode.Created, members)
             }
     }
 
@@ -171,8 +164,8 @@ fun Route.workgroup(repo: WorkgroupRepository) {
             .let { members ->
                 assertCan(REMOVE_MEMBERS, it.workgroup)
                 repo.removeMembers(it.workgroup, members)
-            }.let {
-                call.respond(HttpStatusCode.OK, it)
+            }.let { members ->
+                call.respond(HttpStatusCode.OK, members)
             }
     }
 
@@ -182,8 +175,8 @@ fun Route.workgroup(repo: WorkgroupRepository) {
             .let { members ->
                 assertCan(UPDATE_MEMBERS, it.workgroup)
                 repo.updateMembers(it.workgroup, members)
-            }.let {
-                call.respond(HttpStatusCode.OK, it)
+            }.let { members ->
+                call.respond(HttpStatusCode.OK, members)
             }
     }
 }
