@@ -1012,23 +1012,14 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+              $ref: '#/components/schemas/MembersRequest'
       responses:
         201:
           description: the list of members
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitizenResponse'
+                $ref: '#/components/schemas/MembersResponse'
     put:
       security:
         - JWTAuth: []
@@ -1038,23 +1029,14 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+              $ref: '#/components/schemas/MembersRequest'
       responses:
         201:
           description: the list of members
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitizenResponse'
+                $ref: '#/components/schemas/MembersResponse'
     delete:
       security:
         - JWTAuth: []
@@ -1064,23 +1046,14 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: object
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                    example: 6434f4f9-f570-f22a-c134-8668350651ff
+              $ref: '#/components/schemas/MembersRequest'
       responses:
         200:
           description: the list of members
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/CitizenResponse'
+                $ref: '#/components/schemas/MembersResponse'
 
 components:
   responses:
@@ -1717,20 +1690,41 @@ components:
         - type: object
           properties:
             members:
-              $ref: '#/components/schemas/Members'
+              $ref: '#/components/schemas/MembersResponse'
         - $ref: '#/components/schemas/CreatedAt'
         - $ref: '#/components/schemas/UpdatedAt'
-    Members:
+    MembersRequest:
       description: members of workgroup
       type: array
       items:
-        $ref: '#/components/schemas/Member'
-    Member:
+        $ref: '#/components/schemas/MemberRequest'
+    MembersResponse:
+      description: members of workgroup
+      type: array
+      items:
+        $ref: '#/components/schemas/MemberResponse'
+    MemberResponse:
       description: Member of workgroup
       type: object
       properties:
         citizen:
           $ref: '#/components/schemas/CitizenResponse'
+        roles:
+          type: array
+          items:
+            type: string
+            enum:
+              - MASTER
+              - MANAGER
+              - EDITOR
+              - REPORTER
+            example: MASTER
+    MemberRequest:
+      description: Member of workgroup
+      type: object
+      properties:
+        citizen:
+          $ref: '#/components/schemas/UuidEntity'
         roles:
           type: array
           items:
