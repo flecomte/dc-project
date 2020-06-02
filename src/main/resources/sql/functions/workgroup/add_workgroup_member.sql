@@ -8,6 +8,7 @@ begin
        (member#>>'{citizen, id}')::uuid,
        (select array_agg(t) from json_array_elements_text(member#>'{roles}') t)
     )
-    on conflict do nothing;
+    on conflict (workgroup_id, citizen_id) do update set
+        roles = excluded.roles;
 end;
 $$;
