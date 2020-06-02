@@ -10,6 +10,13 @@
     - Extract zip.
     - Copy the contents to your `Git\mingw64\` merging the folders, but **do NOT overwrite/replace** any existing files.
 
+### Add JAVA_HOME path
+In CMD (Not Powershell)
+```cmd
+$ setx -m JAVA_HOME "C:\Users\%USERNAME%\.jdks\corretto-11.0.7"
+$ setx -m PATH "%PATH%;%JAVA_HOME%\bin";
+```
+
 ### Run dockers
 ```bash
 $ make run-docker
