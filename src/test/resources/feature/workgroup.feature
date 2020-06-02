@@ -7,17 +7,19 @@ Feature: Workgroup
     And I have citizen Joseph Fourier with ID "d9671eca-abaf-4b67-9230-3ece700c1ddb"
     And I am authenticated as Stephen Hawking
     And I have workgroup:
-      | id   | ab469134-bf14-4856-b093-ae1aa990f977 |
-      | name | Les Mousquets                        |
+      | id         | ab469134-bf14-4856-b093-ae1aa990f977 |
+      | name       | Les Mousquets                        |
+      | created_by | Stephen Hawking                      |
     And I have members in workgroup "ab469134-bf14-4856-b093-ae1aa990f977":
       | be3b0926-8628-4426-804a-75188a6eb315 |
       | d9671eca-abaf-4b67-9230-3ece700c1ddb |
     When I send a GET request to "/workgroups/ab469134-bf14-4856-b093-ae1aa990f977"
     Then the response status code should be 200
     And the response should contain object:
-      | $.id                    | ab469134-bf14-4856-b093-ae1aa990f977 |
-      | $.name                  | Les Mousquets                        |
-      | $.members[0].first_name | Sadi                                 |
+      | $.id                                 | ab469134-bf14-4856-b093-ae1aa990f977 |
+      | $.name                               | Les Mousquets                        |
+      | $.members[0].citizen.name.first_name | Stephen                              |
+      | $.members[1].citizen.name.first_name | Sadi                                 |
 
   Scenario: Can create a workgroup
     Given I have citizen Werner Heisenberg
@@ -70,11 +72,11 @@ Feature: Workgroup
       """
       [
         {
-          "id":"6d883fe7-5fc0-4a50-8858-72230673eba4",
+          "citizen": {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
           "roles": ["MASTER"]
         },
         {
-          "id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419",
+          "citizen": {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"},
           "roles": ["MASTER"]
         }
       ]
@@ -96,7 +98,7 @@ Feature: Workgroup
       """
       [
         {
-          "id":"87909ba3-2069-431c-9924-219fd8411cf2",
+          "citizen": {"id":"87909ba3-2069-431c-9924-219fd8411cf2"},
           "roles": ["MASTER"]
         }
       ]
@@ -104,7 +106,7 @@ Feature: Workgroup
     Then the response status code should be 200
     And the response should contain object:
       | $.[0]citizen.id | 1baf48bb-02bc-4d8f-ac86-33335354f5e7 |
-    And the JSON should have 1 items
+    And the JSON should have 2 items
 
   Scenario: Can update members on workgroup
     Given I have citizen Leon Foucault
@@ -122,11 +124,11 @@ Feature: Workgroup
       """
       [
         {
-          "id":"be3b0926-8628-4426-804a-75188a6eb315",
+          "citizen": {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
           "roles": ["MASTER"]
         },
         {
-          "id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1",
+          "citizen": {"id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"},
           "roles": ["MASTER"]
         }
       ]
