@@ -13,8 +13,12 @@ help: ## This help.
 
 .DEFAULT_GOAL := help
 
+bd: build-docker
+
 build-docker: ## Build the docker image of application
 	docker build -t dc-project -f docker/app/Dockerfile .
+
+pd: publish-docker
 
 publish-docker: build-docker ## Publish docker image of application to Github
 	git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
@@ -22,12 +26,18 @@ publish-docker: build-docker ## Publish docker image of application to Github
 	docker tag dc-project docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
 	docker push docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
 
+rd: run-docker
+
 run-docker: ## Build and Run all docker services
 	docker-compose up -d --build
 
+pm: publish-maven
+
 publish-maven: ## Publish JAR file to Github
-	git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
+	@git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
 	gradlew publish
+
+f: fixtures
 
 fixtures: ## Import fixtures
 	bash src/main/resources/sql/fixtures/fixtures.sh
