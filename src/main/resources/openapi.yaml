@@ -844,6 +844,7 @@ paths:
 
   /workgroups:
     get:
+      summary: Get all Workgroup (Paginated)
       security:
         - {}
         - JWTAuth: []
@@ -864,6 +865,7 @@ paths:
                         items:
                           $ref: '#/components/schemas/WorkgroupSimple'
     post:
+      summary: Create new Workgroup
       security:
         - JWTAuth: []
       tags:
@@ -925,6 +927,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/workgroup'
     get:
+      summary: Get one workgroup by ID
       security:
         - {}
         - JWTAuth: []
@@ -939,6 +942,7 @@ paths:
                 allOf:
                   - $ref: '#/components/schemas/Workgroup'
     put:
+      summary: Edit one workgroup
       security:
         - JWTAuth: []
       tags:
@@ -993,6 +997,7 @@ paths:
                     type: string
                     format: uuid
     delete:
+      summary: Delete one workgroup
       security:
         - JWTAuth: []
       tags:
@@ -1004,6 +1009,7 @@ paths:
     parameters:
       - $ref: '#/components/parameters/workgroup'
     post:
+      summary: Add members to the workgroup
       security:
         - JWTAuth: []
       tags:
@@ -1021,6 +1027,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MembersResponse'
     put:
+      summary: Updates ALL members. PLEASE NOTE this removes all members who are not in request!
       security:
         - JWTAuth: []
       tags:
@@ -1038,6 +1045,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/MembersResponse'
     delete:
+      summary: Delete members of workgroup
       security:
         - JWTAuth: []
       tags:
