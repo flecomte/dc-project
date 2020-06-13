@@ -43,7 +43,7 @@ begin
         end,
         case direction when 'desc' then
             case sort
-                when 'title' then w.name
+                when 'name' then w.name
                 when 'created_at' then w.created_at::text
             end
         end
