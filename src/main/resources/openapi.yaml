@@ -850,6 +850,13 @@ paths:
         - JWTAuth: []
       tags:
         - workgroup
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/workgroupSort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/createdBy'
       responses:
         200:
           description: paginated list of workgroup
@@ -1114,6 +1121,17 @@ components:
           - createdAt
           - vote
           - popularity
+    workgroupSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - name
+          - createdAt
     direction:
       name: direction
       in: query
