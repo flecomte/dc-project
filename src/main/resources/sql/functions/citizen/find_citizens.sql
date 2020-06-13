@@ -9,8 +9,7 @@ create or replace function find_citizens(
 ) language plpgsql as
 $$
 begin
-    select json_agg(t), (select count(id) from citizen)
-    into resource, total
+    select json_agg(t) into resource
     from (
         select
             z.*,
@@ -38,6 +37,13 @@ begin
         z.created_at desc
         limit "limit" offset "offset"
     ) as t;
+
+    select count(id) into total
+    from citizen
+    where "search" is null or (
+        (name->'first_name')::text ilike '%'||"search"||'%' or
+        (name->'last_name')::text ilike '%'||"search"||'%'
+    );
 end;
 $$;
 

@@ -21,9 +21,9 @@ build-docker: ## Build the docker image of application
 pd: publish-docker
 
 publish-docker: build-docker ## Publish docker image of application to Github
-	git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
-	cat ./GH_TOKEN.txt | docker login docker.pkg.github.com -u ${GITHUB_USERNAME} --password-stdin
-	docker tag dc-project docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
+	@git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
+	@cat ./GH_TOKEN.txt | docker login docker.pkg.github.com -u ${GITHUB_USERNAME} --password-stdin
+	@docker tag dc-project docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
 	docker push docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
 
 rd: run-docker
