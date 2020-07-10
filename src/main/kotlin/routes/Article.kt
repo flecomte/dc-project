@@ -2,9 +2,13 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.citizenOrNull
+import fr.dcproject.entity.CitizenRef
+import fr.dcproject.entity.WorkgroupRef
+import fr.dcproject.entity.WorkgroupSimple
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.event.raiseEvent
 import fr.dcproject.repository.Article.Filter
+import fr.dcproject.repository.Workgroup as WorkgroupRepository
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.views.ArticleViewManager
@@ -20,6 +24,8 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import kotlinx.coroutines.launch
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.repository.Article as ArticleRepository
@@ -56,7 +62,7 @@ object ArticlesPaths {
     }
 
     @Location("/articles")
-    class PostArticleRequest {
+    class PostArticleRequest: KoinComponent {
         class Article(
             val id: UUID?,
             val title: String,
@@ -65,8 +71,11 @@ object ArticlesPaths {
             val description: String,
             val tags: List<String> = emptyList(),
             val draft: Boolean = false,
-            val versionId: UUID?
+            val versionId: UUID?,
+            val workgroup: WorkgroupRef?
         )
+
+        private val workgroupRepository: WorkgroupRepository by inject()
 
         suspend fun getNewArticle(call: ApplicationCall): ArticleEntity = call.receive<Article>().run {
             ArticleEntity(
@@ -77,7 +86,8 @@ object ArticlesPaths {
                 description,
                 tags,
                 draft,
-                createdBy = call.citizen
+                createdBy = call.citizen,
+                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) as WorkgroupSimple<CitizenRef> else null
             ).also {
                 it.versionId = versionId ?: UUID.randomUUID()
             }

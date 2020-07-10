@@ -16,10 +16,11 @@ class Article(
     override var tags: List<String> = emptyList(),
     draft: Boolean = false,
     override var lastVersion: Boolean = false,
-    override val createdBy: CitizenBasic
+    override val createdBy: CitizenBasic,
+    workgroup: WorkgroupSimple<CitizenRef>? = null
 ) : ArticleFull,
     ArticleAuthI<CitizenBasicI>,
-    ArticleSimple(id, title, createdBy, draft),
+    ArticleSimple(id, title, createdBy, draft, workgroup),
     Viewable by ViewableImp() {
     init {
         tags = tags.distinct()
@@ -30,7 +31,8 @@ open class ArticleSimple(
     id: UUID = UUID.randomUUID(),
     override var title: String,
     override val createdBy: CitizenBasic,
-    override var draft: Boolean = false
+    override var draft: Boolean = false,
+    override var workgroup: WorkgroupSimple<CitizenRef>? = null
 ) : ArticleSimpleI,
     ArticleAuthI<CitizenBasicI>,
     ArticleRefVersioning(id),
@@ -61,6 +63,7 @@ interface ArticleSimpleI :
     EntityDeletedAt,
     Votable {
     var title: String
+    var workgroup: WorkgroupSimple<CitizenRef>?
 }
 
 interface ArticleBasicI :

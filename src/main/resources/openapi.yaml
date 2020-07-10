@@ -1334,6 +1334,8 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserResponse'
+            workgroups:
+              $ref: '#/components/schemas/WorkgroupSimple'
     CitizenBase:
       type: object
       properties:
@@ -1365,6 +1367,8 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserRequest'
+            workgroups:
+              $ref: '#/components/schemas/UuidEntity'
 
     RegisterRequest:
       $ref: '#/components/schemas/CitizenRequest'
@@ -1419,6 +1423,11 @@ components:
               type: boolean
               required: false
               default: false
+            workgroup:
+              allOf:
+                - $ref: '#/components/schemas/UuidEntity'
+                - required: false
+                - default: null
         - $ref: '#/components/schemas/versionId'
     ArticleResponse:
       type: object

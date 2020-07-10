@@ -58,7 +58,8 @@ internal class CommentVoterTest {
             content = "Hi",
             createdBy = einstein,
             description = "blablabla",
-            title = "Super article"
+            title = "Super article",
+            workgroup = null
         ).apply { deletedAt = DateTime.now() }
     )
 
