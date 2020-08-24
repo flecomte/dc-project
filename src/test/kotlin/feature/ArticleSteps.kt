@@ -31,6 +31,10 @@ class ArticleSteps : En, KoinTest {
             createArticle(id = UUID.fromString(id))
         }
 
+        Given("I have article created by workgroup ID {string}") { id: String ->
+            createArticle(workgroup = WorkgroupRef(UUID.fromString(id)))
+        }
+
         Given("I have comment created by {word} {word} on article {string}:") { firstName: String, lastName: String, articleId: String, extraData: DataTable? ->
             commentArticle(articleId, firstName, lastName, extraData)
         }
@@ -39,7 +43,7 @@ class ArticleSteps : En, KoinTest {
         }
     }
 
-    private fun createArticle(extraData: DataTable? = null, id: UUID? = null) {
+    private fun createArticle(extraData: DataTable? = null, id: UUID? = null, workgroup: WorkgroupRef? = null) {
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val createdByUsername = params?.get("createdBy")
         val username = (createdByUsername ?: "username" + UUID.randomUUID().toString())
@@ -63,12 +67,13 @@ class ArticleSteps : En, KoinTest {
             }
         }
 
-        val article = ArticleEntity(
-            id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
+        val article = ArticleForUpdate(
+            id = id ?: params?.get("id")?.toUUID(),
             title = "hello",
             content = "bla bla bla",
             description = "A super article",
-            createdBy = createdBy
+            createdBy = createdBy,
+            workgroup = workgroup
         )
         get<ArticleRepository>().upsert(article)
     }

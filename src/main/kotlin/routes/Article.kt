@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.citizenOrNull
+import fr.dcproject.entity.ArticleForUpdate
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.WorkgroupRef
 import fr.dcproject.entity.WorkgroupSimple
@@ -39,7 +40,8 @@ object ArticlesPaths {
         val sort: String? = null,
         val direction: RepositoryI.Direction? = null,
         val search: String? = null,
-        val createdBy: String? = null
+        val createdBy: String? = null,
+        val workgroup: String? = null
     ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
@@ -62,7 +64,7 @@ object ArticlesPaths {
     }
 
     @Location("/articles")
-    class PostArticleRequest: KoinComponent {
+    class PostArticleRequest : KoinComponent {
         class Article(
             val id: UUID?,
             val title: String,
@@ -77,8 +79,8 @@ object ArticlesPaths {
 
         private val workgroupRepository: WorkgroupRepository by inject()
 
-        suspend fun getNewArticle(call: ApplicationCall): ArticleEntity = call.receive<Article>().run {
-            ArticleEntity(
+        suspend fun getNewArticle(call: ApplicationCall): ArticleForUpdate = call.receive<Article>().run {
+            ArticleForUpdate(
                 id ?: UUID.randomUUID(),
                 title,
                 anonymous,
@@ -98,8 +100,14 @@ object ArticlesPaths {
 @KtorExperimentalLocationsAPI
 fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
     get<ArticlesPaths.ArticlesRequest> {
-        val articles =
-            repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy))
+        val articles = repo.find(
+            it.page,
+            it.limit,
+            it.sort,
+            it.direction,
+            it.search,
+            Filter(createdById = it.createdBy, workgroupId = it.workgroup)
+        )
         assertCan(VIEW, articles.result)
         call.respond(articles)
     }
@@ -127,9 +135,9 @@ fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
     post<ArticlesPaths.PostArticleRequest> {
         it.getNewArticle(call).also { article ->
             assertCan(CREATE, article)
-            repo.upsert(article)
+            val newArticle = repo.upsert(article) ?: error("Article not updated")
             call.respond(article)
-            raiseEvent(ArticleUpdate.event, ArticleUpdate(article))
+            raiseEvent(ArticleUpdate.event, ArticleUpdate(newArticle))
         }
     }
 }

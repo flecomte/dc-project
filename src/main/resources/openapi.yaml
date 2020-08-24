@@ -218,6 +218,14 @@ paths:
         - $ref: '#/components/parameters/direction'
         - $ref: '#/components/parameters/search'
         - $ref: '#/components/parameters/createdBy'
+        - name: workgroup
+          in: query
+          description: ID of workgroup
+          example: 82a0e60a-bb55-dbc0-1c3d-0a804df2b5df
+          required: false
+          schema:
+            type: string
+            format: uuid
       responses:
         200:
           description: The Article objects

@@ -1,6 +1,6 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.ArticleFull
+import fr.dcproject.entity.ArticleForUpdate
 import fr.dcproject.entity.ArticleSimple
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -42,13 +42,14 @@ class Article(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun upsert(article: ArticleFull): ArticleEntity? {
+    fun upsert(article: ArticleForUpdate): ArticleEntity? {
         return requester
             .getFunction("upsert_article")
             .selectOne("resource" to article)
     }
 
     class Filter(
-        val createdById: String? = null
+        val createdById: String? = null,
+        val workgroupId: String? = null
     ) : Parameter
 }

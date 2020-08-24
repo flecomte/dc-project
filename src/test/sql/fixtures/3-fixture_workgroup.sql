@@ -1,4 +1,4 @@
-create or replace function fixture_workgroup(in name text default 'vert', _citizen_id uuid default fixture_citizen(), out _article_id uuid)
+create or replace function fixture_workgroup(in name text default 'vert', _citizen_id uuid default fixture_citizen(), out _workgroup_id uuid)
     language plpgsql as
 $$
 declare
@@ -23,6 +23,7 @@ begin
 
     -- upsert workgroup
     select upsert_workgroup(created_workgroup) into created_workgroup;
+    select (created_workgroup->>'id')::uuid into _workgroup_id;
     assert created_workgroup->>'description' is not null, 'description should not be null';
 end;
 $$;

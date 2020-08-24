@@ -42,6 +42,9 @@ f: fixtures
 fixtures: ## Import fixtures
 	bash src/main/resources/sql/fixtures/fixtures.sh
 
+test-sql: ## Test sql
+	cd src/test/sql/ ; bash test.sh 1
+
 v: vertion
 
 vertion: ## Show current version

@@ -3,6 +3,8 @@ package fr.dcproject.entity
 import fr.postgresjson.entity.immutable.*
 import fr.postgresjson.entity.mutable.EntityDeletedAt
 import fr.postgresjson.entity.mutable.EntityDeletedAtImp
+import fr.postgresjson.entity.mutable.EntityVersioning
+import fr.postgresjson.entity.mutable.UuidEntityVersioning
 import java.util.*
 
 class Constitution(
@@ -41,7 +43,7 @@ open class ConstitutionSimple<Cr : CitizenRefWithUser, T : ConstitutionSimple.Ti
     override val createdBy: Cr,
     versionId: UUID = UUID.randomUUID()
 ) : ConstitutionRef(id),
-    EntityVersioning<UUID, Int?> by UuidEntityVersioning(versionId = versionId),
+    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionId = versionId),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Cr> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp() {

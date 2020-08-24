@@ -15,6 +15,7 @@ begin
         from article a
         where (_search is null or _search = '' or a ==> dsl.multi_match('{title^3, content, description, tags}', _search))
           and (_filter->>'created_by_id' is null or a.created_by_id = (_filter->>'created_by_id')::uuid)
+          and (_filter->>'workgroup_id' is null or a.workgroup_id = (_filter->>'workgroup_id')::uuid)
           and a.last_version = true
         )
     into resource, total
@@ -33,6 +34,7 @@ begin
            or a ==> dsl.multi_match('{title^3, content, description, tags}', _search)
         )
           and (_filter->>'created_by_id' is null or a.created_by_id = (_filter->>'created_by_id')::uuid)
+          and (_filter->>'workgroup_id' is null or a.workgroup_id = (_filter->>'workgroup_id')::uuid)
           and a.last_version = true
 
         order by

@@ -6,6 +6,18 @@ Feature: articles routes
     When I send a GET request to "/articles"
     Then the response status code should be 200
 
+  Scenario: Can get articles filtered by workgroup
+    Given I have 3 article
+    And I have workgroup:
+      | id   | 2bccd5a7-9082-4b31-88f8-e25d70b22b12 |
+      | name | Les papy                             |
+    And I have article created by workgroup ID "2bccd5a7-9082-4b31-88f8-e25d70b22b12"
+    When I send a GET request to "/articles?workgroup=2bccd5a7-9082-4b31-88f8-e25d70b22b12"
+    Then the response status code should be 200
+    And the JSON should contain:
+      | total                   | 1        |
+      | result[0]workgroup.name | Les papy |
+
   Scenario: Can get versions of article by the id
     Given I have article
       | id | 13e6091c-8fed-4600-b079-a97a6b7a9800 |

@@ -1,0 +1,9 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Check" type="CompoundRunConfigurationType">
+    <toRun name="Unit Tests (offline)" type="JUnit" />
+    <toRun name="Cucumber Tests (offline)" type="JUnit" />
+    <toRun name="Test All SQL" type="ShConfigurationType" />
+    <toRun name="Lint" type="GradleRunConfiguration" />
+    <method v="2" />
+  </configuration>
+</component>

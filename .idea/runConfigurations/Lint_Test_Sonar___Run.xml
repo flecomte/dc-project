@@ -32,7 +32,7 @@
     </extension>
     <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="All Tests + Lint" run_configuration_type="JUnit" />
+      <option name="RunConfigurationTask" enabled="true" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Sonarqube" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>

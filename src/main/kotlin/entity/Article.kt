@@ -8,7 +8,7 @@ import fr.postgresjson.entity.mutable.UuidEntityVersioning
 import java.util.*
 
 class Article(
-    id: UUID = UUID.randomUUID(),
+    id: UUID? = null,
     title: String,
     override var anonymous: Boolean = true,
     override var content: String,
@@ -27,8 +27,22 @@ class Article(
     }
 }
 
+class ArticleForUpdate(
+    id: UUID?,
+    val title: String,
+    val anonymous: Boolean = true,
+    val content: String,
+    val description: String,
+    tags: List<String> = emptyList(),
+    val draft: Boolean = false,
+    val createdBy: CitizenRef,
+    val workgroup: WorkgroupRef? = null
+) : ArticleRefVersioning(id) {
+    val tags: List<String> = tags.distinct()
+}
+
 open class ArticleSimple(
-    id: UUID = UUID.randomUUID(),
+    id: UUID? = null,
     override var title: String,
     override val createdBy: CitizenBasic,
     override var draft: Boolean = false,
@@ -43,14 +57,14 @@ open class ArticleSimple(
     Opinionable by OpinionableImp()
 
 open class ArticleRefVersioning(
-    id: UUID = UUID.randomUUID(),
+    id: UUID? = null,
     versionNumber: Int? = null,
     versionId: UUID = UUID.randomUUID()
 ) : ArticleRef(id),
     EntityVersioning<UUID, Int> by UuidEntityVersioning(versionNumber, versionId)
 
 open class ArticleRef(
-    id: UUID = UUID.randomUUID()
+    id: UUID? = null
 ) : ArticleI, TargetRef(id)
 
 interface ArticleI : UuidEntityI, TargetI

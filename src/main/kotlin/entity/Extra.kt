@@ -15,7 +15,7 @@ interface ExtraI<T : TargetI, C : CitizenI> :
     val target: T
 }
 
-open class TargetRef(id: UUID = UUID.randomUUID(), reference: String = "") : TargetI, UuidEntity(id) {
+open class TargetRef(id: UUID? = null, reference: String = "") : TargetI, UuidEntity(id) {
 
     final override val reference: String
         get() = if (field != "") field else TargetI.getReference(this)
