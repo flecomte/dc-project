@@ -9,6 +9,7 @@ import fr.dcproject.repository.Workgroup.Filter
 import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
 import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
+import fr.dcproject.utils.toUUID
 import fr.ktorVoter.assertCan
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall
@@ -34,10 +35,12 @@ object WorkgroupsPaths {
         val sort: String? = null,
         val direction: RepositoryI.Direction? = null,
         val search: String? = null,
-        val createdBy: String? = null
+        val createdBy: String? = null,
+        members: List<String?>? = null
     ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+        val members: List<UUID>? = members?.toUUID()
     }
 
     @Location("/workgroups/{workgroup}")
@@ -111,7 +114,7 @@ object WorkgroupsMembersPaths {
 fun Route.workgroup(repo: WorkgroupRepository) {
     get<WorkgroupsPaths.WorkgroupsRequest> {
         val workgroups =
-            repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy))
+            repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy, members = it.members))
         assertCan(VIEW, workgroups.result)
         call.respond(workgroups)
     }

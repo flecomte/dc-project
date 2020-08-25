@@ -15,6 +15,7 @@ declare
         "anonymous": false
     }';
     selected_workgroup json;
+--     selected_workgroups json;
     members json;
     selected_citizen json;
 begin
@@ -58,6 +59,10 @@ begin
             'roles', jsonb_build_array('MASTER')
         )),
         'Members must contain citizen3';
+
+--     select resource into selected_workgroups
+--     from find_workgroups(_filter := json_build_object('members', json_build_array(_citizen_id2)));
+--     assert (select selected_workgroups#>>'{0,id}' = (created_workgroup->>'id'));
 
     -- Check if "find_citizen_by_id" retrun citizen
     assert (select find_citizen_by_id(_citizen_id2)#>>'{id}')::uuid = _citizen_id2, 'find_citizen_by_id must return citizen';

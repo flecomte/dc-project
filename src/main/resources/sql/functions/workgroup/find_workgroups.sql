@@ -13,9 +13,11 @@ begin
     select json_agg(t), (
         select count(id)
         from workgroup w
+        left join citizen_in_workgroup ciw on w.id = ciw.workgroup_id
         where deleted_at is null
           and (_search is null or _search = '' or w ==> dsl.multi_match('{name^3, description}', _search))
           and (_filter->>'created_by_id' is null or w.created_by_id = (_filter->>'created_by_id')::uuid)
+          and (_filter->>'members' is null or to_jsonb(array[ciw.citizen_id]) <@ (_filter->'members')::jsonb)
         )
     into resource, total
     from (
@@ -24,6 +26,7 @@ begin
             find_citizen_by_id_with_user(w.created_by_id) as created_by,
             zdb.score(w.ctid) _score
         from workgroup as w
+        left join citizen_in_workgroup ciw on w.id = ciw.workgroup_id
         where deleted_at is null
         and (
               _search is null
@@ -31,6 +34,7 @@ begin
            or w ==> dsl.multi_match('{name^3, description}', _search)
         )
           and (_filter->>'created_by_id' is null or w.created_by_id = (_filter->>'created_by_id')::uuid)
+          and (_filter->>'members' is null or to_jsonb(array[ciw.citizen_id]) <@ (_filter->'members')::jsonb)
 
         order by
         _score desc,

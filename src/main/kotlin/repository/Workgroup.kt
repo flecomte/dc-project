@@ -88,6 +88,7 @@ class Workgroup(override var requester: Requester) : RepositoryI {
     }
 
     class Filter(
-        val createdById: String? = null
+        val createdById: String? = null,
+        val members: List<UUID>? = null
     ) : Parameter
 }
