@@ -42,6 +42,9 @@ f: fixtures
 fixtures: ## Import fixtures
 	bash src/main/resources/sql/fixtures/fixtures.sh
 
+reset-database: ## Import fixtures
+	cd src/main/resources/sql/ ; bash resetDB.sh
+
 test-sql: ## Test sql
 	cd src/test/sql/ ; bash test.sh 1
 
