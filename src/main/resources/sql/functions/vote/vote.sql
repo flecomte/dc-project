@@ -35,6 +35,19 @@ begin
     end if;
 
     select count_vote(_target_id) into resource;
+
+    insert into vote_cache (id, total, score, percent) values
+    (
+        _target_id,
+        (resource->>'total')::int,
+        (resource->>'score')::int,
+        (resource->>'percent')::int
+    )
+    on conflict (id) do update set
+        updated_at = now(),
+        total = excluded.total,
+        score = excluded.score,
+        percent = excluded.percent;
 end;
 $$;
 

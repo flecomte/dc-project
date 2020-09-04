@@ -28,6 +28,7 @@ begin
             count_opinion(a.id) as opinions,
             zdb.score(a.ctid) _score
         from article as a
+        left join vote_cache ca using (id)
         where (
               _search is null
            or _search = ''
@@ -43,8 +44,8 @@ begin
             case sort
                 when 'title' then a.title
                 when 'created_at' then a.created_at::text
-                when 'vote' then count_vote(a.id)->>'score'
-                when 'popularity' then count_vote(a.id)->>'total'
+                when 'vote' then ca.score::text
+                when 'popularity' then ca.total::text
                 else null
             end
         end,
@@ -52,8 +53,8 @@ begin
             case sort
                 when 'title' then a.title
                 when 'created_at' then a.created_at::text
-                when 'vote' then count_vote(a.id)->>'score'
-                when 'popularity' then count_vote(a.id)->>'total'
+                when 'vote' then ca.score::text
+                when 'popularity' then ca.total::text
             end
         end
         desc,

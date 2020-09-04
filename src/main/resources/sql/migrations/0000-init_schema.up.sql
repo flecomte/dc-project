@@ -495,6 +495,20 @@ create table vote_for_comment_on_constitution
     unique (created_by_id, target_id)
 ) inherits (vote);
 
+
+create table vote_cache
+(
+    id         uuid      not null primary key,
+    updated_at timestamp not null default now(),
+    total      int       not null default 0,
+    score      int       not null default 0,
+    percent    int       not null default 0
+);
+
+create index on vote_cache (total);
+create index on vote_cache (score);
+create index on vote_cache (percent);
+
 -- Stats
 create table resource_view
 (
