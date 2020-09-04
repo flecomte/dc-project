@@ -1,0 +1,7 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Run for dev" type="CompoundRunConfigurationType">
+    <toRun name="Run" type="GradleRunConfiguration" />
+    <toRun name="Run dependencies" type="docker-deploy" />
+    <method v="2" />
+  </configuration>
+</component>

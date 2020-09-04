@@ -17,6 +17,7 @@
             <option value="elasticsearch" />
             <option value="rabbitmq" />
             <option value="redis" />
+            <option value="openapi" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yml" />

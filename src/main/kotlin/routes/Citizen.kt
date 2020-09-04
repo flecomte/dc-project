@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.citizen
+import fr.dcproject.citizenOrNull
 import fr.dcproject.entity.Citizen
 import fr.dcproject.routes.CitizenPaths.ChangePasswordCitizenRequest
 import fr.dcproject.routes.CitizenPaths.CitizenRequest
@@ -68,9 +69,12 @@ fun Route.citizen(
     }
 
     get<CurrentCitizenRequest> {
-        assertCan(VIEW, citizen)
-
-        call.respond(citizen)
+        if (citizenOrNull === null) {
+            call.respond(HttpStatusCode.Unauthorized)
+        } else {
+            assertCan(VIEW, citizen)
+            call.respond(citizen)
+        }
     }
 
     put<ChangePasswordCitizenRequest> {
