@@ -11,6 +11,17 @@
           </list>
         </option>
         <option name="commandLineOptions" value="--build" />
+        <option name="services">
+          <list>
+            <option value="app" />
+            <option value="db" />
+            <option value="elasticsearch" />
+            <option value="openapi" />
+            <option value="rabbitmq" />
+            <option value="redis" />
+            <option value="sonarqube" />
+          </list>
+        </option>
         <option name="sourceFilePath" value="docker-compose.yml" />
       </settings>
     </deployment>
