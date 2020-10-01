@@ -74,7 +74,7 @@ object ArticlesPaths {
             val tags: List<String> = emptyList(),
             val draft: Boolean = false,
             val versionId: UUID?,
-            val workgroup: WorkgroupRef?
+            val workgroup: WorkgroupRef? = null
         )
 
         private val workgroupRepository: WorkgroupRepository by inject()
