@@ -1,21 +1,6 @@
 # DC Project
 
-## Installation of Development environment
-### On windows
-1. Install git 
-    - Download and install: https://git-scm.com/download/win
-2. Install Make
-    - Go to [ezwinports](https://sourceforge.net/projects/ezwinports/files/).
-    - Download `make-4.1-2-without-guile-w32-bin.zip` (get the version without guile).
-    - Extract zip.
-    - Copy the contents to your `Git\mingw64\` merging the folders, but **do NOT overwrite/replace** any existing files.
-
-### Add JAVA_HOME path
-In CMD (Not Powershell)
-```cmd
-$ setx -m JAVA_HOME "C:\Users\%USERNAME%\.jdks\corretto-11.0.7"
-$ setx -m PATH "%PATH%;%JAVA_HOME%\bin";
-```
+[Installation](./doc/installation)
 
 ### Run dockers
 ```bash
