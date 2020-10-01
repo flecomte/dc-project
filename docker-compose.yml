@@ -5,14 +5,12 @@ services:
   sonarqube:
     container_name: sonarqube_${NAME}
     image: sonarqube
-    restart: always
     ports:
       - ${SONARQUBE_PORT}:9000
 
   openapi:
     container_name: openapi_${NAME}
     image: swaggerapi/swagger-ui
-    restart: always
     ports:
       - ${OPENAPI_PORT}:8080
     environment:
@@ -21,7 +19,6 @@ services:
   rabbitmq:
     container_name: rabbitmq_${NAME}
     image: rabbitmq:management-alpine
-    restart: always
     ports:
       - ${RABBITMQ_PORT}:5672
       - ${RABBITMQ_MANAGEMENT_PORT}:15672
@@ -29,7 +26,6 @@ services:
   redis:
     container_name: redis_${NAME}
     image: redis:6.0-rc-alpine
-    restart: always
     ports:
       - ${REDIS_PORT}:6379
     volumes:
@@ -40,7 +36,6 @@ services:
     build:
       context: .
       dockerfile: docker/app/Dockerfile
-    restart: always
     ports:
       - ${APP_PORT}:8080
     environment:
@@ -58,7 +53,6 @@ services:
   elasticsearch:
     container_name: elasticsearch_${NAME}
     image: elasticsearch:6.7.1
-    restart: always
     ports:
       - ${ELASTIC_REST}:9200
       - ${ELASTIC_NODES}:9300
@@ -72,7 +66,6 @@ services:
     container_name: postgresql_${NAME}
     build:
       context: docker/postgresql
-    restart: always
     ports:
       - ${POSTGRESQL_PORT}:5432
     environment:
