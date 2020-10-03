@@ -36,9 +36,11 @@ class ArticleForUpdate(
     tags: List<String> = emptyList(),
     val draft: Boolean = false,
     val createdBy: CitizenRef,
-    val workgroup: WorkgroupRef? = null
-) : ArticleRefVersioning(id) {
+    val workgroup: WorkgroupRef? = null,
+    versionId: UUID?
+) : ArticleRefVersioning(id, versionId = versionId ?: UUID.randomUUID()) {
     val tags: List<String> = tags.distinct()
+    val isNew = versionId == null
 }
 
 open class ArticleSimple(

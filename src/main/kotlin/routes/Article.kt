@@ -11,6 +11,7 @@ import fr.dcproject.event.raiseEvent
 import fr.dcproject.repository.Article.Filter
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
+import fr.dcproject.security.voter.ArticleVoter.Action.UPDATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.views.ArticleViewManager
 import fr.ktorVoter.assertCan
@@ -81,18 +82,17 @@ object ArticlesPaths {
 
         suspend fun getNewArticle(call: ApplicationCall): ArticleForUpdate = call.receive<Article>().run {
             ArticleForUpdate(
-                id ?: UUID.randomUUID(),
-                title,
-                anonymous,
-                content,
-                description,
-                tags,
-                draft,
+                id = id ?: UUID.randomUUID(),
+                title = title,
+                anonymous = anonymous,
+                content = content,
+                description = description,
+                tags = tags,
+                draft = draft,
                 createdBy = call.citizen,
-                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) as WorkgroupSimple<CitizenRef> else null
-            ).also {
-                it.versionId = versionId ?: UUID.randomUUID()
-            }
+                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) as WorkgroupSimple<CitizenRef> else null,
+                versionId = versionId
+            )
         }
     }
 }
@@ -134,7 +134,11 @@ fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
 
     post<ArticlesPaths.PostArticleRequest> {
         it.getNewArticle(call).also { article ->
-            assertCan(CREATE, article)
+            if(article.isNew) {
+                assertCan(CREATE, article)
+            } else {
+                assertCan(UPDATE, article)
+            }
             val newArticle = repo.upsert(article) ?: error("Article not updated")
             call.respond(article)
             raiseEvent(ArticleUpdate.event, ArticleUpdate(newArticle))

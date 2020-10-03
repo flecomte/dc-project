@@ -73,7 +73,8 @@ class ArticleSteps : En, KoinTest {
             content = "bla bla bla",
             description = "A super article",
             createdBy = createdBy,
-            workgroup = workgroup
+            workgroup = workgroup,
+            versionId = UUID.randomUUID()
         )
         get<ArticleRepository>().upsert(article)
     }
