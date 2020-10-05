@@ -3,7 +3,9 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -47,19 +49,19 @@ internal class OpinionChoiceVoterTest {
     }
 
     @Test
-    fun `support opinion choice`() = OpinionChoiceVoter().run {
+    fun `support opinion choice`(): Unit = OpinionChoiceVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(OpinionChoiceVoter.Action.VIEW, it, choice1) `should be` true
-            supports(OpinionChoiceVoter.Action.VIEW, it, article1) `should be` false
-            supports(p, it, choice1) `should be` false
+            this(OpinionChoiceVoter.Action.VIEW, it, choice1) `should be` Vote.GRANTED
+            this(OpinionChoiceVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
+            this(p, it, choice1) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view the opinion choice`() = listOf(OpinionChoiceVoter()).run {
+    fun `can be view the opinion choice`(): Unit = listOf(OpinionChoiceVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -68,11 +70,11 @@ internal class OpinionChoiceVoterTest {
     }
 
     @Test
-    fun `can be view the opinion choice list`() = listOf(OpinionChoiceVoter()).run {
+    fun `can be view the opinion choice list`(): Unit = listOf(OpinionChoiceVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(OpinionChoiceVoter.Action.VIEW, it, listOf(choice1)) `should be` true
+            canAll(OpinionChoiceVoter.Action.VIEW, it, listOf(choice1)) `should be` true
         }
     }
 }

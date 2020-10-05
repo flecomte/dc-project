@@ -3,34 +3,29 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.citizenOrNull
 import fr.dcproject.entity.ArticleForUpdate
-import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.WorkgroupRef
-import fr.dcproject.entity.WorkgroupSimple
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.event.raiseEvent
 import fr.dcproject.repository.Article.Filter
-import fr.dcproject.repository.Workgroup as WorkgroupRepository
 import fr.dcproject.security.voter.ArticleVoter.Action.CREATE
 import fr.dcproject.security.voter.ArticleVoter.Action.UPDATE
 import fr.dcproject.security.voter.ArticleVoter.Action.VIEW
 import fr.dcproject.views.ArticleViewManager
 import fr.ktorVoter.assertCan
+import fr.ktorVoter.assertCanAll
 import fr.postgresjson.repository.RepositoryI
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.post
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.application.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.repository.Article as ArticleRepository
+import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 @KtorExperimentalLocationsAPI
 object ArticlesPaths {
@@ -90,7 +85,7 @@ object ArticlesPaths {
                 tags = tags,
                 draft = draft,
                 createdBy = call.citizen,
-                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) as WorkgroupSimple<CitizenRef> else null,
+                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) else null,
                 versionId = versionId
             )
         }
@@ -108,7 +103,7 @@ fun Route.article(repo: ArticleRepository, viewManager: ArticleViewManager) {
             it.search,
             Filter(createdById = it.createdBy, workgroupId = it.workgroup)
         )
-        assertCan(VIEW, articles.result)
+        assertCanAll(VIEW, articles.result)
         call.respond(articles)
     }
 

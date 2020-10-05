@@ -11,17 +11,15 @@ import fr.dcproject.routes.CitizenPaths.CurrentCitizenRequest
 import fr.dcproject.security.voter.CitizenVoter.Action.CHANGE_PASSWORD
 import fr.dcproject.security.voter.CitizenVoter.Action.VIEW
 import fr.ktorVoter.assertCan
+import fr.ktorVoter.assertCanAll
 import fr.postgresjson.repository.RepositoryI.Direction
-import io.ktor.application.call
-import io.ktor.auth.UserPasswordCredential
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.put
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.User as UserRepository
 
@@ -58,7 +56,7 @@ fun Route.citizen(
 ) {
     get<CitizensRequest> {
         val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-        assertCan(VIEW, citizens.result)
+        assertCanAll(VIEW, citizens.result)
         call.respond(citizens)
     }
 

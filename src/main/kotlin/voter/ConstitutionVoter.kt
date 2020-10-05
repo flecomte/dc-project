@@ -10,7 +10,7 @@ import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Vote as VoteEntity
 
-class ConstitutionVoter : Voter {
+class ConstitutionVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         CREATE,
         UPDATE,
@@ -18,13 +18,11 @@ class ConstitutionVoter : Voter {
         DELETE
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-            .and(subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is Comment<*>)
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if(!((action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
+            && (subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is Comment<*>))) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
-        val user = call.user
+        val user = context.user
         if (action == Action.CREATE && user != null) {
             return Vote.GRANTED
         }

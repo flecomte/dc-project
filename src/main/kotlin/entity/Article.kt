@@ -19,6 +19,7 @@ class Article(
     override val createdBy: CitizenBasic,
     workgroup: WorkgroupSimple<CitizenRef>? = null
 ) : ArticleFull,
+    ArticleForUpdateI,
     ArticleAuthI<CitizenBasicI>,
     ArticleSimple(id, title, createdBy, draft, workgroup),
     Viewable by ViewableImp() {
@@ -26,19 +27,28 @@ class Article(
         tags = tags.distinct()
     }
 }
-
+interface ArticleForUpdateI: ArticleI, EntityVersioning<UUID, Int>, TargetI {
+    val title: String
+    val anonymous: Boolean
+    val content: String
+    val description: String
+    val draft: Boolean
+    val createdBy: CitizenRef
+    val workgroup: WorkgroupRef?
+}
 class ArticleForUpdate(
     id: UUID?,
-    val title: String,
-    val anonymous: Boolean = true,
-    val content: String,
-    val description: String,
+    override val title: String,
+    override val anonymous: Boolean = true,
+    override val content: String,
+    override val description: String,
     tags: List<String> = emptyList(),
-    val draft: Boolean = false,
-    val createdBy: CitizenRef,
-    val workgroup: WorkgroupRef? = null,
+    override val draft: Boolean = false,
+    override val createdBy: CitizenRef,
+    override val workgroup: WorkgroupRef? = null,
     versionId: UUID?
-) : ArticleRefVersioning(id, versionId = versionId ?: UUID.randomUUID()) {
+) : ArticleForUpdateI,
+    ArticleRefVersioning(id, versionId = versionId ?: UUID.randomUUID()) {
     val tags: List<String> = tags.distinct()
     val isNew = versionId == null
 }

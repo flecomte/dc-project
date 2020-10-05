@@ -3,13 +3,16 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.security.voter.FollowVoter.Action.*
+import fr.dcproject.security.voter.FollowVoter.Action.CREATE
+import fr.dcproject.security.voter.FollowVoter.Action.DELETE
+import fr.dcproject.security.voter.FollowVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.entity.Follow as FollowEntity
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 
@@ -47,7 +50,7 @@ fun Route.followConstitution(repo: FollowConstitutionRepository) {
 
     get<FollowConstitutionPaths.CitizenFollowConstitutionRequest> {
         val follows = repo.findByCitizen(it.citizen)
-        assertCan(VIEW, follows.result)
+        assertCanAll(VIEW, follows.result)
         call.respond(follows)
     }
 }

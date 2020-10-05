@@ -3,7 +3,10 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
+import fr.postgresjson.connexion.Paginated
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -14,6 +17,7 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import fr.dcproject.repository.Article as ArticleRepo
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -51,6 +55,12 @@ internal class CommentVoterTest {
         target = article1
     )
 
+    private val comment2 = Comment(
+        content = "Hello2",
+        createdBy = einstein,
+        target = article1
+    )
+
     private val commentTargetDeleted = Comment(
         content = "Hello",
         createdBy = tesla,
@@ -69,42 +79,48 @@ internal class CommentVoterTest {
         target = ArticleRef()
     )
 
+    private val repoArticle1 = mockk<ArticleRepo> {
+        every { findVerionsByVersionsId(1, 1, any()) } returns Paginated(listOf(article1), 0, 1, 1)
+    }
+
     init {
         mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test
-    fun `support comment`() = CommentVoter().run {
+    fun `support comment`(): Unit = CommentVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(CommentVoter.Action.VIEW, it, comment1) `should be` true
-            supports(CommentVoter.Action.VIEW, it, article1) `should be` false
-            supports(p, it, comment1) `should be` false
+            this(CommentVoter.Action.VIEW, it, comment1) `should be` Vote.GRANTED
+            this(CommentVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
+            this(p, it, comment1) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view the comment`() = listOf(CommentVoter(), ArticleVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(CommentVoter.Action.VIEW, it, comment1) `should be` true
+    fun `can be view the comment`(): Unit {
+        listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
+            mockk<ApplicationCall> {
+                every { user } returns tesla.user
+            }.let {
+                can(CommentVoter.Action.VIEW, it, comment1) `should be` true
+            }
         }
     }
 
     @Test
-    fun `can be view the comment list`() = listOf(CommentVoter()).run {
+    fun `can be view the comment list`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
-            can(CommentVoter.Action.VIEW, it, listOf(comment1)) `should be` true
+            canAll(CommentVoter.Action.VIEW, it, listOf(comment1)) `should be` true
         }
     }
 
     @Test
-    fun `can be update your comment`() = listOf(CommentVoter()).run {
+    fun `can be update your comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -113,7 +129,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be update other comment`() = listOf(CommentVoter()).run {
+    fun `can not be update other comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -122,7 +138,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be delete your comment`() = listOf(CommentVoter()).run {
+    fun `can not be delete your comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -131,7 +147,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can be create a comment`() = listOf(CommentVoter(), ArticleVoter()).run {
+    fun `can be create a comment`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -140,7 +156,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be create a comment if target is deleted`() = listOf(CommentVoter(), ArticleVoter()).run {
+    fun `can not be create a comment if target is deleted`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -149,7 +165,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be create a comment if target has no user`() = listOf(CommentVoter(), ArticleVoter()).run {
+    fun `can not be create a comment if target has no user`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -158,7 +174,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be create a comment with other creator`() = listOf(CommentVoter()).run {
+    fun `can not be create a comment with other creator`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -167,7 +183,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be create a comment if is null`() = listOf(CommentVoter()).run {
+    fun `can not be create a comment if is null`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -176,7 +192,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can not be create a comment if not connected`() = listOf(CommentVoter()).run {
+    fun `can not be create a comment if not connected`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {

@@ -3,6 +3,7 @@ import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBe
 import org.intellij.lang.annotations.Language
@@ -125,7 +126,7 @@ class VoteTest {
     @Test
     fun `test Vote Article Deserialize`() {
         val vote: Vote<Article> = voteJson.deserialize()!!
-        vote.id.toString() `should equal` "032acc3d-e8c5-4cb2-9297-bec913ff8d9b"
-        vote.note.toString() `should equal` "-1"
+        vote.id.toString() `should be equal to` "032acc3d-e8c5-4cb2-9297-bec913ff8d9b"
+        vote.note.toString() `should be equal to` "-1"
     }
 }

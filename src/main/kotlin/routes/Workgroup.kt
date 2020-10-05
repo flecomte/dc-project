@@ -11,14 +11,14 @@ import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
 import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.utils.toUUID
 import fr.ktorVoter.assertCan
+import fr.ktorVoter.assertCanAll
 import fr.postgresjson.repository.RepositoryI
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
+import io.ktor.application.*
+import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
@@ -115,7 +115,7 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     get<WorkgroupsPaths.WorkgroupsRequest> {
         val workgroups =
             repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy, members = it.members))
-        assertCan(VIEW, workgroups.result)
+        assertCanAll(VIEW, workgroups.result)
         call.respond(workgroups)
     }
 

@@ -3,6 +3,7 @@ import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBe
 import org.intellij.lang.annotations.Language
@@ -103,6 +104,6 @@ class FollowTest {
     @Test
     fun `test Follow Article Deserialize`() {
         val follow: Follow<ArticleSimple> = followJson.deserialize()!!
-        follow.id.toString() `should equal` "bae81585-d985-4d7a-9b58-3a13e911688a"
+        follow.id.toString() `should be equal to` "bae81585-d985-4d7a-9b58-3a13e911688a"
     }
 }

@@ -4,17 +4,19 @@ import fr.dcproject.citizen
 import fr.dcproject.entity.Comment
 import fr.dcproject.entity.CommentRef
 import fr.dcproject.routes.CommentPaths.CreateCommentRequest.Content
-import fr.dcproject.security.voter.CommentVoter.Action.*
+import fr.dcproject.security.voter.CommentVoter.Action.CREATE
+import fr.dcproject.security.voter.CommentVoter.Action.UPDATE
+import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import io.ktor.application.call
-import io.ktor.features.NotFoundException
-import io.ktor.http.HttpStatusCode
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.features.*
+import io.ktor.http.*
 import io.ktor.locations.*
-import io.ktor.request.receive
-import io.ktor.request.receiveText
-import io.ktor.response.respond
-import io.ktor.routing.Route
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.util.*
 import java.util.*
 import fr.dcproject.repository.CommentGeneric as CommentRepository
 
@@ -58,7 +60,7 @@ fun Route.comment(repo: CommentRepository) {
                 it.limit
             )
 
-        assertCan(VIEW, comments.result)
+        assertCanAll(VIEW, comments.result)
 
         call.respond(HttpStatusCode.OK, comments)
     }

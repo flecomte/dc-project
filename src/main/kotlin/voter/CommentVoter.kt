@@ -7,7 +7,7 @@ import fr.ktorVoter.Vote
 import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 
-class CommentVoter : Voter {
+class CommentVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         CREATE,
         UPDATE,
@@ -15,15 +15,12 @@ class CommentVoter : Voter {
         DELETE
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action)
-            .and(subject is Comment<*>?)
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if (!(action is Action && subject is Comment<*>?)) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
-        val user = call.user
+        val user = context.user
 
-        if (subject !is Comment<*>) {
+        if (subject == null) {
             return Vote.DENIED
         }
 
@@ -50,10 +47,6 @@ class CommentVoter : Voter {
             return Vote.DENIED
         }
 
-        if (action is Action) {
-            return Vote.DENIED
-        }
-
-        return Vote.ABSTAIN
+        return Vote.DENIED
     }
 }

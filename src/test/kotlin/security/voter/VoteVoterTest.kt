@@ -3,7 +3,10 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
+import fr.postgresjson.connexion.Paginated
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -77,19 +80,19 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `support vote`() = VoteVoter().run {
+    fun `support vote`(): Unit = VoteVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(VoteVoter.Action.VIEW, it, vote1) `should be` true
-            supports(VoteVoter.Action.VIEW, it, article1) `should be` false
-            supports(p, it, vote1) `should be` false
+            this(VoteVoter.Action.VIEW, it, vote1) `should be` Vote.GRANTED
+            this(VoteVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
+            this(p, it, vote1) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view your the vote`() = listOf(VoteVoter()).run {
+    fun `can be view your the vote`(): Unit = listOf(VoteVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -98,7 +101,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can not be view vote of other`() = listOf(VoteVoter()).run {
+    fun `can not be view vote of other`(): Unit = listOf(VoteVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -107,7 +110,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can be not view the vote if is null`() = listOf(VoteVoter()).run {
+    fun `can be not view the vote if is null`(): Unit = listOf(VoteVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -116,25 +119,27 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can be view your votes list`() = listOf(VoteVoter()).run {
+    fun `can be view your votes list`(): Unit = listOf(VoteVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(VoteVoter.Action.VIEW, it, listOf(vote1)) `should be` true
+            canAll(VoteVoter.Action.VIEW, it, listOf(vote1)) `should be` true
         }
     }
 
     @Test
-    fun `can be vote an article`() = listOf(VoteVoter(), ArticleVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(VoteVoter.Action.CREATE, it, vote1) `should be` true
+    fun `can be vote an article`(): Unit {
+        listOf(VoteVoter(), ArticleVoter(mockk())).run {
+            mockk<ApplicationCall> {
+                every { user } returns tesla.user
+            }.let {
+                can(VoteVoter.Action.CREATE, it, vote1) `should be` true
+            }
         }
     }
 
     @Test
-    fun `can not be vote if not connected`() = listOf(VoteVoter()).run {
+    fun `can not be vote if not connected`(): Unit = listOf(VoteVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {
@@ -143,7 +148,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can not be vote an article if article is deleted`() = listOf(VoteVoter(), ArticleVoter()).run {
+    fun `can not be vote an article if article is deleted`(): Unit = listOf(VoteVoter(), ArticleVoter(mockk())).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -152,7 +157,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can not be vote an article if article have no user`() = listOf(VoteVoter(), ArticleVoter()).run {
+    fun `can not be vote an article if article have no user`(): Unit = listOf(VoteVoter(), ArticleVoter(mockk())).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -161,7 +166,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can not be comment an article if article is deleted`() = listOf(VoteVoter(), ArticleVoter()).run {
+    fun `can not be comment an article if article is deleted`(): Unit = listOf(VoteVoter(), ArticleVoter(mockk())).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {

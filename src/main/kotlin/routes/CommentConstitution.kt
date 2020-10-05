@@ -6,15 +6,13 @@ import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.post
-import io.ktor.request.receiveText
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 
@@ -31,7 +29,7 @@ object CommentConstitutionPaths {
 fun Route.commentConstitution(repo: CommentConstitutionRepository) {
     get<CommentConstitutionPaths.ConstitutionCommentRequest> {
         val comments = repo.findByTarget(it.constitution)
-        assertCan(VIEW, comments.result)
+        assertCanAll(VIEW, comments.result)
         call.respond(HttpStatusCode.OK, comments)
     }
 
@@ -50,7 +48,7 @@ fun Route.commentConstitution(repo: CommentConstitutionRepository) {
 
     get<CommentConstitutionPaths.CitizenCommentConstitutionRequest> {
         val comments = repo.findByCitizen(it.citizen)
-        assertCan(VIEW, comments.result)
+        assertCanAll(VIEW, comments.result)
         call.respond(comments)
     }
 }

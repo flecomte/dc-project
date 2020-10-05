@@ -3,6 +3,7 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.VoterException
 import fr.ktorVoter.can
 import io.ktor.application.ApplicationCall
@@ -74,19 +75,19 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `support workgroup`() = WorkgroupVoter().run {
+    fun `support workgroup`(): Unit = WorkgroupVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(WorkgroupVoter.Action.VIEW, it, workgroupPublic) `should be` true
-            supports(WorkgroupVoter.Action.VIEW, it, article1) `should be` false
-            supports(p, it, workgroupPublic) `should be` false
+            this(WorkgroupVoter.Action.VIEW, it, workgroupPublic) `should be` Vote.GRANTED
+            this(WorkgroupVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
+            this(p, it, workgroupPublic) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view your workgroup`() = listOf(WorkgroupVoter()).run {
+    fun `can be view your workgroup`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -95,7 +96,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be view your workgroup if is not public`() = listOf(WorkgroupVoter()).run {
+    fun `can be view your workgroup if is not public`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -104,7 +105,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be view workgroup of other if is public`() = listOf(WorkgroupVoter()).run {
+    fun `can be view workgroup of other if is public`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -113,7 +114,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can not be view workgroup of other if is not public`() = listOf(WorkgroupVoter()).run {
+    fun `can not be view workgroup of other if is not public`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -122,7 +123,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be not view the workgroup if is null`() = listOf(WorkgroupVoter()).run {
+    fun `can be not view the workgroup if is null`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -131,16 +132,18 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be view your workgroup list`() = listOf(WorkgroupVoter()).run {
+    fun `can be view your workgroup list`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(WorkgroupVoter.Action.VIEW, it, listOf(workgroupPublic)) `should be` true
+            listOf(workgroupPublic).map { workgroup ->
+                can(WorkgroupVoter.Action.VIEW, it, workgroup)
+            }.all { it } `should be` true
         }
     }
 
     @Test
-    fun `can be create workgroup`() = listOf(WorkgroupVoter()).run {
+    fun `can be create workgroup`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -149,7 +152,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can not be create workgroup if not connected`() = listOf(WorkgroupVoter()).run {
+    fun `can not be create workgroup if not connected`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {
@@ -158,7 +161,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be delete workgroup if owner`() = listOf(WorkgroupVoter()).run {
+    fun `can be delete workgroup if owner`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -167,7 +170,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can not be delete workgroup if not owner`() = listOf(WorkgroupVoter()).run {
+    fun `can not be delete workgroup if not owner`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -176,7 +179,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can be update workgroup if owner`() = listOf(WorkgroupVoter()).run {
+    fun `can be update workgroup if owner`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -185,7 +188,7 @@ internal class WorkgroupVoterTest {
     }
 
     @Test
-    fun `can not be update workgroup if not owner`() = listOf(WorkgroupVoter()).run {
+    fun `can not be update workgroup if not owner`(): Unit = listOf(WorkgroupVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {

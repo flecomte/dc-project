@@ -16,9 +16,9 @@ import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
-import io.ktor.client.HttpClient
-import io.ktor.client.features.websocket.WebSockets
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.client.*
+import io.ktor.client.features.websocket.*
+import io.ktor.util.*
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands
 import org.apache.http.HttpHost
@@ -123,7 +123,7 @@ val Module = module {
 
     single { ArticleViewManager(get()) }
 
-    // Mailler
+    // Mailer
     single { Mailer(Config.sendGridKey) }
 
     // SSO Manager for connection

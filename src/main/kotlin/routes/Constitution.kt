@@ -7,17 +7,14 @@ import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
 import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
 import fr.ktorVoter.assertCan
+import fr.ktorVoter.assertCanAll
 import fr.postgresjson.entity.immutable.UuidEntity
 import fr.postgresjson.repository.RepositoryI
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.post
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.application.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import java.util.*
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.repository.Constitution as ConstitutionRepository
@@ -86,7 +83,7 @@ object ConstitutionPaths {
 fun Route.constitution(repo: ConstitutionRepository) {
     get<ConstitutionPaths.ConstitutionsRequest> {
         val constitutions = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-        assertCan(VIEW, constitutions.result)
+        assertCanAll(VIEW, constitutions.result)
         call.respond(constitutions)
     }
 

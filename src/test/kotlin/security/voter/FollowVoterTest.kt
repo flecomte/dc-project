@@ -3,7 +3,9 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -63,19 +65,19 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `support follow`() = FollowVoter().run {
+    fun `support follow`(): Unit = FollowVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(FollowVoter.Action.VIEW, it, follow1) `should be` true
-            supports(FollowVoter.Action.VIEW, it, article1) `should be` false
-            supports(p, it, follow1) `should be` false
+            this(FollowVoter.Action.VIEW, it, follow1) `should be` Vote.GRANTED
+            this(FollowVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
+            this(p, it, follow1) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view the follow`() = listOf(FollowVoter()).run {
+    fun `can be view the follow`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -84,16 +86,16 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can be view the follow list`() = listOf(FollowVoter()).run {
+    fun `can be view the follow list`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(FollowVoter.Action.VIEW, it, listOf(follow1)) `should be` true
+            canAll(FollowVoter.Action.VIEW, it, listOf(follow1)) `should be` true
         }
     }
 
     @Test
-    fun `can be view your anonymous follow`() = listOf(FollowVoter()).run {
+    fun `can be view your anonymous follow`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -102,7 +104,7 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can not be view the anonymous follow of other`() = listOf(FollowVoter()).run {
+    fun `can not be view the anonymous follow of other`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -111,7 +113,7 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can be follow article`() = listOf(FollowVoter()).run {
+    fun `can be follow article`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -120,7 +122,7 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can not be follow article if not connected`() = listOf(FollowVoter()).run {
+    fun `can not be follow article if not connected`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {
@@ -129,7 +131,7 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can be unfollow article`() = listOf(FollowVoter()).run {
+    fun `can be unfollow article`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -138,7 +140,7 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `can not be unfollow article if not connected`() = listOf(FollowVoter()).run {
+    fun `can not be unfollow article if not connected`(): Unit = listOf(FollowVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {

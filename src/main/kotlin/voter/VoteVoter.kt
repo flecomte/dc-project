@@ -7,23 +7,22 @@ import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 import fr.dcproject.entity.Vote as VoteEntity
 
-class VoteVoter : Voter {
+class VoteVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         CREATE,
         VIEW
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return action is Action && subject is VoteEntity<*>?
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if (!(action is Action && subject is VoteEntity<*>?)) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
-        val user = call.user
-        if (action == Action.CREATE && user != null) {
+        val user = context.user ?: return Vote.DENIED
+
+        if (action == Action.CREATE) {
             return Vote.GRANTED
         }
 
-        if (action == Action.VIEW && user != null) {
+        if (action == Action.VIEW) {
             if (subject is VoteEntity<*>) {
                 return if (subject.createdBy.user.id != user.id) {
                     Vote.DENIED

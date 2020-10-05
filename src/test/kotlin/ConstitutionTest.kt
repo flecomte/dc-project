@@ -6,6 +6,7 @@ import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should equal`
 import org.amshove.kluent.shouldBe
 import org.intellij.lang.annotations.Language
@@ -101,6 +102,6 @@ class ConstitutionTest {
     @Test
     fun `test Constitution Deserialize`() {
         val constitution2: Constitution = constitutionJson.deserialize()!!
-        constitution2.id.toString() `should equal` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
+        constitution2.id.toString() `should be equal to` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
     }
 }

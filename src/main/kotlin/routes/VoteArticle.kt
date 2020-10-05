@@ -8,17 +8,15 @@ import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
 import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.dcproject.security.voter.VoteVoter.Action.VIEW
-import fr.ktorVoter.assertCan
 import fr.dcproject.utils.toUUID
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.put
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import fr.ktorVoter.assertCan
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import java.util.*
 import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Vote as VoteEntity
@@ -79,7 +77,7 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
 
     get<VoteArticlePaths.CitizenVoteArticleRequest> {
         val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
-        assertCan(VIEW, votes.result)
+        assertCanAll(VIEW, votes.result)
 
         call.respond(votes)
     }
@@ -87,7 +85,7 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
     get<VoteArticlePaths.CitizenVotesByIdsRequest> {
         val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
         if (votes.isNotEmpty()) {
-            assertCan(VIEW, votes)
+            assertCanAll(VIEW, votes)
         }
         call.respond(votes)
     }

@@ -9,7 +9,7 @@ import fr.ktorVoter.Voter
 import fr.ktorVoter.VoterException
 import io.ktor.application.ApplicationCall
 
-class WorkgroupVoter : Voter {
+class WorkgroupVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         CREATE,
         UPDATE,
@@ -24,13 +24,11 @@ class WorkgroupVoter : Voter {
         REMOVE,
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action || action is ActionMembers)
-            .and(subject is WorkgroupI?)
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if (!((action is Action || action is ActionMembers)
+            && (subject is WorkgroupI? || (subject is List<*> && subject.first() is WorkgroupI)))) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
-        val user = call.user
+        val user = context.user
         if (subject is WorkgroupI && action == Action.CREATE && user is UserI) {
             return Vote.GRANTED
         }
@@ -62,7 +60,7 @@ class WorkgroupVoter : Voter {
 
         if (action == ActionMembers.ADD) {
             // TODO create ROLES
-            return Vote.isGranted {
+            return Vote.toVote {
                 user is UserI &&
                 subject is WorkgroupWithAuthI<*> &&
                 subject.hasRole(Role.MASTER, user)
@@ -71,7 +69,7 @@ class WorkgroupVoter : Voter {
 
         if (action == ActionMembers.UPDATE) {
             // TODO create ROLES
-            return Vote.isGranted {
+            return Vote.toVote {
                 user is UserI &&
                 subject is WorkgroupWithAuthI<*> &&
                 subject.hasRole(Role.MASTER, user)
@@ -80,7 +78,7 @@ class WorkgroupVoter : Voter {
 
         if (action == ActionMembers.REMOVE) {
             // TODO create ROLES
-            return Vote.isGranted {
+            return Vote.toVote {
                 user is UserI &&
                 subject is WorkgroupWithAuthI<*> &&
                 subject.hasRole(Role.MASTER, user)

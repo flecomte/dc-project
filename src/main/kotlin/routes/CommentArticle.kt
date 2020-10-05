@@ -7,16 +7,13 @@ import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.locations.post
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 
@@ -61,7 +58,7 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
     get<CommentArticlePaths.ArticleCommentRequest> {
         val comment = repo.findByTarget(it.article, it.page, it.limit, it.sort)
         if (comment.result.isNotEmpty()) {
-            assertCan(VIEW, comment.result)
+            assertCanAll(VIEW, comment.result)
         }
         call.respond(HttpStatusCode.OK, comment)
     }
@@ -76,7 +73,7 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
 
     get<CommentArticlePaths.CitizenCommentArticleRequest> {
         repo.findByCitizen(it.citizen).let { comments ->
-            assertCan(VIEW, comments.result)
+            assertCanAll(VIEW, comments.result)
             call.respond(comments)
         }
     }

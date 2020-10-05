@@ -3,7 +3,9 @@ package fr.dcproject.security.voter
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -62,20 +64,20 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `support opinion`() = OpinionVoter().run {
+    fun `support opinion`(): Unit = OpinionVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(OpinionVoter.Action.VIEW, it, opinion1) `should be` true
-            supports(OpinionVoter.Action.VIEW, it, article1) `should be` true
-            supports(OpinionVoter.Action.VIEW, it, einstein) `should be` false
-            supports(p, it, opinion1) `should be` false
+            this(OpinionVoter.Action.VIEW, it, opinion1) `should be` Vote.GRANTED
+            this(OpinionVoter.Action.VIEW, it, article1) `should be` Vote.GRANTED
+            this(OpinionVoter.Action.VIEW, it, einstein) `should be` Vote.ABSTAIN
+            this(p, it, opinion1) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view the opinion`() = listOf(OpinionVoter()).run {
+    fun `can be view the opinion`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -84,7 +86,7 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `can be not view the opinion if is null`() = listOf(OpinionVoter()).run {
+    fun `can be not view the opinion if is null`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -93,16 +95,16 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `can be view the opinion list`() = listOf(OpinionVoter()).run {
+    fun `can be view the opinion list`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(OpinionVoter.Action.VIEW, it, listOf(opinion1)) `should be` true
+            canAll(OpinionVoter.Action.VIEW, it, listOf(opinion1)) `should be` true
         }
     }
 
     @Test
-    fun `can be opinion an article`() = listOf(OpinionVoter()).run {
+    fun `can be opinion an article`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -120,7 +122,7 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `can be remove opinion`() = listOf(OpinionVoter()).run {
+    fun `can be remove opinion`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -129,7 +131,7 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `can not be remove opinion if not connected`() = listOf(OpinionVoter()).run {
+    fun `can not be remove opinion if not connected`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns null
         }.let {
@@ -138,7 +140,7 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `can not be remove opinion of other user`() = listOf(OpinionVoter()).run {
+    fun `can not be remove opinion of other user`(): Unit = listOf(OpinionVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {

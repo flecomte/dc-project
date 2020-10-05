@@ -6,7 +6,7 @@ import fr.dcproject.views.ArticleViewManager
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
-import org.amshove.kluent.`should equal`
+import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -61,8 +61,8 @@ class ViewTest {
             val afterView = viewManager.getViewsCount(article)
 
             /* Check if view has increment */
-            afterView.total `should equal` startView.total + 4
-            afterView.unique `should equal` startView.unique + 3
+            afterView.total `should be equal to` startView.total + 4
+            afterView.unique `should be equal to` startView.unique + 3
         }
     }
 }

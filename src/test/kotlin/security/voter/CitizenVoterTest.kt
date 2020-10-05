@@ -6,7 +6,9 @@ import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
+import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
 import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.mockk.every
@@ -21,7 +23,7 @@ import org.junit.jupiter.api.TestInstance
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("voter")
-internal class CitizenVoterTest {
+class CitizenVoterTest {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",
@@ -56,18 +58,18 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `support citizen`() = CitizenVoter().run {
+    fun `support citizen`(): Unit = CitizenVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            supports(CitizenVoter.Action.VIEW, it, einstein) `should be` true
-            supports(p, it, einstein) `should be` false
+            this(CitizenVoter.Action.VIEW, it, einstein) `should be` Vote.GRANTED
+            this(p, it, einstein) `should be` Vote.ABSTAIN
         }
     }
 
     @Test
-    fun `can be view the citizen`() = listOf(CitizenVoter()).run {
+    fun `can be view the citizen`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -76,16 +78,16 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `can be view the citizen list`() = listOf(CitizenVoter()).run {
+    fun `can be view the citizen list`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
-            can(CitizenVoter.Action.VIEW, it, listOf(einstein, tesla)) `should be` true
+            canAll(CitizenVoter.Action.VIEW, it, listOf(einstein, tesla)) `should be` true
         }
     }
 
     @Test
-    fun `can not view deleted citizen`() = listOf(CitizenVoter()).run {
+    fun `can not view deleted citizen`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
@@ -94,7 +96,7 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `can be update itself`() = listOf(CitizenVoter()).run {
+    fun `can be update itself`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -103,7 +105,7 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `can not be update other citizen`() = listOf(CitizenVoter()).run {
+    fun `can not be update other citizen`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -112,7 +114,7 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `can be change password of itself`() = listOf(CitizenVoter()).run {
+    fun `can be change password of itself`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
@@ -121,7 +123,7 @@ internal class CitizenVoterTest {
     }
 
     @Test
-    fun `can not be change password of other citizen`() = listOf(CitizenVoter()).run {
+    fun `can not be change password of other citizen`(): Unit = listOf(CitizenVoter()).run {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {

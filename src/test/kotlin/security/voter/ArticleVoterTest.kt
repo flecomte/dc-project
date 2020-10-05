@@ -1,9 +1,12 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.Vote
 import fr.ktorVoter.can
+import fr.ktorVoter.canAll
+import fr.postgresjson.connexion.Paginated
 import io.ktor.application.ApplicationCall
 import io.mockk.every
 import io.mockk.mockk
@@ -13,11 +16,12 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import fr.dcproject.repository.Article as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("voter")
-internal class ArticleVoterTest {
-    val tesla = CitizenBasic(
+class ArticleVoterTest {
+    private val tesla = Citizen(
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -26,7 +30,7 @@ internal class ArticleVoterTest {
         email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla")
     )
-    val einstein = CitizenBasic(
+    private val einstein = Citizen(
         user = User(
             username = "albert-einstein",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -36,24 +40,30 @@ internal class ArticleVoterTest {
         name = CitizenI.Name("Albert", "Einstein")
     )
 
+    private fun getRepo(article: Article): ArticleRepo {
+        return mockk {
+            every { findVerionsByVersionsId(1, 1, any()) } returns Paginated(listOf(article), 0, 1, 1)
+        }
+    }
+
     init {
         mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test
-    fun `creator can be view the article`() = ArticleVoter().run {
+    fun `creator can be view the article`(): Unit {
         val article = getArticle(tesla).apply { draft = true }
-
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            supports(ArticleVoter.Action.VIEW, it, article) `should be` true
-            vote(ArticleVoter.Action.VIEW, it, article) `should be` Vote.GRANTED
+        ArticleVoter(getRepo(article)).run {
+            mockk<ApplicationCall> {
+                every { user } returns tesla.user
+            }.let {
+                this(ArticleVoter.Action.VIEW, it, article) `should be` Vote.GRANTED
+            }
         }
     }
 
     @Test
-    fun `other user can be view the article`() = listOf(ArticleVoter()).run {
+    fun `other user can be view the article`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
 
         mockk<ApplicationCall> {
@@ -64,19 +74,19 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `other user can be view the article list`() = listOf(ArticleVoter()).run {
+    fun `other user can be view the article list`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
         val article2 = getArticle(tesla)
 
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
-            can(ArticleVoter.Action.VIEW, it, listOf(article, article2)) `should be` true
+            canAll(ArticleVoter.Action.VIEW, it, listOf(article, article2)) `should be` true
         }
     }
 
     @Test
-    fun `the no creator can not be view the article on draft`() = listOf(ArticleVoter()).run {
+    fun `the no creator can not be view the article on draft`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla).apply { draft = true }
 
         mockk<ApplicationCall> {
@@ -87,19 +97,19 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `the no creator can not be view list of articles if one is on draft`() = listOf(ArticleVoter()).run {
+    fun `the no creator can not be view list of articles if one is on draft`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
         val article2 = getArticle(tesla).apply { draft = true }
 
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
-            can(ArticleVoter.Action.VIEW, it, listOf(article, article2)) `should be` false
+            canAll(ArticleVoter.Action.VIEW, it, listOf(article, article2)) `should be` false
         }
     }
 
     @Test
-    fun `can not view deleted article`() = listOf(ArticleVoter()).run {
+    fun `can not view deleted article`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla).apply { deletedAt = DateTime.now() }
 
         mockk<ApplicationCall> {
@@ -110,7 +120,7 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `can delete article if owner`() = listOf(ArticleVoter()).run {
+    fun `can delete article if owner`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
 
         mockk<ApplicationCall> {
@@ -121,7 +131,7 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `can not delete article if not owner`() = listOf(ArticleVoter()).run {
+    fun `can not delete article if not owner`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla).apply { deletedAt = DateTime.now() }
 
         mockk<ApplicationCall> {
@@ -132,7 +142,7 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `can create article if logged`() = listOf(ArticleVoter()).run {
+    fun `can create article if logged`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
 
         mockk<ApplicationCall> {
@@ -143,7 +153,7 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `can not create article if not logged`() = listOf(ArticleVoter()).run {
+    fun `can not create article if not logged`(): Unit = listOf(ArticleVoter(mockk())).run {
         val article = getArticle(tesla)
 
         mockk<ApplicationCall> {
@@ -154,24 +164,28 @@ internal class ArticleVoterTest {
     }
 
     @Test
-    fun `can update article if yours`() = listOf(ArticleVoter()).run {
+    fun `can update article if yours`(): Unit {
         val article = getArticle(tesla)
-
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(ArticleVoter.Action.UPDATE, it, article) `should be` true
+        listOf(ArticleVoter(getRepo(article))).run {
+            mockk<ApplicationCall> {
+                every { user } returns tesla.user
+                every { citizenOrNull } returns tesla
+            }.let {
+                can(ArticleVoter.Action.UPDATE, it, article) `should be` true
+            }
         }
     }
 
     @Test
-    fun `can not update article if not yours`() = listOf(ArticleVoter()).run {
+    fun `can not update article if not yours`(): Unit {
         val article = getArticle(tesla)
-
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            can(ArticleVoter.Action.UPDATE, it, article) `should be` false
+        listOf(ArticleVoter(getRepo(article))).run {
+            mockk<ApplicationCall> {
+                every { user } returns einstein.user
+                every { citizenOrNull } returns einstein
+            }.let {
+                can(ArticleVoter.Action.UPDATE, it, article) `should be` false
+            }
         }
     }
 

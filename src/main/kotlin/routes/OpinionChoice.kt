@@ -3,12 +3,11 @@ package fr.dcproject.routes
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionChoiceVoter.Action.VIEW
 import fr.ktorVoter.assertCan
-import io.ktor.application.call
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.get
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import fr.ktorVoter.assertCanAll
+import io.ktor.application.*
+import io.ktor.locations.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 
 @KtorExperimentalLocationsAPI
@@ -30,7 +29,7 @@ fun Route.opinionChoice(repo: OpinionChoiceRepository) {
 
     get<OpinionChoicePaths.OpinionChoicesRequest> {
         val opinions = repo.findOpinionsChoices(it.targets)
-        assertCan(VIEW, opinions)
+        assertCanAll(VIEW, opinions)
 
         call.respond(opinions)
     }

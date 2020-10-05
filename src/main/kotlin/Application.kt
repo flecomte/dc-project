@@ -38,6 +38,7 @@ import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
@@ -58,6 +59,7 @@ fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
 enum class Env { PROD, TEST, CUCUMBER }
 
+@ExperimentalCoroutinesApi
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @Suppress("unused") // Referenced in application.conf
@@ -173,8 +175,8 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(AuthorizationVoter) {
-        voters = mutableListOf(
-            ArticleVoter(),
+        voters = listOf(
+            ArticleVoter(get()),
             ConstitutionVoter(),
             CitizenVoter(),
             CommentVoter(),

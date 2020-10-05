@@ -6,17 +6,15 @@ import fr.ktorVoter.Vote
 import fr.ktorVoter.Voter
 import io.ktor.application.ApplicationCall
 
-class OpinionChoiceVoter : Voter {
+class OpinionChoiceVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         VIEW
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action)
-            .and(subject is OpinionChoice?)
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if (!((action is Action)
+            && (subject is OpinionChoice?))) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
         if (action == Action.VIEW) {
             if (subject is OpinionChoice) {
                 return Vote.GRANTED

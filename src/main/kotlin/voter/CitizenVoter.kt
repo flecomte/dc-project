@@ -10,7 +10,7 @@ import io.ktor.application.ApplicationCall
 import io.ktor.locations.KtorExperimentalLocationsAPI
 
 @KtorExperimentalLocationsAPI
-class CitizenVoter : Voter {
+class CitizenVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
         CREATE,
         UPDATE,
@@ -19,13 +19,11 @@ class CitizenVoter : Voter {
         CHANGE_PASSWORD
     }
 
-    override fun supports(action: ActionI, call: ApplicationCall, subject: Any?): Boolean {
-        return (action is Action)
-            .and(subject is CitizenBasicI?)
-    }
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
+        if (!((action is Action)
+            && (subject is CitizenBasicI?))) return Vote.ABSTAIN
 
-    override fun vote(action: ActionI, call: ApplicationCall, subject: Any?): Vote {
-        val user = call.user
+        val user = context.user
         if (action == Action.CREATE && user != null) {
             return Vote.GRANTED
         }
@@ -56,14 +54,10 @@ class CitizenVoter : Voter {
             return if (user.id == userToChange.id) {
                 Vote.GRANTED
             } else {
-                Vote.ABSTAIN
+                Vote.DENIED
             }
         }
 
-        if (action is Action) {
-            return Vote.DENIED
-        }
-
-        return Vote.ABSTAIN
+        return Vote.DENIED
     }
 }

@@ -6,7 +6,7 @@ import fr.postgresjson.serializer.deserialize
 import fr.postgresjson.serializer.serialize
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
-import org.amshove.kluent.`should equal`
+import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.shouldBe
 import org.intellij.lang.annotations.Language
 import org.joda.time.DateTime
@@ -96,6 +96,6 @@ class ArticleTest {
     @Test
     fun `test Article Deserialize`() {
         val article2: Article = articleJson.deserialize()!!
-        article2.id.toString() `should equal` "83b0b60a-5ab3-44f2-b243-1dc469a7564f"
+        article2.id.toString() `should be equal to` "83b0b60a-5ab3-44f2-b243-1dc469a7564f"
     }
 }

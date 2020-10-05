@@ -1,6 +1,6 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.slf4j.LoggerFactory
 
 val ktor_version: String by project
@@ -139,7 +139,7 @@ dependencies {
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
     implementation("com.github.flecomte:postgres-json:1.2.1")
-    implementation("com.github.flecomte:ktor-voter:1.0.1")
+    implementation("com.github.flecomte:ktor-voter:2.2.1")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.8.0")
@@ -152,7 +152,7 @@ dependencies {
     testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.junit.jupiter:junit-jupiter:5.5.0")
-    testImplementation("org.amshove.kluent:kluent:1.4")
+    testImplementation("org.amshove.kluent:kluent:1.61")
     testImplementation("io.cucumber:cucumber-java8:$cucumber_version")
     testImplementation("io.cucumber:cucumber-junit:$cucumber_version")
 }
