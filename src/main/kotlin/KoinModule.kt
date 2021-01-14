@@ -13,10 +13,12 @@ import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
+import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.messages.SsoManager
+import fr.dcproject.repository.CommentConstitutionRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -29,9 +31,7 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import fr.dcproject.repository.CommentArticle as CommentArticleRepository
-import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
-import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
+import fr.dcproject.component.comment.generic.CommentRepository as CommentGenericRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository

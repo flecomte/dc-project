@@ -6,7 +6,7 @@ import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.CommentRef
+import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.entity.WorkgroupRef

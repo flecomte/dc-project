@@ -1,9 +1,6 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.comment.generic
 
 import fr.dcproject.citizenOrNull
-import fr.dcproject.entity.CommentForUpdate
-import fr.dcproject.entity.CommentForView
-import fr.dcproject.entity.CommentI
 import fr.dcproject.voter.NoRuleDefinedException
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*

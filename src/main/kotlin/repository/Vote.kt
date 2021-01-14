@@ -3,6 +3,7 @@ package fr.dcproject.repository
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.entity.*
 import fr.dcproject.entity.Constitution
 import fr.postgresjson.connexion.Paginated

@@ -1,6 +1,8 @@
-package fr.dcproject.entity
+package fr.dcproject.component.comment.generic
 
 import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.entity.*
+import fr.dcproject.entity.EntityI
 import fr.postgresjson.entity.*
 import org.joda.time.DateTime
 import java.util.*

@@ -6,9 +6,9 @@ import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.entity.CommentForUpdate
+import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.entity.WorkgroupRef
-import fr.dcproject.repository.CommentArticle
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -97,6 +97,6 @@ class ArticleSteps : En, KoinTest {
             target = article,
             content = params?.get("content") ?: "hello"
         )
-        get<CommentArticle>().comment(comment)
+        get<CommentArticleRepository>().comment(comment)
     }
 }

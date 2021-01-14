@@ -16,7 +16,11 @@ import fr.dcproject.component.citizen.routes.changeMyPassword
 import fr.dcproject.component.citizen.routes.findCitizen
 import fr.dcproject.component.citizen.routes.getCurrentCitizen
 import fr.dcproject.component.citizen.routes.getOneCitizen
-import fr.dcproject.component.comment.routes.comment
+import fr.dcproject.component.comment.generic.CommentVoter
+import fr.dcproject.component.comment.generic.routes.createCommentChildren
+import fr.dcproject.component.comment.generic.routes.editComment
+import fr.dcproject.component.comment.generic.routes.getChildrenComments
+import fr.dcproject.component.comment.generic.routes.getOneComment
 import fr.dcproject.elasticsearch.configElasticIndexes
 import fr.dcproject.entity.User
 import fr.dcproject.event.EventNotification
@@ -165,12 +169,16 @@ fun Application.module(env: Env = PROD) {
             getOneCitizen(get())
             getCurrentCitizen(get())
             changeMyPassword(get(), get())
-
+            /* Comment */
+            editComment(get())
+            getOneComment(get())
+            createCommentChildren(get())
+            getChildrenComments(get())
+            /* TODO */
             auth(get(), get(), get())
             constitution(get())
             followArticle(get())
             followConstitution(get())
-            comment(get())
             commentArticle(get())
             commentConstitution(get())
             voteArticle(get(), get(), get())

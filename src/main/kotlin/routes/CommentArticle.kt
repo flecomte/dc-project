@@ -4,10 +4,11 @@ import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.entity.CommentForUpdate
-import fr.dcproject.repository.CommentArticle.Sort
-import fr.dcproject.security.voter.CommentVoter.Action.CREATE
-import fr.dcproject.security.voter.CommentVoter.Action.VIEW
+import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.article.CommentArticleRepository.Sort
+import fr.dcproject.component.comment.generic.CommentForUpdate
+import fr.dcproject.component.comment.generic.CommentVoter.Action.CREATE
+import fr.dcproject.component.comment.generic.CommentVoter.Action.VIEW
 import fr.ktorVoter.assertCan
 import fr.ktorVoter.assertCanAll
 import io.ktor.application.*
@@ -16,7 +17,6 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 
 @KtorExperimentalLocationsAPI
 object CommentArticlePaths {

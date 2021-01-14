@@ -3,8 +3,8 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.entity.VoteForUpdate
-import fr.dcproject.repository.CommentGeneric
 import fr.dcproject.repository.VoteComment
 import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
 import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
@@ -49,7 +49,7 @@ object VoteArticlePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentGeneric) {
+fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentRepository) {
     put<ArticleVoteRequest> {
         val content = call.receive<ArticleVoteRequest.Content>()
         val vote = VoteForUpdate(

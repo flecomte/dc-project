@@ -5,10 +5,10 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.entity.CommentForUpdate
+import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.entity.ConstitutionSimple
-import fr.dcproject.repository.CommentConstitution
+import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -102,6 +102,6 @@ class ConstitutionSteps : En, KoinTest {
             target = constitution,
             content = params?.get("content") ?: "hello"
         )
-        get<CommentConstitution>().comment(comment)
+        get<CommentConstitutionRepository>().comment(comment)
     }
 }
