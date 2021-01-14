@@ -1,8 +1,9 @@
 package fr.dcproject.component.comment.generic.routes
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.comment.generic.CommentVoter
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -25,7 +26,7 @@ class CommentChildrenRequest(
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Route.getChildrenComments(repo: CommentRepository) {
+fun Route.getChildrenComments(repo: CommentRepository, voter: CommentVoter) {
     get<CommentChildrenRequest> {
         val comments =
             repo.findByParent(
@@ -34,7 +35,7 @@ fun Route.getChildrenComments(repo: CommentRepository) {
                 it.limit
             )
 
-        assertCanAll(CommentVoter.Action.VIEW, comments.result)
+        voter.assert { canView(comments.result, citizenOrNull) }
 
         call.respond(HttpStatusCode.OK, comments)
     }

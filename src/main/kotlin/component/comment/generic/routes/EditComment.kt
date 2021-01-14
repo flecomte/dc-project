@@ -1,10 +1,12 @@
 package fr.dcproject.component.comment.generic.routes
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.comment.generic.CommentVoter
-import fr.ktorVoter.assertCan
+import fr.dcproject.voter.assert
 import io.ktor.application.*
+import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.locations.*
 import io.ktor.request.*
@@ -18,10 +20,10 @@ class EditCommentRequest(val comment: CommentRef)
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Route.editComment(repo: CommentRepository) {
+fun Route.editComment(repo: CommentRepository, voter: CommentVoter) {
     put<EditCommentRequest> {
-        val comment = repo.findById(it.comment.id)!!
-        assertCan(CommentVoter.Action.UPDATE, comment)
+        val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
+        voter.assert { canUpdate(comment, citizenOrNull) }
 
         comment.content = call.receiveText()
         repo.edit(comment)

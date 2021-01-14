@@ -1,7 +1,6 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.component.comment.generic.CommentForView
-import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.entity.UserI
 import fr.dcproject.user
@@ -20,7 +19,7 @@ class ConstitutionVoter : Voter<ApplicationCall> {
     }
 
     override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action || action is CommentVoter.Action || action is VoteVoter.Action) &&
+        if (!((action is Action || action is VoteVoter.Action) &&
             (subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is CommentForView<*, *>))) return abstain()
 
         val user = context.user
@@ -44,7 +43,6 @@ class ConstitutionVoter : Voter<ApplicationCall> {
             return granted()
         }
 
-        if (action is CommentVoter.Action) return voteForComment(action)
         if (action is VoteVoter.Action) return voteForVote(action, subject)
 
         if (action is Action) {
@@ -64,18 +62,6 @@ class ConstitutionVoter : Voter<ApplicationCall> {
                 return denied("You cannot vote a deleted constitution", "constitution.vote.deleted")
             }
         }
-        return abstain()
-    }
-
-    private fun voteForComment(action: CommentVoter.Action): VoterResponseI {
-        if (action == CommentVoter.Action.CREATE) {
-            return granted()
-        }
-
-        if (action == CommentVoter.Action.VIEW) {
-            return granted()
-        }
-
         return abstain()
     }
 }

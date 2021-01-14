@@ -1,11 +1,12 @@
 package fr.dcproject.component.comment.generic.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.comment.generic.CommentVoter
-import fr.ktorVoter.assertCan
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -23,7 +24,7 @@ class CreateCommentChildrenRequest(val comment: CommentRef) {
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Route.createCommentChildren(repo: CommentRepository) {
+fun Route.createCommentChildren(repo: CommentRepository, voter: CommentVoter) {
     post<CreateCommentChildrenRequest> {
         val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
         val newComment = CommentForUpdate(
@@ -32,7 +33,7 @@ fun Route.createCommentChildren(repo: CommentRepository) {
             parent = parent
         )
 
-        assertCan(CommentVoter.Action.CREATE, newComment)
+        voter.assert { canCreate(newComment, citizenOrNull) }
         repo.comment(newComment)
 
         call.respond(HttpStatusCode.Created, newComment)

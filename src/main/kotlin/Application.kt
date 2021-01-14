@@ -16,7 +16,6 @@ import fr.dcproject.component.citizen.routes.changeMyPassword
 import fr.dcproject.component.citizen.routes.findCitizen
 import fr.dcproject.component.citizen.routes.getCurrentCitizen
 import fr.dcproject.component.citizen.routes.getOneCitizen
-import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.component.comment.generic.routes.createCommentChildren
 import fr.dcproject.component.comment.generic.routes.editComment
 import fr.dcproject.component.comment.generic.routes.getChildrenComments
@@ -80,7 +79,6 @@ fun Application.module(env: Env = PROD) {
     install(AuthorizationVoter) {
         voters = listOf(
             ConstitutionVoter(),
-            CommentVoter(),
             VoteVoter(),
             FollowVoter(),
             OpinionVoter(),
@@ -170,17 +168,17 @@ fun Application.module(env: Env = PROD) {
             getCurrentCitizen(get())
             changeMyPassword(get(), get())
             /* Comment */
-            editComment(get())
-            getOneComment(get())
-            createCommentChildren(get())
-            getChildrenComments(get())
+            editComment(get(), get())
+            getOneComment(get(), get())
+            createCommentChildren(get(), get())
+            getChildrenComments(get(), get())
             /* TODO */
             auth(get(), get(), get())
             constitution(get())
             followArticle(get())
             followConstitution(get())
-            commentArticle(get())
-            commentConstitution(get())
+            commentArticle(get(), get())
+            commentConstitution(get(), get())
             voteArticle(get(), get(), get())
             voteConstitution(get())
             opinionArticle(get())

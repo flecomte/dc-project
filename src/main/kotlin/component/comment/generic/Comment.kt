@@ -16,6 +16,7 @@ class CommentForView<T : TargetI, C : CitizenRef>(
     val childrenCount: Int? = null,
     override val deletedAt: DateTime? = null
 ) : ExtraI<T, C>,
+    CommentWithParentI<T>,
     CommentForUpdate<T, C>(id, createdBy, target, content, parent, deletedAt),
     CommentWithTargetI<T>,
     EntityCreatedBy<C> by EntityCreatedByImp(createdBy),
@@ -40,9 +41,10 @@ open class CommentForUpdate<T : TargetI, C : CitizenRef>(
     override val createdBy: C,
     override val target: T,
     open var content: String,
-    open val parent: CommentParent<T>? = null,
+    override val parent: CommentParent<T>? = null,
     override val deletedAt: DateTime? = null
 ) : CommentParent<T>(id, deletedAt, target),
+    CommentWithParentI<T>,
     ExtraI<T, C>,
     CommentWithTargetI<T>,
     EntityCreatedAt by EntityCreatedAtImp(),
@@ -71,6 +73,10 @@ open class CommentParent<T : TargetI>(
 interface CommentParentI<T : TargetI> : CommentI, EntityDeletedAt, CommentWithTargetI<T>
 
 interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, AsTarget<T>
+
+interface CommentWithParentI<T : TargetI> {
+    val parent: CommentParent<T>?
+}
 
 open class CommentRef(id: UUID = UUID.randomUUID()) : CommentI, TargetRef(id)
 

@@ -1,16 +1,15 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.article.CommentArticleRepository.Sort
 import fr.dcproject.component.comment.generic.CommentForUpdate
-import fr.dcproject.component.comment.generic.CommentVoter.Action.CREATE
-import fr.dcproject.component.comment.generic.CommentVoter.Action.VIEW
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.component.comment.generic.CommentVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -55,18 +54,18 @@ object CommentArticlePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.commentArticle(repo: CommentArticleRepository) {
+fun Route.commentArticle(repo: CommentArticleRepository, voter: CommentVoter) {
     get<CommentArticlePaths.ArticleCommentRequest> {
         val comment = repo.findByTarget(it.article, it.page, it.limit, it.sort)
         if (comment.result.isNotEmpty()) {
-            assertCanAll(VIEW, comment.result)
+            voter.assert { canView(comment.result, citizenOrNull) }
         }
         call.respond(HttpStatusCode.OK, comment)
     }
 
     post<CommentArticlePaths.PostArticleCommentRequest> {
         it.getComment(call).let { comment ->
-            assertCan(CREATE, comment)
+            voter.assert { canCreate(comment, citizenOrNull) }
             repo.comment(comment)
             call.respond(HttpStatusCode.Created, comment)
         }
@@ -74,7 +73,7 @@ fun Route.commentArticle(repo: CommentArticleRepository) {
 
     get<CommentArticlePaths.CitizenCommentArticleRequest> {
         repo.findByCitizen(it.citizen).let { comments ->
-            assertCanAll(VIEW, comments.result)
+            voter.assert { canView(comments.result, citizenOrNull) }
             call.respond(comments)
         }
     }
