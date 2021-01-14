@@ -30,7 +30,7 @@ class OpinionArticle(
     choice: OpinionChoice
 ) : Opinion<ArticleRef>(id, createdBy, target, choice)
 
-data class OpinionForUpdate<T: TargetI>(
+data class OpinionForUpdate<T : TargetI>(
     override val id: UUID = UUID.randomUUID(),
     val target: T,
     val choice: OpinionChoice,
@@ -42,4 +42,4 @@ open class OpinionRef(
     override val id: UUID
 ) : OpinionI
 
-interface OpinionI: UuidEntityI
+interface OpinionI : UuidEntityI

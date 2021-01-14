@@ -17,7 +17,7 @@ interface ExtraI<T : TargetI, C : CitizenI> :
     EntityCreatedAt,
     EntityCreatedBy<C>
 
-interface AsTarget<T: TargetI> {
+interface AsTarget<T : TargetI> {
     val target: T
 }
 

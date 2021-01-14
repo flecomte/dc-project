@@ -37,7 +37,7 @@ private fun ArticleRepository.findArticles(request: ArticlesRequest): Paginated<
     )
 }
 
-fun Route.findArticles (repo: ArticleRepository, voter: ArticleVoter) {
+fun Route.findArticles(repo: ArticleRepository, voter: ArticleVoter) {
     get<ArticlesRequest> {
         repo.findArticles(it)
             .apply { voter.assert { canView(result, citizenOrNull) } }

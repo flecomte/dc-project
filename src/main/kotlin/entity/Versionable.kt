@@ -7,11 +7,11 @@ interface VersionableRef {
     val versionId: UUID
 }
 
-class VersionableRefImp (
+class VersionableRefImp(
     override val versionId: UUID
 ) : VersionableRef
 
-interface Versionable: VersionableRef, EntityVersioning<UUID, Int> {
+interface Versionable : VersionableRef, EntityVersioning<UUID, Int> {
     override val versionId: UUID
     override val versionNumber: Int
 }

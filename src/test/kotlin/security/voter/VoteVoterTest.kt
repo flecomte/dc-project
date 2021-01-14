@@ -168,7 +168,7 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `can be vote an article`(): Unit {
+    fun `can be vote an article`() {
         listOf(VoteVoter()).run {
             mockk<ApplicationCall> {
                 every { citizenOrNull } returns tesla

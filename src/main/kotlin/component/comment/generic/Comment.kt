@@ -35,7 +35,7 @@ class CommentForView<T : TargetI, C : CitizenRef>(
     )
 }
 
-open class CommentForUpdate<T : TargetI, C: CitizenRef>(
+open class CommentForUpdate<T : TargetI, C : CitizenRef>(
     override val id: UUID = UUID.randomUUID(),
     override val createdBy: C,
     override val target: T,
@@ -61,14 +61,14 @@ open class CommentForUpdate<T : TargetI, C: CitizenRef>(
     )
 }
 
-open class CommentParent<T: TargetI>(
+open class CommentParent<T : TargetI>(
     override val id: UUID,
     override val deletedAt: DateTime?,
     override val target: T
 ) : CommentRef(id),
     CommentParentI<T>
 
-interface CommentParentI<T: TargetI> : CommentI, EntityDeletedAt, CommentWithTargetI<T>
+interface CommentParentI<T : TargetI> : CommentI, EntityDeletedAt, CommentWithTargetI<T>
 
 interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, AsTarget<T>
 

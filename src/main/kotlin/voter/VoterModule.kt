@@ -25,12 +25,12 @@ abstract class Voter {
 
     private fun VoterResponses.getOneResponse(): VoterResponse = this.firstOrNull { it.vote == Vote.DENIED } ?: granted()
 
-    protected fun <S: List<T>, T> canAll(items: S, action: (T) -> VoterResponse): VoterResponse = items
+    protected fun <S : List<T>, T> canAll(items: S, action: (T) -> VoterResponse): VoterResponse = items
         .map { action(it) }
         .getOneResponse()
 }
 
-fun <T: Voter> T.assert(action: T.() -> VoterResponse) {
+fun <T : Voter> T.assert(action: T.() -> VoterResponse) {
     action().assert()
 }
 
@@ -58,7 +58,7 @@ class VoterDeniedException(private val voterResponses: VoterResponses) : Throwab
         .message
 }
 
-sealed class VoterResponse (
+sealed class VoterResponse(
     val vote: Vote,
     val voter: Voter,
     val message: String?,

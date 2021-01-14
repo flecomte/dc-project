@@ -10,7 +10,7 @@ import fr.postgresjson.entity.EntityI
 import java.util.*
 
 @Deprecated("")
-data class Workgroup <C: CitizenBasicI>(
+data class Workgroup <C : CitizenBasicI>(
     override val id: UUID = UUID.randomUUID(),
     override var name: String,
     override var description: String,

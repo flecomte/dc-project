@@ -26,7 +26,7 @@ class VoteVoter : Voter<ApplicationCall> {
             subject.target.let {
                 if (it is EntityDeletedAt) {
                     if (it.isDeleted()) return denied("You cannot vote on deleted target", "vote.create.isDeleted")
-                } else  {
+                } else {
                     throw NoSubjectDefinedException(action)
                 }
             }

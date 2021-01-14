@@ -24,7 +24,7 @@ open class FollowSimple<T : TargetI, C : CitizenI>(
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<C> by EntityCreatedByImp(createdBy)
 
-class FollowForUpdate<T: TargetI, C: CitizenI>(
+class FollowForUpdate<T : TargetI, C : CitizenI>(
     id: UUID = UUID.randomUUID(),
     override val target: T,
     override val createdBy: C
@@ -36,4 +36,4 @@ open class FollowRef(
     override val id: UUID
 ) : FollowI
 
-interface FollowI: UuidEntityI
+interface FollowI : UuidEntityI

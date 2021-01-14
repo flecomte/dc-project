@@ -19,7 +19,6 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import java.util.*
 
-
 @KtorExperimentalLocationsAPI
 @Location("/articles/{articleId}")
 class ArticleRequest(val articleId: UUID) : KoinComponent {

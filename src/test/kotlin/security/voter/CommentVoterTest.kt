@@ -125,7 +125,7 @@ internal class CommentVoterTest {
     }
 
     @Test
-    fun `can be view the comment`(): Unit {
+    fun `can be view the comment`() {
         listOf(CommentVoter()).run {
             mockk<ApplicationCall> {
                 every { citizenOrNull } returns tesla

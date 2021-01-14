@@ -27,8 +27,8 @@ class WorkgroupVoter : Voter<ApplicationCall> {
 
     override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
         if ((action is Action && subject == null)) throw NoSubjectDefinedException(action)
-        if (!((action is Action || action is ActionMembers)
-            && (subject is WorkgroupI? || (subject is List<*> && subject.first() is WorkgroupI)))) return abstain()
+        if (!((action is Action || action is ActionMembers) &&
+            (subject is WorkgroupI? || (subject is List<*> && subject.first() is WorkgroupI)))) return abstain()
 
         val user = context.user
         if (action == Action.CREATE) {
@@ -37,7 +37,6 @@ class WorkgroupVoter : Voter<ApplicationCall> {
                 return granted()
             }
         }
-
 
         if (action == Action.VIEW) {
             if (subject is WorkgroupWithAuthI<*>) {

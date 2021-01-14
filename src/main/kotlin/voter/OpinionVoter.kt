@@ -17,8 +17,8 @@ class OpinionVoter : Voter<ApplicationCall> {
     }
 
     override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action)
-            && (subject is Opinion<*>? || subject is ArticleAuthI<*>))) return abstain()
+        if (!((action is Action) &&
+            (subject is Opinion<*>? || subject is ArticleAuthI<*>))) return abstain()
 
         val user = context.user
         if (action == Action.CREATE) {

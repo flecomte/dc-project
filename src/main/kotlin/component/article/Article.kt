@@ -6,7 +6,7 @@ import fr.postgresjson.entity.*
 import org.joda.time.DateTime
 import java.util.*
 
-data class ArticleForView (
+data class ArticleForView(
     override val id: UUID = UUID.randomUUID(),
     override val title: String,
     val anonymous: Boolean = true,
@@ -32,7 +32,7 @@ data class ArticleForView (
     val lastVersion: Boolean = false
 }
 
-interface ArticleForUpdateI<C: CitizenRef> : ArticleI, ArticleWithTitleI, VersionableRef, TargetI, CreatedBy<C> {
+interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, VersionableRef, TargetI, CreatedBy<C> {
     val anonymous: Boolean
     val content: String
     val description: String
@@ -40,7 +40,7 @@ interface ArticleForUpdateI<C: CitizenRef> : ArticleI, ArticleWithTitleI, Versio
     val workgroup: WorkgroupRef?
 }
 
-class ArticleForUpdate (
+class ArticleForUpdate(
     id: UUID? = null,
     override val title: String,
     override val anonymous: Boolean = true,

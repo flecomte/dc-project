@@ -20,8 +20,8 @@ class ConstitutionVoter : Voter<ApplicationCall> {
     }
 
     override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if(!((action is Action || action is CommentVoter.Action || action is VoteVoter.Action)
-            && (subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is CommentForView<*, *>))) return abstain()
+        if (!((action is Action || action is CommentVoter.Action || action is VoteVoter.Action) &&
+            (subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is CommentForView<*, *>))) return abstain()
 
         val user = context.user
         if (action == Action.CREATE && user != null) {

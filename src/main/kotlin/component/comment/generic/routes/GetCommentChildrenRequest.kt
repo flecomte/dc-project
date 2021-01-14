@@ -23,7 +23,6 @@ class CommentChildrenRequest(
     val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
 }
 
-
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun Route.getChildrenComments(repo: CommentRepository) {

@@ -67,7 +67,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         }
     }
 
-    fun <I : T, C: CitizenRef> comment(comment: CommentForUpdate<I, C>) {
+    fun <I : T, C : CitizenRef> comment(comment: CommentForUpdate<I, C>) {
         requester
             .getFunction("comment")
             .sendQuery(

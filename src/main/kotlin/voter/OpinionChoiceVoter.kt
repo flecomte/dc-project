@@ -11,8 +11,8 @@ class OpinionChoiceVoter : Voter<ApplicationCall> {
     }
 
     override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action)
-            && (subject is OpinionChoice?))) return abstain()
+        if (!((action is Action) &&
+            (subject is OpinionChoice?))) return abstain()
 
         if (action == Action.VIEW) {
             if (subject is OpinionChoice) {

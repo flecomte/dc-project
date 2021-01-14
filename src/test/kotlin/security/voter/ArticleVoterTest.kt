@@ -134,7 +134,7 @@ class ArticleVoterTest {
     }
 
     @Test
-    fun `can update article if yours`(): Unit {
+    fun `can update article if yours`() {
         val article = getArticle(tesla)
         ArticleVoter(getRepo(article))
             .canUpsert(article, tesla)
@@ -142,7 +142,7 @@ class ArticleVoterTest {
     }
 
     @Test
-    fun `can not update article if not yours`(): Unit {
+    fun `can not update article if not yours`() {
         val article = getArticle(tesla)
         ArticleVoter(getRepo(article))
             .canUpsert(article, einstein)

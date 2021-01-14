@@ -12,4 +12,3 @@ interface Versionable {
         override val versionId: UUID = parent.versionId
     }
 }
-

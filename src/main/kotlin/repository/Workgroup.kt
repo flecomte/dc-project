@@ -42,11 +42,11 @@ class Workgroup(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun <C: CitizenI, W: WorkgroupSimple<C>> upsert(workgroup: W): WorkgroupEntity<CitizenBasic> = requester
+    fun <C : CitizenI, W : WorkgroupSimple<C>> upsert(workgroup: W): WorkgroupEntity<CitizenBasic> = requester
         .getFunction("upsert_workgroup")
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
 
-    fun <W: WorkgroupRef> delete(workgroup: W) = requester
+    fun <W : WorkgroupRef> delete(workgroup: W) = requester
             .getFunction("delete_workgroup")
             .perform("id" to workgroup.id)
 

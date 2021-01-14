@@ -16,7 +16,6 @@ import io.ktor.util.*
 @Location("/comments/{comment}")
 class CommentRequest(val comment: CommentRef)
 
-
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 fun Route.getOneComment(repo: CommentRepository) {
