@@ -3,12 +3,9 @@ package feature
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.server.testing.setBody
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.http.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
@@ -42,7 +39,11 @@ class KtorServerRequestSteps : En {
         }
 
         Then("the response status code should be {int}") { statusCode: Int ->
-            assertEquals(HttpStatusCode.fromValue(statusCode), KtorServerContext.defaultServer.call?.response?.status())
+            assertEquals(
+                HttpStatusCode.fromValue(statusCode),
+                KtorServerContext.defaultServer.call?.response?.status(),
+                KtorServerContext.defaultServer.call?.response?.content
+            )
         }
 
         Then("the response should contain object:") { expected: DataTable ->

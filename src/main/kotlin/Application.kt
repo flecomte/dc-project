@@ -8,36 +8,33 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.Env.PROD
+import fr.dcproject.component.article.route.findArticleVersions
+import fr.dcproject.component.article.route.upsertArticle
+import fr.dcproject.component.article.routes.findArticles
+import fr.dcproject.component.article.routes.getOneArticle
 import fr.dcproject.elasticsearch.configElasticIndexes
-import fr.dcproject.entity.*
+import fr.dcproject.entity.User
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.*
 import fr.ktorVoter.AuthorizationVoter
-import fr.ktorVoter.ForbiddenException
+import fr.ktorVoter.VoterException
 import fr.postgresjson.migration.Migrations
-import io.ktor.application.Application
-import io.ktor.application.ApplicationCall
-import io.ktor.application.call
-import io.ktor.application.install
-import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
-import io.ktor.auth.jwt.jwt
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.jetty.Jetty
+import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.auth.jwt.*
+import io.ktor.client.*
+import io.ktor.client.engine.jetty.*
 import io.ktor.features.*
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
-import io.ktor.http.auth.HttpAuthHeader
-import io.ktor.jackson.jackson
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Locations
-import io.ktor.response.respond
-import io.ktor.routing.Routing
-import io.ktor.util.KtorExperimentalAPI
-import io.ktor.websocket.WebSockets
+import io.ktor.http.*
+import io.ktor.http.auth.*
+import io.ktor.jackson.*
+import io.ktor.locations.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.util.*
+import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.core.qualifier.named
@@ -47,13 +44,7 @@ import org.slf4j.event.Level
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
-import fr.dcproject.entity.Workgroup as WorkgroupEntity
-import fr.dcproject.repository.Article as RepositoryArticle
-import fr.dcproject.repository.Citizen as RepositoryCitizen
-import fr.dcproject.repository.Constitution as RepositoryConstitution
-import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.User as UserRepository
-import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -66,117 +57,19 @@ enum class Env { PROD, TEST, CUCUMBER }
 fun Application.module(env: Env = PROD) {
     install(Koin) {
         Slf4jLog()
-        modules(Module)
+        modules(KoinModule)
     }
 
     install(CallLogging) {
         level = Level.INFO
     }
 
-    install(DataConversion) {
-        convert<UUID> {
-            decode { values, _ ->
-                values.singleOrNull()?.let { UUID.fromString(it) }
-            }
+    install(DataConversion, converters)
 
-            encode { value ->
-                when (value) {
-                    null -> listOf()
-                    is UUID -> listOf(value.toString())
-                    else -> throw InternalError("Cannot convert $value as UUID")
-                }
-            }
-        }
-
-        // TODO: create generic convert for entityI
-        convert<Article> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    get<RepositoryArticle>().findById(UUID.fromString(it))
-                        ?: throw NotFoundException("Article $values not found")
-                } ?: throw NotFoundException("Article $values not found")
-            }
-        }
-        convert<ArticleRef> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    ArticleRef(UUID.fromString(it))
-            } ?: throw NotFoundException("""UUID "$values" is not valid for Article""")
-            }
-        }
-
-        convert<CommentRef> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    CommentRef(UUID.fromString(it))
-                } ?: throw NotFoundException("""UUID "$values" is not valid for Comment""")
-            }
-        }
-        convert<ConstitutionRef> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    ConstitutionRef(UUID.fromString(it))
-                } ?: throw NotFoundException("""UUID "$values" is not valid for Constitution""")
-            }
-        }
-
-        convert<Constitution> {
-            decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryConstitution>().findById(id) ?: throw NotFoundException("Constitution $values not found")
-            }
-        }
-
-        convert<Citizen> {
-            decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<RepositoryCitizen>().findById(id) ?: throw NotFoundException("Citizen $values not found")
-            }
-        }
-
-        convert<CitizenRef> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    CitizenRef(UUID.fromString(it))
-                } ?: throw NotFoundException("""UUID "$values" is not valid for Citizen""")
-            }
-        }
-
-        convert<OpinionChoice> {
-            decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<OpinionChoiceRepository>().findOpinionChoiceById(id)
-                    ?: throw NotFoundException("OpinionChoice $values not found")
-            }
-        }
-
-        convert<WorkgroupRef> {
-            decode { values, _ ->
-                values.singleOrNull()?.let {
-                    WorkgroupRef(UUID.fromString(it))
-                } ?: throw NotFoundException("""UUID "$values" is not valid for Workgroup""")
-            }
-        }
-
-        convert<WorkgroupEntity> {
-            decode { values, _ ->
-                val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                    ?: throw InternalError("Cannot convert $values to UUID")
-                get<WorkgroupRepository>().findById(id)
-                    ?: throw NotFoundException("Workgroup $values not found")
-            }
-        }
-    }
-
-    install(Locations) {
-    }
+    install(Locations)
 
     install(AuthorizationVoter) {
         voters = listOf(
-            ArticleVoter(get()),
             ConstitutionVoter(),
             CitizenVoter(),
             CommentVoter(),
@@ -255,10 +148,13 @@ fun Application.module(env: Env = PROD) {
         }
     }
 
-    install(Routing) {
+    install(Routing.Feature) {
         // trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
-            article(get(), get())
+            findArticles(get(), get())
+            getOneArticle(get(), get())
+            upsertArticle(get(), get(), get())
+            findArticleVersions(get(), get())
             auth(get(), get(), get())
             citizen(get(), get())
             constitution(get())
@@ -292,6 +188,10 @@ fun Application.module(env: Env = PROD) {
         }
         exception<NotFoundException> { e ->
             call.respond(HttpStatusCode.NotFound, e.message!!)
+        }
+        exception<VoterException> {
+            if (call.user == null) call.respond(HttpStatusCode.Unauthorized)
+            else call.respond(HttpStatusCode.Forbidden)
         }
         exception<ForbiddenException> {
             call.respond(HttpStatusCode.Forbidden)

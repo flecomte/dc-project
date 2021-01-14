@@ -2,22 +2,21 @@ package fr.dcproject.entity
 
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
+import fr.postgresjson.entity.*
 import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.immutable.*
-import fr.postgresjson.entity.mutable.EntityDeletedAt
-import fr.postgresjson.entity.mutable.EntityDeletedAtImp
 import java.util.*
 
-class Workgroup(
-    id: UUID? = null,
-    name: String,
-    description: String,
-    logo: String? = null,
-    anonymous: Boolean = true,
-    createdBy: CitizenBasic,
-    override var members: List<Member<CitizenBasic>> = emptyList()
-) : WorkgroupWithAuthI<CitizenBasic>,
-    WorkgroupSimple<CitizenBasic>(
+@Deprecated("")
+data class Workgroup <C: CitizenBasicI>(
+    override val id: UUID = UUID.randomUUID(),
+    override var name: String,
+    override var description: String,
+    override var logo: String? = null,
+    override var anonymous: Boolean = true,
+    override val createdBy: C,
+    override var members: List<Member<C>> = emptyList()
+) : WorkgroupWithAuthI<C>,
+    WorkgroupSimple<C>(
         id,
         name,
         description,
@@ -28,17 +27,26 @@ class Workgroup(
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityUpdatedAt by EntityUpdatedAtImp()
 
-open class WorkgroupSimple<Z : CitizenRef>(
+@Deprecated("")
+open class WorkgroupSimple<Z : CitizenI>(
     id: UUID? = null,
-    var name: String,
-    var description: String,
-    var logo: String? = null,
-    var anonymous: Boolean = true,
+    open var name: String,
+    open var description: String,
+    open var logo: String? = null,
+    open var anonymous: Boolean = true,
     createdBy: Z
 ) : WorkgroupRef(id),
     EntityCreatedBy<Z> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp()
 
+class WorkgroupCart(
+    override val id: UUID,
+    override val name: String
+) : WorkgroupCartI
+
+interface WorkgroupCartI : UuidEntityI {
+    val name: String
+}
 open class WorkgroupRef(
     id: UUID? = null
 ) : UuidEntity(id ?: UUID.randomUUID()), WorkgroupI

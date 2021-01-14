@@ -4,6 +4,7 @@ COPY --chown=gradle:gradle . /home/gradle/src
 
 WORKDIR /home/gradle/src
 RUN gradle build -x test -x ktlintKotlinScriptCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck --no-daemon
+RUN gradle shadowJar
 
 #### RUN ####
 FROM adoptopenjdk/openjdk11:jre-11.0.4_11-alpine

@@ -2,7 +2,7 @@
 Feature: follow Article
 
   # Article
-  Scenario: The route for follow article must response a 201 and return
+  Scenario: The route for follow article must response a 201
     Given I have citizen Louis Pasteur
     And I am authenticated as Louis Pasteur
     And I have article

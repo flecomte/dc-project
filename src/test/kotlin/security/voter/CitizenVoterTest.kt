@@ -5,12 +5,9 @@ import fr.dcproject.entity.CitizenI
 import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import fr.dcproject.user
-import fr.ktorVoter.ActionI
-import fr.ktorVoter.Vote
-import fr.ktorVoter.can
-import fr.ktorVoter.canAll
-import io.ktor.application.ApplicationCall
-import io.ktor.locations.KtorExperimentalLocationsAPI
+import fr.ktorVoter.*
+import io.ktor.application.*
+import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -19,6 +16,7 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.assertThrows
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -50,8 +48,9 @@ class CitizenVoterTest {
         ),
         birthday = DateTime.now(),
         email = "curie@best.com",
-        name = CitizenI.Name("Marie", "Curie")
-    ).apply { deletedAt = DateTime.now() }
+        name = CitizenI.Name("Marie", "Curie"),
+        deletedAt = DateTime.now()
+    )
 
     init {
         mockkStatic("fr.dcproject.ApplicationContextKt")
@@ -63,8 +62,8 @@ class CitizenVoterTest {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            this(CitizenVoter.Action.VIEW, it, einstein) `should be` Vote.GRANTED
-            this(p, it, einstein) `should be` Vote.ABSTAIN
+            this(CitizenVoter.Action.VIEW, it, einstein).vote `should be` Vote.GRANTED
+            this(p, it, einstein).vote `should be` Vote.ABSTAIN
         }
     }
 
@@ -109,7 +108,9 @@ class CitizenVoterTest {
         mockk<ApplicationCall> {
             every { user } returns einstein.user
         }.let {
-            can(CitizenVoter.Action.UPDATE, it, tesla) `should be` false
+            assertThrows<OneOrMoreVoterDeniedException> {
+                assertCan(CitizenVoter.Action.UPDATE, it, tesla)
+            }
         }
     }
 

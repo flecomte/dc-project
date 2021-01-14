@@ -1,10 +1,10 @@
 package fr.dcproject.entity
 
 import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.immutable.EntityUpdatedAt
-import fr.postgresjson.entity.immutable.EntityUpdatedAtImp
+import fr.postgresjson.entity.EntityUpdatedAt
+import fr.postgresjson.entity.EntityUpdatedAtImp
 
-open class ViewAggregation(
+class ViewAggregation(
     val total: Int,
     val unique: Int
 ) : EntityI,

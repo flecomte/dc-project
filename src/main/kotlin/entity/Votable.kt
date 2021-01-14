@@ -1,9 +1,9 @@
 package fr.dcproject.entity
 
 interface Votable {
-    var votes: VoteAggregation
+    val votes: VoteAggregation
 }
 
 class VotableImp : Votable {
-    override var votes: VoteAggregation = VoteAggregation()
+    override val votes: VoteAggregation = VoteAggregation()
 }

@@ -1,7 +1,7 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.ArticleRef
-import fr.dcproject.entity.CitizenSimple
+import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.entity.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -34,7 +34,7 @@ class Constitution(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun upsert(constitution: ConstitutionSimple<CitizenSimple, ConstitutionSimple.TitleSimple<ArticleRef>>): ConstitutionEntity? {
+    fun upsert(constitution: ConstitutionSimple<CitizenWithUserI, ConstitutionSimple.TitleSimple<ArticleRef>>): ConstitutionEntity? {
         return requester
             .getFunction("upsert_constitution")
             .selectOne("resource" to constitution)

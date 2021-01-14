@@ -2,6 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CommentForUpdate
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
@@ -13,7 +14,6 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 
 @KtorExperimentalLocationsAPI
@@ -35,7 +35,7 @@ fun Route.commentConstitution(repo: CommentConstitutionRepository) {
 
     post<CommentConstitutionPaths.ConstitutionCommentRequest> {
         val content = call.receiveText()
-        val comment = CommentEntity(
+        val comment = CommentForUpdate(
             target = it.constitution,
             createdBy = citizen,
             content = content

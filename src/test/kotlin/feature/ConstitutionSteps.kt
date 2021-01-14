@@ -1,5 +1,6 @@
 package feature
 
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.entity.*
 import fr.dcproject.repository.CommentConstitution
 import fr.dcproject.utils.toUUID
@@ -9,7 +10,6 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.User as UserEntity
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
@@ -66,7 +66,7 @@ class ConstitutionSteps : En, KoinTest {
             name = "My Title"
         )
 
-        val constitution = ConstitutionSimple<CitizenSimple, ConstitutionSimple.TitleSimple<ArticleRef>>(
+        val constitution = ConstitutionSimple<CitizenWithUserI, ConstitutionSimple.TitleSimple<ArticleRef>>(
             id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
             title = "hello",
             titles = mutableListOf(title1),
@@ -91,7 +91,7 @@ class ConstitutionSteps : En, KoinTest {
             ("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')
         ) ?: error("Citizen not exist")
 
-        val comment: CommentEntity<ConstitutionRef> = CommentEntity(
+        val comment: CommentForUpdate<ConstitutionRef, Citizen> = CommentForUpdate(
             id = params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
             createdBy = citizen,
             target = constitution,

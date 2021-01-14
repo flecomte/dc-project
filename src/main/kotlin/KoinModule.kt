@@ -8,11 +8,13 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
+import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.article.ArticleViewManager
+import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.messages.SsoManager
-import fr.dcproject.views.ArticleViewManager
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -25,7 +27,6 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
@@ -42,7 +43,7 @@ import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 @KtorExperimentalAPI
-val Module = module {
+val KoinModule = module {
 
     single { Config }
 
@@ -113,6 +114,9 @@ val Module = module {
     single { OpinionChoiceRepository(get()) }
     single { OpinionArticleRepository(get()) }
     single { WorkgroupRepository(get()) }
+
+    // Voters
+    single { ArticleVoter(get()) }
 
     // Elasticsearch Client
     single<RestClient> {

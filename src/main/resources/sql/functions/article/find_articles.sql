@@ -21,11 +21,13 @@ begin
     into resource, total
     from (
         select
-            a.*,
+            a.id,
+            a.title,
+            a.deleted_at,
+            a.draft,
             find_citizen_by_id_with_user(a.created_by_id) as created_by,
             find_workgroup_by_id(a.workgroup_id) as workgroup,
             count_vote(a.id) as votes,
-            count_opinion(a.id) as opinions,
             zdb.score(a.ctid) _score
         from article as a
         left join vote_cache ca using (id)

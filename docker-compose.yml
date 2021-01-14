@@ -3,13 +3,13 @@
 version: '3.7'
 services:
   sonarqube:
-    container_name: sonarqube_${NAME}
+    container_name: ${APP_NAME}_sonarqube
     image: sonarqube
     ports:
       - ${SONARQUBE_PORT}:9000
 
   openapi:
-    container_name: openapi_${NAME}
+    container_name: ${APP_NAME}_openapi
     image: swaggerapi/swagger-ui
     ports:
       - ${OPENAPI_PORT}:8080
@@ -17,14 +17,14 @@ services:
       URL: "http://localhost:8080"
 
   rabbitmq:
-    container_name: rabbitmq_${NAME}
+    container_name: ${APP_NAME}_rabbitmq
     image: rabbitmq:management-alpine
     ports:
       - ${RABBITMQ_PORT}:5672
       - ${RABBITMQ_MANAGEMENT_PORT}:15672
 
   redis:
-    container_name: redis_${NAME}
+    container_name: ${APP_NAME}_redis
     image: redis:6.0-rc-alpine
     ports:
       - ${REDIS_PORT}:6379
@@ -32,7 +32,7 @@ services:
       - redis-data:/var/lib/redis:rw
 
   app:
-    container_name: app_${NAME}
+    container_name: ${APP_NAME}_app
     build:
       context: .
       dockerfile: docker/app/Dockerfile
@@ -51,7 +51,7 @@ services:
       - rabbitmq
 
   elasticsearch:
-    container_name: elasticsearch_${NAME}
+    container_name: ${APP_NAME}_elasticsearch
     image: elasticsearch:6.7.1
     ports:
       - ${ELASTIC_REST}:9200
@@ -63,7 +63,7 @@ services:
       retries: 20
 
   db:
-    container_name: postgresql_${NAME}
+    container_name: ${APP_NAME}_postgresql
     build:
       context: docker/postgresql
     ports:

@@ -1,0 +1,98 @@
+@startuml
+
+title Search / Get articles
+
+actor Front
+box Article API
+    control Controller
+    control Repository
+    entity Article
+    database Postgres
+endbox
+box View System
+    control ArticleViewManager
+    database Elasticsearch
+endbox
+box Notification System
+    control EventNotification
+    database RabbitMQ
+    database Redis
+endbox
+
+Front -> Controller++: GET /articles?page=1
+    Controller -> Repository++: find
+        Repository -> Postgres++: find_articles()
+        return
+    return
+return: 200, Articles
+
+newpage Create / Update Article
+
+Front -> Controller: POST /article
+    activate Controller
+    Controller -> Controller: Convert dto to Entity
+    Controller -> Controller: Check Authorization
+    alt Authorize
+        Controller -> Repository++: upsert(entity)
+            Repository -> Postgres++: upsert_article
+            return
+        return
+        Controller -> Controller: Convert to dto
+        Front <-- Controller: 200, New Article
+    else not authorize
+        Front <-- Controller: 403, "Forbidden"
+    end
+    Controller -> EventNotification: raiseEvent(ArticleUpdate)
+        deactivate Controller
+        activate EventNotification
+        EventNotification ->> RabbitMQ
+        deactivate EventNotification
+        ...
+RabbitMQ -->> EventNotification++
+    EventNotification ->> : Send Email
+    EventNotification ->> Redis : Push Event Notification
+return <<ACK>>
+
+newpage get one article by id
+
+Front -> Controller: GET /article/{article}
+    activate Controller
+    Controller -> Repository++: findById()
+        Repository -> Postgres++: find_article_by_id()
+        return
+    return
+    Controller -> Controller: Check Authorization
+
+    alt Authorize
+        Controller -> ArticleViewManager++: getViewsCount(Article)
+            ArticleViewManager -> Elasticsearch++
+            return
+        return
+        Controller -> Controller: Convert Article and Views to dto
+        Front <<-- Controller: 200, Article
+    else not authorize
+        Front <<-- Controller: 403, "Forbidden"
+    end
+    Controller -> ArticleViewManager++: increment the view counter
+        ArticleViewManager -> Elasticsearch++
+        return
+    return
+deactivate Controller
+
+newpage get article versions by id
+
+Front -> Controller: GET /articles/{article}/versions
+    activate Controller
+    Controller -> Controller: Check Authorization
+    alt Authorize
+        Controller -> Repository++: findVersionsByVersionId
+            Repository -> Postgres++: find_articles_versions_by_version_id
+            return
+        return
+        Controller -> Controller: Convert to dto
+        Front <-- Controller: 200, Articles versions
+    else not authorize
+        Front <-- Controller: 403, "Forbidden"
+    end
+deactivate Controller
+@enduml

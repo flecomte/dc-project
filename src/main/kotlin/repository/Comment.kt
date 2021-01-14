@@ -1,32 +1,28 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.ArticleRef
-import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.entity.TargetI
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.entity.*
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.immutable.UuidEntityI
+import fr.postgresjson.entity.UuidEntityI
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import fr.dcproject.entity.Citizen as CitizenEntity
-import fr.dcproject.entity.Comment as CommentEntity
-import fr.dcproject.entity.Article as ArticleEntity
 
 abstract class Comment<T : TargetI>(override var requester: Requester) : RepositoryI {
-    abstract fun findById(id: UUID): CommentEntity<T>?
+    abstract fun findById(id: UUID): CommentForView<T, CitizenRef>?
 
     abstract fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<CommentEntity<T>>
+    ): Paginated<CommentForView<T, CitizenRef>>
 
     open fun findByParent(
-        parent: CommentEntity<T>,
+        parent: CommentForView<T, CitizenRef>,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<CommentEntity<T>> {
+    ): Paginated<CommentForView<T, CitizenRef>> {
         return findByParent(parent.id, page, limit)
     }
 
@@ -34,7 +30,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
         parentId: UUID,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<CommentEntity<T>> {
+    ): Paginated<CommentForView<T, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_parent")
                 .select(
@@ -49,7 +45,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
         page: Int = 1,
         limit: Int = 50,
         sort: CommentArticle.Sort = CommentArticle.Sort.CREATED_AT
-    ): Paginated<CommentEntity<T>> {
+    ): Paginated<CommentForView<T, CitizenRef>> {
         return findByTarget(target.id, page, limit, sort)
     }
 
@@ -58,7 +54,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
         page: Int = 1,
         limit: Int = 50,
         sort: CommentArticle.Sort = CommentArticle.Sort.CREATED_AT
-    ): Paginated<CommentEntity<T>> {
+    ): Paginated<CommentForView<T, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
@@ -69,7 +65,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
         }
     }
 
-    fun <I : T> comment(comment: CommentEntity<I>) {
+    fun <I : T, C: CitizenRef> comment(comment: CommentForUpdate<I, C>) {
         requester
             .getFunction("comment")
             .sendQuery(
@@ -78,7 +74,7 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
             )
     }
 
-    fun <I : T> edit(comment: CommentEntity<I>) {
+    fun <I : T> edit(comment: CommentForUpdate<I, CitizenRef>) {
         requester
             .getFunction("edit_comment")
             .sendQuery(
@@ -89,17 +85,17 @@ abstract class Comment<T : TargetI>(override var requester: Requester) : Reposit
 }
 
 class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
-    override fun findById(id: UUID): CommentEntity<TargetRef>? {
+    override fun findById(id: UUID): CommentForView<TargetRef, CitizenRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
     }
 
     override fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<TargetRef>> {
+    ): Paginated<CommentForView<TargetRef, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
@@ -113,7 +109,7 @@ class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
         parentId: UUID,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<TargetRef>> {
+    ): Paginated<CommentForView<TargetRef, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_parent")
                 .select(
@@ -124,18 +120,18 @@ class CommentGeneric(requester: Requester) : Comment<TargetRef>(requester) {
     }
 }
 
-class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
-    override fun findById(id: UUID): CommentEntity<ArticleEntity>? {
+class CommentArticle(requester: Requester) : Comment<ArticleForView>(requester) {
+    override fun findById(id: UUID): CommentForView<ArticleForView, CitizenRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
     }
 
     override fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<ArticleEntity>> {
+    ): Paginated<CommentForView<ArticleForView, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
@@ -151,7 +147,7 @@ class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
         page: Int,
         limit: Int,
         sort: Sort
-    ): Paginated<CommentEntity<ArticleEntity>> = requester
+    ): Paginated<CommentForView<ArticleForView, CitizenRef>> = requester
         .getFunction("find_comments_by_target")
         .select(
             page, limit,
@@ -171,17 +167,17 @@ class CommentArticle(requester: Requester) : Comment<ArticleEntity>(requester) {
 }
 
 class CommentConstitution(requester: Requester) : Comment<ConstitutionRef>(requester) {
-    override fun findById(id: UUID): CommentEntity<ConstitutionRef>? {
+    override fun findById(id: UUID): CommentForView<ConstitutionRef, CitizenRef>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
     }
 
     override fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int,
         limit: Int
-    ): Paginated<CommentEntity<ConstitutionRef>> {
+    ): Paginated<CommentForView<ConstitutionRef, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
@@ -197,7 +193,7 @@ class CommentConstitution(requester: Requester) : Comment<ConstitutionRef>(reque
         page: Int,
         limit: Int,
         sort: CommentArticle.Sort
-    ): Paginated<CommentEntity<ConstitutionRef>> {
+    ): Paginated<CommentForView<ConstitutionRef, CitizenRef>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(

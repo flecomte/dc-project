@@ -1,15 +1,12 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.EntityI
-
-class OpinionAggregation(
-    private val underlying: MutableMap<String, Any> = mutableMapOf()
-) : MutableMap<String, Any> by underlying, EntityI
+typealias Opinions = Map<String, Int>
+typealias OpinionsMutable = MutableMap<String, Int>
 
 interface Opinionable {
-    var opinions: MutableMap<String, Int>
+    val opinions: Opinions
 }
 
 class OpinionableImp : Opinionable {
-    override var opinions: MutableMap<String, Int> = mutableMapOf()
+    override var opinions: OpinionsMutable = mutableMapOf()
 }

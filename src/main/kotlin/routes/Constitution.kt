@@ -1,14 +1,15 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.ArticleRef
-import fr.dcproject.entity.CitizenSimple
+import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.entity.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
+import fr.dcproject.entity.ConstitutionSimple.TitleSimple
 import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
 import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
 import fr.ktorVoter.assertCan
 import fr.ktorVoter.assertCanAll
-import fr.postgresjson.entity.immutable.UuidEntity
+import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.*
 import io.ktor.locations.*
@@ -58,18 +59,19 @@ object ConstitutionPaths {
                 var rank: Int? = null,
                 var articles: MutableList<ArticleRef> = mutableListOf()
             ) : UuidEntity(id) {
-                fun create(): ConstitutionSimple.TitleSimple<ArticleRef> =
-                    ConstitutionSimple.TitleSimple(
+                fun create(): TitleSimple<ArticleRef> =
+                    TitleSimple(
                         id, name, rank, articles
                     )
             }
 
-            fun List<Title>.create(): MutableList<ConstitutionSimple.TitleSimple<ArticleRef>> =
+            fun List<Title>.create(): MutableList<TitleSimple<ArticleRef>> =
                 map { it.create() }.toMutableList()
         }
 
-        suspend fun getNewConstitution(call: ApplicationCall): ConstitutionSimple<CitizenSimple, ConstitutionSimple.TitleSimple<ArticleRef>> = call.receive<Constitution>().run {
-            ConstitutionSimple(
+        suspend fun getNewConstitution(call: ApplicationCall): ConstitutionSimple<CitizenWithUserI, TitleSimple<ArticleRef>> = call.receive<Constitution>().run {
+            ConstitutionSimple<CitizenWithUserI, TitleSimple<ArticleRef>>(
+                id = UUID.randomUUID(),
                 title = title,
                 titles = titles.create(),
                 createdBy = call.citizen,

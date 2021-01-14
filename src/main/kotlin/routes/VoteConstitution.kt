@@ -2,19 +2,17 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.routes.VoteConstitutionPaths.ConstitutionVoteRequest.Content
 import fr.dcproject.security.voter.VoteVoter.Action.CREATE
 import fr.ktorVoter.assertCan
-import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.put
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.routing.Route
+import io.ktor.application.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
 import fr.dcproject.entity.Constitution as ConstitutionEntity
-import fr.dcproject.entity.Vote as VoteEntity
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 
 @KtorExperimentalLocationsAPI
@@ -32,7 +30,7 @@ object VoteConstitutionPaths {
 fun Route.voteConstitution(repo: VoteConstitutionRepository) {
     put<VoteConstitutionPaths.ConstitutionVoteRequest> {
         val content = call.receive<Content>()
-        val vote = VoteEntity(
+        val vote = VoteForUpdate(
             target = it.constitution,
             note = content.note,
             createdBy = this.citizen

@@ -1,26 +1,26 @@
 package fr.dcproject.entity
 
 import fr.dcproject.entity.CitizenI.Name
-import fr.postgresjson.entity.immutable.EntityCreatedAt
-import fr.postgresjson.entity.immutable.EntityCreatedAtImp
-import fr.postgresjson.entity.immutable.UuidEntity
-import fr.postgresjson.entity.immutable.UuidEntityI
-import fr.postgresjson.entity.mutable.EntityDeletedAt
-import fr.postgresjson.entity.mutable.EntityDeletedAtImp
+import fr.postgresjson.entity.*
 import org.joda.time.DateTime
 import java.util.*
 
+@Deprecated("")
 class Citizen(
-    id: UUID = UUID.randomUUID(),
-    name: Name,
-    email: String,
-    birthday: DateTime,
-    voteAnonymous: Boolean = true,
-    followAnonymous: Boolean = true,
-    override val user: User
+    override val id: UUID = UUID.randomUUID(),
+    override val name: Name,
+    override val email: String,
+    override val birthday: DateTime,
+    override val voteAnonymous: Boolean = true,
+    override val followAnonymous: Boolean = true,
+    override val user: User,
+    deletedAt: DateTime? = null
 ) : CitizenFull,
-    CitizenBasic(id, name, email, birthday, voteAnonymous, followAnonymous, user),
-    EntityCreatedAt by EntityCreatedAtImp() {
+    CitizenBasicI,
+    CitizenRef(id),
+    CitizenCartI,
+    EntityCreatedAt by EntityCreatedAtImp(),
+    EntityDeletedAt by EntityDeletedAtImp(deletedAt) {
     var workgroups: List<WorkgroupAndRoles> = emptyList()
 
     class WorkgroupAndRoles(
@@ -29,29 +29,43 @@ class Citizen(
     )
 }
 
-open class CitizenBasic(
-    id: UUID = UUID.randomUUID(),
-    name: Name,
+@Deprecated("")
+data class CitizenBasic(
+    override var id: UUID = UUID.randomUUID(),
+    override var name: Name,
     override var email: String,
     override var birthday: DateTime,
     override var voteAnonymous: Boolean = true,
     override var followAnonymous: Boolean = true,
-    override val user: User
+    override val user: User,
+    override val deletedAt: DateTime? = null
 ) : CitizenBasicI,
-    CitizenSimple(id, name, user)
+    CitizenRefWithUser(id, user),
+    EntityDeletedAt by EntityDeletedAtImp(deletedAt)
 
+@Deprecated("")
 open class CitizenSimple(
     id: UUID = UUID.randomUUID(),
     var name: Name,
     user: UserRef
 ) : CitizenRefWithUser(id, user)
 
+class CitizenCart(
+    id: UUID = UUID.randomUUID(),
+    override val name: Name,
+    override val user: UserRef
+) : CitizenRef(id),
+    CitizenCartI
+
+interface CitizenCartI : CitizenI, CitizenWithUserI {
+    val name: Name
+}
+
 open class CitizenRefWithUser(
     id: UUID = UUID.randomUUID(),
     override val user: UserRef
 ) : CitizenWithUserI,
-    CitizenRef(id),
-    EntityDeletedAt by EntityDeletedAtImp()
+    CitizenRef(id)
 
 open class CitizenRef(
     id: UUID = UUID.randomUUID()
@@ -60,22 +74,29 @@ open class CitizenRef(
 
 interface CitizenI : UuidEntityI {
     data class Name(
-        var firstName: String,
-        var lastName: String,
-        var civility: String? = null
-    ) {
+        override val firstName: String,
+        override val lastName: String,
+        override val civility: String? = null
+    ) : NameI
+
+    interface NameI {
+        val firstName: String
+        val lastName: String
+        val civility: String?
         fun getFullName(): String = "${civility ?: ""} $firstName $lastName".trim()
     }
 }
 
+@Deprecated("")
 interface CitizenBasicI : CitizenWithUserI, EntityDeletedAt {
-    var name: Name
-    var email: String
-    var birthday: DateTime
-    var voteAnonymous: Boolean
-    var followAnonymous: Boolean
+    val name: Name
+    val email: String
+    val birthday: DateTime
+    val voteAnonymous: Boolean
+    val followAnonymous: Boolean
 }
 
+@Deprecated("")
 interface CitizenFull : CitizenBasicI {
     override val user: User
 }

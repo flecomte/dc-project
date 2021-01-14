@@ -1,14 +1,15 @@
 package fr.dcproject.repository
 
+import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.entity.*
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.immutable.UuidEntity
+import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.*
-import fr.dcproject.entity.Article as ArticleEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 
@@ -33,7 +34,7 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
             )
     }
 
-    fun follow(follow: FollowEntity<IN>) {
+    fun follow(follow: FollowForUpdate<IN, *>) {
         requester
             .getFunction("follow")
             .sendQuery(
@@ -43,7 +44,7 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
             )
     }
 
-    fun unfollow(follow: FollowEntity<IN>) {
+    fun unfollow(follow: FollowForUpdate<IN, *>) {
         requester
             .getFunction("unfollow")
             .sendQuery(
@@ -86,12 +87,12 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
     ): Paginated<FollowSimple<IN, CitizenRef>>
 }
 
-class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleEntity>(requester) {
+class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleForView>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,
         limit: Int
-    ): Paginated<FollowEntity<ArticleEntity>> {
+    ): Paginated<FollowEntity<ArticleForView>> {
         return requester.run {
             getFunction("find_follows_article_by_citizen")
                 .select(

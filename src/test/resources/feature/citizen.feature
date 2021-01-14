@@ -17,7 +17,7 @@ Feature: citizens routes
 
   Scenario: Can get connected citizen
     Given I have citizen Henri Becquerel with ID "47356809-c8ef-4649-8b99-1c5cb9886d38"
-    Given I am authenticated as Henri Becquerel
+    And I am authenticated as Henri Becquerel
     When I send a GET request to "/citizens/current"
     Then the response status code should be 200
     And the response should contain object:

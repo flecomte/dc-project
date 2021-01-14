@@ -1,5 +1,8 @@
 package feature
 
+import fr.dcproject.component.article.ArticleForUpdate
+import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.entity.*
 import fr.dcproject.repository.CommentArticle
 import fr.dcproject.utils.toUUID
@@ -9,10 +12,7 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.entity.Article as ArticleEntity
-import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.entity.User as UserEntity
-import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 
 class ArticleSteps : En, KoinTest {
@@ -88,7 +88,7 @@ class ArticleSteps : En, KoinTest {
             ("$firstName-$lastName".toLowerCase()).toLowerCase().replace(' ', '-')
         ) ?: error("Citizen not exist")
 
-        val comment: CommentEntity<ArticleEntity> = CommentEntity(
+        val comment: CommentForUpdate<ArticleForView, Citizen> = CommentForUpdate(
             id = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID(),
             createdBy = citizen,
             target = article,

@@ -1,12 +1,12 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.user
-import fr.ktorVoter.ActionI
-import fr.ktorVoter.Vote
-import fr.ktorVoter.Voter
-import io.ktor.application.ApplicationCall
+import fr.dcproject.citizenOrNull
+import fr.dcproject.entity.CitizenI
+import fr.dcproject.entity.FollowI
+import fr.dcproject.voter.NoSubjectDefinedException
+import fr.ktorVoter.*
+import io.ktor.application.*
 import fr.dcproject.entity.Follow as FollowEntity
-import fr.dcproject.entity.User as UserEntity
 
 class FollowVoter : Voter<ApplicationCall> {
     enum class Action : ActionI {
@@ -15,33 +15,33 @@ class FollowVoter : Voter<ApplicationCall> {
         VIEW
     }
 
-    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): Vote {
-        if (!((action is Action)
-            && (subject is FollowEntity<*>?))) return Vote.ABSTAIN
+    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
+        if (action !is Action) return abstain()
+        if (subject !is FollowI) throw NoSubjectDefinedException(action)
 
-        val user = context.user
+        val citizen = context.citizenOrNull
         if (action == Action.CREATE) {
-            return if (user != null) Vote.GRANTED
-            else Vote.DENIED
+            return if (citizen == null) denied("You must be connected to follow", "follow.create.notConnected")
+            else granted()
         }
 
         if (action == Action.DELETE) {
-            return if (user != null) Vote.GRANTED
-            else Vote.DENIED
+            return if (citizen == null) denied("You must be connected to unfollow", "follow.delete.notConnected")
+            else granted()
         }
 
         if (action == Action.VIEW) {
             if (subject is FollowEntity<*>) {
-                return voteView(user, subject)
+                return voteView(citizen, subject)
             }
-            return Vote.DENIED
+            throw NoSubjectDefinedException(action)
         }
 
-        return Vote.ABSTAIN
+        return abstain()
     }
 
-    private fun voteView(user: UserEntity?, subject: FollowEntity<*>): Vote {
-        return if ((user != null && subject.createdBy.user.id == user.id) || !subject.createdBy.followAnonymous) Vote.GRANTED
-        else Vote.DENIED
+    private fun voteView(citizen: CitizenI?, subject: FollowEntity<*>): VoterResponseI {
+        return if ((citizen != null && subject.createdBy.id == citizen.id) || !subject.createdBy.followAnonymous) granted()
+        else denied("You cannot view an anonymous follow", "follow.view.anonymous")
     }
 }

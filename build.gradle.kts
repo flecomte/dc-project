@@ -23,6 +23,7 @@ version = versioning.info.run {
 plugins {
     jacoco
     application
+    maven
 
     id("maven-publish")
     id("org.jetbrains.kotlin.jvm") version "1.3.50"
@@ -138,8 +139,8 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("com.auth0:java-jwt:3.8.2")
     implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
-    implementation("com.github.flecomte:postgres-json:1.2.1")
-    implementation("com.github.flecomte:ktor-voter:2.2.1")
+    implementation("com.github.flecomte:postgres-json:2.0.0")
+    implementation("com.github.flecomte:ktor-voter:3.0.0")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
     implementation("com.rabbitmq:amqp-client:5.8.0")

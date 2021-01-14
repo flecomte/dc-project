@@ -1,16 +1,16 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.*
+import fr.postgresjson.entity.*
 import java.util.*
-
-open class Vote<T : TargetI>(
+@Deprecated("")
+class Vote<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenBasic,
-    override var target: T,
+    override val target: T,
     var note: Int,
     var anonymous: Boolean = true
 ) : ExtraI<T, CitizenBasicI>,
-    UuidEntity(id),
+    VoteRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
     EntityUpdatedAt by EntityUpdatedAtImp() {
@@ -20,3 +20,26 @@ open class Vote<T : TargetI>(
         }
     }
 }
+
+class VoteForUpdate<T: TargetI, C: CitizenI>(
+    override val id: UUID = UUID.randomUUID(),
+    override val note: Int,
+    override val target: T,
+    override val createdBy: C
+) : VoteRef(id),
+    VoteForUpdateI<T, C>,
+    EntityCreatedBy<C> by EntityCreatedByImp<C>(createdBy)
+
+interface VoteForUpdateI<T: TargetI, C: CitizenI> : VoteI, AsTarget<T>, EntityCreatedBy<C> {
+    override val id: UUID
+    val note: Int
+    override val target: T
+    override val createdBy: C
+}
+
+
+open class VoteRef(
+    override val id: UUID
+) : VoteI
+
+interface VoteI : UuidEntityI

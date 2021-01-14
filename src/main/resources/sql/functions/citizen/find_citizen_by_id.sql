@@ -8,7 +8,6 @@ begin
          select
             z.*
          from citizen as z
-         left join citizen_in_workgroup ciw on z.id = ciw.citizen_id
          where z.id = _id
          group by z.id
      ) as t;

@@ -1,11 +1,11 @@
 import fr.dcproject.Env
-import fr.dcproject.entity.ArticleRefVersioning
+import fr.dcproject.component.article.ArticleRefVersioning
+import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.module
-import fr.dcproject.views.ArticleViewManager
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.locations.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance

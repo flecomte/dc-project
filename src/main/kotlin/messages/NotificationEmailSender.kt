@@ -3,11 +3,15 @@ package fr.dcproject.messages
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
-import fr.dcproject.entity.*
-import fr.postgresjson.entity.immutable.UuidEntityI
+import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.article.ArticleWithTitleI
+import fr.dcproject.entity.CitizenBasicI
+import fr.dcproject.entity.CitizenRef
+import fr.dcproject.entity.FollowSimple
+import fr.dcproject.entity.TargetRef
+import fr.postgresjson.entity.UuidEntityI
 import java.util.*
 import fr.dcproject.repository.Citizen as CitizenRepository
-import fr.dcproject.repository.Article as ArticleRepository
 
 class NotificationEmailSender(
     private val mailer: Mailer,
@@ -40,7 +44,7 @@ class NotificationEmailSender(
 
     private fun generateHtmlContent(citizen: CitizenBasicI, target: UuidEntityI): String? {
         return when (target) {
-            is Article -> """
+            is ArticleWithTitleI -> """
                 Hello ${citizen.name.getFullName()},<br/>
                 The article "${target.title}" was updated, check it <a href="http://$domain/articles/${target.id}">here</a>
             """.trimIndent()
@@ -50,7 +54,7 @@ class NotificationEmailSender(
 
     private fun generateContent(citizen: CitizenBasicI, target: UuidEntityI): String {
         return when (target) {
-            is Article -> """
+            is ArticleWithTitleI -> """
                 Hello ${citizen.name.getFullName()},
                 The article "${target.title}" was updated, check it here: http://$domain/articles/${target.id}
             """.trimIndent()

@@ -1,13 +1,14 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.entity.*
 import fr.dcproject.user
 import fr.ktorVoter.ActionI
 import fr.ktorVoter.Vote
 import fr.ktorVoter.can
 import fr.ktorVoter.canAll
-import io.ktor.application.ApplicationCall
-import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.application.*
+import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -16,12 +17,14 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import java.util.*
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("voter")
 internal class OpinionChoiceVoterTest {
     private val tesla = CitizenBasic(
+        id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -32,9 +35,18 @@ internal class OpinionChoiceVoterTest {
         followAnonymous = false
     )
 
-    private val article1 = Article(
+    private val tesla2 = CitizenCart(
+        id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
+        user = User(
+            username = "nicolas-tesla",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        name = CitizenI.Name("Nicolas", "Tesla")
+    )
+
+    private val article1 = ArticleForView(
         content = "Hi",
-        createdBy = tesla,
+        createdBy = tesla2,
         description = "blablabla",
         title = "Super article"
     )
@@ -54,9 +66,9 @@ internal class OpinionChoiceVoterTest {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            this(OpinionChoiceVoter.Action.VIEW, it, choice1) `should be` Vote.GRANTED
-            this(OpinionChoiceVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
-            this(p, it, choice1) `should be` Vote.ABSTAIN
+            this(OpinionChoiceVoter.Action.VIEW, it, choice1).vote `should be` Vote.GRANTED
+            this(OpinionChoiceVoter.Action.VIEW, it, article1).vote `should be` Vote.ABSTAIN
+            this(p, it, choice1).vote `should be` Vote.ABSTAIN
         }
     }
 

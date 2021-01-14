@@ -1342,8 +1342,6 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserResponse'
-            workgroups:
-              $ref: '#/components/schemas/WorkgroupSimple'
     CitizenBase:
       type: object
       properties:
@@ -1375,8 +1373,6 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserRequest'
-            workgroups:
-              $ref: '#/components/schemas/UuidEntity'
 
     RegisterRequest:
       $ref: '#/components/schemas/CitizenRequest'

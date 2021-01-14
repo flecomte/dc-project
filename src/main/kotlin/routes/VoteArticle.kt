@@ -1,7 +1,9 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.repository.CommentGeneric
 import fr.dcproject.repository.VoteComment
 import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
@@ -18,14 +20,12 @@ import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
 import java.util.*
-import fr.dcproject.entity.Article as ArticleEntity
-import fr.dcproject.entity.Vote as VoteEntity
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 
 @KtorExperimentalLocationsAPI
 object VoteArticlePaths {
     @Location("/articles/{article}/vote")
-    class ArticleVoteRequest(val article: ArticleEntity) {
+    class ArticleVoteRequest(val article: ArticleForView) {
         data class Content(var note: Int)
     }
 
@@ -52,7 +52,7 @@ object VoteArticlePaths {
 fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentGeneric) {
     put<ArticleVoteRequest> {
         val content = call.receive<ArticleVoteRequest.Content>()
-        val vote = VoteEntity(
+        val vote = VoteForUpdate(
             target = it.article,
             note = content.note,
             createdBy = this.citizen
@@ -65,7 +65,7 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
     put<CommentVoteRequest> {
         val comment = commentRepo.findById(it.comment)!!
         val content = call.receive<CommentVoteRequest.Content>()
-        val vote = VoteEntity(
+        val vote = VoteForUpdate(
             target = comment,
             note = content.note,
             createdBy = this.citizen

@@ -13,7 +13,7 @@ import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 
 class Workgroup(override var requester: Requester) : RepositoryI {
-    fun findById(id: UUID): WorkgroupEntity? {
+    fun findById(id: UUID): WorkgroupEntity<CitizenBasic>? {
         val function = requester.getFunction("find_workgroup_by_id")
         return function.selectOne("id" to id)
     }
@@ -25,7 +25,7 @@ class Workgroup(override var requester: Requester) : RepositoryI {
         direction: Direction? = null,
         search: String? = null,
         filter: Filter = Filter()
-    ): Paginated<WorkgroupEntity> {
+    ): Paginated<WorkgroupEntity<CitizenBasic>> {
         return requester
             .getFunction("find_workgroups")
             .select(
@@ -37,11 +37,11 @@ class Workgroup(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun upsert(workgroup: WorkgroupSimple<CitizenRef>): WorkgroupEntity = requester
+    fun <C: CitizenI, W: WorkgroupSimple<C>> upsert(workgroup: W): WorkgroupEntity<CitizenBasic> = requester
         .getFunction("upsert_workgroup")
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
 
-    fun delete(workgroup: WorkgroupRef) = requester
+    fun <W: WorkgroupRef> delete(workgroup: W) = requester
             .getFunction("delete_workgroup")
             .perform("id" to workgroup.id)
 

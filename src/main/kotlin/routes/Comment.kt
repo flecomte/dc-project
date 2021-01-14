@@ -1,12 +1,10 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.Comment
+import fr.dcproject.entity.CommentForUpdate
 import fr.dcproject.entity.CommentRef
 import fr.dcproject.routes.CommentPaths.CreateCommentRequest.Content
-import fr.dcproject.security.voter.CommentVoter.Action.CREATE
-import fr.dcproject.security.voter.CommentVoter.Action.UPDATE
-import fr.dcproject.security.voter.CommentVoter.Action.VIEW
+import fr.dcproject.security.voter.CommentVoter.Action.*
 import fr.ktorVoter.assertCan
 import fr.ktorVoter.assertCanAll
 import io.ktor.application.*
@@ -67,7 +65,7 @@ fun Route.comment(repo: CommentRepository) {
 
     post<CommentPaths.CreateCommentRequest> {
         val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
-        val newComment = Comment(
+        val newComment = CommentForUpdate(
             content = call.receive<Content>().content,
             createdBy = citizen,
             parent = parent
@@ -82,6 +80,7 @@ fun Route.comment(repo: CommentRepository) {
     put<CommentPaths.CommentRequest> {
         val comment = repo.findById(it.comment.id)!!
         assertCan(UPDATE, comment)
+
 
         comment.content = call.receiveText()
         repo.edit(comment)

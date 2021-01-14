@@ -1,17 +1,21 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.EntityCreatedAt
-import fr.postgresjson.entity.immutable.EntityCreatedBy
-import fr.postgresjson.entity.immutable.UuidEntity
-import fr.postgresjson.entity.immutable.UuidEntityI
+import fr.dcproject.component.article.ArticleRef
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityI
 import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 interface ExtraI<T : TargetI, C : CitizenI> :
     UuidEntityI,
+    AsTarget<T>,
     EntityCreatedAt,
-    EntityCreatedBy<C> {
+    EntityCreatedBy<C>
+
+interface AsTarget<T: TargetI> {
     val target: T
 }
 

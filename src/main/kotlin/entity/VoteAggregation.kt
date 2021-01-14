@@ -1,8 +1,8 @@
 package fr.dcproject.entity
 
 import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.mutable.EntityUpdatedAt
-import fr.postgresjson.entity.mutable.EntityUpdatedAtImp
+import fr.postgresjson.entity.EntityUpdatedAt
+import fr.postgresjson.entity.EntityUpdatedAtImp
 
 open class VoteAggregation(
     val up: Int,

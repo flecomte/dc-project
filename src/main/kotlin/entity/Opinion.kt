@@ -1,11 +1,10 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.EntityCreatedAt
-import fr.postgresjson.entity.immutable.EntityCreatedAtImp
-import fr.postgresjson.entity.immutable.EntityCreatedBy
-import fr.postgresjson.entity.immutable.EntityCreatedByImp
+import fr.dcproject.component.article.ArticleRef
+import fr.postgresjson.entity.*
 import java.util.*
 
+@Deprecated("")
 open class Opinion<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenBasic,
@@ -19,9 +18,24 @@ open class Opinion<T : TargetI>(
     fun getName(): String = choice.name
 }
 
+@Deprecated("")
 class OpinionArticle(
     id: UUID = UUID.randomUUID(),
     createdBy: CitizenBasic,
     target: ArticleRef,
     choice: OpinionChoice
 ) : Opinion<ArticleRef>(id, createdBy, target, choice)
+
+data class OpinionForUpdate<T: TargetI>(
+    override val id: UUID = UUID.randomUUID(),
+    val target: T,
+    val choice: OpinionChoice,
+    override val createdBy: CitizenRef
+) : OpinionRef(id),
+    EntityCreatedBy<CitizenI> by EntityCreatedByImp(createdBy)
+
+open class OpinionRef(
+    override val id: UUID
+) : OpinionI
+
+interface OpinionI: UuidEntityI

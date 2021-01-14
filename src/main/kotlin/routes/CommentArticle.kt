@@ -1,8 +1,10 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.Article
+import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.entity.Citizen
+import fr.dcproject.entity.CommentForUpdate
 import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE
 import fr.dcproject.security.voter.CommentVoter.Action.VIEW
@@ -14,14 +16,13 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import fr.dcproject.entity.Comment as CommentEntity
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 
 @KtorExperimentalLocationsAPI
 object CommentArticlePaths {
     @Location("/articles/{article}/comments")
     class ArticleCommentRequest(
-        val article: Article,
+        val article: ArticleRef,
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null,
@@ -34,14 +35,14 @@ object CommentArticlePaths {
 
     @Location("/articles/{article}/comments")
     class PostArticleCommentRequest(
-        val article: Article
+        val article: ArticleForView
     ) {
         class Comment(
             val content: String
         )
 
         suspend fun getComment(call: ApplicationCall) = call.receive<Comment>().run {
-            CommentEntity(
+            CommentForUpdate(
                 target = article,
                 createdBy = call.citizen,
                 content = content

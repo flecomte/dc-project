@@ -1,14 +1,15 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.citizenOrNull
+import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.entity.*
-import fr.dcproject.user
-import fr.ktorVoter.ActionI
+import fr.dcproject.voter.NoSubjectDefinedException
+import fr.ktorVoter.*
 import fr.ktorVoter.Vote
-import fr.ktorVoter.can
-import fr.ktorVoter.canAll
 import fr.postgresjson.connexion.Paginated
-import io.ktor.application.ApplicationCall
-import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.application.*
+import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -17,13 +18,15 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import fr.dcproject.repository.Article as ArticleRepo
+import org.junit.jupiter.api.assertThrows
+import java.util.*
+import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tag("voter")
 internal class CommentVoterTest {
-    private val tesla = CitizenBasic(
+    private val tesla = Citizen(
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -32,7 +35,8 @@ internal class CommentVoterTest {
         email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla")
     )
-    private val einstein = CitizenBasic(
+    private val einstein = Citizen(
+        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
         user = User(
             username = "albert-einstein",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -42,45 +46,60 @@ internal class CommentVoterTest {
         name = CitizenI.Name("Albert", "Einstein")
     )
 
-    private val article1 = Article(
+    private val einstein2 = CitizenCart(
+        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
+        user = User(
+            username = "albert-einstein",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        name = CitizenI.Name("Albert", "Einstein")
+    )
+
+    private val article1 = ArticleForView(
         content = "Hi",
-        createdBy = einstein,
+        createdBy = einstein2,
         description = "blablabla",
         title = "Super article"
     )
 
-    private val comment1 = Comment(
+    private val comment1 = CommentForView(
         content = "Hello",
         createdBy = tesla,
         target = article1
     )
 
-    private val comment2 = Comment(
+    private val commentForUpdate = CommentForUpdate(
+        content = "Hello",
+        createdBy = tesla,
+        target = article1
+    )
+
+    private val comment2 = CommentForView(
         content = "Hello2",
         createdBy = einstein,
         target = article1
     )
 
-    private val commentTargetDeleted = Comment(
+    private val commentTargetDeleted = CommentForView(
         content = "Hello",
         createdBy = tesla,
-        target = Article(
+        target = ArticleForView(
             content = "Hi",
-            createdBy = einstein,
+            createdBy = einstein2,
             description = "blablabla",
             title = "Super article",
             workgroup = null
-        ).apply { deletedAt = DateTime.now() }
+        ).copy(deletedAt = DateTime.now())
     )
 
-    private val commentTargetNoUser = Comment(
+    private val commentTargetNoUser = CommentForView(
         content = "Hello",
         createdBy = tesla,
         target = ArticleRef()
     )
 
     private val repoArticle1 = mockk<ArticleRepo> {
-        every { findVerionsByVersionsId(1, 1, any()) } returns Paginated(listOf(article1), 0, 1, 1)
+        every { findVersionsByVersionId(1, 1, any()) } returns Paginated(listOf(article1), 0, 1, 1)
     }
 
     init {
@@ -91,19 +110,19 @@ internal class CommentVoterTest {
     fun `support comment`(): Unit = CommentVoter().run {
         val p = object : ActionI {}
         mockk<ApplicationCall> {
-            every { user } returns tesla.user
+            every { citizenOrNull } returns tesla
         }.let {
-            this(CommentVoter.Action.VIEW, it, comment1) `should be` Vote.GRANTED
-            this(CommentVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
-            this(p, it, comment1) `should be` Vote.ABSTAIN
+            this(CommentVoter.Action.VIEW, it, comment1).vote `should be` Vote.GRANTED
+            this(CommentVoter.Action.VIEW, it, article1).vote `should be` Vote.ABSTAIN
+            this(p, it, comment1).vote `should be` Vote.ABSTAIN
         }
     }
 
     @Test
     fun `can be view the comment`(): Unit {
-        listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
+        listOf(CommentVoter()).run {
             mockk<ApplicationCall> {
-                every { user } returns tesla.user
+                every { citizenOrNull } returns tesla
             }.let {
                 can(CommentVoter.Action.VIEW, it, comment1) `should be` true
             }
@@ -113,7 +132,7 @@ internal class CommentVoterTest {
     @Test
     fun `can be view the comment list`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns einstein.user
+            every { citizenOrNull } returns einstein
         }.let {
             canAll(CommentVoter.Action.VIEW, it, listOf(comment1)) `should be` true
         }
@@ -122,7 +141,7 @@ internal class CommentVoterTest {
     @Test
     fun `can be update your comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns tesla.user
+            every { citizenOrNull } returns tesla
         }.let {
             can(CommentVoter.Action.UPDATE, it, comment1) `should be` true
         }
@@ -131,7 +150,7 @@ internal class CommentVoterTest {
     @Test
     fun `can not be update other comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns einstein.user
+            every { citizenOrNull } returns einstein
         }.let {
             can(CommentVoter.Action.UPDATE, it, comment1) `should be` false
         }
@@ -140,43 +159,34 @@ internal class CommentVoterTest {
     @Test
     fun `can not be delete your comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns tesla.user
+            every { citizenOrNull } returns tesla
         }.let {
             can(CommentVoter.Action.DELETE, it, comment1) `should be` false
         }
     }
 
     @Test
-    fun `can be create a comment`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
+    fun `can be create a comment`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns tesla.user
+            every { citizenOrNull } returns tesla
         }.let {
             can(CommentVoter.Action.CREATE, it, comment1) `should be` true
         }
     }
 
     @Test
-    fun `can not be create a comment if target is deleted`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
+    fun `can not be create a comment if target is deleted`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns tesla.user
+            every { citizenOrNull } returns tesla
         }.let {
             can(CommentVoter.Action.CREATE, it, commentTargetDeleted) `should be` false
         }
     }
 
     @Test
-    fun `can not be create a comment if target has no user`(): Unit = listOf(CommentVoter(), ArticleVoter(repoArticle1)).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(CommentVoter.Action.CREATE, it, commentTargetNoUser) `should be` false
-        }
-    }
-
-    @Test
     fun `can not be create a comment with other creator`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns einstein.user
+            every { citizenOrNull } returns einstein
         }.let {
             can(CommentVoter.Action.CREATE, it, comment1) `should be` false
         }
@@ -185,16 +195,18 @@ internal class CommentVoterTest {
     @Test
     fun `can not be create a comment if is null`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns einstein.user
+            every { citizenOrNull } returns einstein
         }.let {
-            can(CommentVoter.Action.CREATE, it, null) `should be` false
+            assertThrows<NoSubjectDefinedException> {
+                assertCan(CommentVoter.Action.CREATE, it, null)
+            }
         }
     }
 
     @Test
     fun `can not be create a comment if not connected`(): Unit = listOf(CommentVoter()).run {
         mockk<ApplicationCall> {
-            every { user } returns null
+            every { citizenOrNull } returns null
         }.let {
             can(CommentVoter.Action.CREATE, it, comment1) `should be` false
         }

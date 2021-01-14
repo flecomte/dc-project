@@ -1,10 +1,8 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.immutable.*
-import fr.postgresjson.entity.mutable.EntityDeletedAt
-import fr.postgresjson.entity.mutable.EntityDeletedAtImp
-import fr.postgresjson.entity.mutable.EntityVersioning
-import fr.postgresjson.entity.mutable.UuidEntityVersioning
+import fr.dcproject.component.article.ArticleI
+import fr.dcproject.component.article.ArticleSimple
+import fr.postgresjson.entity.*
 import java.util.*
 
 class Constitution(
@@ -33,17 +31,17 @@ class Constitution(
     ) : ConstitutionSimple.TitleSimple<ArticleSimple>(id, name, rank)
 }
 
-open class ConstitutionSimple<Cr : CitizenRefWithUser, T : ConstitutionSimple.TitleSimple<*>>(
+open class ConstitutionSimple<Cr : CitizenWithUserI, T : ConstitutionSimple.TitleSimple<*>>(
     id: UUID = UUID.randomUUID(),
-    var title: String,
-    var anonymous: Boolean = true,
-    open var titles: MutableList<T> = mutableListOf(),
-    var draft: Boolean = false,
-    var lastVersion: Boolean = false,
+    val title: String,
+    val anonymous: Boolean = true,
+    val titles: MutableList<T> = mutableListOf(),
+    val draft: Boolean = false,
+    val lastVersion: Boolean = false,
     override val createdBy: Cr,
     versionId: UUID = UUID.randomUUID()
 ) : ConstitutionRef(id),
-    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionId = versionId),
+    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionId = versionId, versionNumber = 0),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<Cr> by EntityCreatedByImp(createdBy),
     EntityDeletedAt by EntityDeletedAtImp() {

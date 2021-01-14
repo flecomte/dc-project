@@ -26,13 +26,16 @@ class CitizenSteps : En, KoinTest {
             createCitizen(firstName, lastName)
         }
 
+        Given("I have citizen {word} {word} with") { firstName: String, lastName: String, extraData: DataTable? ->
+            createCitizen(firstName, lastName, extraData)
+        }
+
         Given("I have citizen {word} {word} with ID {string}") { firstName: String, lastName: String, id: String ->
             createCitizen(firstName, lastName, id = UUID.fromString(id))
         }
     }
 
     private fun createCitizen(firstName: String, lastName: String, extraData: DataTable? = null, id: UUID? = null) {
-
         val params = extraData?.asMap<String, String>(String::class.java, String::class.java)
         val id: UUID = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID()
         val email = params?.get("email") ?: ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr"

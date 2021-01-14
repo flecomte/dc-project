@@ -1,14 +1,15 @@
 package feature
 
-import fr.dcproject.entity.OpinionArticle
+import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.entity.OpinionChoice
+import fr.dcproject.entity.OpinionForUpdate
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.repository.Article as ArticleRepository
 import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.OpinionArticle as OpinionRepository
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
@@ -52,11 +53,11 @@ class OpinionSteps : En, KoinTest {
         lastName: String,
         id: String? = null
     ) {
-        val opinion = OpinionArticle(
+        val opinion = OpinionForUpdate(
             id = id?.toUUID() ?: UUID.randomUUID(),
             choice = get<OpinionChoiceRepository>().findOpinionsChoiceByName(opinionChoiceName)
                 ?: error("Opinion Choice not exist"),
-            target = get<ArticleRepository>().findById(articleId.toUUID()) ?: error("Article not exist"),
+            target = ArticleRef(articleId.toUUID()),
             createdBy = get<CitizenRepository>().findByUsername("$firstName-$lastName".toLowerCase().replace(' ', '-'))
                 ?: error("Citizen not exist")
         )
@@ -67,7 +68,7 @@ class OpinionSteps : En, KoinTest {
         val params = extraInfo?.asMap<String, String>(String::class.java, String::class.java)
         val username = params?.get("createdBy")?.toLowerCase()?.replace(' ', '-')
             ?: error("You must provide the 'createdBy' parameter")
-        val opinion = OpinionArticle(
+        val opinion = OpinionForUpdate(
             choice = params["opinion"]?.let {
                 get<OpinionChoiceRepository>().findOpinionsChoiceByName(it) ?: error("Opinion Choice not exist")
             } ?: error("You must provide the 'opinion' parameter"),

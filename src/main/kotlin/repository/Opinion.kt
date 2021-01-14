@@ -1,9 +1,10 @@
 package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
-import fr.dcproject.entity.ArticleRef
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.OpinionChoiceRef
+import fr.dcproject.entity.OpinionForUpdate
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -70,7 +71,7 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
     fun updateOpinions(choice: OpinionChoiceRef, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>> =
         updateOpinions(listOf(choice), citizen, target)
 
-    abstract fun addOpinion(opinion: OpinionEntity<T>): OpinionEntity<T>
+    abstract fun addOpinion(opinion: OpinionForUpdate<T>): OpinionEntity<T>
 
     /**
      * Find opinions of one citizen filtered by target ids
@@ -148,7 +149,7 @@ class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
     /**
      * Add Opinions on Article
      */
-    override fun addOpinion(opinion: OpinionEntity<ArticleRef>): OpinionArticleEntity {
+    override fun addOpinion(opinion: OpinionForUpdate<ArticleRef>): OpinionArticleEntity {
         return requester
             .getFunction("upsert_opinion")
             .selectOne("resource" to opinion)!!

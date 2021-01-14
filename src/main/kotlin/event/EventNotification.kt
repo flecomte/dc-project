@@ -3,7 +3,7 @@ package fr.dcproject.event
 import com.rabbitmq.client.*
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
 import fr.dcproject.Config
-import fr.dcproject.entity.Article
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.entity.CitizenRef
 import fr.dcproject.entity.FollowSimple
 import fr.dcproject.entity.TargetRef
@@ -11,10 +11,8 @@ import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.Follow
 import fr.postgresjson.serializer.deserialize
-import io.ktor.application.ApplicationCall
-import io.ktor.application.EventDefinition
-import io.ktor.application.application
-import io.ktor.util.pipeline.PipelineContext
+import io.ktor.application.*
+import io.ktor.util.pipeline.*
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
@@ -26,7 +24,7 @@ import org.slf4j.LoggerFactory
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 
 class ArticleUpdate(
-    target: Article
+    target: ArticleForView
 ) : EntityEvent(target, "article", "update") {
     companion object {
         val event = EventDefinition<ArticleUpdate>()

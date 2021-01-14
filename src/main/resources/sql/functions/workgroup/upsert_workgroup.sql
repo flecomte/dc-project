@@ -23,9 +23,9 @@ begin
     insert into citizen_in_workgroup (workgroup_id, citizen_id, roles)
     select
         new_id::uuid,
-        citizen_id,
-        roles
-    from json_populate_recordset(null::citizen_in_workgroup, resource->'members') m;
+        (m#>>'{citizen,id}')::uuid,
+        json_to_array(m#>'{roles}')
+    from json_array_elements(resource->'members') m;
 
     -- insert master if no members
     if (exists) then

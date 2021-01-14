@@ -1,22 +1,22 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.entity.*
 import fr.dcproject.user
+import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.ActionI
 import fr.ktorVoter.Vote
 import fr.ktorVoter.VoterException
 import fr.ktorVoter.can
-import io.ktor.application.ApplicationCall
-import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.application.*
+import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
-import org.junit.jupiter.api.Assertions
-import org.junit.jupiter.api.Tag
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.*
+import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 
 @KtorExperimentalLocationsAPI
@@ -35,6 +35,7 @@ internal class WorkgroupVoterTest {
     )
 
     private val einstein = CitizenBasic(
+        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
         user = User(
             username = "albert-einstein",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -45,9 +46,18 @@ internal class WorkgroupVoterTest {
         followAnonymous = true
     )
 
-    private val article1 = Article(
+    private val einstein2 = CitizenCart(
+        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
+        user = User(
+            username = "albert-einstein",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        name = CitizenI.Name("Albert", "Einstein")
+    )
+
+    private val article1 = ArticleForView(
         content = "Hi",
-        createdBy = einstein,
+        createdBy = einstein2,
         description = "blablabla",
         title = "Super article"
     )
@@ -80,9 +90,9 @@ internal class WorkgroupVoterTest {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            this(WorkgroupVoter.Action.VIEW, it, workgroupPublic) `should be` Vote.GRANTED
-            this(WorkgroupVoter.Action.VIEW, it, article1) `should be` Vote.ABSTAIN
-            this(p, it, workgroupPublic) `should be` Vote.ABSTAIN
+            this(WorkgroupVoter.Action.VIEW, it, workgroupPublic).vote `should be` Vote.GRANTED
+            this(WorkgroupVoter.Action.VIEW, it, article1).vote `should be` Vote.ABSTAIN
+            this(p, it, workgroupPublic).vote `should be` Vote.ABSTAIN
         }
     }
 
@@ -127,7 +137,9 @@ internal class WorkgroupVoterTest {
         mockk<ApplicationCall> {
             every { user } returns tesla.user
         }.let {
-            can(WorkgroupVoter.Action.VIEW, it, null) `should be` false
+            assertThrows<NoSubjectDefinedException> {
+                can(WorkgroupVoter.Action.VIEW, it, null)
+            }
         }
     }
 

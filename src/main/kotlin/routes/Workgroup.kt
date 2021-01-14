@@ -6,9 +6,9 @@ import fr.dcproject.entity.WorkgroupSimple
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
 import fr.dcproject.repository.Workgroup.Filter
-import fr.dcproject.security.voter.WorkgroupVoter.Action.CREATE
+import fr.dcproject.routes.WorkgroupsPaths.PutWorkgroupRequest.Input
+import fr.dcproject.security.voter.WorkgroupVoter.Action.*
 import fr.dcproject.security.voter.WorkgroupVoter.Action.UPDATE
-import fr.dcproject.security.voter.WorkgroupVoter.Action.VIEW
 import fr.dcproject.utils.toUUID
 import fr.ktorVoter.assertCan
 import fr.ktorVoter.assertCanAll
@@ -19,9 +19,10 @@ import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import java.util.*
-import fr.dcproject.entity.Workgroup as WorkgroupEntity
-import fr.dcproject.repository.Workgroup as WorkgroupRepository
+import fr.dcproject.repository.Workgroup as WorkgroupRepo
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.ADD as ADD_MEMBERS
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.REMOVE as REMOVE_MEMBERS
 import fr.dcproject.security.voter.WorkgroupVoter.ActionMembers.UPDATE as UPDATE_MEMBERS
@@ -43,8 +44,11 @@ object WorkgroupsPaths {
         val members: List<UUID>? = members?.toUUID()
     }
 
-    @Location("/workgroups/{workgroup}")
-    class WorkgroupRequest(val workgroup: WorkgroupEntity)
+    @Location("/workgroups/{workgroupId}")
+    class WorkgroupRequest(private val workgroupId: UUID) : KoinComponent {
+        val repo: WorkgroupRepo by inject()
+        val workgroup = repo.findById(workgroupId) ?: TODO()
+    }
 
     @Location("/workgroups")
     open class PostWorkgroupRequest {
@@ -68,31 +72,30 @@ object WorkgroupsPaths {
         }
     }
 
-    @Location("/workgroups/{workgroup}")
-    class PutWorkgroupRequest(val workgroup: WorkgroupEntity) {
-        class Body(
+    @Location("/workgroups/{workgroupId}")
+    class PutWorkgroupRequest(val workgroupId: UUID) : KoinComponent {
+        class Input(
             val name: String?,
             val description: String?,
             val logo: String?,
             val anonymous: Boolean?
         )
-
-        suspend fun updateWorkgroup(call: ApplicationCall): Unit = call.receive<Body>().run {
-            name?.let { workgroup.name = it }
-            description?.let { workgroup.description = it }
-            logo?.let { workgroup.logo = it }
-            anonymous?.let { workgroup.anonymous = it }
-        }
     }
 
-    @Location("/workgroups/{workgroup}")
-    class DeleteWorkgroupRequest(val workgroup: WorkgroupEntity)
+    @Location("/workgroups/{workgroupId}")
+    class DeleteWorkgroupRequest(val workgroupId: UUID) : KoinComponent {
+        val repo: WorkgroupRepo by inject()
+        val workgroup = repo.findById(workgroupId)
+    }
 }
 
 @KtorExperimentalLocationsAPI
 object WorkgroupsMembersPaths {
-    @Location("/workgroups/{workgroup}/members")
-    class WorkgroupsMembersRequest(val workgroup: WorkgroupEntity) {
+    @Location("/workgroups/{workgroupId}/members")
+    class WorkgroupsMembersRequest(val workgroupId: UUID) : KoinComponent {
+        val repo: WorkgroupRepo by inject()
+        val workgroup = repo.findById(workgroupId)
+
         class Body : MutableList<Body.Item> by mutableListOf() {
             class Item(val citizen: CitizenRef, roles: List<String> = emptyList()) {
                 val roles: List<Role> = roles.map {
@@ -111,7 +114,7 @@ object WorkgroupsMembersPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.workgroup(repo: WorkgroupRepository) {
+fun Route.workgroup(repo: WorkgroupRepo) {
     get<WorkgroupsPaths.WorkgroupsRequest> {
         val workgroups =
             repo.find(it.page, it.limit, it.sort, it.direction, it.search, Filter(createdById = it.createdBy, members = it.members))
@@ -136,50 +139,74 @@ fun Route.workgroup(repo: WorkgroupRepository) {
     }
 
     put<WorkgroupsPaths.PutWorkgroupRequest> {
-        it.updateWorkgroup(call).let { workgroup ->
-            assertCan(UPDATE, workgroup)
-            repo.upsert(workgroup as WorkgroupSimple<CitizenRef>)
-        }.let {
-            call.respond(HttpStatusCode.OK, it)
-        }
+        repo.findById(it.workgroupId)?.let { old ->
+            call.receive<Input>().run {
+                old.copy(
+                    name = name ?: old.name,
+                    description = description ?: old.description,
+                    logo = logo ?: old.logo,
+                    anonymous = anonymous ?: old.anonymous
+                ).let { workgroup ->
+                    assertCan(UPDATE, workgroup)
+                    repo.upsert(workgroup)
+                    call.respond(HttpStatusCode.OK, it)
+                }
+            }
+        } ?: call.respond(HttpStatusCode.NotFound)
     }
 
     delete<WorkgroupsPaths.DeleteWorkgroupRequest> {
-        assertCan(UPDATE, it.workgroup)
-        repo.delete(it.workgroup)
-        call.respond(HttpStatusCode.NoContent, it)
+        if (it.workgroup != null) {
+            assertCan(DELETE, it.workgroup)
+            repo.delete(it.workgroup)
+            call.respond(HttpStatusCode.NoContent)
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 
     /* Add members to workgroup */
     post<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        it.getMembers(call)
-            .let { members ->
-                assertCan(ADD_MEMBERS, it.workgroup)
-                repo.addMembers(it.workgroup, members)
-            }.let { members ->
-                call.respond(HttpStatusCode.Created, members)
-            }
+        if (it.workgroup != null) {
+            it.getMembers(call)
+                .let { members ->
+                    assertCan(ADD_MEMBERS, it.workgroup)
+                    repo.addMembers(it.workgroup, members)
+                }.let { members ->
+                    call.respond(HttpStatusCode.Created, members)
+                }
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 
     /* Delete members of workgroup */
     delete<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        it.getMembers(call)
-            .let { members ->
-                assertCan(REMOVE_MEMBERS, it.workgroup)
-                repo.removeMembers(it.workgroup, members)
-            }.let { members ->
-                call.respond(HttpStatusCode.OK, members)
-            }
+        if (it.workgroup != null) {
+            it.getMembers(call)
+                .let { members ->
+                    assertCan(REMOVE_MEMBERS, it.workgroup)
+                    repo.removeMembers(it.workgroup, members)
+                }.let { members ->
+                    call.respond(HttpStatusCode.OK, members)
+                }
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 
     /* Update members of workgroup */
     put<WorkgroupsMembersPaths.WorkgroupsMembersRequest> {
-        it.getMembers(call)
-            .let { members ->
-                assertCan(UPDATE_MEMBERS, it.workgroup)
-                repo.updateMembers(it.workgroup, members)
-            }.let { members ->
-                call.respond(HttpStatusCode.OK, members)
-            }
+        if (it.workgroup != null) {
+            it.getMembers(call)
+                .let { members ->
+                    assertCan(UPDATE_MEMBERS, it.workgroup)
+                    repo.updateMembers(it.workgroup, members)
+                }.let { members ->
+                    call.respond(HttpStatusCode.OK, members)
+                }
+        } else {
+            call.respond(HttpStatusCode.NotFound)
+        }
     }
 }

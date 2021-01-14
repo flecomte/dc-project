@@ -30,7 +30,7 @@ class WorkgroupSteps : En, KoinTest {
 
             val creator = data["created_by"]?.let {
                 get<CitizenRepository>().findByUsername(it.toLowerCase().replace(' ', '-'))
-            } ?: kotlin.run {
+            } ?: run {
                 val username = "paul-langevin".toLowerCase() + UUID.randomUUID()
                 val user = User(
                     username = username,
@@ -46,12 +46,13 @@ class WorkgroupSteps : En, KoinTest {
                 }
             }
 
-            val workgroup = WorkgroupSimple<CitizenRef>(
+            val workgroup = Workgroup(
                 id = UUID.fromString(data["id"] ?: UUID.randomUUID().toString()),
                 name = data["name"] ?: "Les Incoruptible",
                 description = data["description"] ?: "La vie est notre jeux",
                 createdBy = creator,
-                anonymous = (data["anonymous"] ?: false) == true
+                anonymous = (data["anonymous"] ?: false) == true,
+                members = listOf(Member(creator, listOf(Member.Role.MASTER)))
             )
 
             get<WorkgroupRepository>().upsert(workgroup)

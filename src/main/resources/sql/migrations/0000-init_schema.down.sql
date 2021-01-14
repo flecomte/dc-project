@@ -11,6 +11,7 @@ drop table if exists follow_constitution;
 drop table if exists follow_citizen;
 drop table if exists follow;
 
+drop table if exists vote_cache;
 drop table if exists vote_for_article;
 drop table if exists vote_for_constitution;
 drop table if exists vote_for_comment_on_article;

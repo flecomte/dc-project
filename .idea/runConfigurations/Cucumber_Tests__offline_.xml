@@ -3,12 +3,6 @@
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
     <module name="dcproject.test" />
     <useClassPathOnly />
-    <extension name="coverage">
-      <pattern>
-        <option name="PATTERN" value="fr.dcproject.*" />
-        <option name="ENABLED" value="true" />
-      </pattern>
-    </extension>
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="RunCucumberTest" />
     <option name="METHOD_NAME" value="" />
