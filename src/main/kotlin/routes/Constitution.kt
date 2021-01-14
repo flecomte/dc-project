@@ -2,7 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.CitizenWithUserI
+import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.entity.ConstitutionSimple.TitleSimple
 import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE

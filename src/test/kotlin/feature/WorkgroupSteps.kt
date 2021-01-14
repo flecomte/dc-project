@@ -1,5 +1,9 @@
 package feature
 
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.*
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.utils.toUUID
@@ -10,7 +14,6 @@ import org.junit.Assert
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 class WorkgroupSteps : En, KoinTest {

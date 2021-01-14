@@ -4,9 +4,9 @@ import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.JwtConfig
-import fr.dcproject.entity.CitizenBasicI
-import io.ktor.http.URLBuilder
-import fr.dcproject.repository.Citizen as CitizenRepository
+import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenRepository
+import io.ktor.http.*
 
 class SsoManager(
     private val mailer: Mailer,

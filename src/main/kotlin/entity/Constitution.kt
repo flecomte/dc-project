@@ -2,6 +2,8 @@ package fr.dcproject.entity
 
 import fr.dcproject.component.article.ArticleI
 import fr.dcproject.component.article.ArticleSimple
+import fr.dcproject.component.citizen.CitizenSimple
+import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.postgresjson.entity.*
 import java.util.*
 

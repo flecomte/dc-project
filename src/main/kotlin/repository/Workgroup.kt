@@ -1,6 +1,11 @@
 package fr.dcproject.repository
 
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.WorkgroupI
+import fr.dcproject.entity.WorkgroupRef
+import fr.dcproject.entity.WorkgroupSimple
+import fr.dcproject.entity.WorkgroupWithMembersI
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester

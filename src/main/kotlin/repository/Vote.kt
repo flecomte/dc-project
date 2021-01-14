@@ -2,13 +2,14 @@ package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.*
 import fr.dcproject.entity.Constitution
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import java.util.*
-import fr.dcproject.entity.Citizen as CitizenEntity
+import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 
 open class Vote<T : TargetI>(override var requester: Requester) : RepositoryI {

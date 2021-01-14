@@ -4,7 +4,7 @@ import com.rabbitmq.client.*
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
 import fr.dcproject.Config
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.FollowSimple
 import fr.dcproject.entity.TargetRef
 import fr.dcproject.event.publisher.Publisher

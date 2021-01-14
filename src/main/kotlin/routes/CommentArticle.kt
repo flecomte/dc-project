@@ -3,7 +3,7 @@ package fr.dcproject.routes
 import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.Citizen
+import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.entity.CommentForUpdate
 import fr.dcproject.repository.CommentArticle.Sort
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE

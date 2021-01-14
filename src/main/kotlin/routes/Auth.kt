@@ -3,25 +3,22 @@ package fr.dcproject.routes
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.JwtConfig
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.UserI.Roles.ROLE_USER
 import fr.dcproject.messages.SsoManager
 import fr.dcproject.routes.AuthPaths.LoginRequest
 import fr.dcproject.routes.AuthPaths.RegisterRequest
 import fr.dcproject.routes.AuthPaths.SsoRequest
-import io.ktor.application.call
-import io.ktor.auth.UserPasswordCredential
-import io.ktor.features.BadRequestException
-import io.ktor.http.HttpStatusCode
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.locations.Location
-import io.ktor.locations.post
-import io.ktor.request.receive
-import io.ktor.response.respond
-import io.ktor.response.respondText
-import io.ktor.routing.Route
-import io.ktor.util.KtorExperimentalAPI
-import fr.dcproject.entity.Citizen as CitizenEntity
-import fr.dcproject.repository.Citizen as CitizenRepository
+import io.ktor.application.*
+import io.ktor.auth.*
+import io.ktor.features.*
+import io.ktor.http.*
+import io.ktor.locations.*
+import io.ktor.request.*
+import io.ktor.response.*
+import io.ktor.routing.*
+import io.ktor.util.*
+import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.repository.User as UserRepository
 
 @KtorExperimentalLocationsAPI

@@ -5,13 +5,13 @@ import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleWithTitleI
-import fr.dcproject.entity.CitizenBasicI
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.FollowSimple
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.entity.UuidEntityI
 import java.util.*
-import fr.dcproject.repository.Citizen as CitizenRepository
 
 class NotificationEmailSender(
     private val mailer: Mailer,

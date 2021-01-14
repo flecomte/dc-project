@@ -1,13 +1,13 @@
 package feature
 
 import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.VoteArticle as VoteRepository
 
 class VoteSteps : En, KoinTest {

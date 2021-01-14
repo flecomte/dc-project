@@ -1,13 +1,13 @@
 package feature
 
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.entity.FollowForUpdate
 import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 

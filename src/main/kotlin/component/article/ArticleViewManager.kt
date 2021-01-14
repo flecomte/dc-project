@@ -1,6 +1,6 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.ViewAggregation
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField

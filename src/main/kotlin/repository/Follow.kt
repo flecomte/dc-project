@@ -2,7 +2,12 @@ package fr.dcproject.repository
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.entity.FollowForUpdate
+import fr.dcproject.entity.FollowSimple
+import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity

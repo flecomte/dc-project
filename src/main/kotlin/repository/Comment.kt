@@ -2,6 +2,8 @@ package fr.dcproject.repository
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.*
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester

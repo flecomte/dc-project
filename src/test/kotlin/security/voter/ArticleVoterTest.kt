@@ -2,8 +2,8 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleVoter
-import fr.dcproject.entity.CitizenCart
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import fr.dcproject.voter.Vote.DENIED

@@ -3,10 +3,15 @@ package fr.dcproject.security.voter
 import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.CommentForUpdate
+import fr.dcproject.entity.CommentForView
+import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*
-import fr.ktorVoter.Vote
 import fr.postgresjson.connexion.Paginated
 import io.ktor.application.*
 import io.ktor.locations.*

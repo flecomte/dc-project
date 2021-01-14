@@ -11,6 +11,8 @@ import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.ArticleVoter
+import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
@@ -27,7 +29,6 @@ import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.CommentArticle as CommentArticleRepository
 import fr.dcproject.repository.CommentConstitution as CommentConstitutionRepository
 import fr.dcproject.repository.CommentGeneric as CommentGenericRepository
@@ -117,6 +118,7 @@ val KoinModule = module {
 
     // Voters
     single { ArticleVoter(get()) }
+    single { CitizenVoter() }
 
     // Elasticsearch Client
     single<RestClient> {

@@ -3,7 +3,11 @@ package feature
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.entity.CommentForUpdate
+import fr.dcproject.entity.WorkgroupRef
 import fr.dcproject.repository.CommentArticle
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
@@ -13,7 +17,6 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
 import fr.dcproject.entity.User as UserEntity
-import fr.dcproject.repository.Citizen as CitizenRepository
 
 class ArticleSteps : En, KoinTest {
     init {

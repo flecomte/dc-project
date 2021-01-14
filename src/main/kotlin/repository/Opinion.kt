@@ -2,7 +2,7 @@ package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.entity.OpinionForUpdate
 import fr.dcproject.entity.TargetRef
@@ -11,7 +11,7 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import net.pearx.kasechange.toSnakeCase
 import java.util.*
-import fr.dcproject.entity.Citizen as CitizenEntity
+import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.entity.Opinion as OpinionEntity
 import fr.dcproject.entity.OpinionArticle as OpinionArticleEntity
 import fr.dcproject.entity.OpinionChoice as OpinionChoiceEntity

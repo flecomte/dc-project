@@ -2,6 +2,7 @@ package feature
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.entity.OpinionForUpdate
 import fr.dcproject.utils.toUUID
@@ -10,7 +11,6 @@ import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.OpinionArticle as OpinionRepository
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 

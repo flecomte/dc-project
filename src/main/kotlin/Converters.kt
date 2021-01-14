@@ -3,7 +3,13 @@ package fr.dcproject
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.entity.CommentRef
+import fr.dcproject.entity.Constitution
+import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.entity.WorkgroupRef
 import fr.dcproject.repository.OpinionChoice
 import fr.dcproject.repository.Workgroup
 import io.ktor.features.*
@@ -78,7 +84,7 @@ val converters: ConverterDeclaration = {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }
                 ?: throw InternalError("Cannot convert $values to UUID")
-            get<fr.dcproject.repository.Citizen>().findById(id) ?: throw NotFoundException("Citizen $values not found")
+            get<fr.dcproject.component.citizen.CitizenRepository>().findById(id) ?: throw NotFoundException("Citizen $values not found")
         }
     }
 

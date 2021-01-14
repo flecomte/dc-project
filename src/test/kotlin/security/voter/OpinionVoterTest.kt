@@ -1,11 +1,16 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.Opinion
+import fr.dcproject.entity.OpinionChoice
+import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
 import fr.dcproject.user
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*
-import fr.ktorVoter.Vote
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.mockk.every

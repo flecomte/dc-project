@@ -1,7 +1,13 @@
 package feature
 
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.citizen.CitizenWithUserI
+import fr.dcproject.entity.CommentForUpdate
+import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.repository.CommentConstitution
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
@@ -11,7 +17,6 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
 import fr.dcproject.entity.User as UserEntity
-import fr.dcproject.repository.Citizen as CitizenRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 class ConstitutionSteps : En, KoinTest {

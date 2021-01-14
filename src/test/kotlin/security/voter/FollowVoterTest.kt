@@ -2,7 +2,13 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.entity.*
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.Follow
+import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.ActionI
 import fr.ktorVoter.Vote

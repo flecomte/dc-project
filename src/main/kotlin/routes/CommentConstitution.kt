@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.Citizen
+import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.entity.CommentForUpdate
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.security.voter.CommentVoter.Action.CREATE

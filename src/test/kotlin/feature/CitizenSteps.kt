@@ -1,7 +1,8 @@
 package feature
 
-import fr.dcproject.entity.Citizen
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.User
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
@@ -9,7 +10,6 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.repository.Citizen as CitizenRepository
 
 class CitizenSteps : En, KoinTest {
     init {

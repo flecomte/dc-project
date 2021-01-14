@@ -1,7 +1,7 @@
 import fr.dcproject.Env
 import fr.dcproject.component.article.ArticleRefVersioning
 import fr.dcproject.component.article.ArticleViewManager
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.module
 import io.ktor.locations.*
 import io.ktor.server.testing.*

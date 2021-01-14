@@ -1,6 +1,6 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.CreatedBy
 import fr.dcproject.entity.VersionableRef
 import fr.dcproject.voter.Voter

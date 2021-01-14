@@ -1,5 +1,8 @@
 package fr.dcproject.entity
 
+import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
 import fr.postgresjson.entity.*

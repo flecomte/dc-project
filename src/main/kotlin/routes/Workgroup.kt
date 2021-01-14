@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.citizen
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.WorkgroupSimple
 import fr.dcproject.entity.WorkgroupWithMembersI.Member
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role

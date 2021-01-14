@@ -12,6 +12,10 @@ import fr.dcproject.component.article.route.findArticleVersions
 import fr.dcproject.component.article.route.upsertArticle
 import fr.dcproject.component.article.routes.findArticles
 import fr.dcproject.component.article.routes.getOneArticle
+import fr.dcproject.component.citizen.routes.changeMyPassword
+import fr.dcproject.component.citizen.routes.findCitizen
+import fr.dcproject.component.citizen.routes.getCurrentCitizen
+import fr.dcproject.component.citizen.routes.getOneCitizen
 import fr.dcproject.elasticsearch.configElasticIndexes
 import fr.dcproject.entity.User
 import fr.dcproject.event.EventNotification
@@ -71,7 +75,6 @@ fun Application.module(env: Env = PROD) {
     install(AuthorizationVoter) {
         voters = listOf(
             ConstitutionVoter(),
-            CitizenVoter(),
             CommentVoter(),
             VoteVoter(),
             FollowVoter(),
@@ -151,12 +154,18 @@ fun Application.module(env: Env = PROD) {
     install(Routing.Feature) {
         // trace { application.log.trace(it.buildText()) }
         authenticate(optional = true) {
+            /* Article */
             findArticles(get(), get())
             getOneArticle(get(), get())
             upsertArticle(get(), get(), get())
             findArticleVersions(get(), get())
+            /* Citizen */
+            findCitizen(get(), get())
+            getOneCitizen(get())
+            getCurrentCitizen(get())
+            changeMyPassword(get(), get())
+
             auth(get(), get(), get())
-            citizen(get(), get())
             constitution(get())
             followArticle(get())
             followConstitution(get())

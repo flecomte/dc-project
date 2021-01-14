@@ -1,5 +1,6 @@
 package fr.dcproject
 
+import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import io.ktor.application.*
@@ -7,8 +8,7 @@ import io.ktor.auth.*
 import io.ktor.util.*
 import io.ktor.util.pipeline.*
 import org.koin.core.context.GlobalContext
-import fr.dcproject.entity.Citizen as CitizenEntity
-import fr.dcproject.repository.Citizen as CitizenRepository
+import fr.dcproject.component.citizen.Citizen as CitizenEntity
 
 class ForbiddenException(message: String) : Exception(message)
 

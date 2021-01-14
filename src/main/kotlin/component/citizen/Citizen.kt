@@ -1,6 +1,10 @@
-package fr.dcproject.entity
+package fr.dcproject.component.citizen
 
-import fr.dcproject.entity.CitizenI.Name
+import fr.dcproject.component.citizen.CitizenI.Name
+import fr.dcproject.entity.User
+import fr.dcproject.entity.UserI
+import fr.dcproject.entity.UserRef
+import fr.dcproject.entity.WorkgroupSimple
 import fr.postgresjson.entity.*
 import org.joda.time.DateTime
 import java.util.*

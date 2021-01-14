@@ -2,7 +2,7 @@ package fr.dcproject.routes
 
 import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.entity.CitizenRef
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.security.voter.OpinionVoter.Action.CREATE
 import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
@@ -19,7 +19,7 @@ import io.ktor.util.*
 import org.koin.core.KoinComponent
 import org.koin.core.get
 import java.util.*
-import fr.dcproject.entity.Citizen as CitizenEntity
+import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.repository.OpinionArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI

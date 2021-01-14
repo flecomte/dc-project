@@ -2,11 +2,11 @@ package feature
 
 import com.auth0.jwt.JWT
 import fr.dcproject.JwtConfig
+import fr.dcproject.component.citizen.CitizenRepository
 import io.cucumber.java8.En
 import io.ktor.http.*
 import org.koin.test.KoinTest
 import org.koin.test.get
-import fr.dcproject.repository.Citizen as CitizenRepository
 
 class KtorServerAuthSteps : En, KoinTest {
     init {

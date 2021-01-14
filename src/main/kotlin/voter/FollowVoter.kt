@@ -1,7 +1,7 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.citizenOrNull
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.FollowI
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*

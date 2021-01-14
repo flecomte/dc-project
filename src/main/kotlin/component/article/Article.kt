@@ -1,5 +1,6 @@
 package fr.dcproject.component.article
 
+import fr.dcproject.component.citizen.*
 import fr.dcproject.entity.*
 import fr.postgresjson.entity.*
 import org.joda.time.DateTime

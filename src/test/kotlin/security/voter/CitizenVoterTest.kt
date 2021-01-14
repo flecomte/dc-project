@@ -1,22 +1,19 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.CitizenBasic
-import fr.dcproject.entity.CitizenI
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
-import fr.dcproject.user
-import fr.ktorVoter.*
-import io.ktor.application.*
+import fr.dcproject.voter.Vote.DENIED
+import fr.dcproject.voter.Vote.GRANTED
 import io.ktor.locations.*
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 
 @KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -57,78 +54,51 @@ class CitizenVoterTest {
     }
 
     @Test
-    fun `support citizen`(): Unit = CitizenVoter().run {
-        val p = object : ActionI {}
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            this(CitizenVoter.Action.VIEW, it, einstein).vote `should be` Vote.GRANTED
-            this(p, it, einstein).vote `should be` Vote.ABSTAIN
-        }
+    fun `can be view the citizen`() {
+        CitizenVoter()
+            .canView(subject = einstein, connectedCitizen = tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the citizen`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(CitizenVoter.Action.VIEW, it, einstein) `should be` true
-        }
+    fun `can be view the citizen list`() {
+        CitizenVoter()
+            .canView(subjects = listOf(tesla, einstein), connectedCitizen = einstein)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the citizen list`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            canAll(CitizenVoter.Action.VIEW, it, listOf(einstein, tesla)) `should be` true
-        }
+    fun `can not view deleted citizen`() {
+        CitizenVoter()
+            .canView(subject = curie, connectedCitizen = tesla)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not view deleted citizen`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(CitizenVoter.Action.VIEW, it, curie) `should be` false
-        }
+    fun `can be update itself`() {
+        CitizenVoter()
+            .canUpdate(subject = einstein, connectedCitizen = einstein)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be update itself`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            can(CitizenVoter.Action.UPDATE, it, einstein) `should be` true
-        }
+    fun `can not be update other citizen`() {
+        CitizenVoter()
+            .canUpdate(subject = tesla, connectedCitizen = einstein)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not be update other citizen`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            assertThrows<OneOrMoreVoterDeniedException> {
-                assertCan(CitizenVoter.Action.UPDATE, it, tesla)
-            }
-        }
+    fun `can be change password of itself`() {
+        CitizenVoter()
+            .canChangePassword(subject = einstein, connectedCitizen = einstein)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be change password of itself`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            can(CitizenVoter.Action.CHANGE_PASSWORD, it, einstein) `should be` true
-        }
-    }
-
-    @Test
-    fun `can not be change password of other citizen`(): Unit = listOf(CitizenVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            can(CitizenVoter.Action.CHANGE_PASSWORD, it, tesla) `should be` false
-        }
+    fun `can not be change password of other citizen`() {
+        CitizenVoter()
+            .canChangePassword(subject = tesla, connectedCitizen = einstein)
+            .vote `should be` DENIED
     }
 }
