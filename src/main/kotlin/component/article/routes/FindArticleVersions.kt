@@ -1,4 +1,4 @@
-package fr.dcproject.component.article.route
+package fr.dcproject.component.article.routes
 
 import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForView

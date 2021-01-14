@@ -8,14 +8,15 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.Env.PROD
-import fr.dcproject.component.article.route.findArticleVersions
-import fr.dcproject.component.article.route.upsertArticle
+import fr.dcproject.component.article.routes.findArticleVersions
 import fr.dcproject.component.article.routes.findArticles
 import fr.dcproject.component.article.routes.getOneArticle
+import fr.dcproject.component.article.routes.upsertArticle
 import fr.dcproject.component.citizen.routes.changeMyPassword
 import fr.dcproject.component.citizen.routes.findCitizen
 import fr.dcproject.component.citizen.routes.getCurrentCitizen
 import fr.dcproject.component.citizen.routes.getOneCitizen
+import fr.dcproject.component.comment.routes.comment
 import fr.dcproject.elasticsearch.configElasticIndexes
 import fr.dcproject.entity.User
 import fr.dcproject.event.EventNotification
