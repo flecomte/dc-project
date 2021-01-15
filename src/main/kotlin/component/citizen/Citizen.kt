@@ -91,9 +91,8 @@ interface CitizenI : UuidEntityI {
 }
 
 @Deprecated("")
-interface CitizenBasicI : CitizenWithUserI, EntityDeletedAt {
+interface CitizenBasicI : CitizenWithUserI, CitizenWithEmail, EntityDeletedAt {
     val name: Name
-    val email: String
     val birthday: DateTime
     val voteAnonymous: Boolean
     val followAnonymous: Boolean
@@ -106,4 +105,8 @@ interface CitizenFull : CitizenBasicI {
 
 interface CitizenWithUserI : CitizenI {
     val user: UserI
+}
+
+interface CitizenWithEmail : CitizenI {
+    val email: String
 }

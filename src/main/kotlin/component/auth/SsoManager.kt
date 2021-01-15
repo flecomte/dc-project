@@ -6,6 +6,8 @@ import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.JwtConfig
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.citizen.CitizenWithEmail
+import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.messages.Mailer
 import io.ktor.http.*
 
@@ -22,34 +24,29 @@ class SsoManager(
         sendEmail(citizen, url)
     }
 
-    fun sendEmail(citizen: CitizenBasicI, url: String) {
+    fun <C> sendEmail(citizen: C, url: String) where C : CitizenWithEmail, C : CitizenWithUserI {
         mailer.sendEmail {
+            val token = JwtConfig.makeToken(citizen.user)
             Mail(
                 Email("sso@$domain"),
                 "Connection",
                 Email(citizen.email),
-                Content("text/plain", generateContent(citizen, url))
+                Content("text/plain", generateContent(token, url))
             ).apply {
-                addContent(Content("text/html", generateHtmlContent(citizen, url)))
+                addContent(Content("text/html", generateHtmlContent(token, url)))
             }
         }
     }
 
-    /**
-     * TODO pass token to the function to avoid double generations
-     */
-    private fun generateHtmlContent(citizen: CitizenBasicI, url: String): String? {
+    private fun generateHtmlContent(token: String, url: String): String? {
         val urlObject = URLBuilder(url)
-        urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user))
+        urlObject.parameters.append("token", token)
         return "Click <a href=\"${urlObject.buildString()}\">here</a> for connect to $domain"
     }
 
-    /**
-     * TODO pass token to the function to avoid double generations
-     */
-    private fun generateContent(citizen: CitizenBasicI, url: String): String {
+    private fun generateContent(token: String, url: String): String {
         val urlObject = URLBuilder(url)
-        urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user))
+        urlObject.parameters.append("token", token)
         return "Copy this link into your browser for connect to $domain: \n${urlObject.buildString()}"
     }
 
