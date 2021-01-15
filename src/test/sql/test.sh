@@ -17,7 +17,7 @@ case $opt in
       awk 'FNR==1{print "--------------------"}1' \
         ../../main/resources/sql/migrations/*.down.sql \
         ../../main/resources/sql/migrations/*.up.sql > ./allSQL.sql
-      docker exec -i postgresql_dc-project psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
+      docker exec -i dc-project_postgresql psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
       rm ./allSQL.sql
       ;;
   "All")
@@ -26,7 +26,7 @@ case $opt in
         ../../main/resources/sql/functions/*/*.sql \
         ./fixtures/*.sql \
         ./*.sql > ./allSQL.sql
-      docker exec -i postgresql_dc-project psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
+      docker exec -i dc-project_postgresql psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
       rm ./allSQL.sql
       ;;
   "Quit")
@@ -37,7 +37,7 @@ case $opt in
       ../../main/resources/sql/functions/*/*.sql \
       ./fixtures/*.sql \
       ./"$opt".sql > ./allSQL.sql
-    docker exec -i postgresql_dc-project psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
+    docker exec -i dc-project_postgresql psql test test -q -b -v "ON_ERROR_STOP=1" < ./allSQL.sql
     rm ./allSQL.sql
     ;;
 esac
