@@ -128,7 +128,7 @@ fun Application.module(env: Env = PROD) {
             verifier(JwtConfig.verifier)
             realm = "dc-project.fr"
             authHeader { call ->
-                call.request.queryParameters.get("token")?.let {
+                call.request.queryParameters["token"]?.let {
                     HttpAuthHeader.Single("Bearer", it)
                 }
             }

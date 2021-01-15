@@ -47,6 +47,7 @@ object JwtConfig {
 
     /**
      * Produce a token for this combination of User and Account
+     * TODO move token creator in other place
      */
     fun makeToken(user: UserI): String = JWT.create()
         .withSubject("Authentication")

@@ -130,8 +130,7 @@ dependencies {
     implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
-    implementation("io.ktor:ktor-gson:$ktor_version")
-    implementation("io.ktor:ktor-auth-jwt:$ktor_version")
+    implementation("io.ktor:ktor-gson:$ktor_version") /* TODO Can be removed ? */
     implementation("io.ktor:ktor-websockets:$ktor_version")
     implementation("org.koin:koin-ktor:$koinVersion")
     implementation("io.ktor:ktor-jackson:$ktor_version")
