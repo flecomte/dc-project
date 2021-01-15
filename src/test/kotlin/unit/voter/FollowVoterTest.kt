@@ -7,8 +7,8 @@ import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.Follow
-import fr.dcproject.entity.User
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.security.voter.FollowVoter
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.ActionI

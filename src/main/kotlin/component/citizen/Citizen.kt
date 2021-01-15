@@ -1,15 +1,14 @@
 package fr.dcproject.component.citizen
 
 import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.entity.User
-import fr.dcproject.entity.UserI
-import fr.dcproject.entity.UserRef
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.auth.UserRef
 import fr.dcproject.entity.WorkgroupSimple
 import fr.postgresjson.entity.*
 import org.joda.time.DateTime
 import java.util.*
 
-@Deprecated("")
 class Citizen(
     override val id: UUID = UUID.randomUUID(),
     override val name: Name,

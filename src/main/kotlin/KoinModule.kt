@@ -18,7 +18,8 @@ import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.messages.SsoManager
+import fr.dcproject.component.auth.SsoManager
+import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
@@ -38,7 +39,6 @@ import fr.dcproject.repository.FollowArticle as FollowArticleRepository
 import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 import fr.dcproject.repository.OpinionArticle as OpinionArticleRepository
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
-import fr.dcproject.repository.User as UserRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 import fr.dcproject.repository.VoteComment as VoteCommentRepository
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository

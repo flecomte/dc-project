@@ -16,7 +16,7 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.*
-import fr.dcproject.entity.User as UserEntity
+import fr.dcproject.component.auth.User as UserEntity
 
 class ArticleSteps : En, KoinTest {
     init {

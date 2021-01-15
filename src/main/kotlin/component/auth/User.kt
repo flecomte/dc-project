@@ -1,12 +1,11 @@
-package fr.dcproject.entity
+package fr.dcproject.component.auth
 
-import fr.dcproject.entity.UserI.Roles
+import fr.dcproject.component.auth.UserI.Roles
 import fr.postgresjson.entity.*
 import io.ktor.auth.*
 import org.joda.time.DateTime
 import java.util.*
 
-@Deprecated("")
 class User(
     id: UUID = UUID.randomUUID(),
     username: String,

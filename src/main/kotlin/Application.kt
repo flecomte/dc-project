@@ -21,7 +21,11 @@ import fr.dcproject.component.comment.generic.routes.editComment
 import fr.dcproject.component.comment.generic.routes.getChildrenComments
 import fr.dcproject.component.comment.generic.routes.getOneComment
 import fr.dcproject.elasticsearch.configElasticIndexes
-import fr.dcproject.entity.User
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.auth.routes.authLogin
+import fr.dcproject.component.auth.routes.authRegister
+import fr.dcproject.component.auth.routes.authSso
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.*
@@ -52,7 +56,6 @@ import org.slf4j.event.Level
 import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
-import fr.dcproject.repository.User as UserRepository
 
 fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
 
@@ -172,8 +175,11 @@ fun Application.module(env: Env = PROD) {
             getOneComment(get(), get())
             createCommentChildren(get(), get())
             getChildrenComments(get(), get())
+            /* Auth */
+            authLogin(get())
+            authRegister(get())
+            authSso(get())
             /* TODO */
-            auth(get(), get(), get())
             constitution(get())
             followArticle(get())
             followConstitution(get())

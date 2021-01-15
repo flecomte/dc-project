@@ -4,7 +4,7 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.UserI
 import java.util.*
 import java.net.URI
 

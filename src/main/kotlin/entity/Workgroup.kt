@@ -1,5 +1,6 @@
 package fr.dcproject.entity
 
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenWithUserI

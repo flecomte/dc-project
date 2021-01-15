@@ -5,7 +5,7 @@ import fr.dcproject.citizen
 import fr.dcproject.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenVoter
-import fr.dcproject.repository.User
+import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -23,7 +23,7 @@ class ChangePasswordCitizenRequest(val citizen: Citizen) {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.changeMyPassword(voter: CitizenVoter, userRepository: User) {
+fun Route.changeMyPassword(voter: CitizenVoter, userRepository: UserRepository) {
     put<ChangePasswordCitizenRequest> {
         voter.assert { canChangePassword(it.citizen, citizenOrNull) }
         try {

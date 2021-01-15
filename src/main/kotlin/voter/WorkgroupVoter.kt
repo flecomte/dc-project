@@ -1,6 +1,6 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.entity.WorkgroupI
 import fr.dcproject.entity.WorkgroupWithAuthI
 import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role

@@ -3,7 +3,7 @@ package steps
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.entity.User
+import fr.dcproject.component.auth.User
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime

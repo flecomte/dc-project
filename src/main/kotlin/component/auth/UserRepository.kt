@@ -1,13 +1,12 @@
-package fr.dcproject.repository
+package fr.dcproject.component.auth
 
-import fr.dcproject.entity.UserFull
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.auth.UserPasswordCredential
 import java.util.*
-import fr.dcproject.entity.User as UserEntity
+import fr.dcproject.component.auth.User as UserEntity
 
-class User(override var requester: Requester) : RepositoryI {
+class UserRepository(override var requester: Requester) : RepositoryI {
     fun findByCredentials(credentials: UserPasswordCredential): UserEntity? {
         return requester
             .getFunction("check_user")

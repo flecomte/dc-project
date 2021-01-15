@@ -1,8 +1,8 @@
 package fr.dcproject
 
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.entity.User
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
 import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.util.*

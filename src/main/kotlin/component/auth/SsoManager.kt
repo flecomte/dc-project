@@ -1,4 +1,4 @@
-package fr.dcproject.messages
+package fr.dcproject.component.auth
 
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
@@ -6,8 +6,12 @@ import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.JwtConfig
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.messages.Mailer
 import io.ktor.http.*
 
+/**
+ * Send an email to the citizen with a link to automatically connect
+ */
 class SsoManager(
     private val mailer: Mailer,
     private val domain: String,
@@ -31,12 +35,18 @@ class SsoManager(
         }
     }
 
+    /**
+     * TODO pass token to the function to avoid double generations
+     */
     private fun generateHtmlContent(citizen: CitizenBasicI, url: String): String? {
         val urlObject = URLBuilder(url)
         urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user))
         return "Click <a href=\"${urlObject.buildString()}\">here</a> for connect to $domain"
     }
 
+    /**
+     * TODO pass token to the function to avoid double generations
+     */
     private fun generateContent(citizen: CitizenBasicI, url: String): String {
         val urlObject = URLBuilder(url)
         urlObject.parameters.append("token", JwtConfig.makeToken(citizen.user))

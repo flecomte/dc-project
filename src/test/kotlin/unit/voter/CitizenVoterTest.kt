@@ -3,8 +3,8 @@ package unit.voter
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenVoter
-import fr.dcproject.entity.User
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
 import io.mockk.mockkStatic

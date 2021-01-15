@@ -2,7 +2,7 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.entity.ConstitutionSimple
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.user
 import fr.dcproject.voter.NoRuleDefinedException
 import fr.dcproject.voter.NoSubjectDefinedException

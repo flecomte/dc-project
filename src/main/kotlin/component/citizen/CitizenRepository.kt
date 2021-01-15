@@ -1,6 +1,6 @@
 package fr.dcproject.component.citizen
 
-import fr.dcproject.entity.UserI
+import fr.dcproject.component.auth.UserI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI

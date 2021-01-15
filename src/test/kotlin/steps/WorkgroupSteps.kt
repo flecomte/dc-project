@@ -1,5 +1,6 @@
 package steps
 
+import fr.dcproject.component.auth.User
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
