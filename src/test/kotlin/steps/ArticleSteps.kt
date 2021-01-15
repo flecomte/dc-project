@@ -1,4 +1,4 @@
-package feature
+package steps
 
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView

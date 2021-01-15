@@ -68,6 +68,7 @@ val sourcesJar by tasks.creating(Jar::class) {
 tasks.test {
     useJUnit()
     useJUnitPlatform()
+    systemProperty("junit.jupiter.execution.parallel.enabled", true)
 //    maxHeapSize = "1G"
 }
 

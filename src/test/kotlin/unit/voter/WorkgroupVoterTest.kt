@@ -1,4 +1,4 @@
-package fr.dcproject.security.voter
+package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenBasic
@@ -8,6 +8,7 @@ import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import fr.dcproject.entity.WorkgroupRef
 import fr.dcproject.entity.WorkgroupWithMembersI
+import fr.dcproject.security.voter.WorkgroupVoter
 import fr.dcproject.user
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.ActionI
@@ -15,18 +16,19 @@ import fr.ktorVoter.Vote
 import fr.ktorVoter.VoterException
 import fr.ktorVoter.can
 import io.ktor.application.*
-import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.*
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
 import fr.dcproject.entity.Workgroup as WorkgroupEntity
 
-@KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(CONCURRENT)
 @Tag("voter")
 internal class WorkgroupVoterTest {
     private val tesla = CitizenBasic(

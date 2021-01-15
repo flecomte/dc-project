@@ -1,13 +1,12 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Mark as @error" type="JUnit" factoryName="JUnit" folderName="Cucumber" show_console_on_std_err="true">
+  <configuration default="false" name="Functional Tests" type="JUnit" factoryName="JUnit" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
-    <module name="dcproject.test" />
     <useClassPathOnly />
-    <option name="PACKAGE_NAME" value="" />
-    <option name="MAIN_CLASS_NAME" value="CucumberTest" />
+    <option name="PACKAGE_NAME" value="fr.dcproject" />
+    <option name="MAIN_CLASS_NAME" value="" />
     <option name="METHOD_NAME" value="" />
-    <option name="TEST_OBJECT" value="class" />
-    <option name="VM_PARAMETERS" value="-ea -Dcucumber.filter.tags=&quot;@error&quot; -Dstrict" />
+    <option name="TEST_OBJECT" value="tags" />
+    <option name="VM_PARAMETERS" value="-ea -Djdk.attach.allowAttachSelf=true" />
     <option name="PARAMETERS" value="" />
     <option name="TEST_SEARCH_SCOPE">
       <value defaultName="wholeProject" />
@@ -16,7 +15,7 @@
       <env name="SEND_GRID_KEY" value="$SEND_GRID_KEY$" />
     </envs>
     <dir value="$PROJECT_DIR$" />
-    <tag value="!online" />
+    <tag value="functional" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

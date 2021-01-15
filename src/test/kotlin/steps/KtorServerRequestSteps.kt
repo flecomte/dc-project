@@ -1,4 +1,4 @@
-package feature
+package steps
 
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.datatable.DataTable

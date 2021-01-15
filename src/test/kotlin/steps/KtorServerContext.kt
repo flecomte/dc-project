@@ -1,10 +1,7 @@
-package feature
+package steps
 
-import io.ktor.application.Application
-import io.ktor.server.testing.TestApplicationCall
-import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.TestApplicationRequest
-import io.ktor.server.testing.createTestEnvironment
+import io.ktor.application.*
+import io.ktor.server.testing.*
 import java.util.concurrent.TimeUnit
 import kotlin.test.fail
 

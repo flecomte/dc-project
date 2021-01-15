@@ -1,4 +1,4 @@
-package feature
+package steps
 
 import com.auth0.jwt.JWT
 import fr.dcproject.JwtConfig

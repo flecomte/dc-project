@@ -10,7 +10,7 @@
       </pattern>
     </extension>
     <option name="PACKAGE_NAME" value="" />
-    <option name="MAIN_CLASS_NAME" value="RunCucumberTest" />
+    <option name="MAIN_CLASS_NAME" value="CucumberTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea -Dcucumber.filter.tags=&quot;@workgroup&quot;" />

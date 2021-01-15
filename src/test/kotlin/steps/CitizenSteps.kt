@@ -1,4 +1,4 @@
-package feature
+package steps
 
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI

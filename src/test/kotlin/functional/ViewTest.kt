@@ -1,3 +1,5 @@
+package functional
+
 import fr.dcproject.Env
 import fr.dcproject.component.article.ArticleRefVersioning
 import fr.dcproject.component.article.ArticleViewManager
@@ -7,6 +9,7 @@ import io.ktor.locations.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
 import org.amshove.kluent.`should be equal to`
+import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
@@ -16,6 +19,7 @@ import java.util.*
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
 @TestInstance(PER_CLASS)
+@Tag("functional")
 class ViewTest {
     @Test
     fun `test View Article`() {

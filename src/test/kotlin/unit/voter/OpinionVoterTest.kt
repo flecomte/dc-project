@@ -1,4 +1,4 @@
-package fr.dcproject.security.voter
+package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenBasic
@@ -8,11 +8,11 @@ import fr.dcproject.entity.Opinion
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
+import fr.dcproject.security.voter.OpinionVoter
 import fr.dcproject.user
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*
 import io.ktor.application.*
-import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -22,10 +22,12 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.assertThrows
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
 
-@KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(CONCURRENT)
 @Tag("voter")
 internal class OpinionVoterTest {
     private val tesla = CitizenBasic(

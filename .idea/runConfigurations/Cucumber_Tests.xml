@@ -1,10 +1,10 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="Cucumber Tests" type="JUnit" factoryName="JUnit">
-    <output_file path="$PROJECT_DIR$/var/log/test/cucumber.out.log" />
+    <output_file path="$PROJECT_DIR$/var/log/test/cucumber.out.log" is_save="true" />
     <module name="dcproject.test" />
     <useClassPathOnly />
     <option name="PACKAGE_NAME" value="" />
-    <option name="MAIN_CLASS_NAME" value="RunCucumberTest" />
+    <option name="MAIN_CLASS_NAME" value="CucumberTest" />
     <option name="METHOD_NAME" value="" />
     <option name="TEST_OBJECT" value="class" />
     <option name="VM_PARAMETERS" value="-ea -Djdk.attach.allowAttachSelf=true" />

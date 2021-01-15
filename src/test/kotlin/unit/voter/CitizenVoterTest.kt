@@ -1,4 +1,4 @@
-package fr.dcproject.security.voter
+package unit.voter
 
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenI
@@ -7,18 +7,19 @@ import fr.dcproject.entity.User
 import fr.dcproject.entity.UserI
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
-import io.ktor.locations.*
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
-@KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(CONCURRENT)
 @Tag("voter")
-class CitizenVoterTest {
+internal class CitizenVoterTest {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",

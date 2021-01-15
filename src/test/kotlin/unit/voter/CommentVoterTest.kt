@@ -1,4 +1,4 @@
-package fr.dcproject.security.voter
+package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
@@ -13,7 +13,6 @@ import fr.dcproject.entity.UserI
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
 import fr.postgresjson.connexion.Paginated
-import io.ktor.locations.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
@@ -22,11 +21,13 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
 import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
-@KtorExperimentalLocationsAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(CONCURRENT)
 @Tag("voter")
 internal class CommentVoterTest {
     private val tesla = Citizen(

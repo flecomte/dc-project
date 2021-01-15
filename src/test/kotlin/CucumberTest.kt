@@ -1,4 +1,3 @@
-import feature.KtorServerContext
 import fr.dcproject.Config
 import fr.dcproject.Env.CUCUMBER
 import fr.dcproject.module
@@ -10,23 +9,20 @@ import io.cucumber.java8.En
 import io.cucumber.java8.Scenario
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.server.testing.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
 import org.koin.test.get
 import org.slf4j.Logger
+import steps.KtorServerContext
 
 var unitialized: Boolean = false
 
 @InternalCoroutinesApi
-@KtorExperimentalAPI
-@KtorExperimentalLocationsAPI
 @RunWith(Cucumber::class)
 @CucumberOptions(plugin = ["pretty"], strict = true)
-class RunCucumberTest : En, KoinTest {
+class CucumberTest : En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
 
     @InternalCoroutinesApi

@@ -1,4 +1,4 @@
-package fr.dcproject.security.voter
+package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleVoter
@@ -17,12 +17,15 @@ import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.api.parallel.Execution
+import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
 import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Execution(CONCURRENT)
 @Tag("voter")
-class ArticleVoterTest {
+internal class ArticleVoterTest {
     private val tesla = CitizenCart(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
         user = User(

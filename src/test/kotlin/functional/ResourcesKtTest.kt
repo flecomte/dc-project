@@ -1,5 +1,6 @@
-package fr.dcproject.utils
+package functional
 
+import fr.dcproject.utils.readResource
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import kotlin.test.assertEquals

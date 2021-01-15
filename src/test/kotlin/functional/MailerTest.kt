@@ -1,12 +1,14 @@
+package functional
+
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.Env
 import fr.dcproject.messages.Mailer
 import fr.dcproject.module
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
+import io.ktor.locations.*
+import io.ktor.server.testing.*
+import io.ktor.util.*
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
@@ -21,7 +23,7 @@ import org.koin.test.get
 class MailerTest : KoinTest, AutoCloseKoinTest() {
     @InternalCoroutinesApi
     @Test
-    @Tag("online")
+    @Tag("online, functional")
     fun `can be send an email`() {
         withTestApplication({ module(Env.TEST) }) {
             get<Mailer>().sendEmail {
