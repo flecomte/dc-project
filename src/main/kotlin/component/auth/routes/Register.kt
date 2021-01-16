@@ -20,7 +20,7 @@ import org.joda.time.DateTime
 
 @KtorExperimentalLocationsAPI
 @Location("/register")
-private class RegisterRequest {
+class RegisterRequest {
     data class Input(
         val name: Name,
         val email: String,

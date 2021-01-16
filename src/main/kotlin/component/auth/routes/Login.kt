@@ -14,7 +14,7 @@ import io.ktor.util.*
 
 @KtorExperimentalLocationsAPI
 @Location("/login")
-private class LoginRequest
+class LoginRequest
 
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI

@@ -12,7 +12,7 @@ import io.ktor.util.*
 
 @KtorExperimentalLocationsAPI
 @Location("/sso")
-private class SsoRequest {
+class SsoRequest {
     data class Input(val email: String, val url: String)
 }
 
