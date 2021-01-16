@@ -26,6 +26,9 @@ import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.routes.authLogin
 import fr.dcproject.component.auth.routes.authRegister
 import fr.dcproject.component.auth.routes.authSso
+import fr.dcproject.component.comment.article.routes.createCommentArticle
+import fr.dcproject.component.comment.article.routes.getArticleComments
+import fr.dcproject.component.comment.article.routes.getCitizenArticleComments
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.*
@@ -175,6 +178,10 @@ fun Application.module(env: Env = PROD) {
             getOneComment(get(), get())
             createCommentChildren(get(), get())
             getChildrenComments(get(), get())
+            /* Comment Article */
+            getArticleComments(get(), get())
+            createCommentArticle(get(), get())
+            getCitizenArticleComments(get(), get())
             /* Auth */
             authLogin(get())
             authRegister(get())
@@ -183,7 +190,6 @@ fun Application.module(env: Env = PROD) {
             constitution(get())
             followArticle(get())
             followConstitution(get())
-            commentArticle(get(), get())
             commentConstitution(get(), get())
             voteArticle(get(), get(), get())
             voteConstitution(get())

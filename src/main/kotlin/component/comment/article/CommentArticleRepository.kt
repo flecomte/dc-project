@@ -48,7 +48,8 @@ class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<Arti
         )
 
     enum class Sort(val sql: String) {
-        CREATED_AT("created_at"), VOTES("votes");
+        CREATED_AT("created_at"),
+        VOTES("votes");
 
         companion object {
             fun fromString(string: String): Sort? {
