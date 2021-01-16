@@ -2,10 +2,10 @@ package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleVoter
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
 import fr.postgresjson.connexion.Paginated

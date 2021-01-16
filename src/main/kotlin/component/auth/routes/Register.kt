@@ -2,12 +2,12 @@ package fr.dcproject.component.auth.routes
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.JwtConfig
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.routes.RegisterRequest.Input
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserI
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*

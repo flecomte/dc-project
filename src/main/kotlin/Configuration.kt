@@ -5,8 +5,8 @@ import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
 import fr.dcproject.component.auth.UserI
-import java.util.*
 import java.net.URI
+import java.util.*
 
 object Config {
     private var config = ConfigFactory.load()

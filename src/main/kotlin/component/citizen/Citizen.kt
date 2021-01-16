@@ -1,9 +1,9 @@
 package fr.dcproject.component.citizen
 
-import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
+import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.entity.WorkgroupSimple
 import fr.postgresjson.entity.*
 import org.joda.time.DateTime

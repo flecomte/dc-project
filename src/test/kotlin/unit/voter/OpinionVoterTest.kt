@@ -1,13 +1,13 @@
 package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.Opinion
 import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserI
 import fr.dcproject.security.voter.OpinionVoter
 import fr.dcproject.user
 import fr.dcproject.voter.NoSubjectDefinedException

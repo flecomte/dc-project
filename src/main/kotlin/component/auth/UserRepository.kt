@@ -2,7 +2,7 @@ package fr.dcproject.component.auth
 
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
-import io.ktor.auth.UserPasswordCredential
+import io.ktor.auth.*
 import java.util.*
 import fr.dcproject.component.auth.User as UserEntity
 

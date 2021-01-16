@@ -1,7 +1,7 @@
 package fr.dcproject.component.auth.routes
 
-import fr.dcproject.component.auth.routes.SsoRequest.Input
 import fr.dcproject.component.auth.SsoManager
+import fr.dcproject.component.auth.routes.SsoRequest.Input
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*

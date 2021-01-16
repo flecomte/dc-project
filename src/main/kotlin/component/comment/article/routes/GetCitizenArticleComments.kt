@@ -10,7 +10,6 @@ import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
 
-
 @KtorExperimentalLocationsAPI
 @Location("/citizens/{citizen}/comments/articles")
 class CitizenCommentArticleRequest(val citizen: Citizen)
