@@ -1,6 +1,6 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.FollowI
 import fr.dcproject.voter.NoSubjectDefinedException

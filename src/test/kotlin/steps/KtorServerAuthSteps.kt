@@ -1,7 +1,7 @@
 package steps
 
 import com.auth0.jwt.JWT
-import fr.dcproject.JwtConfig
+import fr.dcproject.component.auth.jwt.JwtConfig
 import fr.dcproject.component.citizen.CitizenRepository
 import io.cucumber.java8.En
 import io.ktor.http.*

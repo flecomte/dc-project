@@ -2,7 +2,7 @@ package fr.dcproject.event
 
 import com.rabbitmq.client.*
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
-import fr.dcproject.Config
+import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.FollowSimple
@@ -46,7 +46,7 @@ class EventNotification(
 
     fun config() {
         /* Config Rabbit */
-        val exchangeName = Config.exchangeNotificationName
+        val exchangeName = Configuration.exchangeNotificationName
         rabbitFactory.newConnection().use { connection ->
             connection.createChannel().use { channel ->
                 channel.queueDeclare("push", true, false, false, null)

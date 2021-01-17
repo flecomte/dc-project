@@ -1,4 +1,4 @@
-package fr.dcproject
+package fr.dcproject.application
 
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
@@ -7,16 +7,19 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
-import fr.dcproject.Env.PROD
+import fr.dcproject.application.Env.PROD
 import fr.dcproject.component.article.routes.findArticleVersions
 import fr.dcproject.component.article.routes.findArticles
 import fr.dcproject.component.article.routes.getOneArticle
 import fr.dcproject.component.article.routes.upsertArticle
+import fr.dcproject.component.auth.ForbiddenException
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.auth.jwt.JwtConfig
 import fr.dcproject.component.auth.routes.authLogin
 import fr.dcproject.component.auth.routes.authRegister
 import fr.dcproject.component.auth.routes.authSso
+import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.routes.changeMyPassword
 import fr.dcproject.component.citizen.routes.findCitizen
 import fr.dcproject.component.citizen.routes.getCurrentCitizen
@@ -48,7 +51,7 @@ import io.ktor.application.*
 import io.ktor.auth.*
 import io.ktor.auth.jwt.*
 import io.ktor.client.*
-import io.ktor.client.engine.jetty.*
+import io.ktor.client.engine.jetty.Jetty
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.auth.*
@@ -56,6 +59,7 @@ import io.ktor.jackson.*
 import io.ktor.locations.*
 import io.ktor.response.*
 import io.ktor.routing.*
+import io.ktor.server.jetty.*
 import io.ktor.util.*
 import io.ktor.websocket.*
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -68,7 +72,7 @@ import java.time.Duration
 import java.util.*
 import java.util.concurrent.CompletionException
 
-fun main(args: Array<String>): Unit = io.ktor.server.jetty.EngineMain.main(args)
+fun main(args: Array<String>): Unit = EngineMain.main(args)
 
 enum class Env { PROD, TEST, CUCUMBER }
 

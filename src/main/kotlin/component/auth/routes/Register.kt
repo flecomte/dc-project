@@ -1,13 +1,13 @@
 package fr.dcproject.component.auth.routes
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
-import fr.dcproject.JwtConfig
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.routes.RegisterRequest.Input
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.makeToken
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
@@ -61,7 +61,7 @@ fun Route.authRegister(citizenRepo: CitizenRepository) {
         try {
             val citizen = call.receive<Input>().toCitizen()
             val createdCitizen = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
-            call.respondText(JwtConfig.makeToken(createdCitizen))
+            call.respondText(createdCitizen.makeToken())
         } catch (e: MissingKotlinParameterException) {
             call.respond(HttpStatusCode.BadRequest)
         }

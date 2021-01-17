@@ -1,14 +1,9 @@
-package fr.dcproject
+package fr.dcproject.application
 
-import com.auth0.jwt.JWT
-import com.auth0.jwt.JWTVerifier
-import com.auth0.jwt.algorithms.Algorithm
 import com.typesafe.config.ConfigFactory
-import fr.dcproject.component.auth.UserI
 import java.net.URI
-import java.util.*
 
-object Config {
+object Configuration {
     private var config = ConfigFactory.load()
 
     object Sql {
@@ -30,34 +25,4 @@ object Config {
     val rabbitmq: String = config.getString("rabbitmq.connection")
     val exchangeNotificationName = "notification"
     val sendGridKey: String = config.getString("mail.sendGrid.key")
-}
-
-object JwtConfig {
-    private const val secret = "zAP5MBA4B4Ijz0MZaS48"
-    const val issuer = "dc-project.fr"
-    private const val validityInMs = 3_600_000 * 10 // 10 hours
-
-    // TODO change to RSA512
-    val algorithm = Algorithm.HMAC512(secret)
-
-    val verifier: JWTVerifier = JWT
-        .require(algorithm)
-        .withIssuer(issuer)
-        .build()
-
-    /**
-     * Produce a token for this combination of User and Account
-     * TODO move token creator in other place
-     */
-    fun makeToken(user: UserI): String = JWT.create()
-        .withSubject("Authentication")
-        .withIssuer(issuer)
-        .withClaim("id", user.id.toString())
-        .withExpiresAt(getExpiration())
-        .sign(algorithm)
-
-    /**
-     * Calculate the expiration Date based on current time + the given validity
-     */
-    private fun getExpiration() = Date(System.currentTimeMillis() + validityInMs)
 }

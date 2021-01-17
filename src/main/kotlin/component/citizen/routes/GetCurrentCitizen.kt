@@ -1,7 +1,7 @@
 package fr.dcproject.component.citizen.routes
 
-import fr.dcproject.citizen
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.voter.assert
 import io.ktor.application.*

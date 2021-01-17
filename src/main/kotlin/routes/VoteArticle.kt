@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
-import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.entity.VoteForUpdate

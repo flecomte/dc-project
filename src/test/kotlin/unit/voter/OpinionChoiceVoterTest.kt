@@ -3,12 +3,12 @@ package unit.voter
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionChoiceVoter
-import fr.dcproject.user
 import fr.ktorVoter.ActionI
 import fr.ktorVoter.Vote
 import fr.ktorVoter.can
@@ -64,7 +64,7 @@ internal class OpinionChoiceVoterTest {
     )
 
     init {
-        mockkStatic("fr.dcproject.ApplicationContextKt")
+        mockkStatic("fr.dcproject.component.auth.CitizenContextKt")
     }
 
     @Test

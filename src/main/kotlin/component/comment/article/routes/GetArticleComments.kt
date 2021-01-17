@@ -1,7 +1,7 @@
 package fr.dcproject.component.comment.article.routes
 
-import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.voter.assert

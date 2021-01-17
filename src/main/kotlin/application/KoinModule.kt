@@ -1,4 +1,4 @@
-package fr.dcproject
+package fr.dcproject.application
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
@@ -48,30 +48,30 @@ import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 @KtorExperimentalAPI
 val KoinModule = module {
 
-    single { Config }
+    single { Configuration }
 
     // SQL connection
     single {
         Connection(
-            host = Config.host,
-            port = Config.port,
-            database = Config.database,
-            username = Config.username,
-            password = Config.password
+            host = Configuration.host,
+            port = Configuration.port,
+            database = Configuration.database,
+            username = Configuration.username,
+            password = Configuration.password
         )
     }
 
     // Launch Database migration
-    single { Migrations(get(), Config.Sql.migrationFiles, Config.Sql.functionFiles) }
+    single { Migrations(get(), Configuration.Sql.migrationFiles, Configuration.Sql.functionFiles) }
 
     // Redis client
     single<RedisAsyncCommands<String, String>> {
-        RedisClient.create(Config.redis).connect()?.async() ?: error("Unable to connect to redis")
+        RedisClient.create(Configuration.redis).connect()?.async() ?: error("Unable to connect to redis")
     }
 
     // RabbitMQ
     single<ConnectionFactory> {
-        ConnectionFactory().apply { setUri(Config.rabbitmq) }
+        ConnectionFactory().apply { setUri(Configuration.rabbitmq) }
     }
 
     // JsonSerializer
@@ -97,7 +97,7 @@ val KoinModule = module {
     single {
         Requester.RequesterFactory(
             connection = get(),
-            functionsDirectory = Config.Sql.functionFiles
+            functionsDirectory = Configuration.Sql.functionFiles
         ).createRequester()
     }
 
@@ -127,19 +127,19 @@ val KoinModule = module {
     // Elasticsearch Client
     single<RestClient> {
         RestClient.builder(
-            HttpHost.create(Config.elasticsearch)
+            HttpHost.create(Configuration.elasticsearch)
         ).build()
     }
 
     single { ArticleViewManager(get()) }
 
     // Mailer
-    single { Mailer(Config.sendGridKey) }
+    single { Mailer(Configuration.sendGridKey) }
 
     // SSO Manager for connection
-    single { SsoManager(get<Mailer>(), Config.domain, get()) }
+    single { SsoManager(get<Mailer>(), Configuration.domain, get()) }
 
     single { Publisher(get(), get()) }
 
-    single { NotificationEmailSender(get<Mailer>(), Config.domain, get(), get()) }
+    single { NotificationEmailSender(get<Mailer>(), Configuration.domain, get(), get()) }
 }

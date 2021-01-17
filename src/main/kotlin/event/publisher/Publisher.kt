@@ -2,7 +2,7 @@ package fr.dcproject.event.publisher
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.rabbitmq.client.ConnectionFactory
-import fr.dcproject.Config
+import fr.dcproject.application.Configuration
 import fr.dcproject.event.EntityEvent
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
@@ -19,7 +19,7 @@ class Publisher(
         return GlobalScope.launch {
             factory.newConnection().use { connection ->
                 connection.createChannel().use { channel ->
-                    channel.basicPublish(Config.exchangeNotificationName, "", null, it.serialize().toByteArray())
+                    channel.basicPublish(Configuration.exchangeNotificationName, "", null, it.serialize().toByteArray())
                     logger.debug("Publish message ${it.target.id}")
                 }
             }

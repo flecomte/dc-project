@@ -1,6 +1,6 @@
 package fr.dcproject.component.citizen.routes
 
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.voter.assert

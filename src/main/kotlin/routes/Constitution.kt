@@ -1,7 +1,7 @@
 package fr.dcproject.routes
 
-import fr.dcproject.citizen
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.entity.ConstitutionSimple.TitleSimple

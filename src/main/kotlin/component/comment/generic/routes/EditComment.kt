@@ -1,6 +1,6 @@
 package fr.dcproject.component.comment.generic.routes
 
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.comment.generic.CommentVoter

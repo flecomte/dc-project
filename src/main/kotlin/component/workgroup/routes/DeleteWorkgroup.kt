@@ -1,6 +1,6 @@
 package fr.dcproject.component.workgroup.routes
 
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.voter.assert

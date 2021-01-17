@@ -2,8 +2,8 @@ package fr.dcproject.security.voter
 
 import fr.dcproject.component.article.ArticleAuthI
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.auth.user
 import fr.dcproject.entity.Opinion
-import fr.dcproject.user
 import fr.dcproject.voter.NoRuleDefinedException
 import fr.dcproject.voter.NoSubjectDefinedException
 import fr.ktorVoter.*

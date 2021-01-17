@@ -1,10 +1,10 @@
 package functional
 
-import fr.dcproject.Env
+import fr.dcproject.application.Env.TEST
+import fr.dcproject.application.module
 import fr.dcproject.component.article.ArticleRefVersioning
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.module
 import io.ktor.locations.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
@@ -26,7 +26,7 @@ class ViewTest {
         val article = ArticleRefVersioning(id = UUID.randomUUID(), versionId = UUID.randomUUID())
         val citizenRef = CitizenRef()
 
-        withTestApplication({ module(Env.TEST) }) {
+        withTestApplication({ module(TEST) }) {
             val viewManager: ArticleViewManager = application.get()
 
             /* Get view before */

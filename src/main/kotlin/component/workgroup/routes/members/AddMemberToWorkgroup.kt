@@ -1,10 +1,10 @@
 package fr.dcproject.component.workgroup.routes.members
 
-import fr.dcproject.citizenOrNull
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI
 import fr.dcproject.component.workgroup.WorkgroupVoter
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI
 import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*

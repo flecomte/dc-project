@@ -1,9 +1,9 @@
 package fr.dcproject.component.article.routes
 
-import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleVoter
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.voter.assert
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.repository.RepositoryI

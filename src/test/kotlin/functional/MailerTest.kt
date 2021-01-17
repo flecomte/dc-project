@@ -3,9 +3,9 @@ package functional
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
-import fr.dcproject.Env
+import fr.dcproject.application.Env.TEST
+import fr.dcproject.application.module
 import fr.dcproject.messages.Mailer
-import fr.dcproject.module
 import io.ktor.locations.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
@@ -25,7 +25,7 @@ class MailerTest : KoinTest, AutoCloseKoinTest() {
     @Test
     @Tag("online, functional")
     fun `can be send an email`() {
-        withTestApplication({ module(Env.TEST) }) {
+        withTestApplication({ module(TEST) }) {
             get<Mailer>().sendEmail {
                 Mail(
                     Email("sso@dc-project.fr"),

@@ -1,6 +1,6 @@
 package fr.dcproject.routes
 
-import fr.dcproject.citizen
+import fr.dcproject.component.auth.citizen
 import fr.dcproject.event.Event
 import fr.postgresjson.serializer.deserialize
 import io.ktor.client.*

@@ -1,6 +1,6 @@
-import fr.dcproject.Config
-import fr.dcproject.Env.CUCUMBER
-import fr.dcproject.module
+import fr.dcproject.application.Configuration
+import fr.dcproject.application.Env.CUCUMBER
+import fr.dcproject.application.module
 import fr.dcproject.utils.LoggerDelegate
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
@@ -32,9 +32,9 @@ class CucumberTest : En, KoinTest {
 
     init {
         if (!unitialized) {
-            Config.database = "test"
-            Config.username = "test"
-            Config.password = "test"
+            Configuration.database = "test"
+            Configuration.username = "test"
+            Configuration.password = "test"
 
             withTestApplication({ module(CUCUMBER) }) {
                 migrations()
@@ -43,9 +43,9 @@ class CucumberTest : En, KoinTest {
         }
 
         Before(-1) { _: Scenario ->
-            Config.database = "test"
-            Config.username = "test"
-            Config.password = "test"
+            Configuration.database = "test"
+            Configuration.username = "test"
+            Configuration.password = "test"
             ktorContext.start()
             //language=PostgreSQL
             get<Connection>().sendQuery("start transaction;", listOf())
@@ -59,9 +59,9 @@ class CucumberTest : En, KoinTest {
     }
 
     private fun migrations() {
-        Config.database = "test"
-        Config.username = "test"
-        Config.password = "test"
+        Configuration.database = "test"
+        Configuration.username = "test"
+        Configuration.password = "test"
         val migrations: Migrations = get()
         migrations.forceAllDown()
         migrations.run()
@@ -85,7 +85,7 @@ class CucumberTest : En, KoinTest {
     private fun getFixturesRequester(): Requester {
         return Requester.RequesterFactory(
             connection = get(),
-            queriesDirectory = Config.Sql.fixtureFiles
+            queriesDirectory = Configuration.Sql.fixtureFiles
         ).createRequester()
     }
 }

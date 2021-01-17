@@ -1,16 +1,16 @@
 package fr.dcproject.component.article.routes
 
-import fr.dcproject.citizen
-import fr.dcproject.citizenOrNull
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.article.routes.PostArticleRequest.Input
+import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.event.raiseEvent
-import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.locations.*

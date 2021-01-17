@@ -1,7 +1,5 @@
-package fr.dcproject
+package fr.dcproject.component.auth
 
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenRepository
 import io.ktor.application.*
 import io.ktor.auth.*
