@@ -1,67 +1,34 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.auth.user
-import fr.dcproject.component.comment.generic.CommentForView
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.ConstitutionS
 import fr.dcproject.entity.ConstitutionSimple
-import fr.dcproject.voter.NoRuleDefinedException
-import fr.dcproject.voter.NoSubjectDefinedException
-import fr.ktorVoter.*
-import io.ktor.application.*
-import fr.dcproject.entity.Vote as VoteEntity
+import fr.dcproject.voter.Voter
+import fr.dcproject.voter.VoterResponse
 
-class ConstitutionVoter : Voter<ApplicationCall> {
-    enum class Action : ActionI {
-        CREATE,
-        UPDATE,
-        VIEW,
-        DELETE
+class ConstitutionVoter : Voter() {
+    fun canCreate(subject: ConstitutionS, citizen: CitizenI?): VoterResponse = when {
+        citizen == null -> denied("You must be connected to create constitution", "constitution.create.notConnected")
+        else -> granted()
     }
 
-    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action || action is VoteVoter.Action) &&
-            (subject is ConstitutionSimple<*, *>? || subject is VoteEntity<*> || subject is CommentForView<*, *>))) return abstain()
+    fun <S : ConstitutionSimple<*, *>> canView(subjects: List<S>, citizen: CitizenI?): VoterResponse =
+        canAll(subjects) { canView(it, citizen) }
 
-        val user = context.user
-        if (action == Action.CREATE && user != null) {
-            return granted()
-        }
-
-        if (action == Action.VIEW) {
-            if (subject is ConstitutionSimple<*, *>) {
-                return if (subject.isDeleted()) denied("You cannot view a deleted constitution", "constitution.view.deleted")
-                else granted()
-            }
-            throw NoSubjectDefinedException(action as ActionI)
-        }
-
-        if (action == Action.DELETE && user is UserI && subject is ConstitutionSimple<*, *> && subject.createdBy.user.id == user.id) {
-            return granted()
-        }
-
-        if (action == Action.UPDATE && user is UserI && subject is ConstitutionSimple<*, *> && subject.createdBy.user.id == user.id) {
-            return granted()
-        }
-
-        if (action is VoteVoter.Action) return voteForVote(action, subject)
-
-        if (action is Action) {
-            throw NoRuleDefinedException(action)
-        }
-
-        return abstain()
+    fun canView(subject: ConstitutionSimple<*, *>, citizen: CitizenI?): VoterResponse = when {
+        subject.isDeleted() -> denied("You cannot view a deleted constitution", "constitution.view.deleted")
+        else -> granted()
     }
 
-    private fun voteForVote(action: VoteVoter.Action, subject: Any?): VoterResponseI {
-        if (action == VoteVoter.Action.CREATE && subject is VoteEntity<*>) {
-            val target = subject.target
-            if (target !is ConstitutionSimple<*, *>) {
-                return abstain()
-            }
-            if (target.isDeleted()) {
-                return denied("You cannot vote a deleted constitution", "constitution.vote.deleted")
-            }
-        }
-        return abstain()
+    fun canDelete(subject: ConstitutionSimple<*, *>, citizen: CitizenI?): VoterResponse = when {
+        citizen == null -> denied("You must be connected to delete constitution", "constitution.delete.notConnected")
+        subject.createdBy.id != citizen.id -> denied("You cannot delete the constitution of other citizen", "constitution.delete.otherCitizen")
+        else -> granted()
+    }
+
+    fun canUpdate(subject: ConstitutionSimple<*, *>, citizen: CitizenI?): VoterResponse = when {
+        citizen == null -> denied("You must be connected to update constitution", "constitution.update.notConnected")
+        subject.createdBy.id != citizen.id -> denied("You cannot update the constitution of other citizen", "constitution.update.otherCitizen")
+        else -> granted()
     }
 }

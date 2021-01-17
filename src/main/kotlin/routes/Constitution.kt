@@ -2,13 +2,12 @@ package fr.dcproject.routes
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.entity.ConstitutionSimple.TitleSimple
-import fr.dcproject.security.voter.ConstitutionVoter.Action.CREATE
-import fr.dcproject.security.voter.ConstitutionVoter.Action.VIEW
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.security.voter.ConstitutionVoter
+import fr.dcproject.voter.assert
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.*
@@ -82,21 +81,21 @@ object ConstitutionPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.constitution(repo: ConstitutionRepository) {
+fun Route.constitution(repo: ConstitutionRepository, voter: ConstitutionVoter) {
     get<ConstitutionPaths.ConstitutionsRequest> {
         val constitutions = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-        assertCanAll(VIEW, constitutions.result)
+        voter.assert { canView(constitutions.result, citizenOrNull) }
         call.respond(constitutions)
     }
 
     get<ConstitutionPaths.ConstitutionRequest> {
-        assertCan(VIEW, it.constitution)
+        voter.assert { canView(it.constitution, citizenOrNull) }
         call.respond(it.constitution)
     }
 
     post<ConstitutionPaths.PostConstitutionRequest> {
         it.getNewConstitution(call).let { constitution ->
-            assertCan(CREATE, constitution)
+            voter.assert { canCreate(constitution, citizenOrNull) }
             repo.upsert(constitution)
             call.respond(constitution)
         }
