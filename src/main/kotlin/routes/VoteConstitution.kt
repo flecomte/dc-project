@@ -1,11 +1,12 @@
 package fr.dcproject.routes
 
 import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.routes.VoteConstitutionPaths.ConstitutionVoteRequest.Content
-import fr.dcproject.security.voter.VoteVoter.Action.CREATE
-import fr.ktorVoter.assertCan
+import fr.dcproject.security.voter.VoteVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -27,7 +28,7 @@ object VoteConstitutionPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.voteConstitution(repo: VoteConstitutionRepository) {
+fun Route.voteConstitution(repo: VoteConstitutionRepository, voter: VoteVoter) {
     put<VoteConstitutionPaths.ConstitutionVoteRequest> {
         val content = call.receive<Content>()
         val vote = VoteForUpdate(
@@ -35,7 +36,7 @@ fun Route.voteConstitution(repo: VoteConstitutionRepository) {
             note = content.note,
             createdBy = this.citizen
         )
-        assertCan(CREATE, vote)
+        voter.assert { canCreate(vote, citizenOrNull) }
         repo.vote(vote)
         call.respond(HttpStatusCode.Created)
     }

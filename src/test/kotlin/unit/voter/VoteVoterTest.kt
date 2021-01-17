@@ -4,28 +4,21 @@ import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.security.voter.VoteVoter
-import fr.dcproject.voter.NoSubjectDefinedException
-import fr.ktorVoter.ActionI
-import fr.ktorVoter.Vote
-import fr.ktorVoter.can
-import fr.ktorVoter.canAll
+import fr.dcproject.voter.Vote.DENIED
+import fr.dcproject.voter.Vote.GRANTED
 import io.ktor.application.*
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
@@ -120,101 +113,44 @@ internal class VoteVoterTest {
     }
 
     @Test
-    fun `support vote`(): Unit = VoteVoter().run {
-        val p = object : ActionI {}
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            this(VoteVoter.Action.VIEW, it, vote1).vote `should be` Vote.GRANTED
-            this(VoteVoter.Action.VIEW, it, article1).vote `should be` Vote.ABSTAIN
-            this(p, it, vote1).vote `should be` Vote.ABSTAIN
-        }
+    fun `can be view your the vote`() {
+        VoteVoter()
+            .canView(vote1, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view your the vote`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            can(VoteVoter.Action.VIEW, it, vote1) `should be` true
-        }
+    fun `can not be view vote of other`() {
+        VoteVoter()
+            .canView(vote1, einstein)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not be view vote of other`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns einstein
-        }.let {
-            can(VoteVoter.Action.VIEW, it, vote1) `should be` false
-        }
-    }
-
-    @Test
-    fun `can be not view the vote if is null`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            assertThrows<NoSubjectDefinedException> {
-                can(VoteVoter.Action.VIEW, it, null)
-            }
-        }
-    }
-
-    @Test
-    fun `can be view your votes list`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            canAll(VoteVoter.Action.VIEW, it, listOf(vote1)) `should be` true
-        }
+    fun `can be view your votes list`() {
+        VoteVoter()
+            .canView(listOf(vote1), tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
     fun `can be vote an article`() {
-        listOf(VoteVoter()).run {
-            mockk<ApplicationCall> {
-                every { citizenOrNull } returns tesla
-            }.let {
-                can(VoteVoter.Action.CREATE, it, voteForUpdate) `should be` true
-            }
-        }
+        VoteVoter()
+            .canCreate(voteForUpdate, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can not be vote if not connected`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns null
-        }.let {
-            can(VoteVoter.Action.CREATE, it, voteForUpdate) `should be` false
-        }
+    fun `can not be vote if not connected`() {
+        VoteVoter()
+            .canCreate(voteForUpdate, null)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not be vote an article if article is deleted`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            can(VoteVoter.Action.CREATE, it, voteOnDeleted) `should be` false
-        }
-    }
-
-    @Test
-    fun `can not be vote an article if article have no user`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            assertThrows<NoSubjectDefinedException> {
-                can(VoteVoter.Action.CREATE, it, voteWithoutTargetUser)
-            }
-        }
-    }
-
-    @Test
-    fun `can not be comment an article if article is deleted`(): Unit = listOf(VoteVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla
-        }.let {
-            can(VoteVoter.Action.CREATE, it, voteOnDeleted) `should be` false
-        }
+    fun `can not be vote an article if article is deleted`() {
+        VoteVoter()
+            .canCreate(voteOnDeleted, tesla)
+            .vote `should be` DENIED
     }
 }

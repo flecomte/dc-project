@@ -96,7 +96,6 @@ fun Application.module(env: Env = PROD) {
 
     install(AuthorizationVoter) {
         voters = listOf(
-            VoteVoter(),
             FollowVoter(),
             OpinionVoter(),
             OpinionChoiceVoter()
@@ -211,8 +210,8 @@ fun Application.module(env: Env = PROD) {
             followArticle(get())
             followConstitution(get())
             commentConstitution(get(), get())
-            voteArticle(get(), get(), get())
-            voteConstitution(get())
+            voteArticle(get(), get(), get(), get())
+            voteConstitution(get(), get())
             opinionArticle(get())
             opinionChoice(get())
             definition()

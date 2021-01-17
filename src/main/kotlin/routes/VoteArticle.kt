@@ -2,17 +2,16 @@ package fr.dcproject.routes
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.repository.VoteComment
 import fr.dcproject.routes.VoteArticlePaths.ArticleVoteRequest
 import fr.dcproject.routes.VoteArticlePaths.CommentVoteRequest
-import fr.dcproject.security.voter.VoteVoter.Action.CREATE
-import fr.dcproject.security.voter.VoteVoter.Action.VIEW
+import fr.dcproject.security.voter.VoteVoter
 import fr.dcproject.utils.toUUID
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -49,7 +48,7 @@ object VoteArticlePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentRepository) {
+fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment, commentRepo: CommentRepository, voter: VoteVoter) {
     put<ArticleVoteRequest> {
         val content = call.receive<ArticleVoteRequest.Content>()
         val vote = VoteForUpdate(
@@ -57,7 +56,7 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
             note = content.note,
             createdBy = this.citizen
         )
-        assertCan(CREATE, vote)
+        voter.assert { canCreate(vote, citizenOrNull) }
         val votes = repo.vote(vote)
         call.respond(HttpStatusCode.Created, votes)
     }
@@ -70,14 +69,14 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
             note = content.note,
             createdBy = this.citizen
         )
-        assertCan(CREATE, vote)
+        voter.assert { canCreate(vote, citizenOrNull) }
         val votes = voteCommentRepo.vote(vote)
         call.respond(HttpStatusCode.Created, votes)
     }
 
     get<VoteArticlePaths.CitizenVoteArticleRequest> {
         val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
-        assertCanAll(VIEW, votes.result)
+        voter.assert { canView(votes.result, citizenOrNull) }
 
         call.respond(votes)
     }
@@ -85,7 +84,7 @@ fun Route.voteArticle(repo: VoteArticleRepository, voteCommentRepo: VoteComment,
     get<VoteArticlePaths.CitizenVotesByIdsRequest> {
         val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
         if (votes.isNotEmpty()) {
-            assertCanAll(VIEW, votes)
+            voter.assert { canView(votes, citizenOrNull) }
         }
         call.respond(votes)
     }
