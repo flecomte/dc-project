@@ -7,15 +7,13 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
+import component.auth.jwt.jwtInstallation
 import fr.dcproject.application.Env.PROD
 import fr.dcproject.component.article.routes.findArticleVersions
 import fr.dcproject.component.article.routes.findArticles
 import fr.dcproject.component.article.routes.getOneArticle
 import fr.dcproject.component.article.routes.upsertArticle
 import fr.dcproject.component.auth.ForbiddenException
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserRepository
-import fr.dcproject.component.auth.jwt.JwtConfig
 import fr.dcproject.component.auth.routes.authLogin
 import fr.dcproject.component.auth.routes.authRegister
 import fr.dcproject.component.auth.routes.authPasswordless
@@ -119,37 +117,7 @@ fun Application.module(env: Env = PROD) {
         EventNotification(this, get(), get(), get(), get(), get()).config()
     }
 
-    install(Authentication) {
-        /**
-         * Setup the JWT authentication to be used in [Routing].
-         * If the token is valid, the corresponding [User] is fetched from the database.
-         * The [User] can then be accessed in each [ApplicationCall].
-         */
-        jwt {
-            verifier(JwtConfig.verifier)
-            realm = "dc-project.fr"
-            validate {
-                it.payload.getClaim("id").asString()?.let { id ->
-                    get<UserRepository>().findById(UUID.fromString(id))
-                }
-            }
-        }
-
-        jwt("url") {
-            verifier(JwtConfig.verifier)
-            realm = "dc-project.fr"
-            authHeader { call ->
-                call.request.queryParameters["token"]?.let {
-                    HttpAuthHeader.Single("Bearer", it)
-                }
-            }
-            validate {
-                it.payload.getClaim("id").asString()?.let { id ->
-                    get<UserRepository>().findById(UUID.fromString(id))
-                }
-            }
-        }
-    }
+    install(Authentication, jwtInstallation(get()))
 
     install(AutoHeadResponse)
 
