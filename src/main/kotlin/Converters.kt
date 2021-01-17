@@ -9,9 +9,9 @@ import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.entity.WorkgroupRef
+import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.repository.OpinionChoice
-import fr.dcproject.repository.Workgroup
+import fr.dcproject.component.workgroup.WorkgroupRepository
 import io.ktor.features.*
 import io.ktor.util.*
 import org.koin.core.context.GlobalContext
@@ -113,11 +113,11 @@ val converters: ConverterDeclaration = {
         }
     }
 
-    convert<fr.dcproject.entity.Workgroup<CitizenBasic>> {
+    convert<fr.dcproject.component.workgroup.Workgroup<CitizenBasic>> {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }
                 ?: throw InternalError("Cannot convert $values to UUID")
-            get<Workgroup>().findById(id)
+            get<WorkgroupRepository>().findById(id)
                 ?: throw NotFoundException("Workgroup $values not found")
         }
     }

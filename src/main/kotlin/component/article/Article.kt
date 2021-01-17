@@ -1,5 +1,9 @@
 package fr.dcproject.component.article
 
+import fr.dcproject.component.workgroup.WorkgroupCart
+import fr.dcproject.component.workgroup.WorkgroupCartI
+import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.workgroup.WorkgroupSimple
 import fr.dcproject.component.citizen.*
 import fr.dcproject.entity.*
 import fr.postgresjson.entity.*

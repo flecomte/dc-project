@@ -1,9 +1,9 @@
 package fr.dcproject.security.voter
 
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.entity.WorkgroupI
-import fr.dcproject.entity.WorkgroupWithAuthI
-import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
+import fr.dcproject.component.workgroup.WorkgroupI
+import fr.dcproject.component.workgroup.WorkgroupWithAuthI
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
 import fr.dcproject.user
 import fr.dcproject.voter.NoRuleDefinedException
 import fr.dcproject.voter.NoSubjectDefinedException

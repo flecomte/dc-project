@@ -28,6 +28,15 @@ import fr.dcproject.component.comment.generic.routes.createCommentChildren
 import fr.dcproject.component.comment.generic.routes.editComment
 import fr.dcproject.component.comment.generic.routes.getChildrenComments
 import fr.dcproject.component.comment.generic.routes.getOneComment
+import fr.dcproject.component.workgroup.routes.*
+import fr.dcproject.component.workgroup.routes.CreateWorkgroup.createWorkgroup
+import fr.dcproject.component.workgroup.routes.DeleteWorkgroup.deleteWorkgroup
+import fr.dcproject.component.workgroup.routes.EditWorkgroup.editWorkgroup
+import fr.dcproject.component.workgroup.routes.GetWorkgroup.getWorkgroup
+import fr.dcproject.component.workgroup.routes.GetWorkgroups.getWorkgroups
+import fr.dcproject.component.workgroup.routes.members.AddMemberToWorkgroup.addMemberToWorkgroup
+import fr.dcproject.component.workgroup.routes.members.DeleteMembersOfWorkgroup.deleteMemberOfWorkgroup
+import fr.dcproject.component.workgroup.routes.members.UpdateMemberOfWorkgroup.updateMemberOfWorkgroup
 import fr.dcproject.elasticsearch.configElasticIndexes
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
@@ -186,6 +195,16 @@ fun Application.module(env: Env = PROD) {
             authLogin(get())
             authRegister(get())
             authSso(get())
+            /* Workgroup */
+            getWorkgroups(get())
+            getWorkgroup(get())
+            createWorkgroup(get())
+            editWorkgroup(get())
+            deleteWorkgroup(get())
+            /* Workgroup members */
+            addMemberToWorkgroup(get())
+            deleteMemberOfWorkgroup(get())
+            updateMemberOfWorkgroup(get())
             /* TODO */
             constitution(get())
             followArticle(get())
@@ -195,7 +214,6 @@ fun Application.module(env: Env = PROD) {
             voteConstitution(get())
             opinionArticle(get())
             opinionChoice(get())
-            workgroup(get())
             definition()
         }
 

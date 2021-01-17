@@ -6,17 +6,17 @@ import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleVoter
-import fr.dcproject.entity.WorkgroupRef
+import fr.dcproject.component.article.routes.PostArticleRequest.Input
+import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.event.raiseEvent
-import fr.dcproject.repository.Workgroup
+import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.request.*
 import io.ktor.response.*
 import io.ktor.routing.*
-import io.ktor.util.pipeline.*
 import java.util.*
 
 @KtorExperimentalLocationsAPI
@@ -36,8 +36,8 @@ class PostArticleRequest {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: Workgroup, voter: ArticleVoter) {
-    suspend fun PipelineContext<Unit, ApplicationCall>.convertDtoToEntity(): ArticleForUpdate = call.receive<PostArticleRequest.Input>().run {
+fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: WorkgroupRepository, voter: ArticleVoter) {
+    suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receive<Input>().run {
         ArticleForUpdate(
             id = id ?: UUID.randomUUID(),
             title = title,
@@ -46,14 +46,14 @@ fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: Workgroup,
             description = description,
             tags = tags,
             draft = draft,
-            createdBy = call.citizen,
+            createdBy = citizen,
             workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) else null,
             versionId = versionId
         )
     }
 
     post<PostArticleRequest> {
-        val article = convertDtoToEntity()
+        val article = call.convertRequestToEntity()
 
         voter.assert { canUpsert(article, citizenOrNull) }
 

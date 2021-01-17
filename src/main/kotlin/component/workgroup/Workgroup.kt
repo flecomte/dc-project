@@ -1,11 +1,11 @@
-package fr.dcproject.entity
+package fr.dcproject.component.workgroup
 
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.entity.WorkgroupWithMembersI.Member
-import fr.dcproject.entity.WorkgroupWithMembersI.Member.Role
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
 import fr.postgresjson.entity.*
 import fr.postgresjson.entity.EntityI
 import java.util.*

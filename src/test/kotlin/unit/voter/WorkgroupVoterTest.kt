@@ -6,8 +6,8 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.WorkgroupRef
-import fr.dcproject.entity.WorkgroupWithMembersI
+import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI
 import fr.dcproject.security.voter.WorkgroupVoter
 import fr.dcproject.user
 import fr.dcproject.voter.NoSubjectDefinedException
@@ -25,7 +25,7 @@ import org.junit.jupiter.api.*
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
-import fr.dcproject.entity.Workgroup as WorkgroupEntity
+import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)

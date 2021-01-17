@@ -1,12 +1,8 @@
-package fr.dcproject.repository
+package fr.dcproject.component.workgroup
 
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.WorkgroupI
-import fr.dcproject.entity.WorkgroupRef
-import fr.dcproject.entity.WorkgroupSimple
-import fr.dcproject.entity.WorkgroupWithMembersI
-import fr.dcproject.entity.WorkgroupWithMembersI.Member
+import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
@@ -15,9 +11,9 @@ import fr.postgresjson.repository.RepositoryI.Direction
 import fr.postgresjson.serializer.serialize
 import net.pearx.kasechange.toSnakeCase
 import java.util.*
-import fr.dcproject.entity.Workgroup as WorkgroupEntity
+import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
-class Workgroup(override var requester: Requester) : RepositoryI {
+class WorkgroupRepository(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): WorkgroupEntity<CitizenBasic>? {
         val function = requester.getFunction("find_workgroup_by_id")
         return function.selectOne("id" to id)

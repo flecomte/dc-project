@@ -17,6 +17,7 @@ import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
+import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
@@ -42,7 +43,6 @@ import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 import fr.dcproject.repository.VoteComment as VoteCommentRepository
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
-import fr.dcproject.repository.Workgroup as WorkgroupRepository
 
 @KtorExperimentalAPI
 val KoinModule = module {
