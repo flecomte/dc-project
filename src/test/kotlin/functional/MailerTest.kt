@@ -28,7 +28,7 @@ class MailerTest : KoinTest, AutoCloseKoinTest() {
         withTestApplication({ module(TEST) }) {
             get<Mailer>().sendEmail {
                 Mail(
-                    Email("sso@dc-project.fr"),
+                    Email("passwordless-auth@dc-project.fr"),
                     "Test",
                     Email("fabrice.lecomte.be@gmail.com"),
                     Content("text/plain", "Email Work !")

@@ -37,12 +37,16 @@ paths:
             text/plain:
               example:
                 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag
-  /sso:
+  /auth/passwordless:
     post:
-      summary: Send email with JWT
+      summary: Send a connexion link by email
+      description: Send a connexion link by email with the token required to the connexion
+      externalDocs:
+        description: Explanation of Passwordless auth
+        url: https://en.wikipedia.org/wiki/Passwordless_authentication
       tags:
         - authentification
-      operationId: sso
+      operationId: passwordless
       requestBody:
         content:
           application/json:
@@ -58,7 +62,7 @@ paths:
                   type: string
                   description: url tu redirect with the token
                   example:
-                    http://dc-project.fr/sso
+                    http://dc-project.fr/auth/passwordless
 
       responses:
         204:

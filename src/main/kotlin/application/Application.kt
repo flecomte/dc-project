@@ -18,7 +18,7 @@ import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.jwt.JwtConfig
 import fr.dcproject.component.auth.routes.authLogin
 import fr.dcproject.component.auth.routes.authRegister
-import fr.dcproject.component.auth.routes.authSso
+import fr.dcproject.component.auth.routes.authPasswordless
 import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.routes.changeMyPassword
 import fr.dcproject.component.citizen.routes.findCitizen
@@ -196,7 +196,7 @@ fun Application.module(env: Env = PROD) {
             /* Auth */
             authLogin(get())
             authRegister(get())
-            authSso(get())
+            authPasswordless(get())
             /* Workgroup */
             getWorkgroups(get(), get())
             getWorkgroup(get(), get())

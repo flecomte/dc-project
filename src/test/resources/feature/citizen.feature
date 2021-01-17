@@ -24,13 +24,13 @@ Feature: citizens routes
       | id | 47356809-c8ef-4649-8b99-1c5cb9886d38 |
 
   @online
-  Scenario: Can be connect with SSO
+  Scenario: Can be connect with Passwordless auth
     Given I have citizen
       | id        | c606110c-ff0e-4d09-a79e-74632d7bf7bd |
       | email     | fabrice.lecomte.be@gmail.com         |
       | firstName | Leonhard                             |
       | lastName  | Euler                                |
-    When I send a POST request to "/sso" with body:
+    When I send a POST request to "/auth/passwordless" with body:
     """
     {
       "url": "https://dc-project.fr/password/reset",

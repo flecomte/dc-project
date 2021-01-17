@@ -11,7 +11,7 @@ import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.ArticleVoter
-import fr.dcproject.component.auth.SsoManager
+import fr.dcproject.component.auth.PasswordlessAuth
 import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
@@ -136,8 +136,8 @@ val KoinModule = module {
     // Mailer
     single { Mailer(Configuration.sendGridKey) }
 
-    // SSO Manager for connection
-    single { SsoManager(get<Mailer>(), Configuration.domain, get()) }
+    // Used to send a connexion link by email
+    single { PasswordlessAuth(get<Mailer>(), Configuration.domain, get()) }
 
     single { Publisher(get(), get()) }
 

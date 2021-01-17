@@ -11,9 +11,9 @@ import fr.dcproject.messages.Mailer
 import io.ktor.http.*
 
 /**
- * Send an email to the citizen with a link to automatically connect
+ * Send a connexion link by email
  */
-class SsoManager(
+class PasswordlessAuth(
     private val mailer: Mailer,
     private val domain: String,
     private val citizenRepo: CitizenRepository
@@ -27,7 +27,7 @@ class SsoManager(
         mailer.sendEmail {
             val token = citizen.user.makeToken()
             Mail(
-                Email("sso@$domain"),
+                Email("passwordless-auth@$domain"),
                 "Connection",
                 Email(citizen.email),
                 Content("text/plain", generateContent(token, url))

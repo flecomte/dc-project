@@ -1,7 +1,7 @@
 package fr.dcproject.component.auth.routes
 
-import fr.dcproject.component.auth.SsoManager
-import fr.dcproject.component.auth.routes.SsoRequest.Input
+import fr.dcproject.component.auth.PasswordlessAuth
+import fr.dcproject.component.auth.routes.PasswordlessRequest.Input
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -11,8 +11,8 @@ import io.ktor.routing.*
 import io.ktor.util.*
 
 @KtorExperimentalLocationsAPI
-@Location("/sso")
-class SsoRequest {
+@Location("/auth/passwordless")
+class PasswordlessRequest {
     data class Input(val email: String, val url: String)
 }
 
@@ -21,12 +21,12 @@ class SsoRequest {
  */
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
-fun Route.authSso(ssoManager: SsoManager) {
-    post<SsoRequest> {
+fun Route.authPasswordless(passwordlessAuth: PasswordlessAuth) {
+    post<PasswordlessRequest> {
         call.receive<Input>().run {
             try {
-                ssoManager.sendEmail(email, url)
-            } catch (e: SsoManager.EmailNotFound) {
+                passwordlessAuth.sendEmail(email, url)
+            } catch (e: PasswordlessAuth.EmailNotFound) {
                 call.respond(HttpStatusCode.NotFound)
             }
             call.respond(HttpStatusCode.NoContent)
