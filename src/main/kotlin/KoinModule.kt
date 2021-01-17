@@ -18,6 +18,7 @@ import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.component.workgroup.WorkgroupRepository
+import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
@@ -121,6 +122,7 @@ val KoinModule = module {
     single { ArticleVoter(get()) }
     single { CitizenVoter() }
     single { CommentVoter() }
+    single { WorkgroupVoter() }
 
     // Elasticsearch Client
     single<RestClient> {

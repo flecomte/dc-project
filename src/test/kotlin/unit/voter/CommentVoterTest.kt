@@ -15,7 +15,6 @@ import fr.dcproject.voter.Vote.GRANTED
 import fr.postgresjson.connexion.Paginated
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -104,10 +103,6 @@ internal class CommentVoterTest {
 
     private val repoArticle1 = mockk<ArticleRepo> {
         every { findVersionsByVersionId(1, 1, any()) } returns Paginated(listOf(article1), 0, 1, 1)
-    }
-
-    init {
-        mockkStatic("fr.dcproject.ApplicationContextKt")
     }
 
     @Test

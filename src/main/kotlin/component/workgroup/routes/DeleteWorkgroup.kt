@@ -1,8 +1,9 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.security.voter.WorkgroupVoter
-import fr.ktorVoter.assertCan
+import fr.dcproject.component.workgroup.WorkgroupVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -15,10 +16,10 @@ object DeleteWorkgroup {
     @Location("/workgroups/{workgroupId}")
     class DeleteWorkgroupRequest(val workgroupId: UUID)
 
-    fun Route.deleteWorkgroup(repo: WorkgroupRepository) {
+    fun Route.deleteWorkgroup(repo: WorkgroupRepository, voter: WorkgroupVoter) {
         delete<DeleteWorkgroupRequest> {
             repo.findById(it.workgroupId)?.let { workgroup ->
-                assertCan(WorkgroupVoter.Action.DELETE, workgroup)
+                voter.assert { canDelete(workgroup, citizenOrNull) }
                 repo.delete(workgroup)
                 call.respond(HttpStatusCode.NoContent)
             } ?: call.respond(HttpStatusCode.NotFound)

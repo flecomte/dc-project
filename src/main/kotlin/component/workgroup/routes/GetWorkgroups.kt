@@ -1,9 +1,10 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.security.voter.WorkgroupVoter
+import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.utils.toUUID
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.voter.assert
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.*
 import io.ktor.locations.*
@@ -28,13 +29,13 @@ object GetWorkgroups {
         val members: List<UUID>? = members?.toUUID()
     }
 
-    fun Route.getWorkgroups(repo: WorkgroupRepository) {
+    fun Route.getWorkgroups(repo: WorkgroupRepository, voter: WorkgroupVoter) {
         get<WorkgroupsRequest> {
             val workgroups =
                 repo.find(it.page, it.limit, it.sort, it.direction, it.search,
                     WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
                 )
-            assertCanAll(WorkgroupVoter.Action.VIEW, workgroups.result)
+            voter.assert { canView(workgroups.result, citizenOrNull) }
             call.respond(workgroups)
         }
     }

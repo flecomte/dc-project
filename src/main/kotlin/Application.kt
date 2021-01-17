@@ -28,7 +28,6 @@ import fr.dcproject.component.comment.generic.routes.createCommentChildren
 import fr.dcproject.component.comment.generic.routes.editComment
 import fr.dcproject.component.comment.generic.routes.getChildrenComments
 import fr.dcproject.component.comment.generic.routes.getOneComment
-import fr.dcproject.component.workgroup.routes.*
 import fr.dcproject.component.workgroup.routes.CreateWorkgroup.createWorkgroup
 import fr.dcproject.component.workgroup.routes.DeleteWorkgroup.deleteWorkgroup
 import fr.dcproject.component.workgroup.routes.EditWorkgroup.editWorkgroup
@@ -97,8 +96,7 @@ fun Application.module(env: Env = PROD) {
             VoteVoter(),
             FollowVoter(),
             OpinionVoter(),
-            OpinionChoiceVoter(),
-            WorkgroupVoter()
+            OpinionChoiceVoter()
         )
     }
 
@@ -196,15 +194,15 @@ fun Application.module(env: Env = PROD) {
             authRegister(get())
             authSso(get())
             /* Workgroup */
-            getWorkgroups(get())
-            getWorkgroup(get())
-            createWorkgroup(get())
-            editWorkgroup(get())
-            deleteWorkgroup(get())
+            getWorkgroups(get(), get())
+            getWorkgroup(get(), get())
+            createWorkgroup(get(), get())
+            editWorkgroup(get(), get())
+            deleteWorkgroup(get(), get())
             /* Workgroup members */
-            addMemberToWorkgroup(get())
-            deleteMemberOfWorkgroup(get())
-            updateMemberOfWorkgroup(get())
+            addMemberToWorkgroup(get(), get())
+            deleteMemberOfWorkgroup(get(), get())
+            updateMemberOfWorkgroup(get(), get())
             /* TODO */
             constitution(get())
             followArticle(get())

@@ -7,7 +7,6 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
-import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -49,10 +48,6 @@ internal class CitizenVoterTest {
         name = CitizenI.Name("Marie", "Curie"),
         deletedAt = DateTime.now()
     )
-
-    init {
-        mockkStatic("fr.dcproject.ApplicationContextKt")
-    }
 
     @Test
     fun `can be view the citizen`() {

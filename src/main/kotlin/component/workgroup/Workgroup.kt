@@ -59,7 +59,7 @@ interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, E
     val anonymous: Boolean
 
     fun isMember(user: UserI): Boolean = members.isMember(user)
-    fun isMember(citizen: CitizenWithUserI): Boolean = members.isMember(citizen)
+    fun isMember(citizen: CitizenI): Boolean = members.isMember(citizen)
 
     fun hasRole(expectedRole: Role, user: UserI): Boolean = members.hasRole(expectedRole, user)
     fun hasRole(expectedRole: Role, citizen: CitizenI): Boolean = members.hasRole(expectedRole, citizen)

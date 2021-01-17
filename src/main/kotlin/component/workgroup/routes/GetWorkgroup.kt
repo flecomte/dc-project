@@ -1,8 +1,9 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.security.voter.WorkgroupVoter
-import fr.ktorVoter.assertCan
+import fr.dcproject.component.workgroup.WorkgroupVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -15,10 +16,10 @@ object GetWorkgroup {
     @Location("/workgroups/{workgroupId}")
     class WorkgroupRequest(val workgroupId: UUID)
 
-    fun Route.getWorkgroup(repo: WorkgroupRepository) {
+    fun Route.getWorkgroup(repo: WorkgroupRepository, voter: WorkgroupVoter) {
         get<WorkgroupRequest> {
             repo.findById(it.workgroupId)?.let { workgroup ->
-                assertCan(WorkgroupVoter.Action.VIEW, workgroup)
+                voter.assert { canView(workgroup, citizenOrNull) }
                 call.respond(workgroup)
             } ?: call.respond(HttpStatusCode.NotFound)
         }
