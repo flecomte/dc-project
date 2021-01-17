@@ -24,6 +24,7 @@ import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.security.voter.ConstitutionVoter
+import fr.dcproject.security.voter.FollowVoter
 import fr.dcproject.security.voter.VoteVoter
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
@@ -127,6 +128,7 @@ val KoinModule = module {
     single { WorkgroupVoter() }
     single { ConstitutionVoter() }
     single { VoteVoter() }
+    single { FollowVoter() }
 
     // Elasticsearch Client
     single<RestClient> {

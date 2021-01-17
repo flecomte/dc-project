@@ -1,12 +1,12 @@
 package fr.dcproject.routes
 
 import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.entity.FollowForUpdate
-import fr.dcproject.security.voter.FollowVoter.Action.*
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.security.voter.FollowVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -24,31 +24,31 @@ object FollowConstitutionPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.followConstitution(repo: FollowConstitutionRepository) {
+fun Route.followConstitution(repo: FollowConstitutionRepository, voter: FollowVoter) {
     post<FollowConstitutionPaths.ConstitutionFollowRequest> {
         val follow = FollowForUpdate(target = it.constitution, createdBy = this.citizen)
-        assertCan(CREATE, follow)
+        voter.assert { canCreate(follow, citizenOrNull) }
         repo.follow(follow)
         call.respond(HttpStatusCode.Created)
     }
 
     delete<FollowConstitutionPaths.ConstitutionFollowRequest> {
         val follow = FollowForUpdate(target = it.constitution, createdBy = this.citizen)
-        assertCan(DELETE, follow)
+        voter.assert { canDelete(follow, citizenOrNull) }
         repo.unfollow(follow)
         call.respond(HttpStatusCode.NoContent)
     }
 
     get<FollowConstitutionPaths.ConstitutionFollowRequest> {
         repo.findFollow(citizen, it.constitution)?.let { follow ->
-            assertCan(VIEW, follow)
+            voter.assert { canView(follow, citizenOrNull) }
             call.respond(follow)
         } ?: call.respond(HttpStatusCode.NotFound)
     }
 
     get<FollowConstitutionPaths.CitizenFollowConstitutionRequest> {
         val follows = repo.findByCitizen(it.citizen)
-        assertCanAll(VIEW, follows.result)
+        voter.assert { canView(follows.result, citizenOrNull) }
         call.respond(follows)
     }
 }

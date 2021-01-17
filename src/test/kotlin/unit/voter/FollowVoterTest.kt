@@ -3,28 +3,21 @@ package unit.voter
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.Follow
 import fr.dcproject.security.voter.FollowVoter
-import fr.dcproject.voter.NoSubjectDefinedException
-import fr.ktorVoter.ActionI
-import fr.ktorVoter.Vote
-import fr.ktorVoter.can
-import fr.ktorVoter.canAll
+import fr.dcproject.voter.Vote.DENIED
+import fr.dcproject.voter.Vote.GRANTED
 import io.ktor.application.*
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
@@ -109,88 +102,58 @@ internal class FollowVoterTest {
     }
 
     @Test
-    fun `support follow`(): Unit = FollowVoter().run {
-        val p = object : ActionI {}
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            this(FollowVoter.Action.VIEW, it, follow1).vote `should be` Vote.GRANTED
-            assertThrows<NoSubjectDefinedException> {
-                this(FollowVoter.Action.VIEW, it, article1)
-            }
-            this(p, it, follow1).vote `should be` Vote.ABSTAIN
-        }
+    fun `can be view the follow`() {
+        FollowVoter()
+            .canView(follow1, tesla2)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the follow`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            can(FollowVoter.Action.VIEW, it, follow1) `should be` true
-        }
+    fun `can be view the follow list`() {
+        FollowVoter()
+            .canView(listOf(follow1), tesla2)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the follow list`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            canAll(FollowVoter.Action.VIEW, it, listOf(follow1)) `should be` true
-        }
+    fun `can be view your anonymous follow`() {
+        FollowVoter()
+            .canView(followAnon, einstein3)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view your anonymous follow`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns einstein3
-        }.let {
-            can(FollowVoter.Action.VIEW, it, followAnon) `should be` true
-        }
+    fun `can not be view the anonymous follow of other`() {
+        FollowVoter()
+            .canView(followAnon, tesla2)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not be view the anonymous follow of other`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            can(FollowVoter.Action.VIEW, it, followAnon) `should be` false
-        }
+    fun `can be follow article`() {
+        FollowVoter()
+            .canCreate(follow1, tesla2)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be follow article`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            can(FollowVoter.Action.CREATE, it, follow1) `should be` true
-        }
+    fun `can not be follow article if not connected`() {
+        FollowVoter()
+            .canCreate(follow1, null)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can not be follow article if not connected`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns null
-        }.let {
-            can(FollowVoter.Action.CREATE, it, follow1) `should be` false
-        }
+    fun `can be unfollow article`() {
+        FollowVoter()
+            .canDelete(follow1, tesla2)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be unfollow article`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns tesla2
-        }.let {
-            can(FollowVoter.Action.DELETE, it, follow1) `should be` true
-        }
-    }
-
-    @Test
-    fun `can not be unfollow article if not connected`(): Unit = listOf(FollowVoter()).run {
-        mockk<ApplicationCall> {
-            every { citizenOrNull } returns null
-        }.let {
-            can(FollowVoter.Action.DELETE, it, follow1) `should be` false
-        }
+    fun `can not be unfollow article if not connected`() {
+        FollowVoter()
+            .canDelete(follow1, null)
+            .vote `should be` DENIED
     }
 }
