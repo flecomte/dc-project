@@ -1,4 +1,4 @@
-package fr.dcproject.views
+package fr.dcproject.component.views
 
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.ViewAggregation

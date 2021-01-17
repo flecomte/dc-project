@@ -5,7 +5,7 @@ import fr.dcproject.entity.ViewAggregation
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField
 import fr.dcproject.utils.toIso
-import fr.dcproject.views.ViewManager
+import fr.dcproject.component.views.ViewManager
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient
