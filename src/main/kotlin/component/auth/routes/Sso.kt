@@ -2,13 +2,15 @@ package fr.dcproject.component.auth.routes
 
 import fr.dcproject.component.auth.PasswordlessAuth
 import fr.dcproject.component.auth.routes.PasswordlessRequest.Input
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.locations.post
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
 @Location("/auth/passwordless")

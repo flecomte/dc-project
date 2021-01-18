@@ -8,7 +8,7 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
 import net.pearx.kasechange.toSnakeCase
-import java.util.*
+import java.util.UUID
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 
 class Constitution(override var requester: Requester) : RepositoryI {

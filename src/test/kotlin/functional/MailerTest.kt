@@ -6,9 +6,9 @@ import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
 import fr.dcproject.messages.Mailer
-import io.ktor.locations.*
-import io.ktor.server.testing.*
-import io.ktor.util.*
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.server.testing.withTestApplication
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test

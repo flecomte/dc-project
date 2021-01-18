@@ -5,16 +5,16 @@ import fr.dcproject.application.module
 import fr.dcproject.component.article.ArticleRefVersioning
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.citizen.CitizenRef
-import io.ktor.locations.*
-import io.ktor.server.testing.*
-import io.ktor.util.*
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.server.testing.withTestApplication
+import io.ktor.util.KtorExperimentalAPI
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.koin.ktor.ext.get
-import java.util.*
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI

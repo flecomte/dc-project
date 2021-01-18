@@ -1,14 +1,35 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.component.citizen.*
+import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenCartI
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupCart
 import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.dcproject.entity.*
-import fr.postgresjson.entity.*
+import fr.dcproject.entity.CreatedBy
+import fr.dcproject.entity.CreatedByImp
+import fr.dcproject.entity.Opinionable
+import fr.dcproject.entity.OpinionableImp
+import fr.dcproject.entity.Opinions
+import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.TargetRef
+import fr.dcproject.entity.VersionableRef
+import fr.dcproject.entity.VersionableRefImp
+import fr.dcproject.entity.Votable
+import fr.dcproject.entity.VotableImp
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.EntityVersioning
+import fr.postgresjson.entity.UuidEntityI
+import fr.postgresjson.entity.UuidEntityVersioning
 import org.joda.time.DateTime
-import java.util.*
+import java.util.UUID
 
 data class ArticleForView(
     override val id: UUID = UUID.randomUUID(),

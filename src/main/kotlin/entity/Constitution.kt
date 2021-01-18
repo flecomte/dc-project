@@ -4,8 +4,16 @@ import fr.dcproject.component.article.ArticleI
 import fr.dcproject.component.article.ArticleSimple
 import fr.dcproject.component.citizen.CitizenSimple
 import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.postgresjson.entity.*
-import java.util.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.EntityCreatedByImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.EntityVersioning
+import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityVersioning
+import java.util.UUID
 
 class Constitution(
     id: UUID = UUID.randomUUID(),

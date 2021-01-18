@@ -2,8 +2,13 @@ package fr.dcproject.event
 
 import fr.postgresjson.entity.Serializable
 import fr.postgresjson.entity.UuidEntity
-import io.ktor.application.*
-import io.ktor.util.*
+import io.ktor.application.Application
+import io.ktor.application.ApplicationEvents
+import io.ktor.application.ApplicationFeature
+import io.ktor.application.EventDefinition
+import io.ktor.application.EventHandler
+import io.ktor.util.AttributeKey
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.DisposableHandle
 import org.joda.time.DateTime
 import kotlin.random.Random.Default.nextInt

@@ -5,7 +5,7 @@ import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import net.pearx.kasechange.toSnakeCase
-import java.util.*
+import java.util.UUID
 
 class CitizenRepository(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): Citizen? = requester

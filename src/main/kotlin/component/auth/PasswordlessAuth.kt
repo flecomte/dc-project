@@ -8,7 +8,7 @@ import fr.dcproject.component.citizen.CitizenWithEmail
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.makeToken
 import fr.dcproject.messages.Mailer
-import io.ktor.http.*
+import io.ktor.http.URLBuilder
 
 /**
  * Send a connexion link by email

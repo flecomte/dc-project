@@ -1,10 +1,15 @@
 package fr.dcproject.component.auth
 
 import fr.dcproject.component.auth.UserI.Roles
-import fr.postgresjson.entity.*
-import io.ktor.auth.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityUpdatedAt
+import fr.postgresjson.entity.EntityUpdatedAtImp
+import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityI
+import io.ktor.auth.Principal
 import org.joda.time.DateTime
-import java.util.*
+import java.util.UUID
 
 class User(
     id: UUID = UUID.randomUUID(),

@@ -1,11 +1,23 @@
 package fr.dcproject.component.comment.generic
 
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.*
 import fr.dcproject.entity.EntityI
-import fr.postgresjson.entity.*
+import fr.dcproject.entity.ExtraI
+import fr.dcproject.entity.HasTarget
+import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.TargetRef
+import fr.dcproject.entity.Votable
+import fr.dcproject.entity.VotableImp
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.EntityCreatedByImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.EntityUpdatedAt
+import fr.postgresjson.entity.EntityUpdatedAtImp
 import org.joda.time.DateTime
-import java.util.*
+import java.util.UUID
 
 class CommentForView<T : TargetI, C : CitizenRef>(
     id: UUID = UUID.randomUUID(),

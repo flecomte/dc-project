@@ -11,7 +11,7 @@ import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.entity.FollowSimple
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.entity.UuidEntityI
-import java.util.*
+import java.util.UUID
 
 class NotificationEmailSender(
     private val mailer: Mailer,

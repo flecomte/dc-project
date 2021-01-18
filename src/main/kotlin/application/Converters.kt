@@ -14,12 +14,13 @@ import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.repository.OpinionChoice
-import io.ktor.features.*
-import io.ktor.util.*
+import io.ktor.features.DataConversion
+import io.ktor.features.NotFoundException
+import io.ktor.util.KtorExperimentalAPI
 import org.koin.core.context.GlobalContext
 import org.koin.core.parameter.ParametersDefinition
 import org.koin.core.qualifier.Qualifier
-import java.util.*
+import java.util.UUID
 
 private typealias ConverterDeclaration = DataConversion.Configuration.() -> Unit
 private inline fun <reified T> DataConversion.Configuration.get(

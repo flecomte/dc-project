@@ -1,7 +1,7 @@
 package fr.dcproject.dto
 
 import fr.postgresjson.entity.EntityVersioning
-import java.util.*
+import java.util.UUID
 
 interface Versionable {
     val versionId: UUID

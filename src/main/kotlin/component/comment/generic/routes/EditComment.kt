@@ -5,14 +5,16 @@ import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.voter.assert
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.application.call
+import io.ktor.features.NotFoundException
+import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.locations.put
+import io.ktor.request.receiveText
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
 @Location("/comments/{comment}")

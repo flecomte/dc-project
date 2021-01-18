@@ -6,9 +6,18 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
-import fr.postgresjson.entity.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.EntityCreatedByImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
 import fr.postgresjson.entity.EntityI
-import java.util.*
+import fr.postgresjson.entity.EntityUpdatedAt
+import fr.postgresjson.entity.EntityUpdatedAtImp
+import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityI
+import java.util.UUID
 
 @Deprecated("")
 data class Workgroup <C : CitizenBasicI>(

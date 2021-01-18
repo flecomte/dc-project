@@ -10,12 +10,16 @@ import fr.dcproject.security.voter.ConstitutionVoter
 import fr.dcproject.voter.assert
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
-import io.ktor.application.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import java.util.*
+import io.ktor.application.ApplicationCall
+import io.ktor.application.call
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.locations.get
+import io.ktor.locations.post
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import java.util.UUID
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.repository.Constitution as ConstitutionRepository
 

@@ -6,14 +6,17 @@ import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
 import fr.dcproject.voter.assert
-import io.ktor.application.*
-import io.ktor.http.*
-import io.ktor.locations.*
-import io.ktor.request.*
-import io.ktor.response.*
-import io.ktor.routing.*
+import io.ktor.application.ApplicationCall
+import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.locations.put
+import io.ktor.request.receive
+import io.ktor.response.respond
+import io.ktor.routing.Route
 import org.koin.core.KoinComponent
-import java.util.*
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object UpdateMemberOfWorkgroup {

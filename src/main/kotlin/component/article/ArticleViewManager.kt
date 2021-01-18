@@ -10,7 +10,7 @@ import org.elasticsearch.client.Request
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient
 import org.joda.time.DateTime
-import java.util.*
+import java.util.UUID
 
 /**
  * Wrapper for manage views with elasticsearch

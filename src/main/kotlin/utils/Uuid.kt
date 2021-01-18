@@ -1,6 +1,6 @@
 package fr.dcproject.utils
 
-import java.util.*
+import java.util.UUID
 
 fun String.toUUID(): UUID = UUID.fromString(this.trim())
 

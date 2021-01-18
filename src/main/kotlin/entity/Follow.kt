@@ -3,8 +3,12 @@ package fr.dcproject.entity
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
-import fr.postgresjson.entity.*
-import java.util.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.EntityCreatedByImp
+import fr.postgresjson.entity.UuidEntityI
+import java.util.UUID
 
 @Deprecated("")
 class Follow<T : TargetI>(

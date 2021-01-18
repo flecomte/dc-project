@@ -3,12 +3,12 @@ package component.auth.jwt
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.jwt.JwtConfig
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.auth.jwt.*
-import io.ktor.http.auth.*
-import io.ktor.routing.*
-import java.util.*
+import io.ktor.application.ApplicationCall
+import io.ktor.auth.Authentication
+import io.ktor.auth.jwt.jwt
+import io.ktor.http.auth.HttpAuthHeader
+import io.ktor.routing.Routing
+import java.util.UUID
 
 fun jwtInstallation(userRepo: UserRepository): Authentication.Configuration.() -> Unit = {
     /**

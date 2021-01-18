@@ -1,12 +1,12 @@
 package steps
 
-import fr.dcproject.component.workgroup.Workgroup
-import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.workgroup.Workgroup
+import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.dcproject.utils.toUUID
@@ -16,16 +16,18 @@ import org.joda.time.DateTime
 import org.junit.Assert
 import org.koin.test.KoinTest
 import org.koin.test.get
-import java.util.*
+import java.util.UUID
 
 class WorkgroupSteps : En, KoinTest {
     init {
         When("I have members in workgroup {string}:") { workgroupId: String, members: DataTable ->
             val membersRefs = members.asList()
-                .map { Member(
-                    citizen = CitizenRef(it.toUUID()),
-                    roles = listOf(Member.Role.MASTER)
-                ) }
+                .map {
+                    Member(
+                        citizen = CitizenRef(it.toUUID()),
+                        roles = listOf(Member.Role.MASTER)
+                    )
+                }
 
             get<WorkgroupRepository>().addMembers(WorkgroupRef(workgroupId.toUUID()), membersRefs)
         }

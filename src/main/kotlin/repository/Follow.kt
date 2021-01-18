@@ -14,7 +14,7 @@ import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
-import java.util.*
+import java.util.UUID
 import fr.dcproject.entity.Constitution as ConstitutionEntity
 import fr.dcproject.entity.Follow as FollowEntity
 

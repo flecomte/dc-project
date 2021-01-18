@@ -9,7 +9,7 @@ import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntityI
 import fr.postgresjson.repository.RepositoryI
-import java.util.*
+import java.util.UUID
 
 abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Requester) : RepositoryI {
     abstract fun findById(id: UUID): CommentForView<T, CitizenRef>?

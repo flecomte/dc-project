@@ -4,12 +4,15 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.generic.CommentForView
-import fr.dcproject.entity.*
 import fr.dcproject.entity.Constitution
+import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.TargetRef
+import fr.dcproject.entity.VoteAggregation
+import fr.dcproject.entity.VoteForUpdateI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
-import java.util.*
+import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.entity.Vote as VoteEntity
 

@@ -3,9 +3,12 @@ package steps
 import com.jayway.jsonpath.JsonPath
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import io.ktor.http.*
-import io.ktor.server.testing.*
-import io.ktor.util.*
+import io.ktor.http.ContentType
+import io.ktor.http.HttpHeaders
+import io.ktor.http.HttpMethod
+import io.ktor.http.HttpStatusCode
+import io.ktor.server.testing.setBody
+import io.ktor.util.KtorExperimentalAPI
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 

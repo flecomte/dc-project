@@ -1,10 +1,10 @@
 package fr.dcproject.component.auth
 
 import fr.dcproject.component.citizen.CitizenRepository
-import io.ktor.application.*
-import io.ktor.auth.*
-import io.ktor.util.*
-import io.ktor.util.pipeline.*
+import io.ktor.application.ApplicationCall
+import io.ktor.auth.authentication
+import io.ktor.util.AttributeKey
+import io.ktor.util.pipeline.PipelineContext
 import org.koin.core.context.GlobalContext
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
 

@@ -3,7 +3,7 @@ package fr.dcproject.component.auth.jwt
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
-import java.util.*
+import java.util.Date
 
 object JwtConfig {
     private const val secret = "zAP5MBA4B4Ijz0MZaS48"

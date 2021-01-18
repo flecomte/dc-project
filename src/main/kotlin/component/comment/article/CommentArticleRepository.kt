@@ -10,7 +10,7 @@ import fr.dcproject.entity.TargetI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntityI
-import java.util.*
+import java.util.UUID
 
 class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<ArticleForView>(requester) {
     override fun findById(id: UUID): CommentForView<ArticleForView, CitizenRef>? {

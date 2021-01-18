@@ -3,11 +3,12 @@ package fr.dcproject.routes
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.event.Event
 import fr.postgresjson.serializer.deserialize
-import io.ktor.client.*
-import io.ktor.http.cio.websocket.*
-import io.ktor.locations.*
-import io.ktor.routing.*
-import io.ktor.websocket.*
+import io.ktor.client.HttpClient
+import io.ktor.http.cio.websocket.Frame
+import io.ktor.http.cio.websocket.readText
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.routing.Route
+import io.ktor.websocket.webSocket
 import io.lettuce.core.Range
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,7 +1,11 @@
 package fr.dcproject.event
 
-import com.rabbitmq.client.*
+import com.rabbitmq.client.AMQP
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
+import com.rabbitmq.client.ConnectionFactory
+import com.rabbitmq.client.Consumer
+import com.rabbitmq.client.DefaultConsumer
+import com.rabbitmq.client.Envelope
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
@@ -11,9 +15,11 @@ import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.Follow
 import fr.postgresjson.serializer.deserialize
-import io.ktor.application.*
-import io.ktor.util.pipeline.*
-import io.ktor.utils.io.errors.*
+import io.ktor.application.ApplicationCall
+import io.ktor.application.EventDefinition
+import io.ktor.application.application
+import io.ktor.util.pipeline.PipelineContext
+import io.ktor.utils.io.errors.IOException
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect

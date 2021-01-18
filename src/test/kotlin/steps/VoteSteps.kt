@@ -7,7 +7,7 @@ import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
-import java.util.*
+import java.util.UUID
 import fr.dcproject.repository.VoteArticle as VoteRepository
 
 class VoteSteps : En, KoinTest {

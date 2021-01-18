@@ -10,7 +10,7 @@ import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
 import fr.postgresjson.serializer.serialize
 import net.pearx.kasechange.toSnakeCase
-import java.util.*
+import java.util.UUID
 import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
 class WorkgroupRepository(override var requester: Requester) : RepositoryI {

@@ -1,7 +1,11 @@
 package fr.dcproject.entity
 
-import fr.postgresjson.entity.*
-import java.util.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.UuidEntity
+import java.util.UUID
 
 class OpinionChoice(
     id: UUID? = null,

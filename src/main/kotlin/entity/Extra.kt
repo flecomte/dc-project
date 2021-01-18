@@ -7,7 +7,7 @@ import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedBy
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.entity.UuidEntityI
-import java.util.*
+import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 

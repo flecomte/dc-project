@@ -6,18 +6,24 @@ import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.article.routes.ArticleRequest.Output
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.dto.*
+import fr.dcproject.dto.CreatedAt
+import fr.dcproject.dto.Opinionable
+import fr.dcproject.dto.Versionable
+import fr.dcproject.dto.Viewable
+import fr.dcproject.dto.Votable
 import fr.dcproject.voter.assert
-import io.ktor.application.*
-import io.ktor.features.*
-import io.ktor.locations.*
-import io.ktor.response.*
-import io.ktor.routing.*
-import io.ktor.util.*
+import io.ktor.application.call
+import io.ktor.features.NotFoundException
+import io.ktor.locations.KtorExperimentalLocationsAPI
+import io.ktor.locations.Location
+import io.ktor.locations.get
+import io.ktor.response.respond
+import io.ktor.routing.Route
+import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.launch
 import org.koin.core.KoinComponent
 import org.koin.core.inject
-import java.util.*
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 @Location("/articles/{articleId}")

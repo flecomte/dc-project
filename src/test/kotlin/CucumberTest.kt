@@ -9,7 +9,7 @@ import io.cucumber.java8.En
 import io.cucumber.java8.Scenario
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
-import io.ktor.server.testing.*
+import io.ktor.server.testing.withTestApplication
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest

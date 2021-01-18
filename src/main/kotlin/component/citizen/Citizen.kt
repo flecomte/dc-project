@@ -5,9 +5,14 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
 import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.postgresjson.entity.*
+import fr.postgresjson.entity.EntityCreatedAt
+import fr.postgresjson.entity.EntityCreatedAtImp
+import fr.postgresjson.entity.EntityDeletedAt
+import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityI
 import org.joda.time.DateTime
-import java.util.*
+import java.util.UUID
 
 class Citizen(
     override val id: UUID = UUID.randomUUID(),

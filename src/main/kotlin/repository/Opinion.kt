@@ -8,7 +8,7 @@ import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import net.pearx.kasechange.toSnakeCase
-import java.util.*
+import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.entity.Opinion as OpinionEntity
 import fr.dcproject.entity.OpinionArticle as OpinionArticleEntity

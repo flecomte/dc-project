@@ -10,7 +10,7 @@ import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
-import java.util.*
+import java.util.UUID
 import fr.dcproject.repository.OpinionArticle as OpinionRepository
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 
