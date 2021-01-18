@@ -41,9 +41,7 @@ import fr.dcproject.component.workgroup.routes.members.UpdateMemberOfWorkgroup.u
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.*
-import fr.dcproject.security.voter.OpinionChoiceVoter
-import fr.ktorVoter.AuthorizationVoter
-import fr.ktorVoter.VoterException
+import fr.dcproject.voter.VoterDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.*
 import io.ktor.auth.*
@@ -88,12 +86,6 @@ fun Application.module(env: Env = PROD) {
     install(DataConversion, converters)
 
     install(Locations)
-
-    install(AuthorizationVoter) {
-        voters = listOf(
-            OpinionChoiceVoter()
-        )
-    }
 
     HttpClient(Jetty) {
         engine {
@@ -176,7 +168,7 @@ fun Application.module(env: Env = PROD) {
             voteArticle(get(), get(), get(), get())
             voteConstitution(get(), get())
             opinionArticle(get(), get())
-            opinionChoice(get())
+            opinionChoice(get(), get())
             definition()
         }
 
@@ -198,7 +190,7 @@ fun Application.module(env: Env = PROD) {
         exception<NotFoundException> { e ->
             call.respond(HttpStatusCode.NotFound, e.message!!)
         }
-        exception<VoterException> {
+        exception<VoterDeniedException> {
             if (call.user == null) call.respond(HttpStatusCode.Unauthorized)
             else call.respond(HttpStatusCode.Forbidden)
         }

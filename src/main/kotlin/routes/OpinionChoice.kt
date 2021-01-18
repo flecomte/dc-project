@@ -1,9 +1,9 @@
 package fr.dcproject.routes
 
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.security.voter.OpinionChoiceVoter.Action.VIEW
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.security.voter.OpinionChoiceVoter
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.locations.*
 import io.ktor.response.*
@@ -20,17 +20,17 @@ object OpinionChoicePaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.opinionChoice(repo: OpinionChoiceRepository) {
+fun Route.opinionChoice(repo: OpinionChoiceRepository, voter: OpinionChoiceVoter) {
     get<OpinionChoicePaths.OpinionChoiceRequest> {
-        assertCan(VIEW, it.opinionChoice)
+        voter.assert { canView(it.opinionChoice, citizenOrNull) }
 
         call.respond(it.opinionChoice)
     }
 
     get<OpinionChoicePaths.OpinionChoicesRequest> {
-        val opinions = repo.findOpinionsChoices(it.targets)
-        assertCanAll(VIEW, opinions)
+        val opinionChoices = repo.findOpinionsChoices(it.targets)
+        voter.assert { canView(opinionChoices, citizenOrNull) }
 
-        call.respond(opinions)
+        call.respond(opinionChoices)
     }
 }

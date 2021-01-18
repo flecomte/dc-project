@@ -3,19 +3,12 @@ package unit.voter
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionChoiceVoter
-import fr.ktorVoter.ActionI
-import fr.ktorVoter.Vote
-import fr.ktorVoter.can
-import fr.ktorVoter.canAll
-import io.ktor.application.*
-import io.mockk.every
-import io.mockk.mockk
+import fr.dcproject.voter.Vote.GRANTED
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
@@ -68,32 +61,16 @@ internal class OpinionChoiceVoterTest {
     }
 
     @Test
-    fun `support opinion choice`(): Unit = OpinionChoiceVoter().run {
-        val p = object : ActionI {}
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            this(OpinionChoiceVoter.Action.VIEW, it, choice1).vote `should be` Vote.GRANTED
-            this(OpinionChoiceVoter.Action.VIEW, it, article1).vote `should be` Vote.ABSTAIN
-            this(p, it, choice1).vote `should be` Vote.ABSTAIN
-        }
+    fun `can be view the opinion choice`() {
+        OpinionChoiceVoter()
+            .canView(choice1, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the opinion choice`(): Unit = listOf(OpinionChoiceVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(OpinionChoiceVoter.Action.VIEW, it, choice1) `should be` true
-        }
-    }
-
-    @Test
-    fun `can be view the opinion choice list`(): Unit = listOf(OpinionChoiceVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            canAll(OpinionChoiceVoter.Action.VIEW, it, listOf(choice1)) `should be` true
-        }
+    fun `can be view the opinion choice list`() {
+        OpinionChoiceVoter()
+            .canView(listOf(choice1), tesla)
+            .vote `should be` GRANTED
     }
 }

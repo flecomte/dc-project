@@ -1,26 +1,15 @@
 package fr.dcproject.security.voter
 
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.voter.NoSubjectDefinedException
-import fr.ktorVoter.*
-import io.ktor.application.*
+import fr.dcproject.voter.Voter
+import fr.dcproject.voter.VoterResponse
 
-class OpinionChoiceVoter : Voter<ApplicationCall> {
-    enum class Action : ActionI {
-        VIEW
-    }
+class OpinionChoiceVoter : Voter() {
+    fun canView(subjects: List<OpinionChoice>, citizen: CitizenI?): VoterResponse =
+        canAll(subjects) { canView(it, citizen) }
 
-    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action) &&
-            (subject is OpinionChoice?))) return abstain()
-
-        if (action == Action.VIEW) {
-            if (subject is OpinionChoice) {
-                return granted()
-            }
-            throw NoSubjectDefinedException(action)
-        }
-
-        return abstain()
+    fun canView(subject: OpinionChoice, citizen: CitizenI?): VoterResponse {
+        return granted()
     }
 }
