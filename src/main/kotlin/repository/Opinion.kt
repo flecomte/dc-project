@@ -82,7 +82,8 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
         return requester.run {
             getFunction("find_citizen_opinions_by_target_ids")
                 .select(
-                    typeReference, mapOf(
+                    typeReference,
+                    mapOf(
                         "citizen_id" to citizen.id,
                         "ids" to targets
                     )
@@ -101,7 +102,8 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
         return requester
             .getFunction("find_citizen_opinions_by_target_id")
             .select(
-                typeReference, mapOf(
+                typeReference,
+                mapOf(
                     "citizen_id" to citizen.id,
                     "id" to target
                 )
@@ -121,7 +123,9 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
     ): Paginated<OpinionEntity<TargetRef>> {
         return requester
             .getFunction("find_citizen_opinions")
-            .select(page, limit,
+            .select(
+                page,
+                limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
                 "citizen_id" to citizen.id

@@ -33,10 +33,10 @@ class ArticleVoter(private val articleRepo: ArticleRepository) : Voter() {
         /* The new Article must by created by the same citizen of the connected citizen */
         if (subject.createdBy.id == citizen.id) {
             /* The creator must be the same of the creator of preview version of article */
-                val lastVersionId = articleRepo
-                    .findVersionsByVersionId(1, 1, subject.versionId)
-                    .result
-                    .firstOrNull()?.createdBy?.id
+            val lastVersionId = articleRepo
+                .findVersionsByVersionId(1, 1, subject.versionId)
+                .result
+                .firstOrNull()?.createdBy?.id
 
             return when (lastVersionId) {
                 null -> granted("You can create a new Article")

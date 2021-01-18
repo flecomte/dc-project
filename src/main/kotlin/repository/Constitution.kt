@@ -27,7 +27,8 @@ class Constitution(override var requester: Requester) : RepositoryI {
         return requester
             .getFunction("find_constitutions")
             .select(
-                page, limit,
+                page,
+                limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
                 "search" to search

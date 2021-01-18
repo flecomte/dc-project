@@ -32,7 +32,12 @@ object GetWorkgroups {
     fun Route.getWorkgroups(repo: WorkgroupRepository, voter: WorkgroupVoter) {
         get<WorkgroupsRequest> {
             val workgroups =
-                repo.find(it.page, it.limit, it.sort, it.direction, it.search,
+                repo.find(
+                    it.page,
+                    it.limit,
+                    it.sort,
+                    it.direction,
+                    it.search,
                     WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
                 )
             voter.assert { canView(workgroups.result, citizenOrNull) }

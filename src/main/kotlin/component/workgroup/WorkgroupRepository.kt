@@ -30,7 +30,8 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
         return requester
             .getFunction("find_workgroups")
             .select(
-                page, limit,
+                page,
+                limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
                 "search" to search,
@@ -43,8 +44,8 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
 
     fun <W : WorkgroupRef> delete(workgroup: W) = requester
-            .getFunction("delete_workgroup")
-            .perform("id" to workgroup.id)
+        .getFunction("delete_workgroup")
+        .perform("id" to workgroup.id)
 
     fun addMember(workgroup: WorkgroupI, member: Member<CitizenI>): Member<CitizenBasic>? =
         addMember(workgroup, member.citizen, member.roles)

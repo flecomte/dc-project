@@ -60,7 +60,10 @@ object ConstitutionPaths {
             ) : UuidEntity(id) {
                 fun create(): TitleSimple<ArticleRef> =
                     TitleSimple(
-                        id, name, rank, articles
+                        id,
+                        name,
+                        rank,
+                        articles
                     )
             }
 

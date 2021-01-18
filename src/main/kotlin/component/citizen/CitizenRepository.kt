@@ -33,7 +33,8 @@ class CitizenRepository(override var requester: Requester) : RepositoryI {
     ): Paginated<CitizenBasic> = requester
         .getFunction("find_citizens")
         .select(
-            page, limit,
+            page,
+            limit,
             "sort" to sort?.toSnakeCase(),
             "direction" to direction,
             "search" to search

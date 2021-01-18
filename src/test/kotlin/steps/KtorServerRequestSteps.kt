@@ -6,11 +6,9 @@ import io.cucumber.java8.En
 import io.ktor.http.*
 import io.ktor.server.testing.*
 import io.ktor.util.*
-import kotlinx.serialization.ImplicitReflectionSerializer
 import kotlin.test.assertEquals
 import kotlin.test.assertNotEquals
 
-@ImplicitReflectionSerializer
 @KtorExperimentalAPI
 class KtorServerRequestSteps : En {
     init {

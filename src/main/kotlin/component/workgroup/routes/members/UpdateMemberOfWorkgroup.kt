@@ -41,10 +41,10 @@ object UpdateMemberOfWorkgroup {
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
                     voter.assert { canUpdateMembers(workgroup, citizenOrNull) }
-                        repo.updateMembers(workgroup, members)
-                    }.let { members ->
-                        call.respond(HttpStatusCode.OK, members)
-                    }
+                    repo.updateMembers(workgroup, members)
+                }.let { members ->
+                    call.respond(HttpStatusCode.OK, members)
+                }
             } ?: call.respond(HttpStatusCode.NotFound)
         }
     }

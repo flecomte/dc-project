@@ -2,17 +2,11 @@ package steps
 
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
-import kotlinx.serialization.ImplicitReflectionSerializer
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.json.JsonArray
-import kotlinx.serialization.json.JsonElement
-import kotlinx.serialization.json.JsonPrimitive
-import kotlinx.serialization.parse
+import kotlinx.serialization.json.*
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 import kotlin.test.fail
 
-@ImplicitReflectionSerializer
 class KtorServerRestSteps : En {
     init {
         Then("the JSON should contain:") { dataTable: DataTable ->
@@ -60,7 +54,7 @@ class KtorServerRestSteps : En {
     }
 
     private val responseJsonElement: JsonElement
-        get() = Json.parse(KtorServerContext.defaultServer.call?.response?.content ?: fail("The response isn't valid JSON"))
+        get() = Json.parseToJsonElement(KtorServerContext.defaultServer.call?.response?.content ?: fail("The response isn't valid JSON"))
 
     private val response: String
         get() = KtorServerContext.defaultServer.call?.response?.content ?: fail("The response isn't valid")

@@ -30,7 +30,8 @@ class ArticleRepository(override var requester: Requester) : RepositoryI {
         return requester
             .getFunction("find_articles")
             .select(
-                page, limit,
+                page,
+                limit,
                 "sort" to sort?.toSnakeCase(),
                 "direction" to direction,
                 "search" to search,

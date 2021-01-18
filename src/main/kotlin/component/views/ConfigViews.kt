@@ -9,7 +9,7 @@ object ConfigViews {
     private fun waitElasticsearchIsUp(client: RestClient) {
         val logger: Logger = LoggerFactory.getLogger("fr.dcproject.elasticsearch")
         val request = Request("GET", "/_cluster/health")
-        repeat(5*60 / 2) { // 5 minutes
+        repeat(5 * 60 / 2) { // 5 minutes
             runCatching {
                 client.performRequest(request).statusLine.statusCode
             }.onSuccess {
@@ -74,7 +74,7 @@ object ConfigViews {
                     }
                   }
                 }
-            """.trimIndent()
+                        """.trimIndent()
                     )
                 }.let {
                     performRequest(it)

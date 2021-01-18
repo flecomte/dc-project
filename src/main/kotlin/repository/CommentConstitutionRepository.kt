@@ -27,7 +27,8 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "created_by_id" to citizen.id,
                     "reference" to TargetI.getReference(ConstitutionRef::class)
                 )
@@ -43,7 +44,8 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "target_id" to target.id,
                     "sort" to sort.sql
                 )

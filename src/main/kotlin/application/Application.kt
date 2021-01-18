@@ -49,6 +49,7 @@ import io.ktor.client.*
 import io.ktor.client.engine.jetty.Jetty
 import io.ktor.features.*
 import io.ktor.http.*
+import io.ktor.http.cio.websocket.*
 import io.ktor.jackson.*
 import io.ktor.locations.*
 import io.ktor.response.*
@@ -117,10 +118,12 @@ fun Application.module(env: Env = PROD) {
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
             configure(SerializationFeature.INDENT_OUTPUT, true)
-            setDefaultPrettyPrinter(DefaultPrettyPrinter().apply {
-                indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
-                indentObjectsWith(DefaultIndenter("  ", "\n"))
-            })
+            setDefaultPrettyPrinter(
+                DefaultPrettyPrinter().apply {
+                    indentArraysWith(DefaultPrettyPrinter.FixedSpaceIndenter.instance)
+                    indentObjectsWith(DefaultIndenter("  ", "\n"))
+                }
+            )
         }
     }
 

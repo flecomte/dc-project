@@ -41,10 +41,10 @@ object DeleteMembersOfWorkgroup {
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
                     voter.assert { canView(workgroup, citizenOrNull) }
-                        repo.removeMembers(workgroup, members)
-                    }.let { members ->
-                        call.respond(HttpStatusCode.OK, members)
-                    }
+                    repo.removeMembers(workgroup, members)
+                }.let { members ->
+                    call.respond(HttpStatusCode.OK, members)
+                }
             } ?: call.respond(HttpStatusCode.NotFound)
         }
     }

@@ -36,7 +36,8 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         return requester.run {
             getFunction("find_comments_by_parent")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "parent_id" to parentId
                 )
         }
@@ -60,7 +61,8 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "target_id" to targetId,
                     "sort" to sort.sql
                 )
@@ -101,7 +103,8 @@ class CommentRepository(requester: Requester) : CommentRepositoryAbs<TargetRef>(
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "created_by_id" to citizen.id
                 )
         }
@@ -115,7 +118,8 @@ class CommentRepository(requester: Requester) : CommentRepositoryAbs<TargetRef>(
         return requester.run {
             getFunction("find_comments_by_parent")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "parent_id" to parentId
                 )
         }

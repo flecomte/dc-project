@@ -34,7 +34,8 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
         return requester
             .getFunction("find_follows_by_citizen")
             .select(
-                page, limit,
+                page,
+                limit,
                 "created_by_id" to citizenId
             )
     }
@@ -101,7 +102,8 @@ class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleForView>(r
         return requester.run {
             getFunction("find_follows_article_by_citizen")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "created_by_id" to citizenId
                 )
         }
@@ -115,7 +117,8 @@ class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleForView>(r
         return requester
             .getFunction("find_follows_article_by_target")
             .select(
-                page, limit,
+                page,
+                limit,
                 "target_id" to target.id
             )
     }
@@ -130,7 +133,8 @@ class FollowConstitution(requester: Requester) : Follow<ConstitutionRef, Constit
         return requester.run {
             getFunction("find_follows_constitution_by_citizen")
                 .select(
-                    page, limit,
+                    page,
+                    limit,
                     "created_by_id" to citizenId
                 )
         }

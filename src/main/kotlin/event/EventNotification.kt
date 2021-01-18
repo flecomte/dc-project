@@ -13,12 +13,12 @@ import fr.dcproject.repository.Follow
 import fr.postgresjson.serializer.deserialize
 import io.ktor.application.*
 import io.ktor.util.pipeline.*
+import io.ktor.utils.io.errors.*
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.io.errors.IOException
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import fr.dcproject.repository.FollowArticle as FollowArticleRepository

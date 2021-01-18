@@ -1,11 +1,11 @@
 package fr.dcproject.component.article
 
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.views.ViewManager
 import fr.dcproject.entity.ViewAggregation
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField
 import fr.dcproject.utils.toIso
-import fr.dcproject.component.views.ViewManager
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient
@@ -27,7 +27,8 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
             "/views/_doc/"
         ).apply {
             //language=JSON
-            setJsonEntity("""
+            setJsonEntity(
+                """
                 {
                   "logged": $isLogged,
                   "type": "article",
@@ -38,7 +39,8 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
                   "citizen_id": "${citizen?.id}",
                   "view_at": "${dateTime.toIso()}"
                 }
-            """.trimIndent())
+                """.trimIndent()
+            )
         }
 
         return restClient.performRequest(request)
@@ -53,7 +55,8 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
             "/views/_search"
         ).apply {
             //language=JSON
-            setJsonEntity("""
+            setJsonEntity(
+                """
             {
               "size": 0,
               "query": {
@@ -81,7 +84,8 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
                 }
               }
             }
-            """.trimIndent())
+                """.trimIndent()
+            )
         }
 
         return restClient

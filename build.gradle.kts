@@ -26,7 +26,8 @@ plugins {
     maven
 
     id("maven-publish")
-    id("org.jetbrains.kotlin.jvm") version "1.3.50"
+    kotlin("jvm") version "1.4.21"
+    kotlin("plugin.serialization") version "1.4.21"
 
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "8.2.0"
@@ -123,6 +124,7 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
     implementation("io.ktor:ktor-server-jetty:$ktor_version")
     implementation("io.ktor:ktor-client-jetty:$ktor_version")
     implementation("ch.qos.logback:logback-classic:$logback_version")
@@ -139,8 +141,8 @@ dependencies {
     implementation("com.auth0:java-jwt:3.12.0")
     implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
     implementation("com.github.flecomte:postgres-json:2.0.0")
-    implementation("com.sendgrid:sendgrid-java:4.4.1")
-    implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") //TODO update to 6.0.2
+    implementation("com.sendgrid:sendgrid-java:4.7.1")
+    implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") // TODO update to 6.0.2
     implementation("com.rabbitmq:amqp-client:5.10.0")
     implementation("org.elasticsearch.client:elasticsearch-rest-client:6.7.1")
     implementation("com.jayway.jsonpath:json-path:2.5.0")

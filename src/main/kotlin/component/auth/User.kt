@@ -12,7 +12,8 @@ class User(
     blockedAt: DateTime? = null,
     override var plainPassword: String? = null,
     override var roles: List<Roles> = emptyList()
-) : UserFull, UserBasic(id, username, blockedAt),
+) : UserFull,
+    UserBasic(id, username, blockedAt),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityUpdatedAt by EntityUpdatedAtImp()
 
