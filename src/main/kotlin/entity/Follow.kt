@@ -29,7 +29,7 @@ class FollowForUpdate<T : TargetI, C : CitizenI>(
     override val target: T,
     override val createdBy: C
 ) : FollowRef(id),
-    AsTarget<T>,
+    HasTarget<T>,
     EntityCreatedBy<C> by EntityCreatedByImp<C>(createdBy)
 
 open class FollowRef(

@@ -72,7 +72,7 @@ open class CommentParent<T : TargetI>(
 
 interface CommentParentI<T : TargetI> : CommentI, EntityDeletedAt, CommentWithTargetI<T>
 
-interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, AsTarget<T>
+interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, HasTarget<T>
 
 interface CommentWithParentI<T : TargetI> {
     val parent: CommentParent<T>?

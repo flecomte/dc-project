@@ -2,8 +2,6 @@ package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.OpinionChoiceRef
 import fr.dcproject.entity.OpinionForUpdate
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
@@ -67,9 +65,9 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
     /**
      * Create an Opinion on target (article,...)
      */
-    abstract fun updateOpinions(choices: List<OpinionChoiceRef>, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>>
-    fun updateOpinions(choice: OpinionChoiceRef, citizen: CitizenRef, target: TargetRef): List<OpinionEntity<T>> =
-        updateOpinions(listOf(choice), citizen, target)
+    abstract fun updateOpinions(opinions: List<OpinionForUpdate<*>>): List<OpinionEntity<T>>
+    fun updateOpinions(opinion: OpinionForUpdate<*>): List<OpinionEntity<T>> =
+        updateOpinions(listOf(opinion))
 
     abstract fun addOpinion(opinion: OpinionForUpdate<T>): OpinionEntity<T>
 
@@ -135,14 +133,15 @@ class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
     /**
      * Update Opinions on Article (Delete old one)
      */
-    override fun updateOpinions(choices: List<OpinionChoiceRef>, citizen: CitizenRef, target: TargetRef): List<OpinionArticleEntity> {
+    override fun updateOpinions(opinions: List<OpinionForUpdate<*>>): List<OpinionArticleEntity> {
         return requester
+            /* TODO change SQL function to not use .first() and pass all createdBy and target */
             .getFunction("update_citizen_opinions_by_target_id")
             .select(
-                "choices_ids" to choices.map { it.id },
-                "citizen_id" to citizen.id,
-                "target_id" to target.id,
-                "target_reference" to target.reference
+                "choices_ids" to opinions.map { it.choice.id },
+                "citizen_id" to opinions.first().createdBy.id,
+                "target_id" to opinions.first().target.id,
+                "target_reference" to opinions.first().target.reference
             )
     }
 

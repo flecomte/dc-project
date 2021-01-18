@@ -77,6 +77,6 @@ class OpinionSteps : En, KoinTest {
             } ?: error("You must provide the 'article' parameter"),
             createdBy = get<CitizenRepository>().findByUsername(username) ?: error("Citizen not exist")
         )
-        get<OpinionRepository>().updateOpinions(opinion.choice, opinion.createdBy, opinion.target)
+        get<OpinionRepository>().updateOpinions(opinion)
     }
 }

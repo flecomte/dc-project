@@ -1,7 +1,7 @@
 package fr.dcproject.component.comment.generic
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.AsTarget
+import fr.dcproject.entity.HasTarget
 import fr.dcproject.voter.Voter
 import fr.dcproject.voter.VoterResponse
 import fr.postgresjson.entity.EntityCreatedBy
@@ -23,7 +23,7 @@ class CommentVoter : Voter() {
     where S : CommentI,
           S : EntityCreatedBy<CR>,
           S : CommentWithParentI<*>,
-          S : AsTarget<*> = when {
+          S : HasTarget<*> = when {
         citizen == null -> denied("You must be connected to create user", "comment.create.notConnected")
         subject.createdBy.id != citizen.id -> denied("You cannot create a comment with other user than yours", "comment.create.wrongUser")
         subject.parent?.isDeleted() ?: false -> denied("You cannot create a comment on deleted parent", "comment.create.deletedParent")

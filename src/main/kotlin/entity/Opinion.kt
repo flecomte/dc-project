@@ -14,8 +14,8 @@ open class Opinion<T : TargetI>(
     override val createdBy: CitizenBasic,
     override val target: T,
     val choice: OpinionChoice
-) : ExtraI<T, CitizenBasicI>,
-    TargetRef(id),
+) : OpinionRef(id),
+    ExtraI<T, CitizenBasicI>,
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy) {
 
@@ -32,14 +32,15 @@ class OpinionArticle(
 
 data class OpinionForUpdate<T : TargetI>(
     override val id: UUID = UUID.randomUUID(),
-    val target: T,
-    val choice: OpinionChoice,
+    override val target: T,
+    val choice: OpinionChoiceRef,
     override val createdBy: CitizenRef
 ) : OpinionRef(id),
+    HasTarget<T>,
     EntityCreatedBy<CitizenI> by EntityCreatedByImp(createdBy)
 
 open class OpinionRef(
     override val id: UUID
-) : OpinionI
+) : OpinionI, TargetRef(id)
 
 interface OpinionI : UuidEntityI

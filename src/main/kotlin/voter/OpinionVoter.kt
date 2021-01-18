@@ -1,48 +1,35 @@
 package fr.dcproject.security.voter
 
-import fr.dcproject.component.article.ArticleAuthI
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.auth.user
-import fr.dcproject.entity.Opinion
-import fr.dcproject.voter.NoRuleDefinedException
-import fr.dcproject.voter.NoSubjectDefinedException
-import fr.ktorVoter.*
-import io.ktor.application.*
+import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.entity.HasTarget
+import fr.dcproject.entity.OpinionI
+import fr.dcproject.voter.Voter
+import fr.dcproject.voter.VoterResponse
+import fr.postgresjson.entity.EntityCreatedBy
+import fr.postgresjson.entity.EntityDeletedAt
 
-class OpinionVoter : Voter<ApplicationCall> {
-    enum class Action : ActionI {
-        CREATE,
-        VIEW,
-        DELETE
+class OpinionVoter : Voter() {
+
+    fun <S> canCreate(subjects: List<S>, citizen: CitizenI?): VoterResponse where S : OpinionI, S : HasTarget<*> =
+        canAll(subjects) { canCreate(it, citizen) }
+
+    fun <S> canCreate(subject: S, citizen: CitizenI?): VoterResponse where S : OpinionI, S : HasTarget<*> {
+        val target = subject.target
+        return when {
+            citizen == null -> denied("You must be connected to make an opinion", "opinion.create.notConnected")
+            target is EntityDeletedAt && target.isDeleted() -> denied("You cannot make opinion on deleted target", "opinion.create.deletedTarget")
+            else -> granted()
+        }
     }
 
-    override fun invoke(action: Any, context: ApplicationCall, subject: Any?): VoterResponseI {
-        if (!((action is Action) &&
-            (subject is Opinion<*>? || subject is ArticleAuthI<*>))) return abstain()
+    fun <S : OpinionI, SS : List<S>> canView(subjects: SS, citizen: CitizenI?): VoterResponse =
+        canAll(subjects) { canView(it, citizen) }
 
-        val user = context.user
-        if (action == Action.CREATE) {
-            if (user == null) return denied("You must be connected to make an opinion", "opinion.create.notConnected")
-            if (subject is ArticleAuthI<*> && !subject.isDeleted()) return granted()
-            if (subject is Opinion<*> && subject.createdBy.user.id == user.id) return granted()
+    fun <S : OpinionI> canView(subject: S, citizen: CitizenI?): VoterResponse = granted()
 
-            throw NoSubjectDefinedException(action)
-        }
-
-        if (action == Action.VIEW) {
-            return if (subject is Opinion<*> || subject is ArticleForView) granted() else throw NoSubjectDefinedException(action)
-        }
-
-        if (action == Action.DELETE) {
-            if (user == null) return denied("You must be connected to delete opinion", "opinion.delete.notConnected")
-            if (subject !is Opinion<*>) throw NoSubjectDefinedException(action)
-            return if (subject.createdBy.user.id == user.id) granted() else denied("You can only delete your opinions", "opinion.delete.notYours")
-        }
-
-        if (action is Action) {
-            throw NoRuleDefinedException(action)
-        }
-
-        return abstain()
+    fun <S, C : CitizenI> canDelete(subject: S, citizen: CitizenI?): VoterResponse where S : EntityCreatedBy<C>, S : OpinionI = when {
+        citizen == null -> denied("You must be connected to delete opinion", "opinion.delete.notConnected")
+        subject.createdBy.id != citizen.id -> denied("You can only delete your opinions", "opinion.delete.notYours")
+        else -> granted()
     }
 }

@@ -24,7 +24,6 @@ Feature: Opinion
       | id        | 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b |
       | createdBy | Isaac Newton                         |
     And I have an opinion choice "Opinion4" with ID "0f4f1721-3136-44f1-9f31-1459f3317b15"
-    And I have an opinion "Opinion4" on article "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b" created by Isaac Newton with ID "74e93e12-556b-4399-95a6-04f93a4dd66c"
     When I send a PUT request to "/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/opinions" with body:
     """
     {

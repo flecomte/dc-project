@@ -42,7 +42,6 @@ import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.*
 import fr.dcproject.security.voter.OpinionChoiceVoter
-import fr.dcproject.security.voter.OpinionVoter
 import fr.ktorVoter.AuthorizationVoter
 import fr.ktorVoter.VoterException
 import fr.postgresjson.migration.Migrations
@@ -92,7 +91,6 @@ fun Application.module(env: Env = PROD) {
 
     install(AuthorizationVoter) {
         voters = listOf(
-            OpinionVoter(),
             OpinionChoiceVoter()
         )
     }
@@ -177,7 +175,7 @@ fun Application.module(env: Env = PROD) {
             commentConstitution(get(), get())
             voteArticle(get(), get(), get(), get())
             voteConstitution(get(), get())
-            opinionArticle(get())
+            opinionArticle(get(), get())
             opinionChoice(get())
             definition()
         }

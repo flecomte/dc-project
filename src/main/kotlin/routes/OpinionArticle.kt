@@ -1,14 +1,14 @@
 package fr.dcproject.routes
 
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
+import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.OpinionChoiceRef
-import fr.dcproject.security.voter.OpinionVoter.Action.CREATE
-import fr.dcproject.security.voter.OpinionVoter.Action.VIEW
+import fr.dcproject.entity.*
+import fr.dcproject.security.voter.OpinionVoter
 import fr.dcproject.utils.toUUID
-import fr.ktorVoter.assertCan
-import fr.ktorVoter.assertCanAll
+import fr.dcproject.voter.assert
 import io.ktor.application.*
 import io.ktor.http.*
 import io.ktor.locations.*
@@ -41,7 +41,7 @@ object OpinionArticlePaths {
     @KtorExperimentalAPI
     class ArticleOpinion(val article: ArticleForView) {
         class Body(ids: List<String>) {
-            val ids = ids.map { OpinionChoiceRef(it.toUUID()) }
+            val ids: List<UUID> = ids.map { it.toUUID() }
         }
     }
 
@@ -51,29 +51,35 @@ object OpinionArticlePaths {
     @Location("/citizens/{citizen}/opinions")
     class CitizenOpinions(val citizen: CitizenEntity, id: List<String>) : KoinComponent {
         val id: List<UUID> = id.toUUID()
-        val opinionsEntities = get<OpinionArticleRepository>()
+        val opinionsEntities: List<Opinion<ArticleRef>> = get<OpinionArticleRepository>()
             .findCitizenOpinionsByTargets(citizen, this.id)
     }
 }
 
 @KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
-fun Route.opinionArticle(repo: OpinionArticleRepository) {
+fun Route.opinionArticle(repo: OpinionArticleRepository, voter: OpinionVoter) {
     get<OpinionArticlePaths.CitizenOpinionArticleRequest> {
         val opinions = repo.findCitizenOpinions(citizen, it.page, it.limit)
         call.respond(opinions)
     }
 
     get<OpinionArticlePaths.CitizenOpinions> {
-        assertCanAll(VIEW, it.opinionsEntities)
+        voter.assert { canView(it.opinionsEntities, citizenOrNull) }
 
         call.respond(it.opinionsEntities)
     }
 
     put<OpinionArticlePaths.ArticleOpinion> {
-        call.receive<OpinionArticlePaths.ArticleOpinion.Body>().ids.let { choices ->
-            assertCan(CREATE, it.article)
-            repo.updateOpinions(choices, citizen, it.article)
+        call.receive<OpinionArticlePaths.ArticleOpinion.Body>().ids.map { id ->
+            OpinionForUpdate(
+                choice = OpinionChoiceRef(id),
+                target = it.article,
+                createdBy = citizen
+            )
+        }.let { opinions ->
+            voter.assert { canCreate(opinions, citizenOrNull) }
+            repo.updateOpinions(opinions)
         }.let {
             call.respond(HttpStatusCode.Created, it)
         }

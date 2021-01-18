@@ -33,7 +33,7 @@ class VoteForUpdate<T : TargetI, C : CitizenI>(
     VoteForUpdateI<T, C>,
     EntityCreatedBy<C> by EntityCreatedByImp<C>(createdBy)
 
-interface VoteForUpdateI<T : TargetI, C : CitizenI> : VoteI, AsTarget<T>, EntityCreatedBy<C> {
+interface VoteForUpdateI<T : TargetI, C : CitizenI> : VoteI, HasTarget<T>, EntityCreatedBy<C> {
     override val id: UUID
     val note: Int
     override val target: T

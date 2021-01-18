@@ -13,11 +13,11 @@ import kotlin.reflect.full.isSubclassOf
 
 interface ExtraI<T : TargetI, C : CitizenI> :
     UuidEntityI,
-    AsTarget<T>,
+    HasTarget<T>,
     EntityCreatedAt,
     EntityCreatedBy<C>
 
-interface AsTarget<T : TargetI> {
+interface HasTarget<T : TargetI> {
     val target: T
 }
 
@@ -45,7 +45,7 @@ interface TargetI : UuidEntityI {
                 t.isSubclassOf(ArticleRef::class) -> TargetName.Article.targetReference
                 t.isSubclassOf(ConstitutionRef::class) -> TargetName.Constitution.targetReference
                 t.isSubclassOf(CommentRef::class) -> TargetName.Comment.targetReference
-                t.isSubclassOf(Opinion::class) -> TargetName.Opinion.targetReference
+                t.isSubclassOf(OpinionRef::class) -> TargetName.Opinion.targetReference
                 else -> throw error("target not implemented: ${t.qualifiedName} \nImplement it or return 'reference' from SQL")
             }
         }

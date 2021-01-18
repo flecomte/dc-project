@@ -10,18 +10,16 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.Opinion
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionVoter
-import fr.dcproject.voter.NoSubjectDefinedException
+import fr.dcproject.voter.Vote.DENIED
+import fr.dcproject.voter.Vote.GRANTED
 import fr.ktorVoter.*
 import io.ktor.application.*
-import io.mockk.every
-import io.mockk.mockk
 import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.*
@@ -83,89 +81,51 @@ internal class OpinionVoterTest {
     }
 
     @Test
-    fun `support opinion`(): Unit = OpinionVoter().run {
-        val p = object : ActionI {}
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            this(OpinionVoter.Action.VIEW, it, opinion1).vote `should be` Vote.GRANTED
-            this(OpinionVoter.Action.VIEW, it, article1).vote `should be` Vote.GRANTED
-            this(OpinionVoter.Action.VIEW, it, einstein).vote `should be` Vote.ABSTAIN
-            this(p, it, opinion1).vote `should be` Vote.ABSTAIN
-        }
+    fun `can be view the opinion`() {
+        OpinionVoter()
+            .canView(opinion1, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the opinion`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(OpinionVoter.Action.VIEW, it, opinion1) `should be` true
-        }
+    fun `can be view the opinion list`() {
+        OpinionVoter()
+            .canView(listOf(opinion1), tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be not view the opinion if is null`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            assertThrows<NoSubjectDefinedException> {
-                assertCan(OpinionVoter.Action.VIEW, it, null)
-            }
-        }
+    fun `can be opinion an article`() {
+        OpinionVoter()
+            .canCreate(opinion1, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can be view the opinion list`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            canAll(OpinionVoter.Action.VIEW, it, listOf(opinion1)) `should be` true
-        }
+    fun `can not be opinion if not connected`() {
+        OpinionVoter()
+            .canCreate(opinion1, null)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can be opinion an article`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(OpinionVoter.Action.CREATE, it, opinion1) `should be` true
-        }
+    fun `can be remove opinion`() {
+        OpinionVoter()
+            .canDelete(opinion1, tesla)
+            .vote `should be` GRANTED
     }
 
     @Test
-    fun `can not be opinion if not connected`() = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns null
-        }.let {
-            can(OpinionVoter.Action.CREATE, it, opinion1) `should be` false
-        }
+    fun `can not be remove opinion if not connected`() {
+        OpinionVoter()
+            .canDelete(opinion1, null)
+            .vote `should be` DENIED
     }
 
     @Test
-    fun `can be remove opinion`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns tesla.user
-        }.let {
-            can(OpinionVoter.Action.DELETE, it, opinion1) `should be` true
-        }
-    }
-
-    @Test
-    fun `can not be remove opinion if not connected`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns null
-        }.let {
-            can(OpinionVoter.Action.DELETE, it, opinion1) `should be` false
-        }
-    }
-
-    @Test
-    fun `can not be remove opinion of other user`(): Unit = listOf(OpinionVoter()).run {
-        mockk<ApplicationCall> {
-            every { user } returns einstein.user
-        }.let {
-            can(OpinionVoter.Action.DELETE, it, opinion1) `should be` false
-        }
+    fun `can not be remove opinion of other user`() {
+        OpinionVoter()
+            .canDelete(opinion1, einstein)
+            .vote `should be` DENIED
     }
 }
