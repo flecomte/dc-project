@@ -138,7 +138,7 @@ dependencies {
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_version")
     implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
     implementation("com.auth0:java-jwt:3.8.2")
-    implementation("com.github.jasync-sql:jasync-postgresql:1.0.7")
+    implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
     implementation("com.github.flecomte:postgres-json:2.0.0")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
     implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
