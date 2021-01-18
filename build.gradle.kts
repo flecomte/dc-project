@@ -130,19 +130,18 @@ dependencies {
     implementation("io.ktor:ktor-locations:$ktor_version")
     implementation("io.ktor:ktor-auth:$ktor_version")
     implementation("io.ktor:ktor-auth-jwt:$ktor_version")
-    implementation("io.ktor:ktor-gson:$ktor_version") /* TODO Can be removed ? */
     implementation("io.ktor:ktor-websockets:$ktor_version")
     implementation("org.koin:koin-ktor:$koinVersion")
     implementation("io.ktor:ktor-jackson:$ktor_version")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jackson_version")
     implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jackson_version")
-    implementation("net.pearx.kasechange:kasechange-jvm:1.1.0")
-    implementation("com.auth0:java-jwt:3.8.2")
+    implementation("net.pearx.kasechange:kasechange-jvm:1.3.0")
+    implementation("com.auth0:java-jwt:3.12.0")
     implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
     implementation("com.github.flecomte:postgres-json:2.0.0")
     implementation("com.sendgrid:sendgrid-java:4.4.1")
-    implementation("io.lettuce:lettuce-core:5.2.2.RELEASE")
-    implementation("com.rabbitmq:amqp-client:5.8.0")
+    implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") //TODO update to 6.0.2
+    implementation("com.rabbitmq:amqp-client:5.10.0")
     implementation("org.elasticsearch.client:elasticsearch-rest-client:6.7.1")
     implementation("com.jayway.jsonpath:json-path:2.5.0")
 
