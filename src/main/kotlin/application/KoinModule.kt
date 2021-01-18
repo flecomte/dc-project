@@ -17,6 +17,7 @@ import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
+import fr.dcproject.component.follow.FollowVoter
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.event.publisher.Publisher
@@ -24,7 +25,6 @@ import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.security.voter.ConstitutionVoter
-import fr.dcproject.security.voter.FollowVoter
 import fr.dcproject.security.voter.OpinionChoiceVoter
 import fr.dcproject.security.voter.OpinionVoter
 import fr.dcproject.security.voter.VoteVoter
@@ -41,9 +41,9 @@ import org.elasticsearch.client.RestClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import fr.dcproject.component.comment.generic.CommentRepository as CommentGenericRepository
+import fr.dcproject.component.follow.FollowArticleRepository as FollowArticleRepository
+import fr.dcproject.component.follow.FollowConstitutionRepository as FollowConstitutionRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
-import fr.dcproject.repository.FollowArticle as FollowArticleRepository
-import fr.dcproject.repository.FollowConstitution as FollowConstitutionRepository
 import fr.dcproject.repository.OpinionArticle as OpinionArticleRepository
 import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository

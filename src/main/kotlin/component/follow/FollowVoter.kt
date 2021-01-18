@@ -1,10 +1,9 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.follow
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.FollowI
 import fr.dcproject.voter.Voter
 import fr.dcproject.voter.VoterResponse
-import fr.dcproject.entity.Follow as FollowEntity
+import fr.dcproject.component.follow.Follow as FollowEntity
 
 class FollowVoter : Voter() {
     fun canCreate(subject: FollowI, citizen: CitizenI?): VoterResponse {

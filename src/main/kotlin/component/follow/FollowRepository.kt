@@ -1,12 +1,10 @@
-package fr.dcproject.repository
+package fr.dcproject.component.follow
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.entity.FollowForUpdate
-import fr.dcproject.entity.FollowSimple
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -15,10 +13,10 @@ import fr.postgresjson.repository.RepositoryI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
+import fr.dcproject.component.follow.Follow as FollowEntity
 import fr.dcproject.entity.Constitution as ConstitutionEntity
-import fr.dcproject.entity.Follow as FollowEntity
 
-sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
+sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenI,
         page: Int = 1,
@@ -93,7 +91,7 @@ sealed class Follow<IN : TargetRef, OUT : TargetRef>(override var requester: Req
     ): Paginated<FollowSimple<IN, CitizenRef>>
 }
 
-class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleForView>(requester) {
+class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRef, ArticleForView>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,
@@ -124,7 +122,7 @@ class FollowArticle(requester: Requester) : Follow<ArticleRef, ArticleForView>(r
     }
 }
 
-class FollowConstitution(requester: Requester) : Follow<ConstitutionRef, ConstitutionEntity>(requester) {
+class FollowConstitutionRepository(requester: Requester) : FollowRepository<ConstitutionRef, ConstitutionEntity>(requester) {
     override fun findByCitizen(
         citizenId: UUID,
         page: Int,

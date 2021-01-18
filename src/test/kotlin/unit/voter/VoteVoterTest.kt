@@ -1,7 +1,6 @@
 package unit.voter
 
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.Citizen
@@ -12,7 +11,6 @@ import fr.dcproject.entity.VoteForUpdate
 import fr.dcproject.security.voter.VoteVoter
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
-import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -100,16 +98,6 @@ internal class VoteVoterTest {
         ).copy(deletedAt = DateTime.now()),
         note = 1
     )
-
-    private val voteWithoutTargetUser = VoteForUpdate(
-        createdBy = tesla,
-        target = ArticleRef(),
-        note = 1
-    )
-
-    init {
-        mockkStatic("fr.dcproject.component.auth.CitizenContextKt")
-    }
 
     @Test
     fun `can be view your the vote`() {

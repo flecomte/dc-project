@@ -7,11 +7,10 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.Follow
-import fr.dcproject.security.voter.FollowVoter
+import fr.dcproject.component.follow.Follow
+import fr.dcproject.component.follow.FollowVoter
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
-import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -95,10 +94,6 @@ internal class FollowVoterTest {
         createdBy = einstein,
         target = article1
     )
-
-    init {
-        mockkStatic("fr.dcproject.component.auth.CitizenContextKt")
-    }
 
     @Test
     fun `can be view the follow`() {

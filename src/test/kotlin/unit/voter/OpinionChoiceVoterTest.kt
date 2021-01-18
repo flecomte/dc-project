@@ -9,7 +9,6 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.OpinionChoice
 import fr.dcproject.security.voter.OpinionChoiceVoter
 import fr.dcproject.voter.Vote.GRANTED
-import io.mockk.mockkStatic
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -55,10 +54,6 @@ internal class OpinionChoiceVoterTest {
         name = "Opinion1",
         target = listOf()
     )
-
-    init {
-        mockkStatic("fr.dcproject.component.auth.CitizenContextKt")
-    }
 
     @Test
     fun `can be view the opinion choice`() {

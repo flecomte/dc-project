@@ -9,11 +9,11 @@ import com.rabbitmq.client.Envelope
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.FollowSimple
+import fr.dcproject.component.follow.FollowRepository
+import fr.dcproject.component.follow.FollowSimple
 import fr.dcproject.entity.TargetRef
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.repository.Follow
 import fr.postgresjson.serializer.deserialize
 import io.ktor.application.ApplicationCall
 import io.ktor.application.EventDefinition
@@ -27,7 +27,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import fr.dcproject.repository.FollowArticle as FollowArticleRepository
+import fr.dcproject.component.follow.FollowArticleRepository as FollowArticleRepository
 
 class ArticleUpdate(
     target: ArticleForView
@@ -120,7 +120,7 @@ class EventNotification(
         val repo = when (event.type) {
             "article" -> followRepo
             else -> error("event '${event.type}' not implemented")
-        } as Follow<*, *>
+        } as FollowRepository<*, *>
 
         repo
             .findFollowsByTarget(event.target)

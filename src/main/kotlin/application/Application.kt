@@ -29,6 +29,14 @@ import fr.dcproject.component.comment.generic.routes.createCommentChildren
 import fr.dcproject.component.comment.generic.routes.editComment
 import fr.dcproject.component.comment.generic.routes.getChildrenComments
 import fr.dcproject.component.comment.generic.routes.getOneComment
+import fr.dcproject.component.follow.routes.article.FollowArticle.followArticle
+import fr.dcproject.component.follow.routes.article.GetFollowArticle.getFollowArticle
+import fr.dcproject.component.follow.routes.article.GetMyFollowsArticle.getMyFollowsArticle
+import fr.dcproject.component.follow.routes.article.UnfollowArticle.unfollowArticle
+import fr.dcproject.component.follow.routes.constitution.FollowConstitution.followConstitution
+import fr.dcproject.component.follow.routes.constitution.GetFollowConstitution.getFollowConstitution
+import fr.dcproject.component.follow.routes.constitution.GetMyFollowsConstitution.getMyFollowsConstitution
+import fr.dcproject.component.follow.routes.constitution.UnfollowConstitution.unfollowConstitution
 import fr.dcproject.component.views.ConfigViews
 import fr.dcproject.component.workgroup.routes.CreateWorkgroup.createWorkgroup
 import fr.dcproject.component.workgroup.routes.DeleteWorkgroup.deleteWorkgroup
@@ -43,8 +51,6 @@ import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.commentConstitution
 import fr.dcproject.routes.constitution
 import fr.dcproject.routes.definition
-import fr.dcproject.routes.followArticle
-import fr.dcproject.routes.followConstitution
 import fr.dcproject.routes.notificationArticle
 import fr.dcproject.routes.opinionArticle
 import fr.dcproject.routes.opinionChoice
@@ -186,10 +192,18 @@ fun Application.module(env: Env = PROD) {
             addMemberToWorkgroup(get(), get())
             deleteMemberOfWorkgroup(get(), get())
             updateMemberOfWorkgroup(get(), get())
-            /* TODO */
-            constitution(get(), get())
+            /* Follows */
             followArticle(get(), get())
             followConstitution(get(), get())
+            unfollowArticle(get(), get())
+            unfollowConstitution(get(), get())
+            getFollowArticle(get(), get())
+            getFollowConstitution(get(), get())
+            getMyFollowsArticle(get(), get())
+            getMyFollowsConstitution(get(), get())
+
+            /* TODO */
+            constitution(get(), get())
             commentConstitution(get(), get())
             voteArticle(get(), get(), get(), get())
             voteConstitution(get(), get())

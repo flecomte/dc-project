@@ -12,9 +12,6 @@ import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
-import fr.postgresjson.connexion.Paginated
-import io.mockk.every
-import io.mockk.mockk
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -23,7 +20,6 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
@@ -100,10 +96,6 @@ internal class CommentVoterTest {
         createdBy = tesla,
         target = ArticleRef()
     )
-
-    private val repoArticle1 = mockk<ArticleRepo> {
-        every { findVersionsByVersionId(1, 1, any()) } returns Paginated(listOf(article1), 0, 1, 1)
-    }
 
     @Test
     fun `can be view the comment`() {
