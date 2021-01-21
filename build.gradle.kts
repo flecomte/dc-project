@@ -31,7 +31,7 @@ plugins {
 
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
-    id("org.owasp.dependencycheck") version "5.1.0"
+    id("org.owasp.dependencycheck") version "6.0.5"
     id("org.sonarqube") version "2.7"
     id("net.nemerosa.versioning") version "2.13.1"
 }
