@@ -16,23 +16,10 @@ import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.routes.installCitizenRoutes
 import fr.dcproject.component.comment.article.routes.installCommentArticleRoutes
 import fr.dcproject.component.comment.generic.routes.installCommentRoutes
-import fr.dcproject.component.follow.routes.article.FollowArticle.followArticle
-import fr.dcproject.component.follow.routes.article.GetFollowArticle.getFollowArticle
-import fr.dcproject.component.follow.routes.article.GetMyFollowsArticle.getMyFollowsArticle
-import fr.dcproject.component.follow.routes.article.UnfollowArticle.unfollowArticle
-import fr.dcproject.component.follow.routes.constitution.FollowConstitution.followConstitution
-import fr.dcproject.component.follow.routes.constitution.GetFollowConstitution.getFollowConstitution
-import fr.dcproject.component.follow.routes.constitution.GetMyFollowsConstitution.getMyFollowsConstitution
-import fr.dcproject.component.follow.routes.constitution.UnfollowConstitution.unfollowConstitution
+import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
+import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
 import fr.dcproject.component.views.ConfigViews
-import fr.dcproject.component.workgroup.routes.CreateWorkgroup.createWorkgroup
-import fr.dcproject.component.workgroup.routes.DeleteWorkgroup.deleteWorkgroup
-import fr.dcproject.component.workgroup.routes.EditWorkgroup.editWorkgroup
-import fr.dcproject.component.workgroup.routes.GetWorkgroup.getWorkgroup
-import fr.dcproject.component.workgroup.routes.GetWorkgroups.getWorkgroups
-import fr.dcproject.component.workgroup.routes.members.AddMemberToWorkgroup.addMemberToWorkgroup
-import fr.dcproject.component.workgroup.routes.members.DeleteMembersOfWorkgroup.deleteMemberOfWorkgroup
-import fr.dcproject.component.workgroup.routes.members.UpdateMemberOfWorkgroup.updateMemberOfWorkgroup
+import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.commentConstitution
@@ -150,28 +137,11 @@ fun Application.module(env: Env = PROD) {
         installCitizenRoutes()
         installCommentArticleRoutes()
         installCommentRoutes()
+        installFollowArticleRoutes()
+        installFollowConstitutionRoutes()
+        installWorkgroupRoutes()
 
         authenticate(optional = true) {
-            /* Workgroup */
-            getWorkgroups(get(), get())
-            getWorkgroup(get(), get())
-            createWorkgroup(get(), get())
-            editWorkgroup(get(), get())
-            deleteWorkgroup(get(), get())
-            /* Workgroup members */
-            addMemberToWorkgroup(get(), get())
-            deleteMemberOfWorkgroup(get(), get())
-            updateMemberOfWorkgroup(get(), get())
-            /* Follows */
-            followArticle(get(), get())
-            followConstitution(get(), get())
-            unfollowArticle(get(), get())
-            unfollowConstitution(get(), get())
-            getFollowArticle(get(), get())
-            getFollowConstitution(get(), get())
-            getMyFollowsArticle(get(), get())
-            getMyFollowsConstitution(get(), get())
-
             /* TODO */
             constitution(get(), get())
             commentConstitution(get(), get())
