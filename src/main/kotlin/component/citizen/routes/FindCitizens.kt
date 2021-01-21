@@ -13,23 +13,24 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/citizens")
-class CitizensRequest(
-    page: Int = 1,
-    limit: Int = 50,
-    val sort: String? = null,
-    val direction: RepositoryI.Direction? = null,
-    val search: String? = null
-) {
-    val page: Int = if (page < 1) 1 else page
-    val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
-}
+object FindCitizens {
+    @Location("/citizens")
+    class CitizensRequest(
+        page: Int = 1,
+        limit: Int = 50,
+        val sort: String? = null,
+        val direction: RepositoryI.Direction? = null,
+        val search: String? = null
+    ) {
+        val page: Int = if (page < 1) 1 else page
+        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    }
 
-@KtorExperimentalLocationsAPI
-fun Route.findCitizen(voter: CitizenVoter, repo: CitizenRepository) {
-    get<CitizensRequest> {
-        val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-        voter.assert { canView(citizens.result, citizenOrNull) }
-        call.respond(citizens)
+    fun Route.findCitizen(voter: CitizenVoter, repo: CitizenRepository) {
+        get<CitizensRequest> {
+            val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
+            voter.assert { canView(citizens.result, citizenOrNull) }
+            call.respond(citizens)
+        }
     }
 }

@@ -13,15 +13,16 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/citizens/{citizen}/comments/articles")
-class CitizenCommentArticleRequest(val citizen: Citizen)
+object GetCitizenArticleComments {
+    @Location("/citizens/{citizen}/comments/articles")
+    class CitizenCommentArticleRequest(val citizen: Citizen)
 
-@KtorExperimentalLocationsAPI
-fun Route.getCitizenArticleComments(repo: CommentArticleRepository, voter: CommentVoter) {
-    get<CitizenCommentArticleRequest> {
-        repo.findByCitizen(it.citizen).let { comments ->
-            voter.assert { canView(comments.result, citizenOrNull) }
-            call.respond(comments)
+    fun Route.getCitizenArticleComments(repo: CommentArticleRepository, voter: CommentVoter) {
+        get<CitizenCommentArticleRequest> {
+            repo.findByCitizen(it.citizen).let { comments ->
+                voter.assert { canView(comments.result, citizenOrNull) }
+                call.respond(comments)
+            }
         }
     }
 }

@@ -7,28 +7,15 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategy
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
-import component.auth.jwt.jwtInstallation
 import fr.dcproject.application.Env.PROD
-import fr.dcproject.component.article.routes.findArticleVersions
-import fr.dcproject.component.article.routes.findArticles
-import fr.dcproject.component.article.routes.getOneArticle
-import fr.dcproject.component.article.routes.upsertArticle
+import fr.dcproject.component.article.routes.installArticleRoutes
 import fr.dcproject.component.auth.ForbiddenException
-import fr.dcproject.component.auth.routes.authLogin
-import fr.dcproject.component.auth.routes.authPasswordless
-import fr.dcproject.component.auth.routes.authRegister
+import fr.dcproject.component.auth.jwt.jwtInstallation
+import fr.dcproject.component.auth.routes.installAuthRoutes
 import fr.dcproject.component.auth.user
-import fr.dcproject.component.citizen.routes.changeMyPassword
-import fr.dcproject.component.citizen.routes.findCitizen
-import fr.dcproject.component.citizen.routes.getCurrentCitizen
-import fr.dcproject.component.citizen.routes.getOneCitizen
-import fr.dcproject.component.comment.article.routes.createCommentArticle
-import fr.dcproject.component.comment.article.routes.getArticleComments
-import fr.dcproject.component.comment.article.routes.getCitizenArticleComments
-import fr.dcproject.component.comment.generic.routes.createCommentChildren
-import fr.dcproject.component.comment.generic.routes.editComment
-import fr.dcproject.component.comment.generic.routes.getChildrenComments
-import fr.dcproject.component.comment.generic.routes.getOneComment
+import fr.dcproject.component.citizen.routes.installCitizenRoutes
+import fr.dcproject.component.comment.article.routes.installCommentArticleRoutes
+import fr.dcproject.component.comment.generic.routes.installCommentRoutes
 import fr.dcproject.component.follow.routes.article.FollowArticle.followArticle
 import fr.dcproject.component.follow.routes.article.GetFollowArticle.getFollowArticle
 import fr.dcproject.component.follow.routes.article.GetMyFollowsArticle.getMyFollowsArticle
@@ -86,14 +73,14 @@ import io.ktor.routing.Routing
 import io.ktor.server.jetty.EngineMain
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
+import java.time.Duration
+import java.util.concurrent.CompletionException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
-import java.time.Duration
-import java.util.concurrent.CompletionException
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -158,30 +145,13 @@ fun Application.module(env: Env = PROD) {
 
     install(Routing.Feature) {
         // trace { application.log.trace(it.buildText()) }
+        installArticleRoutes()
+        installAuthRoutes()
+        installCitizenRoutes()
+        installCommentArticleRoutes()
+        installCommentRoutes()
+
         authenticate(optional = true) {
-            /* Article */
-            findArticles(get(), get())
-            getOneArticle(get(), get())
-            upsertArticle(get(), get(), get())
-            findArticleVersions(get(), get())
-            /* Citizen */
-            findCitizen(get(), get())
-            getOneCitizen(get())
-            getCurrentCitizen(get())
-            changeMyPassword(get(), get())
-            /* Comment */
-            editComment(get(), get())
-            getOneComment(get(), get())
-            createCommentChildren(get(), get())
-            getChildrenComments(get(), get())
-            /* Comment Article */
-            getArticleComments(get(), get())
-            createCommentArticle(get(), get())
-            getCitizenArticleComments(get(), get())
-            /* Auth */
-            authLogin(get())
-            authRegister(get())
-            authPasswordless(get())
             /* Workgroup */
             getWorkgroups(get(), get())
             getWorkgroup(get(), get())

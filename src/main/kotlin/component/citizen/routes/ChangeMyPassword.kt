@@ -18,30 +18,30 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
+object ChangeMyPassword {
+    @Location("/citizens/{citizen}/password/change")
+    class ChangePasswordCitizenRequest(val citizen: Citizen) {
+        data class Input(val oldPassword: String, val newPassword: String)
+    }
 
-@Location("/citizens/{citizen}/password/change")
-class ChangePasswordCitizenRequest(val citizen: Citizen) {
-    data class Input(val oldPassword: String, val newPassword: String)
-}
+    fun Route.changeMyPassword(voter: CitizenVoter, userRepository: UserRepository) {
+        put<ChangePasswordCitizenRequest> {
+            voter.assert { canChangePassword(it.citizen, citizenOrNull) }
+            try {
+                val content = call.receive<ChangePasswordCitizenRequest.Input>()
+                val currentUser = userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword))
+                val user = it.citizen.user
+                if (currentUser == null || currentUser.id != user.id) {
+                    call.respond(HttpStatusCode.BadRequest, "Bad password")
+                } else {
+                    user.plainPassword = content.newPassword
+                    userRepository.changePassword(user)
 
-@KtorExperimentalLocationsAPI
-fun Route.changeMyPassword(voter: CitizenVoter, userRepository: UserRepository) {
-    put<ChangePasswordCitizenRequest> {
-        voter.assert { canChangePassword(it.citizen, citizenOrNull) }
-        try {
-            val content = call.receive<ChangePasswordCitizenRequest.Input>()
-            val currentUser = userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword))
-            val user = it.citizen.user
-            if (currentUser == null || currentUser.id != user.id) {
-                call.respond(HttpStatusCode.BadRequest, "Bad password")
-            } else {
-                user.plainPassword = content.newPassword
-                userRepository.changePassword(user)
-
-                call.respond(HttpStatusCode.Created)
+                    call.respond(HttpStatusCode.Created)
+                }
+            } catch (e: MissingKotlinParameterException) {
+                call.respond(HttpStatusCode.BadRequest, "Request format is not correct")
             }
-        } catch (e: MissingKotlinParameterException) {
-            call.respond(HttpStatusCode.BadRequest, "Request format is not correct")
         }
     }
 }

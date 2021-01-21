@@ -18,30 +18,31 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/articles/{article}/comments")
-class PostArticleCommentRequest(
-    val article: ArticleForView
-) {
-    class Comment(
-        val content: String
-    )
-
-    suspend fun getComment(call: ApplicationCall) = call.receive<Comment>().run {
-        CommentForUpdate(
-            target = article,
-            createdBy = call.citizen,
-            content = content
+object CreateCommentArticle {
+    @Location("/articles/{article}/comments")
+    class PostArticleCommentRequest(
+        val article: ArticleForView
+    ) {
+        class Comment(
+            val content: String
         )
-    }
-}
 
-@KtorExperimentalLocationsAPI
-fun Route.createCommentArticle(repo: CommentArticleRepository, voter: CommentVoter) {
-    post<PostArticleCommentRequest> {
-        it.getComment(call).let { comment ->
-            voter.assert { canCreate(comment, citizenOrNull) }
-            repo.comment(comment)
-            call.respond(HttpStatusCode.Created, comment)
+        suspend fun getComment(call: ApplicationCall) = call.receive<Comment>().run {
+            CommentForUpdate(
+                target = article,
+                createdBy = call.citizen,
+                content = content
+            )
+        }
+    }
+
+    fun Route.createCommentArticle(repo: CommentArticleRepository, voter: CommentVoter) {
+        post<PostArticleCommentRequest> {
+            it.getComment(call).let { comment ->
+                voter.assert { canCreate(comment, citizenOrNull) }
+                repo.comment(comment)
+                call.respond(HttpStatusCode.Created, comment)
+            }
         }
     }
 }

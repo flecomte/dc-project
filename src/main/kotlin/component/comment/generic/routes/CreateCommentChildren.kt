@@ -19,25 +19,25 @@ import io.ktor.routing.Route
 import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
-@Location("/comments/{comment}/children")
-class CreateCommentChildrenRequest(val comment: CommentRef) {
-    class Input(val content: String)
-}
+object CreateCommentChildren {
+    @Location("/comments/{comment}/children")
+    class CreateCommentChildrenRequest(val comment: CommentRef) {
+        class Input(val content: String)
+    }
 
-@KtorExperimentalAPI
-@KtorExperimentalLocationsAPI
-fun Route.createCommentChildren(repo: CommentRepository, voter: CommentVoter) {
-    post<CreateCommentChildrenRequest> {
-        val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
-        val newComment = CommentForUpdate(
-            content = call.receive<CreateCommentChildrenRequest.Input>().content,
-            createdBy = citizen,
-            parent = parent
-        )
+    fun Route.createCommentChildren(repo: CommentRepository, voter: CommentVoter) {
+        post<CreateCommentChildrenRequest> {
+            val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
+            val newComment = CommentForUpdate(
+                content = call.receive<CreateCommentChildrenRequest.Input>().content,
+                createdBy = citizen,
+                parent = parent
+            )
 
-        voter.assert { canCreate(newComment, citizenOrNull) }
-        repo.comment(newComment)
+            voter.assert { canCreate(newComment, citizenOrNull) }
+            repo.comment(newComment)
 
-        call.respond(HttpStatusCode.Created, newComment)
+            call.respond(HttpStatusCode.Created, newComment)
+        }
     }
 }

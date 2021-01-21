@@ -14,28 +14,28 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/articles/{article}/versions")
-class ArticleVersionsRequest(
-    val article: ArticleForView,
-    page: Int = 1,
-    limit: Int = 50,
-    val sort: String? = null,
-    val direction: RepositoryI.Direction? = null,
-    val search: String? = null
-) {
-    val page: Int = if (page < 1) 1 else page
-    val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
-}
+object FindArticleVersions {
+    @Location("/articles/{article}/versions")
+    class ArticleVersionsRequest(
+        val article: ArticleForView,
+        page: Int = 1,
+        limit: Int = 50,
+        val sort: String? = null,
+        val direction: RepositoryI.Direction? = null,
+        val search: String? = null
+    ) {
+        val page: Int = if (page < 1) 1 else page
+        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    }
 
-@KtorExperimentalLocationsAPI
-private fun ArticleRepository.findVersions(request: ArticleVersionsRequest) =
-    findVersionsByVersionId(request.page, request.limit, request.article.versionId)
+    private fun ArticleRepository.findVersions(request: ArticleVersionsRequest) =
+        findVersionsByVersionId(request.page, request.limit, request.article.versionId)
 
-@KtorExperimentalLocationsAPI
-fun Route.findArticleVersions(repo: ArticleRepository, voter: ArticleVoter) {
-    get<ArticleVersionsRequest> {
-        repo.findVersions(it)
-            .apply { voter.assert { canView(it.article, citizenOrNull) } }
-            .let { call.respond(it) }
+    fun Route.findArticleVersions(repo: ArticleRepository, voter: ArticleVoter) {
+        get<ArticleVersionsRequest> {
+            repo.findVersions(it)
+                .apply { voter.assert { canView(it.article, citizenOrNull) } }
+                .let { call.respond(it) }
+        }
     }
 }

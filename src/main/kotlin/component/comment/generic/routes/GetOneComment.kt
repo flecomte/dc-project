@@ -16,16 +16,16 @@ import io.ktor.routing.Route
 import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
-@Location("/comments/{comment}")
-class CommentRequest(val comment: CommentRef)
+object GetOneComment {
+    @Location("/comments/{comment}")
+    class CommentRequest(val comment: CommentRef)
 
-@KtorExperimentalAPI
-@KtorExperimentalLocationsAPI
-fun Route.getOneComment(repo: CommentRepository, voter: CommentVoter) {
-    get<CommentRequest> {
-        val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment ${it.comment.id} not found")
-        voter.assert { canView(comment, citizenOrNull) }
+    fun Route.getOneComment(repo: CommentRepository, voter: CommentVoter) {
+        get<CommentRequest> {
+            val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment ${it.comment.id} not found")
+            voter.assert { canView(comment, citizenOrNull) }
 
-        call.respond(HttpStatusCode.OK, comment)
+            call.respond(HttpStatusCode.OK, comment)
+        }
     }
 }

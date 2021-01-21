@@ -14,22 +14,21 @@ import io.ktor.locations.put
 import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
-@Location("/comments/{comment}")
-class EditCommentRequest(val comment: CommentRef)
+object EditComment {
+    @Location("/comments/{comment}")
+    class EditCommentRequest(val comment: CommentRef)
 
-@KtorExperimentalAPI
-@KtorExperimentalLocationsAPI
-fun Route.editComment(repo: CommentRepository, voter: CommentVoter) {
-    put<EditCommentRequest> {
-        val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
-        voter.assert { canUpdate(comment, citizenOrNull) }
+    fun Route.editComment(repo: CommentRepository, voter: CommentVoter) {
+        put<EditCommentRequest> {
+            val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
+            voter.assert { canUpdate(comment, citizenOrNull) }
 
-        comment.content = call.receiveText()
-        repo.edit(comment)
+            comment.content = call.receiveText()
+            repo.edit(comment)
 
-        call.respond(HttpStatusCode.OK, comment)
+            call.respond(HttpStatusCode.OK, comment)
+        }
     }
 }

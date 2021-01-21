@@ -12,14 +12,15 @@ import io.ktor.response.respond
 import io.ktor.routing.Route
 
 @KtorExperimentalLocationsAPI
-@Location("/citizens/{citizen}")
-class CitizenRequest(val citizen: Citizen)
+object GetOneCitizen {
+    @Location("/citizens/{citizen}")
+    class CitizenRequest(val citizen: Citizen)
 
-@KtorExperimentalLocationsAPI
-fun Route.getOneCitizen(voter: CitizenVoter) {
-    get<CitizenRequest> {
-        voter.assert { canView(it.citizen, citizenOrNull) }
+    fun Route.getOneCitizen(voter: CitizenVoter) {
+        get<CitizenRequest> {
+            voter.assert { canView(it.citizen, citizenOrNull) }
 
-        call.respond(it.citizen)
+            call.respond(it.citizen)
+        }
     }
 }

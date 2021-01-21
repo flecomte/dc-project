@@ -6,7 +6,7 @@ import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithEmail
 import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.makeToken
+import fr.dcproject.component.auth.jwt.makeToken
 import fr.dcproject.messages.Mailer
 import io.ktor.http.URLBuilder
 
