@@ -3,10 +3,10 @@ package fr.dcproject.component.opinion.routes
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -27,10 +27,10 @@ object GetMyOpinionsArticle {
         limit: Int = 50
     ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
-    fun Route.getMyOpinionsArticle(repo: OpinionArticleRepository, voter: OpinionVoter) {
+    fun Route.getMyOpinionsArticle(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         get<CitizenOpinionsArticleRequest> {
             val opinions = repo.findCitizenOpinions(citizen, it.page, it.limit)
-            voter.assert { canView(opinions.result, citizenOrNull) }
+            ac.assert { canView(opinions.result, citizenOrNull) }
             call.respond(opinions)
         }
     }

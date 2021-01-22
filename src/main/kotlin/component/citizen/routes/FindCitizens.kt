@@ -1,11 +1,11 @@
 package fr.dcproject.component.citizen.routes
 
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -25,10 +25,10 @@ object FindCitizens {
         val search: String? = null
     ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
-    fun Route.findCitizen(voter: CitizenVoter, repo: CitizenRepository) {
+    fun Route.findCitizen(ac: CitizenAccessControl, repo: CitizenRepository) {
         get<CitizensRequest> {
             val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-            voter.assert { canView(citizens.result, citizenOrNull) }
+            ac.assert { canView(citizens.result, citizenOrNull) }
             call.respond(citizens)
         }
     }

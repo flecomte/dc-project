@@ -1,4 +1,4 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
@@ -7,10 +7,10 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.vote.VoteVoter
+import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.entity.VoteForUpdate
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -23,8 +23,8 @@ import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class VoteVoterTest {
+@Tag("security")
+internal class VoteAccessControlTest {
     private val tesla = Citizen(
         id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),
         user = User(
@@ -101,43 +101,43 @@ internal class VoteVoterTest {
 
     @Test
     fun `can be view your the vote`() {
-        VoteVoter()
+        VoteAccessControl()
             .canView(vote1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be view vote of other`() {
-        VoteVoter()
+        VoteAccessControl()
             .canView(vote1, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be view your votes list`() {
-        VoteVoter()
+        VoteAccessControl()
             .canView(listOf(vote1), tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be vote an article`() {
-        VoteVoter()
+        VoteAccessControl()
             .canCreate(voteForUpdate, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be vote if not connected`() {
-        VoteVoter()
+        VoteAccessControl()
             .canCreate(voteForUpdate, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can not be vote an article if article is deleted`() {
-        VoteVoter()
+        VoteAccessControl()
             .canCreate(voteOnDeleted, tesla)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 }

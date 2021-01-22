@@ -6,8 +6,8 @@ import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.entity.ConstitutionSimple.TitleSimple
-import fr.dcproject.security.voter.ConstitutionVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
+import fr.dcproject.security.voter.ConstitutionAccessControl
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.ApplicationCall
@@ -88,21 +88,21 @@ object ConstitutionPaths {
 }
 
 @KtorExperimentalLocationsAPI
-fun Route.constitution(repo: ConstitutionRepository, voter: ConstitutionVoter) {
+fun Route.constitution(repo: ConstitutionRepository, ac: ConstitutionAccessControl) {
     get<ConstitutionPaths.ConstitutionsRequest> {
         val constitutions = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-        voter.assert { canView(constitutions.result, citizenOrNull) }
+        ac.assert { canView(constitutions.result, citizenOrNull) }
         call.respond(constitutions)
     }
 
     get<ConstitutionPaths.ConstitutionRequest> {
-        voter.assert { canView(it.constitution, citizenOrNull) }
+        ac.assert { canView(it.constitution, citizenOrNull) }
         call.respond(it.constitution)
     }
 
     post<ConstitutionPaths.PostConstitutionRequest> {
         it.getNewConstitution(call).let { constitution ->
-            voter.assert { canCreate(constitution, citizenOrNull) }
+            ac.assert { canCreate(constitution, citizenOrNull) }
             repo.upsert(constitution)
             call.respond(constitution)
         }

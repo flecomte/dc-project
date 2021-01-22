@@ -1,4 +1,4 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
@@ -6,11 +6,11 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
 import fr.dcproject.component.opinion.entity.OpinionChoice
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -22,8 +22,8 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class OpinionVoterTest {
+@Tag("security")
+internal class OpinionAccessControlTest {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",
@@ -74,50 +74,50 @@ internal class OpinionVoterTest {
 
     @Test
     fun `can be view the opinion`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canView(opinion1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view the opinion list`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canView(listOf(opinion1), tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be opinion an article`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canCreate(opinion1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be opinion if not connected`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canCreate(opinion1, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be remove opinion`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canDelete(opinion1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be remove opinion if not connected`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canDelete(opinion1, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can not be remove opinion of other user`() {
-        OpinionVoter()
+        OpinionAccessControl()
             .canDelete(opinion1, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 }

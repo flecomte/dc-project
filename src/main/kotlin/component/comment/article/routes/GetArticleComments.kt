@@ -3,10 +3,10 @@ package fr.dcproject.component.comment.article.routes
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.article.CommentArticleRepository
-import fr.dcproject.component.comment.generic.CommentVoter
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -28,11 +28,11 @@ object GetArticleComments {
         val sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.fromString(sort) ?: CommentArticleRepository.Sort.CREATED_AT
     }
 
-    fun Route.getArticleComments(repo: CommentArticleRepository, voter: CommentVoter) {
+    fun Route.getArticleComments(repo: CommentArticleRepository, ac: CommentAccessControl) {
         get<ArticleCommentsRequest> {
             val comment = repo.findByTarget(it.article, it.page, it.limit, it.sort)
             if (comment.result.isNotEmpty()) {
-                voter.assert { canView(comment.result, citizenOrNull) }
+                ac.assert { canView(comment.result, citizenOrNull) }
             }
             call.respond(HttpStatusCode.OK, comment)
         }

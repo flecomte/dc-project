@@ -1,12 +1,12 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
@@ -40,10 +40,10 @@ object FindArticles {
         )
     }
 
-    fun Route.findArticles(repo: ArticleRepository, voter: ArticleVoter) {
+    fun Route.findArticles(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticlesRequest> {
             repo.findArticles(it)
-                .apply { voter.assert { canView(result, citizenOrNull) } }
+                .apply { ac.assert { canView(result, citizenOrNull) } }
                 .let { call.respond(it) }
         }
     }

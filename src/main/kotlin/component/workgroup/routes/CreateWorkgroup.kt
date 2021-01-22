@@ -2,11 +2,11 @@ package fr.dcproject.component.workgroup.routes
 
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.component.workgroup.routes.CreateWorkgroup.PostWorkgroupRequest.Input
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -30,7 +30,7 @@ object CreateWorkgroup {
         )
     }
 
-    fun Route.createWorkgroup(repo: WorkgroupRepository, voter: WorkgroupVoter) {
+    fun Route.createWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         post<PostWorkgroupRequest> {
             call.receive<Input>().run {
                 WorkgroupSimple(
@@ -42,7 +42,7 @@ object CreateWorkgroup {
                     citizen
                 )
             }.let { workgroup ->
-                voter.assert { canCreate(workgroup, citizenOrNull) }
+                ac.assert { canCreate(workgroup, citizenOrNull) }
                 repo.upsert(workgroup)
             }.let {
                 call.respond(HttpStatusCode.Created, it)

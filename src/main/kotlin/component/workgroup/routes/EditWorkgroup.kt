@@ -1,10 +1,10 @@
 package fr.dcproject.component.workgroup.routes
 
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.component.workgroup.routes.EditWorkgroup.PutWorkgroupRequest.Input
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -28,7 +28,7 @@ object EditWorkgroup {
         )
     }
 
-    fun Route.editWorkgroup(repo: WorkgroupRepository, voter: WorkgroupVoter) {
+    fun Route.editWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         put<PutWorkgroupRequest> {
             repo.findById(it.workgroupId)?.let { old ->
                 call.receive<Input>().run {
@@ -38,7 +38,7 @@ object EditWorkgroup {
                         logo = logo ?: old.logo,
                         anonymous = anonymous ?: old.anonymous
                     ).let { workgroup ->
-                        voter.assert { canUpdate(workgroup, citizenOrNull) }
+                        ac.assert { canUpdate(workgroup, citizenOrNull) }
                         repo.upsert(workgroup)
                         call.respond(HttpStatusCode.OK, it)
                     }

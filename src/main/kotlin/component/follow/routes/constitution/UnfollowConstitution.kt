@@ -2,11 +2,11 @@ package fr.dcproject.component.follow.routes.constitution
 
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.FollowConstitutionRepository
 import fr.dcproject.component.follow.FollowForUpdate
-import fr.dcproject.component.follow.FollowVoter
 import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -20,10 +20,10 @@ object UnfollowConstitution {
     @Location("/constitutions/{constitution}/follows")
     class ConstitutionUnfollowRequest(val constitution: ConstitutionRef)
 
-    fun Route.unfollowConstitution(repo: FollowConstitutionRepository, voter: FollowVoter) {
+    fun Route.unfollowConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
         delete<ConstitutionUnfollowRequest> {
             val follow = FollowForUpdate(target = it.constitution, createdBy = this.citizen)
-            voter.assert { canDelete(follow, citizenOrNull) }
+            ac.assert { canDelete(follow, citizenOrNull) }
             repo.unfollow(follow)
             call.respond(HttpStatusCode.NoContent)
         }

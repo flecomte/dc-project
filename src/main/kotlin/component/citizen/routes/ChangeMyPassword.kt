@@ -5,8 +5,8 @@ import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.component.citizen.CitizenAccessControl
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
 import io.ktor.http.HttpStatusCode
@@ -24,9 +24,9 @@ object ChangeMyPassword {
         data class Input(val oldPassword: String, val newPassword: String)
     }
 
-    fun Route.changeMyPassword(voter: CitizenVoter, userRepository: UserRepository) {
+    fun Route.changeMyPassword(ac: CitizenAccessControl, userRepository: UserRepository) {
         put<ChangePasswordCitizenRequest> {
-            voter.assert { canChangePassword(it.citizen, citizenOrNull) }
+            ac.assert { canChangePassword(it.citizen, citizenOrNull) }
             try {
                 val content = call.receive<ChangePasswordCitizenRequest.Input>()
                 val currentUser = userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword))

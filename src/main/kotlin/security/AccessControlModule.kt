@@ -1,13 +1,13 @@
-package fr.dcproject.voter
+package fr.dcproject.security
 
-/** Responses of voters */
-enum class Vote {
+/** Responses of AccessControl */
+enum class AccessDecision {
     GRANTED,
     DENIED;
 
     /** Helper to convert true/false to GRANTED/DENIED */
     companion object {
-        fun toVote(lambda: () -> Boolean): Vote = when (lambda()) {
+        fun toVote(lambda: () -> Boolean): AccessDecision = when (lambda()) {
             true -> GRANTED
             false -> DENIED
         }
@@ -22,7 +22,7 @@ enum class Vote {
     }
 }
 
-abstract class Voter {
+abstract class AccessControl {
     /**
      * A Shortcut for return a GrantedResponse
      */
@@ -37,20 +37,20 @@ abstract class Voter {
      *
      * If the list of responses is empty, return GRANTED
      */
-    private fun VoterResponses.getOneResponse(): VoterResponse = this.firstOrNull { it.vote == Vote.DENIED } ?: granted()
+    private fun AccessResponses.getOneResponse(): AccessResponse = this.firstOrNull { it.decision == AccessDecision.DENIED } ?: granted()
 
     /**
      * An helper to convert a list of subject into one response
      */
-    protected fun <S : List<T>, T> canAll(items: S, action: (T) -> VoterResponse): VoterResponse = items
+    protected fun <S : List<T>, T> canAll(items: S, action: (T) -> AccessResponse): AccessResponse = items
         .map { action(it) }
         .getOneResponse()
 }
 
 /**
- * Throw an Exception if voter return a DENIED response
+ * Throw an Exception if AccessControl return a DENIED response
  */
-fun <T : Voter> T.assert(action: T.() -> VoterResponse) {
+fun <T : AccessControl> T.assert(action: T.() -> AccessResponse) {
     action().assert()
 }
 
@@ -59,84 +59,84 @@ fun <T : Voter> T.assert(action: T.() -> VoterResponse) {
  *
  * If the list of responses is empty, return GRANTED
  */
-fun VoterResponses.getOneResponse(): VoterResponse = this.firstOrNull { it.vote == Vote.DENIED } ?: GrantedResponse(first().voter)
+fun AccessResponses.getOneResponse(): AccessResponse = this.firstOrNull { it.decision == AccessDecision.DENIED } ?: GrantedResponse(first().accessControl)
 
 /**
  * Throw an Exception if one response is DENIED
  */
-fun VoterResponses.assert() = this.getOneResponse().assert()
+fun AccessResponses.assert() = this.getOneResponse().assert()
 
-class VoterDeniedException(private val voterResponses: VoterResponses) : Throwable(voterResponses.first().message) {
-    constructor(voterResponse: VoterResponse) : this(listOf(voterResponse))
+class AccessDeniedException(private val accessResponses: AccessResponses) : Throwable(accessResponses.first().message) {
+    constructor(accessResponse: AccessResponse) : this(listOf(accessResponse))
 
     /**
      * Get first response
      */
-    fun first(): VoterResponse = voterResponses.first()
+    fun first(): AccessResponse = accessResponses.first()
 
     /**
      * Check if the error code is present into the responses
      */
-    fun hasErrorCode(code: String): Boolean = voterResponses
-        .filter { it.vote == Vote.DENIED }
+    fun hasErrorCode(code: String): Boolean = accessResponses
+        .filter { it.decision == AccessDecision.DENIED }
         .any { it.code == code }
 
     /**
      * Find and return the response than match with the error code
      */
-    fun getErrorCode(code: String): VoterResponse? = voterResponses
-        .firstOrNull { it.vote == Vote.DENIED && it.code == code }
+    fun getErrorCode(code: String): AccessResponse? = accessResponses
+        .firstOrNull { it.decision == AccessDecision.DENIED && it.code == code }
 
     /**
      * Get a list of messages of all responses
      */
-    fun getMessages(): List<String> = voterResponses
+    fun getMessages(): List<String> = accessResponses
         .mapNotNull { it.message }
 
     /**
      * Get the first message
      */
-    fun getFirstMessage(): String? = voterResponses
+    fun getFirstMessage(): String? = accessResponses
         .first()
         .message
 }
 
 /**
- * The response that all Voter method return
+ * The response that all AccessControl method return
  * @see GrantedResponse
  * @see DeniedResponse
  */
-sealed class VoterResponse(
-    val vote: Vote,
-    val voter: Voter,
+sealed class AccessResponse(
+    val decision: AccessDecision,
+    val accessControl: AccessControl,
     val message: String?,
     val code: String?
 ) {
     /**
      * Convert response as boolean
      */
-    fun toBoolean(): Boolean = vote.toBoolean()
+    fun toBoolean(): Boolean = decision.toBoolean()
 
     /**
      * Throw Exception if response if DENIED
      */
     fun assert() {
-        if (this.vote == Vote.DENIED) {
-            throw VoterDeniedException(this)
+        if (this.decision == AccessDecision.DENIED) {
+            throw AccessDeniedException(this)
         }
     }
 }
 
 class GrantedResponse(
-    voter: Voter,
+    accessControl: AccessControl,
     message: String? = null,
     code: String? = null
-) : VoterResponse(Vote.GRANTED, voter, message, code)
+) : AccessResponse(AccessDecision.GRANTED, accessControl, message, code)
 
 class DeniedResponse(
-    voter: Voter,
+    accessControl: AccessControl,
     message: String,
     code: String
-) : VoterResponse(Vote.DENIED, voter, message, code)
+) : AccessResponse(AccessDecision.DENIED, accessControl, message, code)
 
-typealias VoterResponses = List<VoterResponse>
+typealias AccessResponses = List<AccessResponse>

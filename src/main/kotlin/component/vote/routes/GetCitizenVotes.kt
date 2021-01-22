@@ -2,10 +2,10 @@ package fr.dcproject.component.vote.routes
 
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteRepository
-import fr.dcproject.component.vote.VoteVoter
+import fr.dcproject.security.assert
 import fr.dcproject.utils.toUUID
-import fr.dcproject.voter.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -21,11 +21,11 @@ object GetCitizenVotes {
         val id: List<UUID> = id.toUUID()
     }
 
-    fun Route.getCitizenVote(repo: VoteRepository, voter: VoteVoter) {
+    fun Route.getCitizenVote(repo: VoteRepository, ac: VoteAccessControl) {
         get<CitizenVotesRequest> {
             val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
             if (votes.isNotEmpty()) {
-                voter.assert { canView(votes, citizenOrNull) }
+                ac.assert { canView(votes, citizenOrNull) }
             }
             call.respond(votes)
         }

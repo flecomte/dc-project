@@ -1,4 +1,4 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
@@ -6,9 +6,9 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.opinion.OpinionChoiceVoter
+import fr.dcproject.component.opinion.OpinionChoiceAccessControl
 import fr.dcproject.component.opinion.entity.OpinionChoice
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -20,8 +20,8 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class OpinionChoiceVoterTest {
+@Tag("security")
+internal class OpinionChoiceAccessControlTest {
     private val tesla = CitizenBasic(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
         user = User(
@@ -57,15 +57,15 @@ internal class OpinionChoiceVoterTest {
 
     @Test
     fun `can be view the opinion choice`() {
-        OpinionChoiceVoter()
+        OpinionChoiceAccessControl()
             .canView(choice1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view the opinion choice list`() {
-        OpinionChoiceVoter()
+        OpinionChoiceAccessControl()
             .canView(listOf(choice1), tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 }

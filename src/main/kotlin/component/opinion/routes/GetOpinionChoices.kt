@@ -1,9 +1,9 @@
 package fr.dcproject.component.opinion.routes
 
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.opinion.OpinionChoiceAccessControl
 import fr.dcproject.component.opinion.OpinionChoiceRepository
-import fr.dcproject.component.opinion.OpinionChoiceVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -16,10 +16,10 @@ object GetOpinionChoices {
     @Location("/opinions")
     class OpinionChoicesRequest(val targets: List<String> = emptyList())
 
-    fun Route.getOpinionChoices(repo: OpinionChoiceRepository, voter: OpinionChoiceVoter) {
+    fun Route.getOpinionChoices(repo: OpinionChoiceRepository, ac: OpinionChoiceAccessControl) {
         get<OpinionChoicesRequest> {
             val opinionChoices = repo.findOpinionsChoices(it.targets)
-            voter.assert { canView(opinionChoices, citizenOrNull) }
+            ac.assert { canView(opinionChoices, citizenOrNull) }
 
             call.respond(opinionChoices)
         }

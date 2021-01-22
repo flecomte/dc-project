@@ -2,8 +2,8 @@ package fr.dcproject.component.citizen.routes
 
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.component.citizen.CitizenAccessControl
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -16,9 +16,9 @@ object GetOneCitizen {
     @Location("/citizens/{citizen}")
     class CitizenRequest(val citizen: Citizen)
 
-    fun Route.getOneCitizen(voter: CitizenVoter) {
+    fun Route.getOneCitizen(ac: CitizenAccessControl) {
         get<CitizenRequest> {
-            voter.assert { canView(it.citizen, citizenOrNull) }
+            ac.assert { canView(it.citizen, citizenOrNull) }
 
             call.respond(it.citizen)
         }

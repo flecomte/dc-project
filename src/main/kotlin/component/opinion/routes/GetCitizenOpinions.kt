@@ -2,10 +2,10 @@ package fr.dcproject.component.opinion.routes
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
+import fr.dcproject.security.assert
 import fr.dcproject.utils.toUUID
-import fr.dcproject.voter.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
@@ -27,10 +27,10 @@ object GetCitizenOpinions {
         val id: List<UUID> = id.toUUID()
     }
 
-    fun Route.getCitizenOpinions(repo: OpinionArticleRepository, voter: OpinionVoter) {
+    fun Route.getCitizenOpinions(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         get<CitizenOpinions> {
             val opinionsEntities: List<Opinion<ArticleRef>> = repo.findCitizenOpinionsByTargets(it.citizen, it.id)
-            voter.assert { canView(opinionsEntities, citizenOrNull) }
+            ac.assert { canView(opinionsEntities, citizenOrNull) }
 
             call.respond(opinionsEntities)
         }

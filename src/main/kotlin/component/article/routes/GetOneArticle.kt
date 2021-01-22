@@ -1,9 +1,9 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
-import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.article.routes.GetOneArticle.ArticleRequest.Output
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.dto.Opinionable
@@ -11,7 +11,7 @@ import fr.dcproject.component.vote.dto.Votable
 import fr.dcproject.dto.CreatedAt
 import fr.dcproject.dto.Versionable
 import fr.dcproject.dto.Viewable
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -53,9 +53,9 @@ object GetOneArticle {
         }
     }
 
-    fun Route.getOneArticle(viewManager: ArticleViewManager, voter: ArticleVoter) {
+    fun Route.getOneArticle(viewManager: ArticleViewManager, ac: ArticleAccessControl) {
         get<ArticleRequest> {
-            voter.assert { canView(it.article, citizenOrNull) }
+            ac.assert { canView(it.article, citizenOrNull) }
 
             Output(
                 it.article,

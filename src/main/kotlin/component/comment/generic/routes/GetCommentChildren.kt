@@ -1,11 +1,11 @@
 package fr.dcproject.component.comment.generic.routes
 
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentRepository
-import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -25,7 +25,7 @@ object GetCommentChildren {
         val search: String? = null
     ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
-    fun Route.getChildrenComments(repo: CommentRepository, voter: CommentVoter) {
+    fun Route.getChildrenComments(repo: CommentRepository, ac: CommentAccessControl) {
         get<CommentChildrenRequest> {
             val comments =
                 repo.findByParent(
@@ -34,7 +34,7 @@ object GetCommentChildren {
                     it.limit
                 )
 
-            voter.assert { canView(comments.result, citizenOrNull) }
+            ac.assert { canView(comments.result, citizenOrNull) }
 
             call.respond(HttpStatusCode.OK, comments)
         }

@@ -28,7 +28,7 @@ import fr.dcproject.routes.commentConstitution
 import fr.dcproject.routes.constitution
 import fr.dcproject.routes.definition
 import fr.dcproject.routes.notificationArticle
-import fr.dcproject.voter.VoterDeniedException
+import fr.dcproject.security.AccessDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.call
@@ -166,7 +166,7 @@ fun Application.module(env: Env = PROD) {
         exception<NotFoundException> { e ->
             call.respond(HttpStatusCode.NotFound, e.message!!)
         }
-        exception<VoterDeniedException> {
+        exception<AccessDeniedException> {
             if (call.user == null) call.respond(HttpStatusCode.Unauthorized)
             else call.respond(HttpStatusCode.Forbidden)
         }

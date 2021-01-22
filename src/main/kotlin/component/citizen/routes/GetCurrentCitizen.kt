@@ -2,8 +2,8 @@ package fr.dcproject.component.citizen.routes
 
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.CitizenVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.component.citizen.CitizenAccessControl
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -17,13 +17,13 @@ object GetCurrentCitizen {
     @Location("/citizens/current")
     class CurrentCitizenRequest
 
-    fun Route.getCurrentCitizen(voter: CitizenVoter) {
+    fun Route.getCurrentCitizen(ac: CitizenAccessControl) {
         get<CurrentCitizenRequest> {
             val currentUser = citizenOrNull
             if (currentUser === null) {
                 call.respond(HttpStatusCode.Unauthorized)
             } else {
-                voter.assert { canView(currentUser, citizenOrNull) }
+                ac.assert { canView(currentUser, citizenOrNull) }
                 call.respond(citizen)
             }
         }

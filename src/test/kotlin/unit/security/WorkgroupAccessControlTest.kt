@@ -1,14 +1,14 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.workgroup.WorkgroupVoter
+import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -21,8 +21,8 @@ import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class WorkgroupVoterTest {
+@Tag("security")
+internal class WorkgroupAccessControlTest {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",
@@ -73,78 +73,78 @@ internal class WorkgroupVoterTest {
 
     @Test
     fun `can be view your workgroup`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canView(workgroupPublic, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view your workgroup if is not public`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canView(workgroupAnon, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view workgroup of other if is public`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canView(workgroupPublic, einstein)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be view workgroup of other if is not public`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canView(workgroupAnon, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be view your workgroup list`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canView(listOf(workgroupPublic, workgroupAnon), tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be create workgroup`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canCreate(workgroupPublic, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be create workgroup if not connected`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canCreate(workgroupPublic, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be delete workgroup if owner`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canDelete(workgroupPublic, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be delete workgroup if not owner`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canDelete(workgroupPublic, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be update workgroup if owner`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canUpdate(workgroupPublic, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be update workgroup if not owner`() {
-        WorkgroupVoter()
+        WorkgroupAccessControl()
             .canUpdate(workgroupPublic, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 }

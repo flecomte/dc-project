@@ -1,13 +1,13 @@
-package unit.voter
+package unit.security
 
+import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import fr.postgresjson.connexion.Paginated
 import io.mockk.every
 import io.mockk.mockk
@@ -23,8 +23,8 @@ import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class ArticleVoterTest {
+@Tag("security")
+internal class ArticleAccessControlTest {
     private val tesla = CitizenCart(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
         user = User(
@@ -50,35 +50,35 @@ internal class ArticleVoterTest {
     @Test
     fun `creator can be view the article`() {
         val article = getArticle(tesla).copy(draft = true)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(article, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `other user can be view the article`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(article, einstein)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
-    fun `other user can be view the article list`(): Unit = listOf(ArticleVoter(mockk())).run {
+    fun `other user can be view the article list`(): Unit = listOf(ArticleAccessControl(mockk())).run {
         val article = getArticle(tesla)
         val article2 = getArticle(tesla)
 
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(listOf(article, article2), einstein)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `the no creator can not be view the article on draft`() {
         val article = getArticle(tesla).copy(draft = true)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(article, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
@@ -86,31 +86,31 @@ internal class ArticleVoterTest {
         val article = getArticle(tesla)
         val article2 = getArticle(tesla).copy(draft = true)
 
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(listOf(article, article2), einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can not view deleted article`() {
         val article = getArticle(tesla).copy(deletedAt = DateTime.now())
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canView(article, tesla)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can delete article if owner`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canDelete(article, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not delete article if not owner`() {
         val article = getArticle(tesla).copy(deletedAt = DateTime.now())
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canDelete(article, einstein)
             .code `should be` "article.delete.notYours"
     }
@@ -118,15 +118,15 @@ internal class ArticleVoterTest {
     @Test
     fun `can create article if logged`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canUpsert(article, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not create article if not logged`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canUpsert(article, null)
             .code `should be` "article.create.notConnected"
     }
@@ -134,15 +134,15 @@ internal class ArticleVoterTest {
     @Test
     fun `can update article if yours`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canUpsert(article, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not update article if not yours`() {
         val article = getArticle(tesla)
-        ArticleVoter(getRepo(article))
+        ArticleAccessControl(getRepo(article))
             .canUpsert(article, einstein)
             .code `should be` "article.update.notYours"
     }

@@ -4,9 +4,9 @@ import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
-import fr.dcproject.component.comment.generic.CommentVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -36,10 +36,10 @@ object CreateCommentArticle {
         }
     }
 
-    fun Route.createCommentArticle(repo: CommentArticleRepository, voter: CommentVoter) {
+    fun Route.createCommentArticle(repo: CommentArticleRepository, ac: CommentAccessControl) {
         post<PostArticleCommentRequest> {
             it.getComment(call).let { comment ->
-                voter.assert { canCreate(comment, citizenOrNull) }
+                ac.assert { canCreate(comment, citizenOrNull) }
                 repo.comment(comment)
                 call.respond(HttpStatusCode.Created, comment)
             }

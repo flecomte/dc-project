@@ -2,11 +2,11 @@ package fr.dcproject.component.comment.generic.routes
 
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
-import fr.dcproject.component.comment.generic.CommentVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -24,7 +24,7 @@ object CreateCommentChildren {
         class Input(val content: String)
     }
 
-    fun Route.createCommentChildren(repo: CommentRepository, voter: CommentVoter) {
+    fun Route.createCommentChildren(repo: CommentRepository, ac: CommentAccessControl) {
         post<CreateCommentChildrenRequest> {
             val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
             val newComment = CommentForUpdate(
@@ -33,7 +33,7 @@ object CreateCommentChildren {
                 parent = parent
             )
 
-            voter.assert { canCreate(newComment, citizenOrNull) }
+            ac.assert { canCreate(newComment, citizenOrNull) }
             repo.comment(newComment)
 
             call.respond(HttpStatusCode.Created, newComment)

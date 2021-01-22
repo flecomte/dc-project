@@ -2,24 +2,24 @@ package fr.dcproject.component.comment.generic
 
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.entity.HasTarget
-import fr.dcproject.voter.Voter
-import fr.dcproject.voter.VoterResponse
+import fr.dcproject.security.AccessControl
+import fr.dcproject.security.AccessResponse
 import fr.postgresjson.entity.EntityCreatedBy
 import fr.postgresjson.entity.EntityDeletedAt
 
-class CommentVoter : Voter() {
-    fun <S> canView(subjects: List<S>, citizen: CitizenI?): VoterResponse
+class CommentAccessControl : AccessControl() {
+    fun <S> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse
     where S : CommentI,
           S : EntityDeletedAt = canAll(subjects) { canView(it, citizen) }
 
-    fun <S> canView(subject: S, citizen: CitizenI?): VoterResponse
+    fun <S> canView(subject: S, citizen: CitizenI?): AccessResponse
     where S : CommentI,
           S : EntityDeletedAt = when {
         subject.isDeleted() -> denied("Your cannot view a deleted comment", "comment.view.deleted")
         else -> granted()
     }
 
-    fun <S, CR : CitizenI> canCreate(subject: S, citizen: CitizenI?): VoterResponse
+    fun <S, CR : CitizenI> canCreate(subject: S, citizen: CitizenI?): AccessResponse
     where S : CommentI,
           S : EntityCreatedBy<CR>,
           S : CommentWithParentI<*>,
@@ -31,7 +31,7 @@ class CommentVoter : Voter() {
         else -> granted()
     }
 
-    fun <S, CR : CitizenI> canUpdate(subject: S, citizen: CitizenI?): VoterResponse
+    fun <S, CR : CitizenI> canUpdate(subject: S, citizen: CitizenI?): AccessResponse
     where S : CommentI,
           S : EntityCreatedBy<CR> = when {
         citizen == null -> denied("You must be connected to update comment", "comment.update.notConnected")

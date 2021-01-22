@@ -3,9 +3,9 @@ package fr.dcproject.component.follow.routes.article
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.FollowArticleRepository
-import fr.dcproject.component.follow.FollowVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -19,10 +19,10 @@ object GetFollowArticle {
     @Location("/articles/{article}/follows")
     class ArticleFollowRequest(val article: ArticleRef)
 
-    fun Route.getFollowArticle(repo: FollowArticleRepository, voter: FollowVoter) {
+    fun Route.getFollowArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         get<ArticleFollowRequest> {
             repo.findFollow(citizen, it.article)?.let { follow ->
-                voter.assert { canView(follow, citizenOrNull) }
+                ac.assert { canView(follow, citizenOrNull) }
                 call.respond(follow)
             } ?: call.respond(HttpStatusCode.NoContent)
         }

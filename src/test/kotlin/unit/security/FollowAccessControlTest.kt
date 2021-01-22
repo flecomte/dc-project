@@ -1,4 +1,4 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
@@ -8,9 +8,9 @@ import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.follow.Follow
-import fr.dcproject.component.follow.FollowVoter
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.component.follow.FollowAccessControl
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -22,8 +22,8 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class FollowVoterTest {
+@Tag("security")
+internal class FollowAccessControlTest {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",
@@ -97,57 +97,57 @@ internal class FollowVoterTest {
 
     @Test
     fun `can be view the follow`() {
-        FollowVoter()
+        FollowAccessControl()
             .canView(follow1, tesla2)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view the follow list`() {
-        FollowVoter()
+        FollowAccessControl()
             .canView(listOf(follow1), tesla2)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view your anonymous follow`() {
-        FollowVoter()
+        FollowAccessControl()
             .canView(followAnon, einstein3)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be view the anonymous follow of other`() {
-        FollowVoter()
+        FollowAccessControl()
             .canView(followAnon, tesla2)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be follow article`() {
-        FollowVoter()
+        FollowAccessControl()
             .canCreate(follow1, tesla2)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be follow article if not connected`() {
-        FollowVoter()
+        FollowAccessControl()
             .canCreate(follow1, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be unfollow article`() {
-        FollowVoter()
+        FollowAccessControl()
             .canDelete(follow1, tesla2)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be unfollow article if not connected`() {
-        FollowVoter()
+        FollowAccessControl()
             .canDelete(follow1, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 }

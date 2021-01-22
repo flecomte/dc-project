@@ -1,9 +1,9 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.Input
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
@@ -11,7 +11,7 @@ import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.event.ArticleUpdate
 import fr.dcproject.event.raiseEvent
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -39,7 +39,7 @@ object UpsertArticle {
         )
     }
 
-    fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: WorkgroupRepository, voter: ArticleVoter) {
+    fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: WorkgroupRepository, ac: ArticleAccessControl) {
         suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receive<Input>().run {
             ArticleForUpdate(
                 id = id ?: UUID.randomUUID(),
@@ -57,7 +57,7 @@ object UpsertArticle {
 
         post<UpsertArticleRequest> {
             val article = call.convertRequestToEntity()
-            voter.assert { canUpsert(article, citizenOrNull) }
+            ac.assert { canUpsert(article, citizenOrNull) }
             val newArticle: ArticleForView = repo.upsert(article) ?: error("Article not updated")
             call.respond(newArticle)
             raiseEvent(ArticleUpdate.event, ArticleUpdate(newArticle))

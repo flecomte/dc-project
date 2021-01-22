@@ -8,31 +8,31 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
+import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
-import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.auth.PasswordlessAuth
 import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
-import fr.dcproject.component.comment.generic.CommentVoter
-import fr.dcproject.component.follow.FollowVoter
+import fr.dcproject.component.comment.generic.CommentAccessControl
+import fr.dcproject.component.follow.FollowAccessControl
+import fr.dcproject.component.opinion.OpinionAccessControl
+import fr.dcproject.component.opinion.OpinionChoiceAccessControl
 import fr.dcproject.component.opinion.OpinionChoiceRepository
-import fr.dcproject.component.opinion.OpinionChoiceVoter
-import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteArticleRepository
 import fr.dcproject.component.vote.VoteCommentRepository
 import fr.dcproject.component.vote.VoteConstitutionRepository
 import fr.dcproject.component.vote.VoteRepository
-import fr.dcproject.component.vote.VoteVoter
+import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
-import fr.dcproject.security.voter.ConstitutionVoter
+import fr.dcproject.security.voter.ConstitutionAccessControl
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -125,16 +125,16 @@ val KoinModule = module {
     single { OpinionArticleRepository(get()) }
     single { WorkgroupRepository(get()) }
 
-    // Voters
-    single { ArticleVoter(get()) }
-    single { CitizenVoter() }
-    single { CommentVoter() }
-    single { WorkgroupVoter() }
-    single { ConstitutionVoter() }
-    single { VoteVoter() }
-    single { FollowVoter() }
-    single { OpinionVoter() }
-    single { OpinionChoiceVoter() }
+    // AccessControl
+    single { ArticleAccessControl(get()) }
+    single { CitizenAccessControl() }
+    single { CommentAccessControl() }
+    single { WorkgroupAccessControl() }
+    single { ConstitutionAccessControl() }
+    single { VoteAccessControl() }
+    single { FollowAccessControl() }
+    single { OpinionAccessControl() }
+    single { OpinionChoiceAccessControl() }
 
     // Elasticsearch Client
     single<RestClient> {

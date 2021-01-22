@@ -1,4 +1,4 @@
-package unit.voter
+package unit.security
 
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
@@ -7,11 +7,11 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.comment.generic.CommentForView
-import fr.dcproject.component.comment.generic.CommentVoter
-import fr.dcproject.voter.Vote.DENIED
-import fr.dcproject.voter.Vote.GRANTED
+import fr.dcproject.security.AccessDecision.DENIED
+import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -23,8 +23,8 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("voter")
-internal class CommentVoterTest {
+@Tag("security")
+internal class CommentAccessControlTest {
     private val tesla = Citizen(
         user = User(
             username = "nicolas-tesla",
@@ -99,57 +99,57 @@ internal class CommentVoterTest {
 
     @Test
     fun `can be view the comment`() {
-        CommentVoter()
+        CommentAccessControl()
             .canView(comment1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be view the comment list`() {
-        CommentVoter()
+        CommentAccessControl()
             .canView(listOf(comment1, comment2), einstein)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can be update your comment`() {
-        CommentVoter()
+        CommentAccessControl()
             .canUpdate(comment1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be update other comment`() {
-        CommentVoter()
+        CommentAccessControl()
             .canUpdate(comment1, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can be create a comment`() {
-        CommentVoter()
+        CommentAccessControl()
             .canCreate(comment1, tesla)
-            .vote `should be` GRANTED
+            .decision `should be` GRANTED
     }
 
     @Test
     fun `can not be create a comment if target is deleted`() {
-        CommentVoter()
+        CommentAccessControl()
             .canCreate(commentTargetDeleted, tesla)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can not be create a comment with other creator`() {
-        CommentVoter()
+        CommentAccessControl()
             .canCreate(comment1, einstein)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 
     @Test
     fun `can not be create a comment if not connected`() {
-        CommentVoter()
+        CommentAccessControl()
             .canCreate(comment1, null)
-            .vote `should be` DENIED
+            .decision `should be` DENIED
     }
 }

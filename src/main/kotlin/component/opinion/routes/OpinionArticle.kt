@@ -3,11 +3,11 @@ package fr.dcproject.component.opinion.routes
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.OpinionChoiceRef
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
+import fr.dcproject.security.assert
 import fr.dcproject.utils.toUUID
-import fr.dcproject.voter.assert
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -31,7 +31,7 @@ object OpinionArticle {
         }
     }
 
-    fun Route.setOpinionOnArticle(repo: OpinionArticleRepository, voter: OpinionVoter) {
+    fun Route.setOpinionOnArticle(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         put<ArticleOpinion> {
             call.receive<ArticleOpinion.Body>().ids.map { id ->
                 OpinionForUpdate(
@@ -40,7 +40,7 @@ object OpinionArticle {
                     createdBy = citizen
                 )
             }.let { opinions ->
-                voter.assert { canCreate(opinions, citizenOrNull) }
+                ac.assert { canCreate(opinions, citizenOrNull) }
                 repo.updateOpinions(opinions)
             }.let {
                 call.respond(HttpStatusCode.Created, it)

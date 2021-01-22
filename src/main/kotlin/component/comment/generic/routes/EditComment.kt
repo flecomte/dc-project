@@ -1,10 +1,10 @@
 package fr.dcproject.component.comment.generic.routes
 
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
-import fr.dcproject.component.comment.generic.CommentVoter
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -20,10 +20,10 @@ object EditComment {
     @Location("/comments/{comment}")
     class EditCommentRequest(val comment: CommentRef)
 
-    fun Route.editComment(repo: CommentRepository, voter: CommentVoter) {
+    fun Route.editComment(repo: CommentRepository, ac: CommentAccessControl) {
         put<EditCommentRequest> {
             val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
-            voter.assert { canUpdate(comment, citizenOrNull) }
+            ac.assert { canUpdate(comment, citizenOrNull) }
 
             comment.content = call.receiveText()
             repo.edit(comment)

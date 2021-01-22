@@ -2,10 +2,10 @@ package fr.dcproject.component.workgroup.routes.members
 
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
-import fr.dcproject.voter.assert
+import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -38,12 +38,12 @@ object DeleteMembersOfWorkgroup {
         )
     }
 
-    fun Route.deleteMemberOfWorkgroup(repo: WorkgroupRepository, voter: WorkgroupVoter) {
+    fun Route.deleteMemberOfWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         /* Delete members of workgroup */
         delete<WorkgroupsMembersRequest> {
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
-                    voter.assert { canView(workgroup, citizenOrNull) }
+                    ac.assert { canView(workgroup, citizenOrNull) }
                     repo.removeMembers(workgroup, members)
                 }.let { members ->
                     call.respond(HttpStatusCode.OK, members)
