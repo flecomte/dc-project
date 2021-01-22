@@ -11,7 +11,6 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import io.ktor.util.KtorExperimentalAPI
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI

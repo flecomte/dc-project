@@ -7,7 +7,6 @@ import fr.dcproject.component.article.routes.UpsertArticle.upsertArticle
 import io.ktor.auth.authenticate
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.Routing
-import io.ktor.util.KtorExperimentalAPI
 import org.koin.ktor.ext.get
 
 @KtorExperimentalLocationsAPI

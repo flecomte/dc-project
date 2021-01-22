@@ -6,7 +6,6 @@ import fr.dcproject.component.auth.routes.Sso.authPasswordless
 import io.ktor.auth.authenticate
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.Routing
-import io.ktor.util.KtorExperimentalAPI
 import org.koin.ktor.ext.get
 
 @KtorExperimentalLocationsAPI

@@ -3,11 +3,11 @@ package fr.dcproject.component.auth.routes
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.auth.jwt.makeToken
 import fr.dcproject.component.auth.routes.Register.RegisterRequest.Input
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.auth.jwt.makeToken
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.http.HttpStatusCode

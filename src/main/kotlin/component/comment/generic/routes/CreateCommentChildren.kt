@@ -16,7 +16,6 @@ import io.ktor.locations.post
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import io.ktor.util.KtorExperimentalAPI
 
 @KtorExperimentalLocationsAPI
 object CreateCommentChildren {

@@ -60,14 +60,14 @@ import io.ktor.routing.Routing
 import io.ktor.server.jetty.EngineMain
 import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
-import java.time.Duration
-import java.util.concurrent.CompletionException
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
 import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
+import java.time.Duration
+import java.util.concurrent.CompletionException
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 

@@ -9,6 +9,7 @@
         <value>
           <package name="" alias="false" withSubpackages="true" />
           <package name="" alias="true" withSubpackages="true" />
+          <package name="java" alias="false" withSubpackages="true" />
         </value>
       </option>
       <option name="NAME_COUNT_TO_USE_STAR_IMPORT" value="2147483647" />
