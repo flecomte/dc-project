@@ -53,7 +53,7 @@ object GetOneArticle {
         }
     }
 
-    fun Route.getOneArticle(viewManager: ArticleViewManager, ac: ArticleAccessControl) {
+    fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl) {
         get<ArticleRequest> {
             ac.assert { canView(it.article, citizenOrNull) }
 

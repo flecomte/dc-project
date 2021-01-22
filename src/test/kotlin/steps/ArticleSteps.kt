@@ -71,7 +71,7 @@ class ArticleSteps : En, KoinTest {
         }
 
         val article = ArticleForUpdate(
-            id = id ?: params?.get("id")?.toUUID(),
+            id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
             title = "hello",
             content = "bla bla bla",
             description = "A super article",

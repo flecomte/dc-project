@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.component.article.ArticleAccessControl
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.auth.PasswordlessAuth
@@ -143,7 +144,7 @@ val KoinModule = module {
         ).build()
     }
 
-    single { ArticleViewManager(get()) }
+    single { ArticleViewManager<ArticleForView>(get()) }
 
     // Mailer
     single { Mailer(Configuration.sendGridKey) }

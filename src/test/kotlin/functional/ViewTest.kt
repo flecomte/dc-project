@@ -2,7 +2,7 @@ package functional
 
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
-import fr.dcproject.component.article.ArticleRefVersioning
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.citizen.CitizenRef
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -23,11 +23,18 @@ import java.util.UUID
 class ViewTest {
     @Test
     fun `test View Article`() {
-        val article = ArticleRefVersioning(id = UUID.randomUUID(), versionId = UUID.randomUUID())
+        val article = ArticleForView(
+            id = UUID.randomUUID(),
+            versionId = UUID.randomUUID(),
+            createdBy = CitizenRef(),
+            content = "",
+            description = "",
+            title = ""
+        )
         val citizenRef = CitizenRef()
 
         withTestApplication({ module(TEST) }) {
-            val viewManager: ArticleViewManager = application.get()
+            val viewManager: ArticleViewManager<ArticleForView> = application.get()
 
             /* Get view before */
             val startView = viewManager.getViewsCount(article)

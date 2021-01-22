@@ -2,6 +2,7 @@ package fr.dcproject.component.article
 
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.views.ViewManager
+import fr.dcproject.entity.VersionableRef
 import fr.dcproject.entity.ViewAggregation
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField
@@ -15,11 +16,11 @@ import java.util.UUID
 /**
  * Wrapper for manage views with elasticsearch
  */
-class ArticleViewManager(private val restClient: RestClient) : ViewManager<ArticleRefVersioningI> {
+class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<A> where A : VersionableRef, A : ArticleI {
     /**
      * Add view on article to elasticsearch
      */
-    override fun addView(ip: String, article: ArticleRefVersioningI, citizen: CitizenI?, dateTime: DateTime): Response? {
+    override fun addView(ip: String, entity: A, citizen: CitizenI?, dateTime: DateTime): Response? {
         val isLogged = (citizen != null).toString()
         val ref = citizen?.id ?: UUID.nameUUIDFromBytes(ip.toByteArray())!!
         val request = Request(
@@ -34,8 +35,8 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
                   "type": "article",
                   "user_ref": "$ref",
                   "ip": "$ip",
-                  "id": "${article.id}",
-                  "version_id": "${article.versionId}",
+                  "id": "${entity.id}",
+                  "version_id": "${entity.versionId}",
                   "citizen_id": "${citizen?.id}",
                   "view_at": "${dateTime.toIso()}"
                 }
@@ -49,7 +50,7 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
     /**
      * Get article views aggregations from elasticsearch
      */
-    override fun getViewsCount(article: ArticleRefVersioningI): ViewAggregation {
+    override fun getViewsCount(entity: A): ViewAggregation {
         val request = Request(
             "GET",
             "/views/_search"
@@ -63,7 +64,7 @@ class ArticleViewManager(private val restClient: RestClient) : ViewManager<Artic
                 "bool": {
                   "must": {
                     "term": {
-                      "version_id": "${article.versionId}"
+                      "version_id": "${entity.versionId}"
                     }
                   }
                 }

@@ -1,13 +1,10 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenCartI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.entity.Opinionable
-import fr.dcproject.component.opinion.entity.OpinionableImp
 import fr.dcproject.component.opinion.entity.Opinions
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
@@ -16,18 +13,15 @@ import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupSimple
 import fr.dcproject.entity.CreatedBy
-import fr.dcproject.entity.CreatedByImp
 import fr.dcproject.entity.TargetI
 import fr.dcproject.entity.TargetRef
 import fr.dcproject.entity.VersionableRef
-import fr.dcproject.entity.VersionableRefImp
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityDeletedAt
 import fr.postgresjson.entity.EntityDeletedAtImp
 import fr.postgresjson.entity.EntityVersioning
 import fr.postgresjson.entity.UuidEntityI
-import fr.postgresjson.entity.UuidEntityVersioning
 import org.joda.time.DateTime
 import java.util.UUID
 
@@ -51,7 +45,7 @@ data class ArticleForView(
     EntityVersioning<UUID, Int>,
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityDeletedAt by EntityDeletedAtImp(deletedAt),
-    ArticleRefVersioningI,
+    VersionableRef,
     Opinionable,
     Votable by VotableImp() {
     val lastVersion: Boolean = false
@@ -66,7 +60,7 @@ interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, Versi
 }
 
 class ArticleForUpdate(
-    id: UUID? = null,
+    override val id: UUID = UUID.randomUUID(),
     override val title: String,
     override val anonymous: Boolean = true,
     override val content: String,
@@ -75,29 +69,14 @@ class ArticleForUpdate(
     override val draft: Boolean = false,
     override val createdBy: CitizenRef,
     override val workgroup: WorkgroupRef? = null,
-    versionId: UUID? = null,
-    override val deletedAt: DateTime? = null
-) : ArticleForUpdateI<CitizenRef>,
+    override val versionId: UUID = UUID.randomUUID(),
+    override val deletedAt: DateTime? = null,
+) : ArticleRef(id),
+    ArticleForUpdateI<CitizenRef>,
     ArticleAuthI<CitizenRef>,
-    ArticleRefVersioningI by ArticleRefVersioningImmutable(id, versionId = versionId ?: UUID.randomUUID()) {
+    VersionableRef {
     val tags: List<String> = tags.distinct()
-    val isNew = versionId == null
 }
-
-@Deprecated("")
-open class ArticleSimple(
-    id: UUID = UUID.randomUUID(),
-    var title: String,
-    override val createdBy: CitizenBasic,
-    override var draft: Boolean = false,
-    var workgroup: WorkgroupSimple<CitizenRef>? = null
-) : ArticleAuthI<CitizenBasicI>,
-    ArticleRefVersioning(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    CreatedBy<CitizenBasicI> by CreatedByImp(createdBy),
-    EntityDeletedAt by EntityDeletedAtImp(),
-    Votable by VotableImp(),
-    Opinionable by OpinionableImp()
 
 class ArticleForListing(
     id: UUID? = null,
@@ -115,24 +94,6 @@ class ArticleForListing(
 interface ArticleForListingI : ArticleWithTitleI, CreatedBy<CitizenCartI> {
     val workgroup: WorkgroupCartI?
 }
-
-@Deprecated("", ReplaceWith("ArticleRefVersioningImmutable"))
-open class ArticleRefVersioning(
-    id: UUID = UUID.randomUUID(),
-    override var versionNumber: Int = 0,
-    versionId: UUID = UUID.randomUUID()
-) : ArticleRefVersioningI,
-    ArticleRef(id),
-    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionNumber, versionId)
-
-open class ArticleRefVersioningImmutable(
-    id: UUID? = null,
-    versionId: UUID = UUID.randomUUID()
-) : ArticleRefVersioningI,
-    ArticleRef(id),
-    VersionableRef by VersionableRefImp(versionId)
-
-interface ArticleRefVersioningI : ArticleI, VersionableRef
 
 open class ArticleRef(
     id: UUID? = null

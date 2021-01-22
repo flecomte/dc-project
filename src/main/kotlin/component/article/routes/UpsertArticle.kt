@@ -34,7 +34,7 @@ object UpsertArticle {
             val description: String,
             val tags: List<String> = emptyList(),
             val draft: Boolean = false,
-            val versionId: UUID?,
+            val versionId: UUID,
             val workgroup: WorkgroupRef? = null
         )
     }
@@ -50,7 +50,7 @@ object UpsertArticle {
                 tags = tags,
                 draft = draft,
                 createdBy = citizen,
-                workgroup = if (workgroup != null) workgroupRepository.findById(workgroup.id) else null,
+                workgroup = workgroup,
                 versionId = versionId
             )
         }
