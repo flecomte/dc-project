@@ -3,6 +3,8 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenVoter
+import fr.dcproject.routes.PaginatedRequest
+import fr.dcproject.routes.PaginatedRequestI
 import fr.dcproject.voter.assert
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
@@ -21,10 +23,7 @@ object FindCitizens {
         val sort: String? = null,
         val direction: RepositoryI.Direction? = null,
         val search: String? = null
-    ) {
-        val page: Int = if (page < 1) 1 else page
-        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
-    }
+    ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
     fun Route.findCitizen(voter: CitizenVoter, repo: CitizenRepository) {
         get<CitizensRequest> {

@@ -4,6 +4,8 @@ import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.routes.PaginatedRequest
+import fr.dcproject.routes.PaginatedRequestI
 import fr.dcproject.voter.assert
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.repository.RepositoryI
@@ -25,10 +27,7 @@ object FindArticles {
         val search: String? = null,
         val createdBy: String? = null,
         val workgroup: String? = null
-    ) {
-        val page: Int = if (page < 1) 1 else page
-        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
-    }
+    ) : PaginatedRequestI by PaginatedRequest(page, limit)
 
     private fun ArticleRepository.findArticles(request: ArticlesRequest): Paginated<ArticleForListing> {
         return find(
