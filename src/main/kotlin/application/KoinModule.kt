@@ -58,11 +58,11 @@ val KoinModule = module {
     // SQL connection
     single {
         Connection(
-            host = Configuration.host,
-            port = Configuration.port,
-            database = Configuration.database,
-            username = Configuration.username,
-            password = Configuration.password
+            host = Configuration.Database.host,
+            port = Configuration.Database.port,
+            database = Configuration.Database.database,
+            username = Configuration.Database.username,
+            password = Configuration.Database.password
         )
     }
 
