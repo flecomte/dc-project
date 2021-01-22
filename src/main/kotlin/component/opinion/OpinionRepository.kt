@@ -1,4 +1,4 @@
-package fr.dcproject.repository
+package fr.dcproject.component.opinion
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleRef

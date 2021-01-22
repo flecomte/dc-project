@@ -7,10 +7,10 @@ import fr.dcproject.component.article.ArticleVoter
 import fr.dcproject.component.article.routes.GetOneArticle.ArticleRequest.Output
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.dto.Opinionable
+import fr.dcproject.component.vote.dto.Votable
 import fr.dcproject.dto.CreatedAt
 import fr.dcproject.dto.Versionable
 import fr.dcproject.dto.Viewable
-import fr.dcproject.dto.Votable
 import fr.dcproject.voter.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException

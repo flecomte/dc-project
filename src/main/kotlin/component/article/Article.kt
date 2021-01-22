@@ -9,6 +9,8 @@ import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.entity.Opinionable
 import fr.dcproject.component.opinion.entity.OpinionableImp
 import fr.dcproject.component.opinion.entity.Opinions
+import fr.dcproject.component.vote.entity.Votable
+import fr.dcproject.component.vote.entity.VotableImp
 import fr.dcproject.component.workgroup.WorkgroupCart
 import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
@@ -19,8 +21,6 @@ import fr.dcproject.entity.TargetI
 import fr.dcproject.entity.TargetRef
 import fr.dcproject.entity.VersionableRef
 import fr.dcproject.entity.VersionableRefImp
-import fr.dcproject.entity.Votable
-import fr.dcproject.entity.VotableImp
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityDeletedAt

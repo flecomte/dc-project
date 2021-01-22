@@ -1,12 +1,12 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.vote
 
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.vote.entity.VoteForUpdateI
 import fr.dcproject.entity.TargetI
-import fr.dcproject.entity.VoteForUpdateI
 import fr.dcproject.voter.Voter
 import fr.dcproject.voter.VoterResponse
 import fr.postgresjson.entity.EntityDeletedAt
-import fr.dcproject.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 class VoteVoter : Voter() {
     fun <S> canCreate(subject: VoteForUpdateI<S, *>, citizen: CitizenI?): VoterResponse where S : EntityDeletedAt, S : TargetI = when {

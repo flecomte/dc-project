@@ -7,8 +7,8 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.VoteForUpdate
-import fr.dcproject.security.voter.VoteVoter
+import fr.dcproject.component.vote.VoteVoter
+import fr.dcproject.component.vote.entity.VoteForUpdate
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
 import org.amshove.kluent.`should be`
@@ -19,7 +19,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)

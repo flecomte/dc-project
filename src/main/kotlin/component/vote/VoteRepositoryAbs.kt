@@ -1,22 +1,22 @@
-package fr.dcproject.repository
+package fr.dcproject.component.vote
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.generic.CommentForView
+import fr.dcproject.component.vote.entity.VoteAggregation
+import fr.dcproject.component.vote.entity.VoteForUpdateI
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.TargetI
 import fr.dcproject.entity.TargetRef
-import fr.dcproject.entity.VoteAggregation
-import fr.dcproject.entity.VoteForUpdateI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
-open class Vote<T : TargetI>(override var requester: Requester) : RepositoryI {
+abstract class VoteRepositoryAbs<T : TargetI>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteForUpdateI<T, *>, anonymous: Boolean? = null): VoteAggregation {
         val author = vote.createdBy
         return requester
@@ -69,7 +69,9 @@ open class Vote<T : TargetI>(override var requester: Requester) : RepositoryI {
     }
 }
 
-class VoteArticle(requester: Requester) : Vote<ArticleForView>(requester) {
+class VoteRepository(requester: Requester) : VoteRepositoryAbs<TargetRef>(requester)
+
+class VoteArticleRepository(requester: Requester) : VoteRepositoryAbs<ArticleForView>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -84,7 +86,7 @@ class VoteArticle(requester: Requester) : Vote<ArticleForView>(requester) {
         )
 }
 
-class VoteArticleComment(requester: Requester) : Vote<CommentForView<ArticleForView, CitizenRef>>(requester) {
+class VoteArticleCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<ArticleForView, CitizenRef>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -99,7 +101,7 @@ class VoteArticleComment(requester: Requester) : Vote<CommentForView<ArticleForV
         )
 }
 
-class VoteComment(requester: Requester) : Vote<CommentForView<TargetRef, CitizenRef>>(requester) {
+class VoteCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<TargetRef, CitizenRef>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
@@ -114,7 +116,7 @@ class VoteComment(requester: Requester) : Vote<CommentForView<TargetRef, Citizen
         )
 }
 
-class VoteConstitution(requester: Requester) : Vote<Constitution>(requester) {
+class VoteConstitutionRepository(requester: Requester) : VoteRepositoryAbs<Constitution>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,

@@ -1,10 +1,10 @@
-package fr.dcproject.entity
+package fr.dcproject.component.vote.entity
 
 import fr.postgresjson.entity.EntityI
 import fr.postgresjson.entity.EntityUpdatedAt
 import fr.postgresjson.entity.EntityUpdatedAtImp
 
-open class VoteAggregation(
+class VoteAggregation(
     val up: Int,
     val neutral: Int,
     val down: Int,

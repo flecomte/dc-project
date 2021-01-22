@@ -17,7 +17,7 @@ import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import java.util.UUID
-import fr.dcproject.repository.OpinionRepositoryArticle as OpinionArticleRepository
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI
 object OpinionArticle {

@@ -2,13 +2,13 @@ package steps
 
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.entity.VoteForUpdate
+import fr.dcproject.component.vote.entity.VoteForUpdate
 import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.UUID
-import fr.dcproject.repository.VoteArticle as VoteRepository
+import fr.dcproject.component.vote.VoteArticleRepository as VoteRepository
 
 class VoteSteps : En, KoinTest {
     init {

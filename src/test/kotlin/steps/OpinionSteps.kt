@@ -3,6 +3,7 @@ package steps
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.opinion.OpinionChoiceRepository
 import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
 import fr.dcproject.utils.toUUID
@@ -11,8 +12,7 @@ import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.UUID
-import fr.dcproject.repository.OpinionChoiceRepository as OpinionChoiceRepository
-import fr.dcproject.repository.OpinionRepositoryArticle as OpinionRepository
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionRepository
 
 class OpinionSteps : En, KoinTest {
     init {

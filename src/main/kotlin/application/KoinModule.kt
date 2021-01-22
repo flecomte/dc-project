@@ -18,8 +18,14 @@ import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.component.follow.FollowVoter
+import fr.dcproject.component.opinion.OpinionChoiceRepository
 import fr.dcproject.component.opinion.OpinionChoiceVoter
 import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.vote.VoteArticleRepository
+import fr.dcproject.component.vote.VoteCommentRepository
+import fr.dcproject.component.vote.VoteConstitutionRepository
+import fr.dcproject.component.vote.VoteRepository
+import fr.dcproject.component.vote.VoteVoter
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.event.publisher.Publisher
@@ -27,7 +33,6 @@ import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.security.voter.ConstitutionVoter
-import fr.dcproject.security.voter.VoteVoter
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -43,12 +48,8 @@ import org.koin.dsl.module
 import fr.dcproject.component.comment.generic.CommentRepository as CommentGenericRepository
 import fr.dcproject.component.follow.FollowArticleRepository as FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository as FollowConstitutionRepository
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
-import fr.dcproject.repository.OpinionChoiceRepository as OpinionChoiceRepository
-import fr.dcproject.repository.OpinionRepositoryArticle as OpinionArticleRepository
-import fr.dcproject.repository.VoteArticle as VoteArticleRepository
-import fr.dcproject.repository.VoteComment as VoteCommentRepository
-import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository
 
 @KtorExperimentalAPI
 val KoinModule = module {
@@ -116,6 +117,7 @@ val KoinModule = module {
     single { CommentGenericRepository(get()) }
     single { CommentArticleRepository(get()) }
     single { CommentConstitutionRepository(get()) }
+    single { VoteRepository(get()) }
     single { VoteArticleRepository(get()) }
     single { VoteConstitutionRepository(get()) }
     single { VoteCommentRepository(get()) }

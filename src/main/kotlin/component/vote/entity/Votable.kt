@@ -1,4 +1,4 @@
-package fr.dcproject.entity
+package fr.dcproject.component.vote.entity
 
 interface Votable {
     val votes: VoteAggregation

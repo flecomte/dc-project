@@ -20,6 +20,7 @@ import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
 import fr.dcproject.component.opinion.routes.installOpinionRoutes
 import fr.dcproject.component.views.ConfigViews
+import fr.dcproject.component.vote.routes.installVoteRoutes
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
@@ -27,8 +28,6 @@ import fr.dcproject.routes.commentConstitution
 import fr.dcproject.routes.constitution
 import fr.dcproject.routes.definition
 import fr.dcproject.routes.notificationArticle
-import fr.dcproject.routes.voteArticle
-import fr.dcproject.routes.voteConstitution
 import fr.dcproject.voter.VoterDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
@@ -140,13 +139,12 @@ fun Application.module(env: Env = PROD) {
         installFollowConstitutionRoutes()
         installWorkgroupRoutes()
         installOpinionRoutes()
+        installVoteRoutes()
 
         authenticate(optional = true) {
             /* TODO */
             constitution(get(), get())
             commentConstitution(get(), get())
-            voteArticle(get(), get(), get(), get())
-            voteConstitution(get(), get())
             definition()
         }
 

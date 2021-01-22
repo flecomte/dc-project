@@ -1,6 +1,6 @@
-package fr.dcproject.dto
+package fr.dcproject.component.vote.dto
 
-import fr.dcproject.entity.Votable
+import fr.dcproject.component.vote.entity.Votable
 
 class VoteAggregation(parent: Votable) {
     val up: Int = parent.votes.up

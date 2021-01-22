@@ -15,7 +15,7 @@ import io.ktor.routing.Route
 import org.koin.core.KoinComponent
 import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.repository.OpinionRepositoryArticle as OpinionArticleRepository
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI
 object GetCitizenOpinions {

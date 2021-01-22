@@ -13,7 +13,7 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.repository.OpinionRepositoryArticle as OpinionArticleRepository
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI
 object GetMyOpinionsArticle {
