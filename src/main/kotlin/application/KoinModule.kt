@@ -18,6 +18,8 @@ import fr.dcproject.component.citizen.CitizenVoter
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentVoter
 import fr.dcproject.component.follow.FollowVoter
+import fr.dcproject.component.opinion.OpinionChoiceVoter
+import fr.dcproject.component.opinion.OpinionVoter
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupVoter
 import fr.dcproject.event.publisher.Publisher
@@ -25,8 +27,6 @@ import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.security.voter.ConstitutionVoter
-import fr.dcproject.security.voter.OpinionChoiceVoter
-import fr.dcproject.security.voter.OpinionVoter
 import fr.dcproject.security.voter.VoteVoter
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
@@ -44,8 +44,8 @@ import fr.dcproject.component.comment.generic.CommentRepository as CommentGeneri
 import fr.dcproject.component.follow.FollowArticleRepository as FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository as FollowConstitutionRepository
 import fr.dcproject.repository.Constitution as ConstitutionRepository
-import fr.dcproject.repository.OpinionArticle as OpinionArticleRepository
-import fr.dcproject.repository.OpinionChoice as OpinionChoiceRepository
+import fr.dcproject.repository.OpinionChoiceRepository as OpinionChoiceRepository
+import fr.dcproject.repository.OpinionRepositoryArticle as OpinionArticleRepository
 import fr.dcproject.repository.VoteArticle as VoteArticleRepository
 import fr.dcproject.repository.VoteComment as VoteCommentRepository
 import fr.dcproject.repository.VoteConstitution as VoteConstitutionRepository

@@ -3,6 +3,7 @@ package fr.dcproject.entity
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.comment.generic.CommentRef
+import fr.dcproject.component.opinion.entity.OpinionRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedBy
 import fr.postgresjson.entity.UuidEntity

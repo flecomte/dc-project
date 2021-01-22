@@ -6,9 +6,9 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.Opinion
-import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.security.voter.OpinionVoter
+import fr.dcproject.component.opinion.OpinionVoter
+import fr.dcproject.component.opinion.entity.Opinion
+import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.voter.Vote.DENIED
 import fr.dcproject.voter.Vote.GRANTED
 import org.amshove.kluent.`should be`

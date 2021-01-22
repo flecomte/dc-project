@@ -6,8 +6,8 @@ import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.OpinionChoice
-import fr.dcproject.security.voter.OpinionChoiceVoter
+import fr.dcproject.component.opinion.OpinionChoiceVoter
+import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.voter.Vote.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime

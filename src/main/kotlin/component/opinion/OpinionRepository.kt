@@ -2,7 +2,7 @@ package fr.dcproject.repository
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.entity.OpinionForUpdate
+import fr.dcproject.component.opinion.entity.OpinionForUpdate
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -10,11 +10,11 @@ import fr.postgresjson.repository.RepositoryI
 import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.entity.Opinion as OpinionEntity
-import fr.dcproject.entity.OpinionArticle as OpinionArticleEntity
-import fr.dcproject.entity.OpinionChoice as OpinionChoiceEntity
+import fr.dcproject.component.opinion.entity.Opinion as OpinionEntity
+import fr.dcproject.component.opinion.entity.OpinionArticle as OpinionArticleEntity
+import fr.dcproject.component.opinion.entity.OpinionChoice as OpinionChoiceEntity
 
-open class OpinionChoice(override val requester: Requester) : RepositoryI {
+open class OpinionChoiceRepository(override val requester: Requester) : RepositoryI {
     /**
      * find all opinion choices
      * can be filtered by target compatibility
@@ -61,7 +61,7 @@ open class OpinionChoice(override val requester: Requester) : RepositoryI {
         )!!
 }
 
-abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requester) {
+abstract class OpinionRepository<T : TargetRef>(requester: Requester) : OpinionChoiceRepository(requester) {
     /**
      * Create an Opinion on target (article,...)
      */
@@ -133,7 +133,7 @@ abstract class Opinion<T : TargetRef>(requester: Requester) : OpinionChoice(requ
     }
 }
 
-class OpinionArticle(requester: Requester) : Opinion<ArticleRef>(requester) {
+class OpinionRepositoryArticle(requester: Requester) : OpinionRepository<ArticleRef>(requester) {
     /**
      * Update Opinions on Article (Delete old one)
      */

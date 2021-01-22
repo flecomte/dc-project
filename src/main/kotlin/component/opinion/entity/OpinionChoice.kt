@@ -1,4 +1,4 @@
-package fr.dcproject.entity
+package fr.dcproject.component.opinion.entity
 
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp

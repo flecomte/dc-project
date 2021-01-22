@@ -8,12 +8,13 @@ import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.comment.generic.CommentRef
+import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.workgroup.Workgroup
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.repository.OpinionChoice
+import fr.dcproject.repository.OpinionChoiceRepository
 import io.ktor.features.DataConversion
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -99,11 +100,11 @@ val converters: ConverterDeclaration = {
         }
     }
 
-    convert<fr.dcproject.entity.OpinionChoice> {
+    convert<OpinionChoice> {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }
                 ?: throw InternalError("Cannot convert $values to UUID")
-            get<OpinionChoice>().findOpinionChoiceById(id)
+            get<OpinionChoiceRepository>().findOpinionChoiceById(id)
                 ?: throw NotFoundException("OpinionChoice $values not found")
         }
     }

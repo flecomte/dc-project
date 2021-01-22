@@ -1,8 +1,8 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.opinion
 
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.opinion.entity.OpinionI
 import fr.dcproject.entity.HasTarget
-import fr.dcproject.entity.OpinionI
 import fr.dcproject.voter.Voter
 import fr.dcproject.voter.VoterResponse
 import fr.postgresjson.entity.EntityCreatedBy

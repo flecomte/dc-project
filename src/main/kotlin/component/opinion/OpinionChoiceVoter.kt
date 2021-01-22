@@ -1,7 +1,7 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.opinion
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.OpinionChoice
+import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.voter.Voter
 import fr.dcproject.voter.VoterResponse
 
