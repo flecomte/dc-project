@@ -1,7 +1,7 @@
 package fr.dcproject.component.views
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.ViewAggregation
+import fr.dcproject.component.views.entity.ViewAggregation
 import org.elasticsearch.client.Response
 import org.joda.time.DateTime
 

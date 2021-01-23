@@ -5,7 +5,7 @@ import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
-import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.security.assert
 import io.ktor.application.call

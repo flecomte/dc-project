@@ -7,10 +7,11 @@ import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.routes.GetOneArticle.ArticleRequest.Output
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.dto.Opinionable
+import fr.dcproject.component.views.dto.Viewable
+import fr.dcproject.component.views.entity.ViewAggregation
 import fr.dcproject.component.vote.dto.Votable
 import fr.dcproject.dto.CreatedAt
 import fr.dcproject.dto.Versionable
-import fr.dcproject.dto.Viewable
 import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
@@ -34,7 +35,7 @@ object GetOneArticle {
 
         class Output(
             article: ArticleForView,
-            views: fr.dcproject.entity.ViewAggregation = fr.dcproject.entity.ViewAggregation()
+            views: ViewAggregation = ViewAggregation()
         ) : CreatedAt by CreatedAt.Imp(article),
             Opinionable by Opinionable.Imp(article),
             Votable by Votable.Imp(article),

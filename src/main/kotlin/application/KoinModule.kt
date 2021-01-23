@@ -18,6 +18,8 @@ import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
+import fr.dcproject.component.constitution.ConstitutionAccessControl
+import fr.dcproject.component.constitution.ConstitutionRepository
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.OpinionChoiceAccessControl
@@ -33,7 +35,6 @@ import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.repository.CommentConstitutionRepository
-import fr.dcproject.security.voter.ConstitutionAccessControl
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -50,7 +51,6 @@ import fr.dcproject.component.comment.generic.CommentRepository as CommentGeneri
 import fr.dcproject.component.follow.FollowArticleRepository as FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository as FollowConstitutionRepository
 import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
-import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 @KtorExperimentalAPI
 val KoinModule = module {

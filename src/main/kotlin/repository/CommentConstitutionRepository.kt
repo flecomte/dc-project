@@ -5,7 +5,7 @@ import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.component.comment.generic.CommentRepositoryAbs
-import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.entity.TargetI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester

@@ -1,8 +1,6 @@
-package fr.dcproject.security.voter
+package fr.dcproject.component.constitution
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.ConstitutionS
-import fr.dcproject.entity.ConstitutionSimple
 import fr.dcproject.security.AccessControl
 import fr.dcproject.security.AccessResponse
 

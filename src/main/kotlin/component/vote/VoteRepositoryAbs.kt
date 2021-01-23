@@ -4,9 +4,9 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.generic.CommentForView
+import fr.dcproject.component.constitution.Constitution
 import fr.dcproject.component.vote.entity.VoteAggregation
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.dcproject.entity.Constitution
 import fr.dcproject.entity.TargetI
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated

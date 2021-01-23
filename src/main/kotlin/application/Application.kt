@@ -16,6 +16,7 @@ import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.routes.installCitizenRoutes
 import fr.dcproject.component.comment.article.routes.installCommentArticleRoutes
 import fr.dcproject.component.comment.generic.routes.installCommentRoutes
+import fr.dcproject.component.constitution.routes.installConstitutionRoutes
 import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
 import fr.dcproject.component.opinion.routes.installOpinionRoutes
@@ -25,7 +26,6 @@ import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.commentConstitution
-import fr.dcproject.routes.constitution
 import fr.dcproject.routes.definition
 import fr.dcproject.routes.notificationArticle
 import fr.dcproject.security.AccessDeniedException
@@ -140,10 +140,10 @@ fun Application.module(env: Env = PROD) {
         installWorkgroupRoutes()
         installOpinionRoutes()
         installVoteRoutes()
+        installConstitutionRoutes()
 
         authenticate(optional = true) {
             /* TODO */
-            constitution(get(), get())
             commentConstitution(get(), get())
             definition()
         }

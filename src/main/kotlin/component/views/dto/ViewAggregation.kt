@@ -1,6 +1,6 @@
-package fr.dcproject.dto
+package fr.dcproject.component.views.dto
 
-import fr.dcproject.entity.ViewAggregation
+import fr.dcproject.component.views.entity.ViewAggregation
 
 class ViewAggregation(
     val total: Int,

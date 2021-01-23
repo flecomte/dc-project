@@ -8,13 +8,14 @@ import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.comment.generic.CommentRef
+import fr.dcproject.component.constitution.Constitution
+import fr.dcproject.component.constitution.ConstitutionRef
+import fr.dcproject.component.constitution.ConstitutionRepository
 import fr.dcproject.component.opinion.OpinionChoiceRepository
 import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.workgroup.Workgroup
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.entity.Constitution
-import fr.dcproject.entity.ConstitutionRef
 import io.ktor.features.DataConversion
 import io.ktor.features.NotFoundException
 import io.ktor.util.KtorExperimentalAPI
@@ -80,7 +81,7 @@ val converters: ConverterDeclaration = {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }
                 ?: throw InternalError("Cannot convert $values to UUID")
-            get<fr.dcproject.repository.Constitution>().findById(id) ?: throw NotFoundException("Constitution $values not found")
+            get<ConstitutionRepository>().findById(id) ?: throw NotFoundException("Constitution $values not found")
         }
     }
 

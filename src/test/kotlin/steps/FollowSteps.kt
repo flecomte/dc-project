@@ -2,8 +2,8 @@ package steps
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.follow.FollowForUpdate
-import fr.dcproject.entity.ConstitutionRef
 import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest

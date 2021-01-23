@@ -1,4 +1,4 @@
-package fr.dcproject.entity
+package fr.dcproject.component.views.entity
 
 import fr.postgresjson.entity.EntityI
 import fr.postgresjson.entity.EntityUpdatedAt

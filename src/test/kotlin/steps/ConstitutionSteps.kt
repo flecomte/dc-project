@@ -6,8 +6,10 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.comment.generic.CommentForUpdate
-import fr.dcproject.entity.ConstitutionRef
-import fr.dcproject.entity.ConstitutionSimple
+import fr.dcproject.component.constitution.ConstitutionRef
+import fr.dcproject.component.constitution.ConstitutionRepository
+import fr.dcproject.component.constitution.ConstitutionSimple
+import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
 import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
@@ -17,7 +19,6 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.UUID
 import fr.dcproject.component.auth.User as UserEntity
-import fr.dcproject.repository.Constitution as ConstitutionRepository
 
 class ConstitutionSteps : En, KoinTest {
     init {
@@ -71,7 +72,7 @@ class ConstitutionSteps : En, KoinTest {
             name = "My Title"
         )
 
-        val constitution = ConstitutionSimple<CitizenWithUserI, ConstitutionSimple.TitleSimple<ArticleRef>>(
+        val constitution = ConstitutionSimple<CitizenWithUserI, TitleSimple<ArticleRef>>(
             id = id ?: params?.get("id")?.toUUID() ?: UUID.randomUUID(),
             title = "hello",
             titles = mutableListOf(title1),

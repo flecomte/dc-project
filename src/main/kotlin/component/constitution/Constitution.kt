@@ -1,9 +1,12 @@
-package fr.dcproject.entity
+package fr.dcproject.component.constitution
 
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleI
 import fr.dcproject.component.citizen.CitizenSimple
 import fr.dcproject.component.citizen.CitizenWithUserI
+import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
+import fr.dcproject.entity.TargetI
+import fr.dcproject.entity.TargetRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityCreatedBy
@@ -23,7 +26,7 @@ class Constitution(
     draft: Boolean = false,
     lastVersion: Boolean = false,
     override val createdBy: CitizenSimple
-) : ConstitutionSimple<CitizenSimple, ConstitutionSimple.TitleSimple<ArticleForListing>>(
+) : ConstitutionSimple<CitizenSimple, TitleSimple<ArticleForListing>>(
     id,
     title = title,
     anonymous = anonymous,
@@ -38,10 +41,10 @@ class Constitution(
         name: String,
         rank: Int? = null,
         override val articles: MutableList<ArticleForListing> = mutableListOf()
-    ) : ConstitutionSimple.TitleSimple<ArticleForListing>(id, name, rank)
+    ) : TitleSimple<ArticleForListing>(id, name, rank)
 }
 
-open class ConstitutionSimple<Cr : CitizenWithUserI, T : ConstitutionSimple.TitleSimple<*>>(
+open class ConstitutionSimple<Cr : CitizenWithUserI, T : TitleSimple<*>>(
     id: UUID = UUID.randomUUID(),
     val title: String,
     val anonymous: Boolean = true,

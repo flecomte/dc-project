@@ -4,7 +4,7 @@ import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.entity.ConstitutionRef
+import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -13,8 +13,8 @@ import fr.postgresjson.repository.RepositoryI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
+import fr.dcproject.component.constitution.Constitution as ConstitutionEntity
 import fr.dcproject.component.follow.Follow as FollowEntity
-import fr.dcproject.entity.Constitution as ConstitutionEntity
 
 sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(

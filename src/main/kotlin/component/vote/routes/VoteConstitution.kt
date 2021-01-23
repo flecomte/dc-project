@@ -15,7 +15,7 @@ import io.ktor.locations.put
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.entity.Constitution as ConstitutionEntity
+import fr.dcproject.component.constitution.Constitution as ConstitutionEntity
 
 @KtorExperimentalLocationsAPI
 object VoteConstitution {
