@@ -104,7 +104,7 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(EventSubscriber) {
-        EventNotification(this, get(), get(), get(), get(), get()).config()
+        EventNotification(this, get(), get(), get(), get(), get(), Configuration.exchangeNotificationName).config()
     }
 
     install(Authentication, jwtInstallation(get()))

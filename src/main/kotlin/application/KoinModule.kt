@@ -54,9 +54,6 @@ import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticle
 
 @KtorExperimentalAPI
 val KoinModule = module {
-
-    single { Configuration }
-
     // SQL connection
     single {
         Connection(
@@ -152,7 +149,7 @@ val KoinModule = module {
     // Used to send a connexion link by email
     single { PasswordlessAuth(get<Mailer>(), Configuration.domain, get()) }
 
-    single { Publisher(get(), get()) }
+    single { Publisher(get(), get(), exchangeName = Configuration.exchangeNotificationName) }
 
     single { NotificationEmailSender(get<Mailer>(), Configuration.domain, get(), get()) }
 }

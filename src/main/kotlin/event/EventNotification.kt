@@ -6,7 +6,6 @@ import com.rabbitmq.client.ConnectionFactory
 import com.rabbitmq.client.Consumer
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
-import fr.dcproject.application.Configuration
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
@@ -46,13 +45,13 @@ class EventNotification(
     private val redis: RedisAsyncCommands<String, String>,
     private val followRepo: FollowArticleRepository,
     private val publisher: Publisher,
-    private val notificationEmailSender: NotificationEmailSender
+    private val notificationEmailSender: NotificationEmailSender,
+    private val exchangeName: String,
 ) {
     private val logger: Logger = LoggerFactory.getLogger(Publisher::class.qualifiedName)
 
     fun config() {
         /* Config Rabbit */
-        val exchangeName = Configuration.exchangeNotificationName
         rabbitFactory.newConnection().use { connection ->
             connection.createChannel().use { channel ->
                 channel.queueDeclare("push", true, false, false, null)
