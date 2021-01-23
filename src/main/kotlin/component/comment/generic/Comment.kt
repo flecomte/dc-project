@@ -3,11 +3,11 @@ package fr.dcproject.component.comment.generic
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
-import fr.dcproject.entity.EntityI
-import fr.dcproject.entity.ExtraI
-import fr.dcproject.entity.HasTarget
-import fr.dcproject.entity.TargetI
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.common.entity.EntityI
+import fr.dcproject.common.entity.ExtraI
+import fr.dcproject.common.entity.HasTarget
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityCreatedBy

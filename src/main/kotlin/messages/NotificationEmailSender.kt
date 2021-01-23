@@ -9,7 +9,7 @@ import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 

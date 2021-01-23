@@ -1,4 +1,4 @@
-package fr.dcproject.entity
+package fr.dcproject.common.entity
 
 import fr.postgresjson.entity.EntityI
 import java.util.UUID

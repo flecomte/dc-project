@@ -3,9 +3,9 @@ package fr.dcproject.component.follow
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.entity.ExtraI
-import fr.dcproject.entity.HasTarget
-import fr.dcproject.entity.TargetI
+import fr.dcproject.common.entity.ExtraI
+import fr.dcproject.common.entity.HasTarget
+import fr.dcproject.common.entity.TargetI
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityCreatedBy

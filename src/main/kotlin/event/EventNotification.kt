@@ -11,7 +11,7 @@ import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import fr.postgresjson.serializer.deserialize

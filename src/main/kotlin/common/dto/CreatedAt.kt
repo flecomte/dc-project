@@ -1,4 +1,4 @@
-package fr.dcproject.dto
+package fr.dcproject.common.dto
 
 import fr.postgresjson.entity.EntityCreatedAt
 import org.joda.time.DateTime

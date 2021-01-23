@@ -7,8 +7,8 @@ import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.component.constitution.Constitution
 import fr.dcproject.component.vote.entity.VoteAggregation
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.dcproject.entity.TargetI
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI

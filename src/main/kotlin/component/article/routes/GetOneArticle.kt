@@ -1,17 +1,16 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.common.dto.CreatedAt
+import fr.dcproject.common.dto.Versionable
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
-import fr.dcproject.component.article.routes.GetOneArticle.ArticleRequest.Output
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.dto.Opinionable
 import fr.dcproject.component.views.dto.Viewable
 import fr.dcproject.component.views.entity.ViewAggregation
 import fr.dcproject.component.vote.dto.Votable
-import fr.dcproject.dto.CreatedAt
-import fr.dcproject.dto.Versionable
 import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
@@ -32,26 +31,26 @@ object GetOneArticle {
         val repo: ArticleRepository by inject()
 
         val article: ArticleForView = repo.findById(articleId) ?: throw NotFoundException("Article $articleId not found")
+    }
 
-        class Output(
-            article: ArticleForView,
-            views: ViewAggregation = ViewAggregation()
-        ) : CreatedAt by CreatedAt.Imp(article),
-            Opinionable by Opinionable.Imp(article),
-            Votable by Votable.Imp(article),
-            Versionable by Versionable.Imp(article),
-            Viewable by Viewable.Imp(views) {
-            val id = article.id
-            val title = article.title
-            val anonymous = article.anonymous
-            val content = article.content
-            val description = article.description
-            val tags = article.tags
-            val draft = article.draft
-            val lastVersion = article.lastVersion
-            val createdBy = article.createdBy
-            val workgroup = article.workgroup // TODO change to workgroup DTO
-        }
+    class Output(
+        article: ArticleForView,
+        views: ViewAggregation = ViewAggregation()
+    ) : CreatedAt by CreatedAt.Imp(article),
+        Opinionable by Opinionable.Imp(article),
+        Votable by Votable.Imp(article),
+        Versionable by Versionable.Imp(article),
+        Viewable by Viewable.Imp(views) {
+        val id = article.id
+        val title = article.title
+        val anonymous = article.anonymous
+        val content = article.content
+        val description = article.description
+        val tags = article.tags
+        val draft = article.draft
+        val lastVersion = article.lastVersion
+        val createdBy = article.createdBy
+        val workgroup = article.workgroup // TODO change to workgroup DTO
     }
 
     fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl) {

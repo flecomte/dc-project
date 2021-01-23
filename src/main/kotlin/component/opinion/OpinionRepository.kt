@@ -3,7 +3,7 @@ package fr.dcproject.component.opinion
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
-import fr.dcproject.entity.TargetRef
+import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI

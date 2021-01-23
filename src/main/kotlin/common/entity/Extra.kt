@@ -1,4 +1,4 @@
-package fr.dcproject.entity
+package fr.dcproject.common.entity
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
