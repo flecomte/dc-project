@@ -3,13 +3,13 @@ package fr.dcproject.messages
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleWithTitleI
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 

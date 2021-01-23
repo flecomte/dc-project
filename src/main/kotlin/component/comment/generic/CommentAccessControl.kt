@@ -1,7 +1,7 @@
 package fr.dcproject.component.comment.generic
 
-import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.common.entity.HasTarget
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.security.AccessControl
 import fr.dcproject.security.AccessResponse
 import fr.postgresjson.entity.EntityCreatedBy

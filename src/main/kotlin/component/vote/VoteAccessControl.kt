@@ -1,8 +1,8 @@
 package fr.dcproject.component.vote
 
+import fr.dcproject.common.entity.TargetI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.dcproject.common.entity.TargetI
 import fr.dcproject.security.AccessControl
 import fr.dcproject.security.AccessResponse
 import fr.postgresjson.entity.EntityDeletedAt

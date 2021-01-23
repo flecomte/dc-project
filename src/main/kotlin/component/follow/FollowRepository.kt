@@ -1,11 +1,11 @@
 package fr.dcproject.component.follow
 
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.constitution.ConstitutionRef
-import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.UuidEntity

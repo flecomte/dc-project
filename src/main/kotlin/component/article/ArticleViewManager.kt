@@ -1,9 +1,9 @@
 package fr.dcproject.component.article
 
+import fr.dcproject.common.entity.VersionableRef
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.views.ViewManager
 import fr.dcproject.component.views.entity.ViewAggregation
-import fr.dcproject.common.entity.VersionableRef
 import fr.dcproject.utils.contentToString
 import fr.dcproject.utils.getJsonField
 import fr.dcproject.utils.toIso

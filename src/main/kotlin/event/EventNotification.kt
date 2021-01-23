@@ -7,11 +7,11 @@ import com.rabbitmq.client.Consumer
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
 import fr.dcproject.application.Configuration
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import fr.postgresjson.serializer.deserialize

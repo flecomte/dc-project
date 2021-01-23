@@ -1,14 +1,14 @@
 package fr.dcproject.component.opinion.entity
 
+import fr.dcproject.common.entity.ExtraI
+import fr.dcproject.common.entity.HasTarget
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.common.entity.ExtraI
-import fr.dcproject.common.entity.HasTarget
-import fr.dcproject.common.entity.TargetI
-import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityCreatedBy

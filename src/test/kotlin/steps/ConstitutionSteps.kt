@@ -5,12 +5,12 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithUserI
+import fr.dcproject.component.comment.constitution.CommentConstitutionRepository
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.constitution.ConstitutionRepository
 import fr.dcproject.component.constitution.ConstitutionSimple
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
-import fr.dcproject.repository.CommentConstitutionRepository
 import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En

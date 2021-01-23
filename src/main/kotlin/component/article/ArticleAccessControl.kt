@@ -1,8 +1,8 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.common.entity.CreatedBy
 import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.security.AccessControl
 import fr.dcproject.security.AccessResponse
 

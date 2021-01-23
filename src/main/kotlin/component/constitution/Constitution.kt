@@ -1,12 +1,12 @@
 package fr.dcproject.component.constitution
 
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleI
 import fr.dcproject.component.citizen.CitizenSimple
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
-import fr.dcproject.common.entity.TargetI
-import fr.dcproject.common.entity.TargetRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityCreatedBy

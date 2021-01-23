@@ -1,5 +1,9 @@
 package fr.dcproject.component.article
 
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
+import fr.dcproject.common.entity.VersionableRef
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenCartI
 import fr.dcproject.component.citizen.CitizenI
@@ -12,10 +16,6 @@ import fr.dcproject.component.workgroup.WorkgroupCart
 import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.dcproject.common.entity.CreatedBy
-import fr.dcproject.common.entity.TargetI
-import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.common.entity.VersionableRef
 import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityDeletedAt

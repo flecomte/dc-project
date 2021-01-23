@@ -17,6 +17,7 @@ import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.constitution.CommentConstitutionRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.constitution.ConstitutionAccessControl
 import fr.dcproject.component.constitution.ConstitutionRepository
@@ -34,7 +35,6 @@ import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.repository.CommentConstitutionRepository
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
