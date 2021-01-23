@@ -5,16 +5,8 @@ enum class AccessDecision {
     GRANTED,
     DENIED;
 
-    /** Helper to convert true/false to GRANTED/DENIED */
-    companion object {
-        fun toVote(lambda: () -> Boolean): AccessDecision = when (lambda()) {
-            true -> GRANTED
-            false -> DENIED
-        }
-    }
-
     /**
-     * Convert vote to boolean
+     * Convert decision to boolean
      */
     fun toBoolean(): Boolean = when (this) {
         GRANTED -> true
