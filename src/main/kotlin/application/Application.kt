@@ -8,22 +8,31 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.application.Env.PROD
+import fr.dcproject.component.article.articleKoinModule
 import fr.dcproject.component.article.routes.installArticleRoutes
 import fr.dcproject.component.auth.ForbiddenException
+import fr.dcproject.component.auth.authKoinModule
 import fr.dcproject.component.auth.jwt.jwtInstallation
 import fr.dcproject.component.auth.routes.installAuthRoutes
 import fr.dcproject.component.auth.user
+import fr.dcproject.component.citizen.citizenKoinModule
 import fr.dcproject.component.citizen.routes.installCitizenRoutes
 import fr.dcproject.component.comment.article.routes.installCommentArticleRoutes
+import fr.dcproject.component.comment.commentKoinModule
 import fr.dcproject.component.comment.constitution.routes.installCommentConstitutionRoutes
 import fr.dcproject.component.comment.generic.routes.installCommentRoutes
+import fr.dcproject.component.constitution.constitutionKoinModule
 import fr.dcproject.component.constitution.routes.installConstitutionRoutes
+import fr.dcproject.component.follow.followKoinModule
 import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
+import fr.dcproject.component.opinion.opinionKoinModule
 import fr.dcproject.component.opinion.routes.installOpinionRoutes
-import fr.dcproject.component.views.ConfigViews
+import fr.dcproject.component.views.viewKoinModule
 import fr.dcproject.component.vote.routes.installVoteRoutes
+import fr.dcproject.component.vote.voteKoinModule
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
+import fr.dcproject.component.workgroup.workgroupKoinModule
 import fr.dcproject.event.EventNotification
 import fr.dcproject.event.EventSubscriber
 import fr.dcproject.routes.definition
@@ -78,7 +87,21 @@ enum class Env { PROD, TEST, CUCUMBER }
 fun Application.module(env: Env = PROD) {
     install(Koin) {
         Slf4jLog()
-        modules(KoinModule)
+        modules(
+            listOf(
+                KoinModule,
+                articleKoinModule,
+                authKoinModule,
+                citizenKoinModule,
+                commentKoinModule,
+                constitutionKoinModule,
+                followKoinModule,
+                opinionKoinModule,
+                viewKoinModule,
+                voteKoinModule,
+                workgroupKoinModule,
+            )
+        )
     }
 
     install(CallLogging) {
@@ -93,8 +116,6 @@ fun Application.module(env: Env = PROD) {
         engine {
         }
     }
-
-    ConfigViews.createEsIndexForViews(get())
 
     install(WebSockets) {
         pingPeriod = Duration.ofSeconds(60) // Disabled (null) by default
