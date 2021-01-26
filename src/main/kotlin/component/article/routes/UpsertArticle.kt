@@ -8,9 +8,8 @@ import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.event.ArticleUpdate
-import fr.dcproject.event.raiseEvent
+import fr.dcproject.event.publisher.Publisher
 import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -35,11 +34,11 @@ object UpsertArticle {
             val tags: List<String> = emptyList(),
             val draft: Boolean = false,
             val versionId: UUID,
-            val workgroup: WorkgroupRef? = null
+            val workgroup: WorkgroupRef? = null,
         )
     }
 
-    fun Route.upsertArticle(repo: ArticleRepository, workgroupRepository: WorkgroupRepository, ac: ArticleAccessControl) {
+    fun Route.upsertArticle(repo: ArticleRepository, publisher: Publisher, ac: ArticleAccessControl) {
         suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receive<Input>().run {
             ArticleForUpdate(
                 id = id ?: UUID.randomUUID(),
@@ -60,7 +59,7 @@ object UpsertArticle {
             ac.assert { canUpsert(article, citizenOrNull) }
             val newArticle: ArticleForView = repo.upsert(article) ?: error("Article not updated")
             call.respond(newArticle)
-            raiseEvent(ArticleUpdate.event, ArticleUpdate(newArticle))
+            publisher.publish(ArticleUpdate(newArticle))
         }
     }
 }
