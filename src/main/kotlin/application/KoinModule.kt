@@ -8,7 +8,7 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
-import fr.dcproject.event.publisher.Publisher
+import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
 import fr.postgresjson.connexion.Connection
@@ -78,7 +78,7 @@ val KoinModule = module {
     // Mailer
     single { Mailer(Configuration.sendGridKey) }
 
-    single { Publisher(get(), get(), exchangeName = Configuration.exchangeNotificationName) }
+    single { Publisher(factory = get(), exchangeName = Configuration.exchangeNotificationName) }
 
     single { NotificationEmailSender(get<Mailer>(), Configuration.domain, get(), get()) }
 }

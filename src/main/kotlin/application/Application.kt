@@ -3,7 +3,7 @@ package fr.dcproject.application
 import com.fasterxml.jackson.core.util.DefaultIndenter
 import com.fasterxml.jackson.core.util.DefaultPrettyPrinter
 import com.fasterxml.jackson.databind.DeserializationFeature
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
@@ -33,7 +33,7 @@ import fr.dcproject.component.vote.routes.installVoteRoutes
 import fr.dcproject.component.vote.voteKoinModule
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.component.workgroup.workgroupKoinModule
-import fr.dcproject.event.EventNotification
+import fr.dcproject.notification.EventNotification
 import fr.dcproject.routes.definition
 import fr.dcproject.routes.notificationArticle
 import fr.dcproject.security.AccessDeniedException
@@ -123,7 +123,7 @@ fun Application.module(env: Env = PROD) {
         masking = false
     }
 
-    EventNotification(get(), get(), get(), get(), get(), Configuration.exchangeNotificationName, get()).config()
+    EventNotification(get(), get(), get(), get(), get(), Configuration.exchangeNotificationName).config()
 
     install(Authentication, jwtInstallation(get()))
 
@@ -131,7 +131,7 @@ fun Application.module(env: Env = PROD) {
 
     install(ContentNegotiation) {
         jackson {
-            propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+            propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
 
             registerModule(JodaModule())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

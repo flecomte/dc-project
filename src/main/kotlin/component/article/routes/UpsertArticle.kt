@@ -8,8 +8,8 @@ import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.event.ArticleUpdate
-import fr.dcproject.event.publisher.Publisher
+import fr.dcproject.notification.ArticleUpdateNotification
+import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
@@ -59,7 +59,7 @@ object UpsertArticle {
             ac.assert { canUpsert(article, citizenOrNull) }
             val newArticle: ArticleForView = repo.upsert(article) ?: error("Article not updated")
             call.respond(newArticle)
-            publisher.publish(ArticleUpdate(newArticle))
+            publisher.publish(ArticleUpdateNotification(newArticle))
         }
     }
 }

@@ -1,9 +1,7 @@
 package fr.dcproject.routes
 
 import fr.dcproject.component.auth.citizen
-import fr.dcproject.event.Event
-import fr.postgresjson.serializer.deserialize
-import io.ktor.client.HttpClient
+import fr.dcproject.notification.Notification
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.readText
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -17,6 +15,7 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.consumeAsFlow
 import kotlinx.coroutines.flow.mapNotNull
 import kotlinx.coroutines.launch
+import org.slf4j.LoggerFactory
 
 @ExperimentalCoroutinesApi
 @KtorExperimentalLocationsAPI
@@ -26,15 +25,19 @@ fun Route.notificationArticle(redis: RedisAsyncCommands<String, String>, client:
 
         launch {
             incoming.consumeAsFlow().mapNotNull { it as? Frame.Text }.collect {
-                val notificationMessage = it.readText().deserialize<Event>() ?: error("unable to deserialize message")
-
-                redis.zremrangebyscore(
-                    "notification:$citizenId",
-                    Range.from(
-                        Range.Boundary.including(notificationMessage.id),
-                        Range.Boundary.including(notificationMessage.id)
+                try {
+                    val notificationMessage: Notification = Notification.deserialize(it.readText())
+                    redis.zremrangebyscore(
+                        "notification:$citizenId",
+                        Range.from(
+                            Range.Boundary.including(notificationMessage.id),
+                            Range.Boundary.including(notificationMessage.id)
+                        )
                     )
-                )
+                } catch (e: Throwable) {
+                    LoggerFactory.getLogger(Route::class.qualifiedName)
+                        .error("Unable to deserialize notification")
+                }
             }
         }
 
