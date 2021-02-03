@@ -33,7 +33,7 @@ import fr.dcproject.component.vote.routes.installVoteRoutes
 import fr.dcproject.component.vote.voteKoinModule
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.component.workgroup.workgroupKoinModule
-import fr.dcproject.notification.EventNotification
+import fr.dcproject.notification.NotificationConsumer
 import fr.dcproject.routes.definition
 import fr.dcproject.routes.notificationArticle
 import fr.dcproject.security.AccessDeniedException
@@ -122,7 +122,7 @@ fun Application.module(env: Env = PROD) {
         masking = false
     }
 
-    EventNotification(get(), get(), get(), get(), get(), Configuration.exchangeNotificationName).config()
+    NotificationConsumer(get(), get(), get(), get(), get(), Configuration.exchangeNotificationName).config()
 
     install(Authentication, jwtInstallation(get()))
 

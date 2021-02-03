@@ -8,30 +8,26 @@ import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowSimple
 import fr.dcproject.notification.ArticleUpdateNotification
-import fr.dcproject.notification.EventNotification
+import fr.dcproject.notification.NotificationConsumer
 import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
-import io.lettuce.core.api.async.RedisAsyncCommands
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.spyk
 import io.mockk.verify
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.KoinTest
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EventNotificationTest {
+class NotificationConsumerTest {
     @InternalCoroutinesApi
     @KtorExperimentalLocationsAPI
     @KtorExperimentalAPI
@@ -68,7 +64,7 @@ class EventNotificationTest {
         }
 
         /* Config consumer */
-        EventNotification(
+        NotificationConsumer(
             rabbitFactory = rabbitFactory,
             redisClient = redisClient,
             followArticleRepo = followArticleRepo,
