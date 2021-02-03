@@ -17,7 +17,7 @@ class Publisher(
         async {
             factory.newConnection().use { connection ->
                 connection.createChannel().use { channel ->
-                    channel.basicPublish(exchangeName, "", null, it.serialize().toByteArray())
+                    channel.basicPublish(exchangeName, "", null, it.toString().toByteArray())
                     logger.debug("Publish message ${it.target.id}")
                 }
             }

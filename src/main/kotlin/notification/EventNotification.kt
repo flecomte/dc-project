@@ -23,6 +23,7 @@ import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.messages.NotificationEmailSender
 import fr.postgresjson.entity.UuidEntity
 import io.ktor.utils.io.errors.IOException
+import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.runBlocking
@@ -41,9 +42,9 @@ open class Notification(
         return (time.toString() + Random.nextInt(1000, 9999).toString()).toDouble()
     }
 
-    fun serialize(): String = mapper.writeValueAsString(this) ?: error("Unable to serialize notification")
+    override fun toString(): String = mapper.writeValueAsString(this) ?: error("Unable to serialize notification")
 
-    fun toByteArray() = serialize().toByteArray()
+    fun toByteArray() = toString().toByteArray()
 
     companion object {
         val mapper = jacksonObjectMapper().apply {
@@ -55,7 +56,7 @@ open class Notification(
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
 
-        inline fun <reified T : Notification> deserialize(raw: String): T = mapper.readValue(raw)
+        inline fun <reified T : Notification> fromString(raw: String): T = mapper.readValue(raw)
     }
 }
 
@@ -71,12 +72,13 @@ class ArticleUpdateNotification(
 
 class EventNotification(
     private val rabbitFactory: ConnectionFactory,
-    private val redis: RedisAsyncCommands<String, String>,
+    private val redisClient: RedisClient,
     private val followConstitutionRepo: FollowConstitutionRepository,
     private val followArticleRepo: FollowArticleRepository,
     private val notificationEmailSender: NotificationEmailSender,
     private val exchangeName: String,
 ) {
+    val redis: RedisAsyncCommands<String, String> = redisClient.connect()?.async() ?: error("Unable to connect to redis")
     private val logger: Logger = LoggerFactory.getLogger(Publisher::class.qualifiedName)
 
     fun config() {
@@ -102,7 +104,7 @@ class EventNotification(
                 properties: AMQP.BasicProperties,
                 body: ByteArray
             ) = runBlocking {
-                decodeMessage(body) {
+                followersFromMessage(body) {
                     redis.zadd(
                         "notification:${it.follow.createdBy.id}",
                         it.event.id,
@@ -123,7 +125,7 @@ class EventNotification(
                 body: ByteArray
             ) {
                 runBlocking {
-                    decodeMessage(body) {
+                    followersFromMessage(body) {
                         notificationEmailSender.sendEmail(it.follow)
                         logger.debug("EmailSend to: ${it.follow.createdBy.id}")
                     }
@@ -136,9 +138,9 @@ class EventNotification(
         rabbitChannel.basicConsume("email", false, consumerEmail)
     }
 
-    private suspend fun decodeMessage(body: ByteArray, action: suspend (DecodedMessage) -> Unit) {
+    private suspend fun followersFromMessage(body: ByteArray, action: suspend (DecodedMessage) -> Unit) {
         val rawMessage: String = body.toString(Charsets.UTF_8)
-        val notification: EntityNotification = Notification.deserialize<EntityNotification>(rawMessage) ?: error("Unable to deserialize notification message from rabbit")
+        val notification: EntityNotification = Notification.fromString<EntityNotification>(rawMessage) ?: error("Unable to deserialize notification message from rabbit")
         val follows = when (notification.type) {
             "article" -> followArticleRepo.findFollowsByTarget(notification.target)
             "constitution" -> followConstitutionRepo.findFollowsByTarget(notification.target)

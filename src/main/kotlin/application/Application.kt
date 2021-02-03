@@ -68,7 +68,6 @@ import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
-import org.koin.core.qualifier.named
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
@@ -162,12 +161,11 @@ fun Application.module(env: Env = PROD) {
         installCommentConstitutionRoutes()
 
         authenticate(optional = true) {
-            /* TODO */
             definition()
         }
 
         authenticate("url") {
-            notificationArticle(get(), get(named("ws")))
+            notificationArticle(get())
         }
     }
 

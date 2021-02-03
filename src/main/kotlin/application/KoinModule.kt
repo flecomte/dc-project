@@ -39,8 +39,10 @@ val KoinModule = module {
     single { Migrations(get(), Configuration.Sql.migrationFiles, Configuration.Sql.functionFiles) }
 
     // Redis client
-    single<RedisAsyncCommands<String, String>> {
-        RedisClient.create(Configuration.redis).connect()?.async() ?: error("Unable to connect to redis")
+    single<RedisClient> {
+        RedisClient.create(Configuration.redis).apply {
+            connect().sync().configSet("notify-keyspace-events", "KEA")
+        }
     }
 
     // RabbitMQ

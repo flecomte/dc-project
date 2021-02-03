@@ -31,7 +31,7 @@ import org.koin.test.AutoCloseKoinTest
 import org.koin.test.KoinTest
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class EventNotificationTest : KoinTest, AutoCloseKoinTest() {
+class EventNotificationTest {
     @InternalCoroutinesApi
     @KtorExperimentalLocationsAPI
     @KtorExperimentalAPI
@@ -43,9 +43,12 @@ class EventNotificationTest : KoinTest, AutoCloseKoinTest() {
         val emailSender = mockk<NotificationEmailSender>() {
             every { sendEmail(any()) } returns Unit
         }
-        val redisClient = spyk<RedisAsyncCommands<String, String>> {
-            RedisClient.create(Configuration.redis).connect().async() ?: error("Unable to connect to redis")
-        }
+
+        /* Init Spy on redis client */
+        val redisClient = spyk<RedisClient>(RedisClient.create(Configuration.redis))
+        val asyncCommand = spyk(redisClient.connect().async())
+        every { redisClient.connect().async() } returns asyncCommand
+
         val rabbitFactory: ConnectionFactory = spyk {
             ConnectionFactory().apply { setUri(Configuration.rabbitmq) }
         }
@@ -67,7 +70,7 @@ class EventNotificationTest : KoinTest, AutoCloseKoinTest() {
         /* Config consumer */
         EventNotification(
             rabbitFactory = rabbitFactory,
-            redis = redisClient,
+            redisClient = redisClient,
             followArticleRepo = followArticleRepo,
             followConstitutionRepo = mockk(),
             notificationEmailSender = emailSender,
@@ -90,12 +93,9 @@ class EventNotificationTest : KoinTest, AutoCloseKoinTest() {
             )
         ).await()
 
-        /* Wait to receive message */
-        delay(1000)
-
         /* Check if notifications sent */
-        verify { followArticleRepo.findFollowsByTarget(any()) }
-        verify { emailSender.sendEmail(any()) }
-        verify { redisClient.zadd(any<String>(), any<Double>(), any<String>()) }
+        verify(timeout = 1000) { followArticleRepo.findFollowsByTarget(any()) }
+        verify(timeout = 1000) { emailSender.sendEmail(any()) }
+        verify(timeout = 1000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
     }
 }
