@@ -32,10 +32,6 @@ class CucumberTest : En, KoinTest {
 
     init {
         if (!unitialized) {
-            Configuration.Database.database = "test"
-            Configuration.Database.username = "test"
-            Configuration.Database.password = "test"
-
             withTestApplication({ module(CUCUMBER) }) {
                 migrations()
             }
@@ -43,9 +39,6 @@ class CucumberTest : En, KoinTest {
         }
 
         Before(-1) { _: Scenario ->
-            Configuration.Database.database = "test"
-            Configuration.Database.username = "test"
-            Configuration.Database.password = "test"
             ktorContext.start()
             //language=PostgreSQL
             get<Connection>().sendQuery("start transaction;", listOf())
@@ -59,9 +52,6 @@ class CucumberTest : En, KoinTest {
     }
 
     private fun migrations() {
-        Configuration.Database.database = "test"
-        Configuration.Database.username = "test"
-        Configuration.Database.password = "test"
         val migrations: Migrations = get()
         migrations.forceAllDown()
         migrations.run()

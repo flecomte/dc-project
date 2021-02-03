@@ -7,9 +7,9 @@ object Configuration {
     private var config = ConfigFactory.load()
 
     object Sql {
-        val migrationFiles: URI = this::class.java.getResource("/sql/migrations").toURI()
-        val functionFiles: URI = this::class.java.getResource("/sql/functions").toURI()
-        val fixtureFiles: URI = this::class.java.getResource("/sql/fixtures").toURI()
+        val migrationFiles: URI = this::class.java.getResource("/sql/migrations")?.toURI() ?: error("No migrations found")
+        val functionFiles: URI = this::class.java.getResource("/sql/functions")?.toURI() ?: error("No sql function found")
+        val fixtureFiles: URI = this::class.java.getResource("/sql/fixtures")?.toURI() ?: error("No sql fixture found")
     }
     object Database {
         val host: String = config.getString("db.host")
