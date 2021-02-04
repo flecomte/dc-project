@@ -1,9 +1,8 @@
-package notification
+package fr.dcproject.component.notification
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.notification.Notification
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.Frame.Text
 import io.ktor.http.cio.websocket.readText

@@ -7,9 +7,9 @@ import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.Input
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.notification.ArticleUpdateNotification
+import fr.dcproject.component.notification.Publisher
 import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.notification.ArticleUpdateNotification
-import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.security.assert
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call

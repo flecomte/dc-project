@@ -1,4 +1,4 @@
-package fr.dcproject.notification
+package fr.dcproject.component.notification
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies

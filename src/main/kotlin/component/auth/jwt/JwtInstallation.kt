@@ -25,6 +25,7 @@ fun jwtInstallation(userRepo: UserRepository): Authentication.Configuration.() -
         }
     }
 
+    /* Token in URL */
     jwt("url") {
         verifier(JwtConfig.verifier)
         realm = "dc-project.fr"

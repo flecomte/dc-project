@@ -1,7 +1,6 @@
-package fr.dcproject.notification.publisher
+package fr.dcproject.component.notification
 
 import com.rabbitmq.client.ConnectionFactory
-import fr.dcproject.notification.EntityNotification
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope

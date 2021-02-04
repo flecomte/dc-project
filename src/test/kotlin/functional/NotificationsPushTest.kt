@@ -4,8 +4,9 @@ import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.notification.ArticleUpdateNotification
-import fr.dcproject.notification.Notification
+import fr.dcproject.component.notification.ArticleUpdateNotification
+import fr.dcproject.component.notification.Notification
+import fr.dcproject.component.notification.NotificationsPush
 import io.lettuce.core.RedisClient
 import io.mockk.every
 import io.mockk.spyk
@@ -14,7 +15,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.runBlocking
-import notification.NotificationsPush
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Tag

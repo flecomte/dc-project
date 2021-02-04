@@ -7,10 +7,10 @@ import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowSimple
+import fr.dcproject.component.notification.ArticleUpdateNotification
+import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.Publisher
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.notification.ArticleUpdateNotification
-import fr.dcproject.notification.NotificationConsumer
-import fr.dcproject.notification.publisher.Publisher
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient

@@ -1,4 +1,4 @@
-package fr.dcproject.notification
+package fr.dcproject.component.notification
 
 import com.rabbitmq.client.AMQP.BasicProperties
 import com.rabbitmq.client.BuiltinExchangeType.DIRECT
@@ -12,7 +12,6 @@ import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository
 import fr.dcproject.component.follow.FollowSimple
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.notification.publisher.Publisher
 import io.ktor.utils.io.errors.IOException
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands

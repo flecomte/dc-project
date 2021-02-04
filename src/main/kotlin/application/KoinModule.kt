@@ -8,10 +8,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
+import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.NotificationsPush
+import fr.dcproject.component.notification.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
-import fr.dcproject.notification.NotificationConsumer
-import fr.dcproject.notification.publisher.Publisher
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -19,10 +20,8 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
-import notification.NotificationsPush
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
-import org.koin.ktor.ext.get
 
 @KtorExperimentalAPI
 val KoinModule = module {

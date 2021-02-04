@@ -23,9 +23,12 @@ import fr.dcproject.component.comment.constitution.routes.installCommentConstitu
 import fr.dcproject.component.comment.generic.routes.installCommentRoutes
 import fr.dcproject.component.constitution.constitutionKoinModule
 import fr.dcproject.component.constitution.routes.installConstitutionRoutes
+import fr.dcproject.component.doc.routes.installDocRoutes
 import fr.dcproject.component.follow.followKoinModule
 import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
+import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.routes.installNotificationsRoutes
 import fr.dcproject.component.opinion.opinionKoinModule
 import fr.dcproject.component.opinion.routes.installOpinionRoutes
 import fr.dcproject.component.views.viewKoinModule
@@ -33,9 +36,6 @@ import fr.dcproject.component.vote.routes.installVoteRoutes
 import fr.dcproject.component.vote.voteKoinModule
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.component.workgroup.workgroupKoinModule
-import fr.dcproject.notification.NotificationConsumer
-import fr.dcproject.routes.definition
-import fr.dcproject.routes.notificationArticle
 import fr.dcproject.security.AccessDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
@@ -43,7 +43,6 @@ import io.ktor.application.ApplicationStopped
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
-import io.ktor.auth.authenticate
 import io.ktor.client.HttpClient
 import io.ktor.client.engine.jetty.Jetty
 import io.ktor.features.AutoHeadResponse
@@ -165,14 +164,8 @@ fun Application.module(env: Env = PROD) {
         installVoteRoutes()
         installConstitutionRoutes()
         installCommentConstitutionRoutes()
-
-        authenticate(optional = true) {
-            definition()
-        }
-
-        authenticate("url") {
-            notificationArticle(get())
-        }
+        installNotificationsRoutes()
+        installDocRoutes()
     }
 
     install(StatusPages) {

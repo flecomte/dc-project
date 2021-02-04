@@ -1,10 +1,10 @@
-package fr.dcproject.routes
+package fr.dcproject.component.notification.routes
 
+import fr.dcproject.component.notification.NotificationsPush
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.Route
 import io.ktor.websocket.webSocket
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import notification.NotificationsPush
 
 /**
  * Consume Websocket, then remove notification in redis.

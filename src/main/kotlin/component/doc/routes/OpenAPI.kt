@@ -1,4 +1,4 @@
-package fr.dcproject.routes
+package fr.dcproject.component.doc.routes
 
 import fr.dcproject.utils.readResource
 import io.ktor.application.call
