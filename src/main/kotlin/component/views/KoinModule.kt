@@ -8,12 +8,15 @@ import org.elasticsearch.client.RestClient
 import org.koin.dsl.module
 
 val viewKoinModule = module {
-    // Elasticsearch Client
-    val esClient = RestClient.builder(
-        HttpHost.create(Configuration.elasticsearch)
-    ).build().apply {
-        createEsIndexForViews()
-    }
 
-    single { ArticleViewManager<ArticleForView>(esClient) }
+    single {
+        val config: Configuration = get()
+        // Elasticsearch Client
+        val esClient = RestClient.builder(
+            HttpHost.create(config.elasticsearch)
+        ).build().apply {
+            createEsIndexForViews()
+        }
+        ArticleViewManager<ArticleForView>(esClient)
+    }
 }

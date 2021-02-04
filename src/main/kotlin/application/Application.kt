@@ -39,6 +39,7 @@ import fr.dcproject.routes.notificationArticle
 import fr.dcproject.security.AccessDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
+import io.ktor.application.ApplicationStopped
 import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
@@ -122,7 +123,12 @@ fun Application.module(env: Env = PROD) {
         masking = false
     }
 
-    NotificationConsumer(get(), get(), get(), get(), get(), Configuration.exchangeNotificationName).config()
+    get<NotificationConsumer>().run {
+        start()
+        environment.monitor.subscribe(ApplicationStopped) {
+            close()
+        }
+    }
 
     install(Authentication, jwtInstallation(get()))
 

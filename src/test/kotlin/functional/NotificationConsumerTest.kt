@@ -7,10 +7,10 @@ import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowSimple
+import fr.dcproject.messages.NotificationEmailSender
 import fr.dcproject.notification.ArticleUpdateNotification
 import fr.dcproject.notification.NotificationConsumer
 import fr.dcproject.notification.publisher.Publisher
-import fr.dcproject.messages.NotificationEmailSender
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
@@ -22,31 +22,53 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.runBlocking
+import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestInstance(TestInstance.Lifecycle.PER_METHOD)
+@Tags(Tag("functional"))
 class NotificationConsumerTest {
+    companion object {
+        @BeforeAll
+        @JvmStatic
+        fun before() {
+            val config: Configuration = Configuration("application-test.conf")
+            RedisClient.create(config.redis).connect().sync().flushall()
+
+            /* Purge rabbit notification queues */
+            ConnectionFactory()
+                .apply { setUri(config.rabbitmq) }
+                .run {
+                    newConnection().createChannel().apply {
+                        queuePurge("push")
+                        queuePurge("email")
+                    }
+                }
+        }
+    }
+
     @InternalCoroutinesApi
     @KtorExperimentalLocationsAPI
     @KtorExperimentalAPI
     @ExperimentalCoroutinesApi
     @Test
-    @Tag("functional")
     fun `can be send notification`() = runBlocking {
+        val config: Configuration = Configuration("application-test.conf")
         /* Create mocks and spy's */
         val emailSender = mockk<NotificationEmailSender>() {
             every { sendEmail(any()) } returns Unit
         }
 
         /* Init Spy on redis client */
-        val redisClient = spyk<RedisClient>(RedisClient.create(Configuration.redis))
+        val redisClient = spyk<RedisClient>(RedisClient.create(config.redis))
         val asyncCommand = spyk(redisClient.connect().async())
         every { redisClient.connect().async() } returns asyncCommand
 
         val rabbitFactory: ConnectionFactory = spyk {
-            ConnectionFactory().apply { setUri(Configuration.rabbitmq) }
+            ConnectionFactory().apply { setUri(config.rabbitmq) }
         }
         val followArticleRepo = mockk<FollowArticleRepository> {
             every { findFollowsByTarget(any()) } returns flow {
@@ -57,21 +79,15 @@ class NotificationConsumerTest {
             }
         }
 
-        /* Purge rabbit notification queues */
-        rabbitFactory.newConnection().createChannel().apply {
-            queuePurge("push")
-            queuePurge("email")
-        }
-
         /* Config consumer */
-        NotificationConsumer(
+        val consumer = NotificationConsumer(
             rabbitFactory = rabbitFactory,
             redisClient = redisClient,
             followArticleRepo = followArticleRepo,
             followConstitutionRepo = mockk(),
             notificationEmailSender = emailSender,
             exchangeName = "notification_test",
-        ).config()
+        ).apply { start() }
         verify { rabbitFactory.newConnection() }
 
         /* Push message */
@@ -93,5 +109,7 @@ class NotificationConsumerTest {
         verify(timeout = 1000) { followArticleRepo.findFollowsByTarget(any()) }
         verify(timeout = 1000) { emailSender.sendEmail(any()) }
         verify(timeout = 1000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
+
+//        consumer.close()
     }
 }

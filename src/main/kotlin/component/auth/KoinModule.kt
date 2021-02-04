@@ -7,5 +7,8 @@ import org.koin.dsl.module
 val authKoinModule = module {
     single { UserRepository(get()) }
     // Used to send a connexion link by email
-    single { PasswordlessAuth(get<Mailer>(), Configuration.domain, get()) }
+    single {
+        val config: Configuration = get()
+        PasswordlessAuth(get<Mailer>(), config.domain, get())
+    }
 }

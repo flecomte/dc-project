@@ -11,6 +11,7 @@ import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.koin.test.AutoCloseKoinTest
@@ -20,10 +21,11 @@ import org.koin.test.get
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@Tags(Tag("functional"))
 class MailerTest : KoinTest, AutoCloseKoinTest() {
     @InternalCoroutinesApi
     @Test
-    @Tag("online, functional")
+    @Tags(Tag("online"))
     fun `can be send an email`() {
         withTestApplication({ module(TEST) }) {
             get<Mailer>().sendEmail {

@@ -14,6 +14,7 @@ import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
@@ -23,7 +24,7 @@ import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("security")
+@Tags(Tag("security"), Tag("unit"))
 internal class VoteAccessControlTest {
     private val tesla = Citizen(
         id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),

@@ -14,6 +14,7 @@ import io.mockk.mockk
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
+import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
@@ -23,7 +24,7 @@ import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tag("security")
+@Tags(Tag("security"), Tag("unit"))
 internal class ArticleAccessControlTest {
     private val tesla = CitizenCart(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),

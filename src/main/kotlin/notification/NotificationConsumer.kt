@@ -29,10 +29,18 @@ class NotificationConsumer(
     private val notificationEmailSender: NotificationEmailSender,
     private val exchangeName: String,
 ) {
-    val redis: RedisAsyncCommands<String, String> = redisClient.connect()?.async() ?: error("Unable to connect to redis")
+    private val redisConnection = redisClient.connect() ?: error("Unable to connect to redis")
+    private val redis: RedisAsyncCommands<String, String> = redisConnection.async() ?: error("Unable to connect to redis")
+    private val rabbitConnection = rabbitFactory.newConnection()
+    private val rabbitChannel = rabbitConnection.createChannel()
     private val logger: Logger = LoggerFactory.getLogger(Publisher::class.qualifiedName)
 
-    fun config() {
+    fun close() {
+        rabbitChannel.close()
+        rabbitConnection.close()
+    }
+
+    fun start() {
         /* Config Rabbit */
         rabbitFactory.newConnection().use { connection ->
             connection.createChannel().use { channel ->
@@ -45,8 +53,6 @@ class NotificationConsumer(
         }
 
         /* Define Consumer */
-        val rabbitChannel = rabbitFactory.newConnection().createChannel()
-
         val consumerPush: Consumer = object : DefaultConsumer(rabbitChannel) {
             @Throws(IOException::class)
             override fun handleDelivery(

@@ -15,7 +15,7 @@
       <env name="SEND_GRID_KEY" value="$SEND_GRID_KEY$" />
     </envs>
     <dir value="$PROJECT_DIR$" />
-    <tag value="!functional" />
+    <tag value="unit" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

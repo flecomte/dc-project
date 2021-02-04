@@ -1,3 +1,5 @@
+import com.rabbitmq.client.Channel
+import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.application.Configuration
 import fr.dcproject.application.Env.CUCUMBER
 import fr.dcproject.application.module
@@ -10,6 +12,8 @@ import io.cucumber.java8.Scenario
 import io.cucumber.junit.Cucumber
 import io.cucumber.junit.CucumberOptions
 import io.ktor.server.testing.withTestApplication
+import io.lettuce.core.RedisClient
+import io.lettuce.core.api.sync.RedisCommands
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.runner.RunWith
 import org.koin.test.KoinTest
@@ -24,6 +28,12 @@ var unitialized: Boolean = false
 @CucumberOptions(plugin = ["pretty"], strict = true)
 class CucumberTest : En, KoinTest {
     private val logger: Logger? by LoggerDelegate()
+    val config = Configuration("application-test.conf")
+    val redis: RedisCommands<String, String> = RedisClient.create(config.redis).connect().sync()
+    val rabbit: Channel = ConnectionFactory()
+        .apply { setUri(config.rabbitmq) }
+        .newConnection()
+        .createChannel()
 
     @InternalCoroutinesApi
     val ktorContext = KtorServerContext {
@@ -47,6 +57,14 @@ class CucumberTest : En, KoinTest {
         After { _: Scenario ->
             //language=PostgreSQL
             get<Connection>().sendQuery("rollback;", listOf())
+
+            redis.flushall()
+            /* Purge rabbit notification queues */
+            rabbit.run {
+                queuePurge("push")
+                queuePurge("email")
+            }
+
             ktorContext.stop()
         }
     }
@@ -75,7 +93,7 @@ class CucumberTest : En, KoinTest {
     private fun getFixturesRequester(): Requester {
         return Requester.RequesterFactory(
             connection = get(),
-            queriesDirectory = Configuration.Sql.fixtureFiles
+            queriesDirectory = config.sql.fixtureFiles
         ).createRequester()
     }
 }

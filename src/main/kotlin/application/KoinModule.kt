@@ -8,9 +8,10 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
-import fr.dcproject.notification.publisher.Publisher
 import fr.dcproject.messages.Mailer
 import fr.dcproject.messages.NotificationEmailSender
+import fr.dcproject.notification.NotificationConsumer
+import fr.dcproject.notification.publisher.Publisher
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -18,36 +19,52 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.websocket.WebSockets
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
-import io.lettuce.core.api.async.RedisAsyncCommands
+import notification.NotificationsPush
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import org.koin.ktor.ext.get
 
 @KtorExperimentalAPI
 val KoinModule = module {
+    single { Configuration() }
+
     // SQL connection
     single {
+        val config: Configuration = get()
         Connection(
-            host = Configuration.Database.host,
-            port = Configuration.Database.port,
-            database = Configuration.Database.database,
-            username = Configuration.Database.username,
-            password = Configuration.Database.password
+            host = config.database.host,
+            port = config.database.port,
+            database = config.database.database,
+            username = config.database.username,
+            password = config.database.password
         )
     }
 
     // Launch Database migration
-    single { Migrations(get(), Configuration.Sql.migrationFiles, Configuration.Sql.functionFiles) }
+    single {
+        val config: Configuration = get()
+        Migrations(get(), config.sql.migrationFiles, config.sql.functionFiles)
+    }
 
     // Redis client
     single<RedisClient> {
-        RedisClient.create(Configuration.redis).apply {
+        val config: Configuration = get()
+        RedisClient.create(config.redis).apply {
             connect().sync().configSet("notify-keyspace-events", "KEA")
         }
     }
 
+    single { NotificationsPush.Builder(get()) }
+
+    single {
+        val config: Configuration = get()
+        NotificationConsumer(get(), get(), get(), get(), get(), config.exchangeNotificationName)
+    }
+
     // RabbitMQ
     single<ConnectionFactory> {
-        ConnectionFactory().apply { setUri(Configuration.rabbitmq) }
+        val config: Configuration = get()
+        ConnectionFactory().apply { setUri(config.rabbitmq) }
     }
 
     // JsonSerializer
@@ -71,16 +88,26 @@ val KoinModule = module {
 
     // SQL Requester (postgresJson)
     single {
+        val config: Configuration = get()
         Requester.RequesterFactory(
             connection = get(),
-            functionsDirectory = Configuration.Sql.functionFiles
+            functionsDirectory = config.sql.functionFiles
         ).createRequester()
     }
 
     // Mailer
-    single { Mailer(Configuration.sendGridKey) }
+    single {
+        val config: Configuration = get()
+        Mailer(config.sendGridKey)
+    }
 
-    single { Publisher(factory = get(), exchangeName = Configuration.exchangeNotificationName) }
+    single {
+        val config: Configuration = get()
+        Publisher(factory = get(), exchangeName = config.exchangeNotificationName)
+    }
 
-    single { NotificationEmailSender(get<Mailer>(), Configuration.domain, get(), get()) }
+    single {
+        val config: Configuration = get()
+        NotificationEmailSender(get<Mailer>(), config.domain, get(), get())
+    }
 }

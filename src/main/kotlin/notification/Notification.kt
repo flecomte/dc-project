@@ -10,16 +10,16 @@ import com.fasterxml.jackson.module.kotlin.readValue
 import fr.dcproject.component.article.ArticleForView
 import fr.postgresjson.entity.UuidEntity
 import org.joda.time.DateTime
-import kotlin.random.Random
+import java.util.concurrent.atomic.AtomicInteger
 
 open class Notification(
     val type: String,
     val createdAt: DateTime = DateTime.now()
 ) {
-    val id: Double = randId(createdAt.millis)
+    val id: Double = nextId()
 
-    private fun randId(time: Long): Double {
-        return (time.toString() + Random.nextInt(1000, 9999).toString()).toDouble()
+    private fun nextId(): Double {
+        return (createdAt.millis.toString() + nextInt().toString()).toDouble()
     }
 
     override fun toString(): String = mapper.writeValueAsString(this) ?: error("Unable to serialize notification")
@@ -27,6 +27,12 @@ open class Notification(
     fun toByteArray() = toString().toByteArray()
 
     companion object {
+        private val counter: AtomicInteger = AtomicInteger(1000)
+        fun nextInt(): Int {
+            counter.compareAndSet(9999, 1000)
+            return counter.incrementAndGet()
+        }
+
         val mapper = jacksonObjectMapper().apply {
             registerModule(SimpleModule())
             propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
