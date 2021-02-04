@@ -1,9 +1,10 @@
 package fr.dcproject.component.comment.article.routes
 
-import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.article.routes.CreateCommentArticle.PostArticleCommentRequest.Input
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.security.assert
@@ -16,24 +17,22 @@ import io.ktor.locations.post
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object CreateCommentArticle {
     @Location("/articles/{article}/comments")
-    class PostArticleCommentRequest(
-        val article: ArticleForView
-    ) {
-        class Comment(
-            val content: String
-        )
+    class PostArticleCommentRequest(article: UUID) {
+        val article = ArticleRef(article)
+        class Input(val content: String)
+    }
 
-        suspend fun getComment(call: ApplicationCall) = call.receive<Comment>().run {
-            CommentForUpdate(
-                target = article,
-                createdBy = call.citizen,
-                content = content
-            )
-        }
+    suspend fun PostArticleCommentRequest.getComment(call: ApplicationCall) = call.receive<Input>().run {
+        CommentForUpdate(
+            target = article,
+            createdBy = call.citizen,
+            content = content
+        )
     }
 
     fun Route.createCommentArticle(repo: CommentArticleRepository, ac: CommentAccessControl) {

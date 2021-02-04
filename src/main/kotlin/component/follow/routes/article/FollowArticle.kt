@@ -14,11 +14,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.post
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object FollowArticle {
     @Location("/articles/{article}/follows")
-    class ArticleFollowRequest(val article: ArticleRef)
+    class ArticleFollowRequest(article: UUID) {
+        val article = ArticleRef(article)
+    }
 
     fun Route.followArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         post<ArticleFollowRequest> {

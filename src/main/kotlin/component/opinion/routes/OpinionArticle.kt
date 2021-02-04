@@ -1,6 +1,6 @@
 package fr.dcproject.component.opinion.routes
 
-import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.OpinionAccessControl
@@ -25,7 +25,8 @@ object OpinionArticle {
      * Put an opinion on one article
      */
     @Location("/articles/{article}/opinions")
-    class ArticleOpinion(val article: ArticleForView) {
+    class ArticleOpinion(article: UUID) {
+        val article = ArticleRef(article)
         class Body(ids: List<String>) {
             val ids: List<UUID> = ids.map { it.toUUID() }
         }

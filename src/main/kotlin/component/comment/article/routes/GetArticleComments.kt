@@ -14,17 +14,19 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetArticleComments {
     @Location("/articles/{article}/comments")
     class ArticleCommentsRequest(
-        val article: ArticleRef,
+        article: UUID,
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null,
         sort: String = CommentArticleRepository.Sort.CREATED_AT.sql
     ) : PaginatedRequestI by PaginatedRequest(page, limit) {
+        val article = ArticleRef(article)
         val sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.fromString(sort) ?: CommentArticleRepository.Sort.CREATED_AT
     }
 

@@ -14,11 +14,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.delete
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object UnfollowArticle {
     @Location("/articles/{article}/follows")
-    class ArticleFollowRequest(val article: ArticleRef)
+    class ArticleFollowRequest(article: UUID) {
+        val article = ArticleRef(article)
+    }
 
     fun Route.unfollowArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         delete<ArticleFollowRequest> {

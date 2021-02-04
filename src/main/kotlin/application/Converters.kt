@@ -1,8 +1,5 @@
 package fr.dcproject.application
 
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenRef
@@ -43,22 +40,6 @@ val converters: ConverterDeclaration = {
                 is UUID -> listOf(value.toString())
                 else -> throw InternalError("Cannot convert $value as UUID")
             }
-        }
-    }
-
-    convert<ArticleForView> {
-        decode { values, _ ->
-            values.singleOrNull()?.let {
-                get<ArticleRepository>().findById(UUID.fromString(it))
-                    ?: throw NotFoundException("Article $values not found")
-            } ?: throw NotFoundException("Article $values not found")
-        }
-    }
-    convert<ArticleRef> {
-        decode { values, _ ->
-            values.singleOrNull()?.let {
-                ArticleRef(UUID.fromString(it))
-            } ?: throw NotFoundException("""UUID "$values" is not valid for Article""")
         }
     }
 
