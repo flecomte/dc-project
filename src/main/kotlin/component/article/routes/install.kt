@@ -14,7 +14,7 @@ fun Routing.installArticleRoutes() {
     authenticate(optional = true) {
         findArticles(get(), get())
         findArticleVersions(get(), get())
-        getOneArticle(get(), get())
+        getOneArticle(get(), get(), get())
         upsertArticle(get(), get(), get())
     }
 }

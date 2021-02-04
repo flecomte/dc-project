@@ -4,6 +4,7 @@ import fr.dcproject.common.dto.CreatedAt
 import fr.dcproject.common.dto.Versionable
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.auth.citizenOrNull
@@ -20,17 +21,13 @@ import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import kotlinx.coroutines.launch
-import org.koin.core.KoinComponent
-import org.koin.core.inject
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetOneArticle {
-    @Location("/articles/{articleId}")
-    class ArticleRequest(val articleId: UUID) : KoinComponent {
-        val repo: ArticleRepository by inject()
-
-        val article: ArticleForView = repo.findById(articleId) ?: throw NotFoundException("Article $articleId not found")
+    @Location("/articles/{article}")
+    class ArticleRequest(article: UUID) {
+        val article = ArticleRef(article)
     }
 
     class Output(
@@ -53,19 +50,20 @@ object GetOneArticle {
         val workgroup = article.workgroup // TODO change to workgroup DTO
     }
 
-    fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl) {
+    fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl, repo: ArticleRepository) {
         get<ArticleRequest> {
-            ac.assert { canView(it.article, citizenOrNull) }
+            val article: ArticleForView = repo.findById(it.article.id) ?: throw NotFoundException("Article ${it.article.id} not found")
+            ac.assert { canView(article, citizenOrNull) }
 
             Output(
-                it.article,
-                viewManager.getViewsCount(it.article)
+                article,
+                viewManager.getViewsCount(article)
             ).also { out ->
                 call.respond(out)
             }
 
             launch {
-                viewManager.addView(call.request.local.remoteHost, it.article, citizenOrNull)
+                viewManager.addView(call.request.local.remoteHost, article, citizenOrNull)
             }
         }
     }
