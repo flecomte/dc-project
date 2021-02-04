@@ -1,7 +1,7 @@
 package fr.dcproject.component.article.routes
 
 import fr.dcproject.component.article.ArticleAccessControl
-import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.security.assert
@@ -12,12 +12,13 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object FindArticleVersions {
     @Location("/articles/{article}/versions")
     class ArticleVersionsRequest(
-        val article: ArticleForView,
+        article: UUID,
         page: Int = 1,
         limit: Int = 50,
         val sort: String? = null,
@@ -26,15 +27,16 @@ object FindArticleVersions {
     ) {
         val page: Int = if (page < 1) 1 else page
         val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+        val article = ArticleRef(article)
     }
 
     private fun ArticleRepository.findVersions(request: ArticleVersionsRequest) =
-        findVersionsByVersionId(request.page, request.limit, request.article.versionId)
+        findVersionsById(request.page, request.limit, request.article.id)
 
     fun Route.findArticleVersions(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticleVersionsRequest> {
             repo.findVersions(it)
-                .apply { ac.assert { canView(it.article, citizenOrNull) } }
+                .apply { ac.assert { canView(result, citizenOrNull) } }
                 .let { call.respond(it) }
         }
     }

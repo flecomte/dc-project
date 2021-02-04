@@ -13,6 +13,12 @@ class ArticleRepository(override var requester: Requester) : RepositoryI {
         return function.selectOne("id" to id)
     }
 
+    fun findVersionsById(page: Int = 1, limit: Int = 50, id: UUID): Paginated<ArticleForView> {
+        return requester
+            .getFunction("find_articles_versions_by_id")
+            .select(page, limit, "id" to id)
+    }
+
     fun findVersionsByVersionId(page: Int = 1, limit: Int = 50, versionId: UUID): Paginated<ArticleForView> {
         return requester
             .getFunction("find_articles_versions_by_version_id")
