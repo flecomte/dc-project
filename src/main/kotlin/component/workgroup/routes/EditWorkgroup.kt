@@ -5,6 +5,7 @@ import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.routes.EditWorkgroup.PutWorkgroupRequest.Input
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -31,7 +32,7 @@ object EditWorkgroup {
     fun Route.editWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         put<PutWorkgroupRequest> {
             repo.findById(it.workgroupId)?.let { old ->
-                call.receive<Input>().run {
+                call.receiveOrBadRequest<Input>().run {
                     old.copy(
                         name = name ?: old.name,
                         description = description ?: old.description,

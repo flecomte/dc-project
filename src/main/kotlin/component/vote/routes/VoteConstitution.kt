@@ -9,6 +9,7 @@ import fr.dcproject.component.vote.VoteConstitutionRepository
 import fr.dcproject.component.vote.entity.VoteForUpdate
 import fr.dcproject.component.vote.routes.VoteConstitution.ConstitutionVoteRequest.Input
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -32,7 +33,7 @@ object VoteConstitution {
     fun Route.voteConstitution(repo: VoteConstitutionRepository, ac: VoteAccessControl, constitutionRepo: ConstitutionRepository) {
         put<ConstitutionVoteRequest> {
             val constitution = constitutionRepo.findById(it.constitution.id) ?: throw NotFoundException("Unable to find constitution ${it.constitution.id}")
-            val content = call.receive<Input>()
+            val content = call.receiveOrBadRequest<Input>()
             val vote = VoteForUpdate(
                 target = constitution,
                 note = content.note,

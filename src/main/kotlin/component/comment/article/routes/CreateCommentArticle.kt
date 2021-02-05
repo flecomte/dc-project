@@ -8,6 +8,7 @@ import fr.dcproject.component.comment.article.routes.CreateCommentArticle.PostAr
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -27,7 +28,7 @@ object CreateCommentArticle {
         class Input(val content: String)
     }
 
-    suspend fun PostArticleCommentRequest.getComment(call: ApplicationCall) = call.receive<Input>().run {
+    suspend fun PostArticleCommentRequest.getComment(call: ApplicationCall) = call.receiveOrBadRequest<Input>().run {
         CommentForUpdate(
             target = article,
             createdBy = call.citizen,

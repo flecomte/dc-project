@@ -7,6 +7,7 @@ import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -30,7 +31,7 @@ object CreateCommentChildren {
         post<CreateCommentChildrenRequest> {
             val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
             val newComment = CommentForUpdate(
-                content = call.receive<CreateCommentChildrenRequest.Input>().content,
+                content = call.receiveOrBadRequest<CreateCommentChildrenRequest.Input>().content,
                 createdBy = citizen,
                 parent = parent
             )

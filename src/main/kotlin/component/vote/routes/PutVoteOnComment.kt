@@ -7,6 +7,7 @@ import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteCommentRepository
 import fr.dcproject.component.vote.entity.VoteForUpdate
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -27,7 +28,7 @@ object PutVoteOnComment {
     fun Route.putVoteOnComment(voteCommentRepo: VoteCommentRepository, commentRepo: CommentRepository, ac: VoteAccessControl) {
         put<CommentVoteRequest> {
             val comment = commentRepo.findById(it.comment)!!
-            val content = call.receive<CommentVoteRequest.Content>()
+            val content = call.receiveOrBadRequest<CommentVoteRequest.Content>()
             val vote = VoteForUpdate(
                 target = comment,
                 note = content.note,

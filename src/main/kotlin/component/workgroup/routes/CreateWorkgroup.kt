@@ -7,6 +7,7 @@ import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupSimple
 import fr.dcproject.component.workgroup.routes.CreateWorkgroup.PostWorkgroupRequest.Input
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -32,7 +33,7 @@ object CreateWorkgroup {
 
     fun Route.createWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         post<PostWorkgroupRequest> {
-            call.receive<Input>().run {
+            call.receiveOrBadRequest<Input>().run {
                 WorkgroupSimple(
                     id ?: UUID.randomUUID(),
                     name,

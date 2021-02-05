@@ -8,6 +8,7 @@ import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteArticleRepository
 import fr.dcproject.component.vote.entity.VoteForUpdate
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -29,7 +30,7 @@ object PutVoteOnArticle {
 
     fun Route.putVoteOnArticle(repo: VoteArticleRepository, ac: VoteAccessControl, articleRepo: ArticleRepository) {
         put<ArticleVoteRequest> {
-            val input = call.receive<ArticleVoteRequest.Input>()
+            val input = call.receiveOrBadRequest<ArticleVoteRequest.Input>()
             val article = articleRepo.findById(it.article.id) ?: throw NotFoundException("Article ${it.article.id} not found")
             val vote = VoteForUpdate(
                 target = article,

@@ -8,6 +8,7 @@ import fr.dcproject.component.auth.routes.Register.RegisterRequest.Input
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.http.HttpStatusCode
@@ -60,7 +61,7 @@ object Register {
 
         post<RegisterRequest> {
             try {
-                val citizen = call.receive<Input>().toCitizen()
+                val citizen = call.receiveOrBadRequest<Input>().toCitizen()
                 val createdCitizen = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
                 call.respondText(createdCitizen.makeToken())
             } catch (e: MissingKotlinParameterException) {

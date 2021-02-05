@@ -2,6 +2,7 @@ package fr.dcproject.component.auth.routes
 
 import fr.dcproject.component.auth.PasswordlessAuth
 import fr.dcproject.component.auth.routes.Sso.PasswordlessRequest.Input
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -23,7 +24,7 @@ object Sso {
      */
     fun Route.authPasswordless(passwordlessAuth: PasswordlessAuth) {
         post<PasswordlessRequest> {
-            call.receive<Input>().run {
+            call.receiveOrBadRequest<Input>().run {
                 try {
                     passwordlessAuth.sendEmail(email, url)
                 } catch (e: PasswordlessAuth.EmailNotFound) {

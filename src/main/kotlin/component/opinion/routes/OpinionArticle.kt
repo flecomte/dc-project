@@ -7,6 +7,7 @@ import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.OpinionChoiceRef
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import fr.dcproject.utils.toUUID
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -34,7 +35,7 @@ object OpinionArticle {
 
     fun Route.setOpinionOnArticle(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         put<ArticleOpinion> {
-            call.receive<ArticleOpinion.Body>().ids.map { id ->
+            call.receiveOrBadRequest<ArticleOpinion.Body>().ids.map { id ->
                 OpinionForUpdate(
                     choice = OpinionChoiceRef(id),
                     target = it.article,

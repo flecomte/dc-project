@@ -12,6 +12,7 @@ import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input.Title
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import fr.postgresjson.entity.UuidEntity
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -72,7 +73,7 @@ object CreateConstitution {
 
     fun Route.createConstitution(repo: ConstitutionRepository, ac: ConstitutionAccessControl) {
         post<PostConstitutionRequest> {
-            getNewConstitution(call.receive(), citizen).let {
+            getNewConstitution(call.receiveOrBadRequest(), citizen).let {
                 ac.assert { canCreate(it, citizenOrNull) }
                 repo.upsert(it)
                 call.respond(it)

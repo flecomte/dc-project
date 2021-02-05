@@ -11,6 +11,7 @@ import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.Publisher
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -39,7 +40,7 @@ object UpsertArticle {
     }
 
     fun Route.upsertArticle(repo: ArticleRepository, publisher: Publisher, ac: ArticleAccessControl) {
-        suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receive<Input>().run {
+        suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receiveOrBadRequest<Input>().run {
             ArticleForUpdate(
                 id = id ?: UUID.randomUUID(),
                 title = title,

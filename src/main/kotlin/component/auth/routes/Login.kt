@@ -3,6 +3,7 @@ package fr.dcproject.component.auth.routes
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.jwt.makeToken
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
 import io.ktor.http.HttpStatusCode
@@ -22,7 +23,7 @@ object Login {
     fun Route.authLogin(userRepo: UserRepository) {
         post<LoginRequest> {
             try {
-                val credentials = call.receive<UserPasswordCredential>()
+                val credentials = call.receiveOrBadRequest<UserPasswordCredential>()
                 userRepo.findByCredentials(credentials)?.let { user ->
                     call.respondText(user.makeToken())
                 } ?: call.respond(HttpStatusCode.BadRequest, "Username not exist or password is wrong")
