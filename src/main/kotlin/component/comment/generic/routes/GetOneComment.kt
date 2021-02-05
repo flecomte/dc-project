@@ -13,11 +13,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetOneComment {
     @Location("/comments/{comment}")
-    class CommentRequest(val comment: CommentRef)
+    class CommentRequest(comment: UUID) {
+        val comment = CommentRef(comment)
+    }
 
     fun Route.getOneComment(repo: CommentRepository, ac: CommentAccessControl) {
         get<CommentRequest> {

@@ -16,11 +16,13 @@ import io.ktor.locations.post
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object CreateCommentChildren {
     @Location("/comments/{comment}/children")
-    class CreateCommentChildrenRequest(val comment: CommentRef) {
+    class CreateCommentChildrenRequest(comment: UUID) {
+        val comment = CommentRef(comment)
         class Input(val content: String)
     }
 

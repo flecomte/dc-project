@@ -4,7 +4,6 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.constitution.Constitution
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.constitution.ConstitutionRepository
@@ -43,13 +42,8 @@ val converters: ConverterDeclaration = {
         }
     }
 
-    convert<CommentRef> {
-        decode { values, _ ->
-            values.singleOrNull()?.let {
-                CommentRef(UUID.fromString(it))
-            } ?: throw NotFoundException("""UUID "$values" is not valid for Comment""")
-        }
-    }
+    // TODO remove converters of entities
+
     convert<ConstitutionRef> {
         decode { values, _ ->
             values.singleOrNull()?.let {

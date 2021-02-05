@@ -14,11 +14,14 @@ import io.ktor.locations.put
 import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object EditComment {
     @Location("/comments/{comment}")
-    class EditCommentRequest(val comment: CommentRef)
+    class EditCommentRequest(comment: UUID) {
+        val comment = CommentRef(comment)
+    }
 
     fun Route.editComment(repo: CommentRepository, ac: CommentAccessControl) {
         put<EditCommentRequest> {
