@@ -5,6 +5,7 @@ import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityDeletedAt
 import fr.postgresjson.entity.EntityDeletedAtImp
 import fr.postgresjson.entity.UuidEntity
+import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 class OpinionChoice(
@@ -17,4 +18,7 @@ class OpinionChoice(
 
 open class OpinionChoiceRef(
     id: UUID?
-) : UuidEntity(id ?: UUID.randomUUID())
+) : OpinionChoiceI,
+    UuidEntity(id ?: UUID.randomUUID())
+
+interface OpinionChoiceI : UuidEntityI

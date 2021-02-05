@@ -44,15 +44,6 @@ val converters: ConverterDeclaration = {
 
     // TODO remove converters of entities
 
-    convert<OpinionChoice> {
-        decode { values, _ ->
-            val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                ?: throw InternalError("Cannot convert $values to UUID")
-            get<OpinionChoiceRepository>().findOpinionChoiceById(id)
-                ?: throw NotFoundException("OpinionChoice $values not found")
-        }
-    }
-
     convert<WorkgroupRef> {
         decode { values, _ ->
             values.singleOrNull()?.let {
