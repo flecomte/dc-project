@@ -2,6 +2,7 @@ package fr.dcproject.component.follow.routes.article
 
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.security.assert
@@ -11,11 +12,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetMyFollowsArticle {
     @Location("/citizens/{citizen}/follows/articles")
-    class CitizenFollowArticleRequest(val citizen: Citizen)
+    class CitizenFollowArticleRequest(citizen: UUID) {
+        val citizen = CitizenRef(citizen)
+    }
 
     fun Route.getMyFollowsArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         get<CitizenFollowArticleRequest> {

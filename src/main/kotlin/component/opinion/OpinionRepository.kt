@@ -3,6 +3,7 @@ package fr.dcproject.component.opinion
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -75,7 +76,7 @@ abstract class OpinionRepository<T : TargetRef>(requester: Requester) : OpinionC
      * Find opinions of one citizen filtered by target ids
      */
     fun findCitizenOpinionsByTargets(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         targets: List<UUID>
     ): List<OpinionEntity<T>> {
         val typeReference = object : TypeReference<List<OpinionEntity<T>>>() {}

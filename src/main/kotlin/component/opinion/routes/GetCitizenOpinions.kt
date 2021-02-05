@@ -2,6 +2,7 @@ package fr.dcproject.component.opinion.routes
 
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
 import fr.dcproject.security.assert
@@ -23,7 +24,8 @@ object GetCitizenOpinions {
      * Get all Opinion of citizen on targets by target ids
      */
     @Location("/citizens/{citizen}/opinions")
-    class CitizenOpinions(val citizen: CitizenEntity, id: List<String>) : KoinComponent {
+    class CitizenOpinions(citizen: UUID, id: List<String>) {
+        val citizen = CitizenRef(citizen)
         val id: List<UUID> = id.toUUID()
     }
 

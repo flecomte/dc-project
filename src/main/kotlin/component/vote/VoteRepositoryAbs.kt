@@ -4,6 +4,7 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.component.constitution.Constitution
@@ -52,7 +53,7 @@ abstract class VoteRepositoryAbs<T : TargetI>(override var requester: Requester)
     }
 
     fun findCitizenVotesByTargets(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         targets: List<UUID>
     ): List<VoteEntity<*>> {
         val typeReference = object : TypeReference<List<VoteEntity<TargetRef>>>() {}
@@ -73,7 +74,7 @@ class VoteRepository(requester: Requester) : VoteRepositoryAbs<TargetRef>(reques
 
 class VoteArticleRepository(requester: Requester) : VoteRepositoryAbs<ArticleForView>(requester) {
     fun findByCitizen(
-        citizen: CitizenEntity,
+        citizen: CitizenI,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<VoteEntity<ArticleForView>> =

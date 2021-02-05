@@ -44,14 +44,6 @@ val converters: ConverterDeclaration = {
 
     // TODO remove converters of entities
 
-    convert<Citizen> {
-        decode { values, _ ->
-            val id = values.singleOrNull()?.let { UUID.fromString(it) }
-                ?: throw InternalError("Cannot convert $values to UUID")
-            get<CitizenRepository>().findById(id) ?: throw NotFoundException("Citizen $values not found")
-        }
-    }
-
     convert<OpinionChoice> {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }

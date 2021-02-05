@@ -2,6 +2,7 @@ package fr.dcproject.component.vote.routes
 
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteRepository
 import fr.dcproject.security.assert
@@ -17,7 +18,8 @@ import java.util.UUID
 @KtorExperimentalLocationsAPI
 object GetCitizenVotes {
     @Location("/citizens/{citizen}/votes")
-    class CitizenVotesRequest(val citizen: Citizen, id: List<String>) {
+    class CitizenVotesRequest(citizen: UUID, id: List<String>) {
+        val citizen = CitizenRef(citizen)
         val id: List<UUID> = id.toUUID()
     }
 

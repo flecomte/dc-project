@@ -13,7 +13,7 @@ import org.koin.ktor.ext.get
 fun Routing.installCitizenRoutes() {
     authenticate(optional = true) {
         findCitizen(get(), get())
-        getOneCitizen(get())
+        getOneCitizen(get(), get())
         getCurrentCitizen(get())
         changeMyPassword(get(), get())
     }

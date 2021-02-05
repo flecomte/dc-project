@@ -6,42 +6,39 @@ import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenAccessControl
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.security.assert
+import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
+import io.ktor.features.BadRequestException
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.put
 import io.ktor.request.receive
+import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object ChangeMyPassword {
     @Location("/citizens/{citizen}/password/change")
-    class ChangePasswordCitizenRequest(val citizen: Citizen) {
+    class ChangePasswordCitizenRequest(citizen: UUID) {
+        val citizen = CitizenRef(citizen)
         data class Input(val oldPassword: String, val newPassword: String)
     }
 
     fun Route.changeMyPassword(ac: CitizenAccessControl, userRepository: UserRepository) {
         put<ChangePasswordCitizenRequest> {
             ac.assert { canChangePassword(it.citizen, citizenOrNull) }
-            try {
-                val content = call.receive<ChangePasswordCitizenRequest.Input>()
-                val currentUser = userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword))
-                val user = it.citizen.user
-                if (currentUser == null || currentUser.id != user.id) {
-                    call.respond(HttpStatusCode.BadRequest, "Bad password")
-                } else {
-                    user.plainPassword = content.newPassword
-                    userRepository.changePassword(user)
+            val content = call.receiveOrBadRequest<ChangePasswordCitizenRequest.Input>()
+            userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword)) ?: throw BadRequestException("Bad Password")
+            citizen.user.plainPassword = content.newPassword
+            userRepository.changePassword(citizen.user)
 
-                    call.respond(HttpStatusCode.Created)
-                }
-            } catch (e: MissingKotlinParameterException) {
-                call.respond(HttpStatusCode.BadRequest, "Request format is not correct")
-            }
+            call.respond(HttpStatusCode.Created)
         }
     }
 }
