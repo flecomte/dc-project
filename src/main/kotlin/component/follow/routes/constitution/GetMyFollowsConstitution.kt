@@ -11,11 +11,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetMyFollowsConstitution {
     @Location("/citizens/{citizen}/follows/constitutions")
-    class CitizenFollowConstitutionRequest(val citizen: CitizenRef)
+    class CitizenFollowConstitutionRequest(citizen: UUID) {
+        val citizen = CitizenRef(citizen)
+    }
 
     fun Route.getMyFollowsConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
         get<CitizenFollowConstitutionRequest> {

@@ -52,14 +52,6 @@ val converters: ConverterDeclaration = {
         }
     }
 
-    convert<CitizenRef> {
-        decode { values, _ ->
-            values.singleOrNull()?.let {
-                CitizenRef(UUID.fromString(it))
-            } ?: throw NotFoundException("""UUID "$values" is not valid for Citizen""")
-        }
-    }
-
     convert<OpinionChoice> {
         decode { values, _ ->
             val id = values.singleOrNull()?.let { UUID.fromString(it) }
