@@ -11,7 +11,7 @@ import org.koin.ktor.ext.get
 @KtorExperimentalLocationsAPI
 fun Routing.installConstitutionRoutes() {
     authenticate(optional = true) {
-        getConstitution(get())
+        getConstitution(get(), get())
         findConstitutions(get(), get())
         createConstitution(get(), get())
     }

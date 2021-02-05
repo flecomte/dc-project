@@ -17,6 +17,6 @@ fun Routing.installVoteRoutes() {
         getCitizenVotesOnArticle(get(), get())
         putVoteOnArticle(get(), get(), get())
         putVoteOnComment(get(), get(), get())
-        voteConstitution(get(), get())
+        voteConstitution(get(), get(), get())
     }
 }
