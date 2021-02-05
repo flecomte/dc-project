@@ -1,14 +1,6 @@
 package fr.dcproject.application
 
-import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.constitution.Constitution
-import fr.dcproject.component.constitution.ConstitutionRef
-import fr.dcproject.component.constitution.ConstitutionRepository
-import fr.dcproject.component.opinion.OpinionChoiceRepository
-import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.workgroup.Workgroup
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository

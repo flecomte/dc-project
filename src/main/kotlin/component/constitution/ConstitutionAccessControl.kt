@@ -15,7 +15,7 @@ class ConstitutionAccessControl : AccessControl() {
     fun <S : ConstitutionSimple<*, *>> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse =
         canAll(subjects) { canView(it, citizen) }
 
-    fun <S> canView(subject: S, citizen: CitizenI?): AccessResponse where S: EntityDeletedAt, S: ConstitutionS = when {
+    fun <S> canView(subject: S, citizen: CitizenI?): AccessResponse where S : EntityDeletedAt, S : ConstitutionS = when {
         subject.isDeleted() -> denied("You cannot view a deleted constitution", "constitution.view.deleted")
         else -> granted()
     }

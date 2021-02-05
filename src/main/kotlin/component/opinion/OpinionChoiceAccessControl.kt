@@ -1,9 +1,7 @@
 package fr.dcproject.component.opinion
 
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.opinion.entity.OpinionChoiceI
-import fr.dcproject.component.opinion.entity.OpinionChoiceRef
 import fr.dcproject.security.AccessControl
 import fr.dcproject.security.AccessResponse
 

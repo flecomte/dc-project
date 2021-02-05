@@ -13,9 +13,7 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.koin.core.KoinComponent
 import java.util.UUID
-import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI

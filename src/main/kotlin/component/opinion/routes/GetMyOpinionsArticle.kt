@@ -3,7 +3,6 @@ package fr.dcproject.component.opinion.routes
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
@@ -17,8 +16,8 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 import java.util.UUID
+import fr.dcproject.component.opinion.OpinionRepositoryArticle as OpinionArticleRepository
 
 @KtorExperimentalLocationsAPI
 object GetMyOpinionsArticle {

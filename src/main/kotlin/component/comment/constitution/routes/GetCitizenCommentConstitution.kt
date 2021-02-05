@@ -1,7 +1,6 @@
 package fr.dcproject.component.comment.constitution.routes
 
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.comment.constitution.CommentConstitutionRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl

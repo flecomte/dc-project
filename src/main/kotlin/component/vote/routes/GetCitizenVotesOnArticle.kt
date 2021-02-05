@@ -1,7 +1,6 @@
 package fr.dcproject.component.vote.routes
 
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.VoteArticleRepository

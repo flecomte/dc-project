@@ -1,7 +1,6 @@
 package fr.dcproject.component.follow.routes.article
 
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.FollowArticleRepository

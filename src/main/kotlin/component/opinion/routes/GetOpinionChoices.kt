@@ -4,6 +4,7 @@ import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.OpinionChoiceAccessControl
 import fr.dcproject.component.opinion.OpinionChoiceRepository
 import fr.dcproject.security.assert
+import fr.dcproject.utils.toUUID
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location

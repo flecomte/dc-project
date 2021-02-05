@@ -1,10 +1,8 @@
 package fr.dcproject.component.citizen.routes
 
-import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.component.auth.UserRepository
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.security.assert
@@ -16,8 +14,6 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.put
-import io.ktor.request.receive
-import io.ktor.request.receiveOrNull
 import io.ktor.response.respond
 import io.ktor.routing.Route
 import java.util.UUID
