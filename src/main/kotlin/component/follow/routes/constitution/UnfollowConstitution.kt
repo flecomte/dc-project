@@ -14,11 +14,14 @@ import io.ktor.locations.Location
 import io.ktor.locations.delete
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object UnfollowConstitution {
     @Location("/constitutions/{constitution}/follows")
-    class ConstitutionUnfollowRequest(val constitution: ConstitutionRef)
+    class ConstitutionUnfollowRequest(constitution: UUID) {
+        val constitution = ConstitutionRef(constitution)
+    }
 
     fun Route.unfollowConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
         delete<ConstitutionUnfollowRequest> {

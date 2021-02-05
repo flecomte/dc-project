@@ -16,11 +16,14 @@ import io.ktor.locations.post
 import io.ktor.request.receiveText
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object CreateConstitutionComment {
     @Location("/constitutions/{constitution}/comments")
-    class CreateConstitutionCommentRequest(val constitution: ConstitutionRef)
+    class CreateConstitutionCommentRequest(constitution: UUID) {
+        val constitution = ConstitutionRef(constitution)
+    }
 
     fun Route.createConstitutionComment(repo: CommentConstitutionRepository, ac: CommentAccessControl) {
         post<CreateConstitutionCommentRequest> {
