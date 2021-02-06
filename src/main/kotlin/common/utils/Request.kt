@@ -1,4 +1,4 @@
-package fr.dcproject.utils
+package fr.dcproject.common.utils
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import io.ktor.application.ApplicationCall

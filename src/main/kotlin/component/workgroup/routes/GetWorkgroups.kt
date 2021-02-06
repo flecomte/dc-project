@@ -1,10 +1,10 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.common.security.assert
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
-import fr.dcproject.security.assert
-import fr.dcproject.utils.toUUID
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI

@@ -1,4 +1,4 @@
-package fr.dcproject.utils
+package fr.dcproject.common.utils
 
 import org.joda.time.DateTime
 import org.joda.time.format.ISODateTimeFormat

@@ -1,8 +1,8 @@
 package fr.dcproject.component.auth.routes
 
+import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.PasswordlessAuth
 import fr.dcproject.component.auth.routes.Sso.PasswordlessRequest.Input
-import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI

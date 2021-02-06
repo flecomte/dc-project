@@ -3,7 +3,7 @@ import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.application.Configuration
 import fr.dcproject.application.Env.CUCUMBER
 import fr.dcproject.application.module
-import fr.dcproject.utils.LoggerDelegate
+import fr.dcproject.common.utils.LoggerDelegate
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations

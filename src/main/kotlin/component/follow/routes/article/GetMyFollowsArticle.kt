@@ -1,10 +1,10 @@
 package fr.dcproject.component.follow.routes.article
 
+import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.FollowArticleRepository
-import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location

@@ -2,6 +2,7 @@ package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.dto.CreatedAt
 import fr.dcproject.common.dto.Versionable
+import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
@@ -12,7 +13,6 @@ import fr.dcproject.component.opinion.dto.Opinionable
 import fr.dcproject.component.views.dto.Viewable
 import fr.dcproject.component.views.entity.ViewAggregation
 import fr.dcproject.component.vote.dto.Votable
-import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.locations.KtorExperimentalLocationsAPI

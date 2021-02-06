@@ -1,5 +1,6 @@
 package steps
 
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
@@ -11,7 +12,6 @@ import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.constitution.ConstitutionRepository
 import fr.dcproject.component.constitution.ConstitutionSimple
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
-import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime

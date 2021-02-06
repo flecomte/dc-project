@@ -5,7 +5,7 @@ import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
-import fr.dcproject.messages.Mailer
+import fr.dcproject.common.email.Mailer
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI

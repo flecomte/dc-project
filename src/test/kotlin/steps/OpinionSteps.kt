@@ -1,12 +1,12 @@
 package steps
 
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.opinion.OpinionChoiceRepository
 import fr.dcproject.component.opinion.entity.OpinionChoice
 import fr.dcproject.component.opinion.entity.OpinionForUpdate
-import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.koin.test.KoinTest

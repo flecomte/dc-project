@@ -1,4 +1,4 @@
-package fr.dcproject.utils
+package fr.dcproject.common.utils
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

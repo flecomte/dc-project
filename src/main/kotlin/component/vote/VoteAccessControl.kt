@@ -1,10 +1,10 @@
 package fr.dcproject.component.vote
 
 import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.security.AccessControl
+import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.dcproject.security.AccessControl
-import fr.dcproject.security.AccessResponse
 import fr.postgresjson.entity.EntityDeletedAt
 import fr.dcproject.component.vote.entity.Vote as VoteEntity
 

@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.application.Env.PROD
+import fr.dcproject.common.security.AccessDeniedException
 import fr.dcproject.component.article.articleKoinModule
 import fr.dcproject.component.article.routes.installArticleRoutes
 import fr.dcproject.component.auth.ForbiddenException
@@ -36,7 +37,6 @@ import fr.dcproject.component.vote.routes.installVoteRoutes
 import fr.dcproject.component.vote.voteKoinModule
 import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.component.workgroup.workgroupKoinModule
-import fr.dcproject.security.AccessDeniedException
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStopped

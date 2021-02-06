@@ -1,8 +1,8 @@
 package fr.dcproject.component.follow
 
+import fr.dcproject.common.security.AccessControl
+import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.security.AccessControl
-import fr.dcproject.security.AccessResponse
 import fr.dcproject.component.follow.Follow as FollowEntity
 
 class FollowAccessControl : AccessControl() {

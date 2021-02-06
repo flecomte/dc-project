@@ -1,5 +1,6 @@
 package steps
 
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
@@ -9,7 +10,6 @@ import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.comment.article.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime

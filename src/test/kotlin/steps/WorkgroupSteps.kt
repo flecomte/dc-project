@@ -1,5 +1,6 @@
 package steps
 
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenI
@@ -9,7 +10,6 @@ import fr.dcproject.component.workgroup.Workgroup
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
-import fr.dcproject.utils.toUUID
 import io.cucumber.datatable.DataTable
 import io.cucumber.java8.En
 import org.joda.time.DateTime

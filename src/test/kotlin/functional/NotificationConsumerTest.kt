@@ -9,8 +9,8 @@ import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowSimple
 import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.NotificationEmailSender
 import fr.dcproject.component.notification.Publisher
-import fr.dcproject.messages.NotificationEmailSender
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient

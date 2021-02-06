@@ -1,5 +1,7 @@
 package unit.security
 
+import fr.dcproject.common.security.AccessDecision.DENIED
+import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
@@ -9,8 +11,6 @@ import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.entity.VoteForUpdate
-import fr.dcproject.security.AccessDecision.DENIED
-import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -24,7 +24,7 @@ import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("common/security"), Tag("unit"))
 internal class VoteAccessControlTest {
     private val tesla = Citizen(
         id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),

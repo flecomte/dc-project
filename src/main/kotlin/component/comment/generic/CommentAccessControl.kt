@@ -1,9 +1,9 @@
 package fr.dcproject.component.comment.generic
 
 import fr.dcproject.common.entity.HasTarget
+import fr.dcproject.common.security.AccessControl
+import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.security.AccessControl
-import fr.dcproject.security.AccessResponse
 import fr.postgresjson.entity.EntityCreatedBy
 import fr.postgresjson.entity.EntityDeletedAt
 

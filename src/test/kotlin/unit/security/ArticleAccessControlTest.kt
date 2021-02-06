@@ -1,13 +1,13 @@
 package unit.security
 
+import fr.dcproject.common.security.AccessDecision.DENIED
+import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.security.AccessDecision.DENIED
-import fr.dcproject.security.AccessDecision.GRANTED
 import fr.postgresjson.connexion.Paginated
 import io.mockk.every
 import io.mockk.mockk
@@ -24,7 +24,7 @@ import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("common/security"), Tag("unit"))
 internal class ArticleAccessControlTest {
     private val tesla = CitizenCart(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),

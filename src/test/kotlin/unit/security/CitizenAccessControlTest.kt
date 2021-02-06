@@ -1,12 +1,12 @@
 package unit.security
 
+import fr.dcproject.common.security.AccessDecision.DENIED
+import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.security.AccessDecision.DENIED
-import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("common/security"), Tag("unit"))
 internal class CitizenAccessControlTest {
     private val tesla = CitizenBasic(
         user = User(

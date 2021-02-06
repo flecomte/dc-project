@@ -1,4 +1,4 @@
-package fr.dcproject.messages
+package fr.dcproject.common.email
 
 import com.sendgrid.Method
 import com.sendgrid.Request

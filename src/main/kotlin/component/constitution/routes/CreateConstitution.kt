@@ -1,5 +1,7 @@
 package fr.dcproject.component.constitution.routes
 
+import fr.dcproject.common.security.assert
+import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
@@ -11,8 +13,6 @@ import fr.dcproject.component.constitution.ConstitutionSimple
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input.Title
-import fr.dcproject.security.assert
-import fr.dcproject.utils.receiveOrBadRequest
 import fr.postgresjson.entity.UuidEntity
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI

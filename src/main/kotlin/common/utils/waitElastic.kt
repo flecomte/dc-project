@@ -1,4 +1,4 @@
-package fr.dcproject.utils
+package fr.dcproject.common.utils
 
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.RestClient

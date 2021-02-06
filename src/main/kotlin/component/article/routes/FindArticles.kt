@@ -1,12 +1,12 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
-import fr.dcproject.security.assert
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call

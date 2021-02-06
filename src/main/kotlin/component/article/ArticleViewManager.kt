@@ -1,12 +1,12 @@
 package fr.dcproject.component.article
 
 import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.common.utils.contentToString
+import fr.dcproject.common.utils.getJsonField
+import fr.dcproject.common.utils.toIso
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.views.ViewManager
 import fr.dcproject.component.views.entity.ViewAggregation
-import fr.dcproject.utils.contentToString
-import fr.dcproject.utils.getJsonField
-import fr.dcproject.utils.toIso
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient

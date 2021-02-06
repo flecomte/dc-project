@@ -1,6 +1,6 @@
 package functional
 
-import fr.dcproject.utils.readResource
+import fr.dcproject.common.utils.readResource
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test

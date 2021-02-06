@@ -1,4 +1,4 @@
-package fr.dcproject.security
+package fr.dcproject.common.security
 
 /** Responses of AccessControl */
 enum class AccessDecision {

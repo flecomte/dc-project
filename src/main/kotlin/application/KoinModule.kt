@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
+import fr.dcproject.common.email.Mailer
 import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.NotificationEmailSender
 import fr.dcproject.component.notification.NotificationsPush
 import fr.dcproject.component.notification.Publisher
-import fr.dcproject.messages.Mailer
-import fr.dcproject.messages.NotificationEmailSender
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations

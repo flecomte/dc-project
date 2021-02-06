@@ -3,11 +3,11 @@ package fr.dcproject.component.auth
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
+import fr.dcproject.common.email.Mailer
 import fr.dcproject.component.auth.jwt.makeToken
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithEmail
 import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.messages.Mailer
 import io.ktor.http.URLBuilder
 
 /**

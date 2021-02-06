@@ -1,4 +1,4 @@
-package fr.dcproject.utils
+package fr.dcproject.common.utils
 
 import com.jayway.jsonpath.JsonPath
 import com.jayway.jsonpath.PathNotFoundException

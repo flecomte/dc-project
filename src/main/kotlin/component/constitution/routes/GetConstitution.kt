@@ -1,10 +1,10 @@
 package fr.dcproject.component.constitution.routes
 
+import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.constitution.ConstitutionAccessControl
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.constitution.ConstitutionRepository
-import fr.dcproject.security.assert
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.locations.KtorExperimentalLocationsAPI

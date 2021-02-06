@@ -1,9 +1,9 @@
 package steps
 
+import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.vote.entity.VoteForUpdate
-import fr.dcproject.utils.toUUID
 import io.cucumber.java8.En
 import org.koin.test.KoinTest
 import org.koin.test.get

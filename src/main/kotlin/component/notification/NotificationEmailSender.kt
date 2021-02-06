@@ -1,8 +1,9 @@
-package fr.dcproject.messages
+package fr.dcproject.component.notification
 
 import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
+import fr.dcproject.common.email.Mailer
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleWithTitleI

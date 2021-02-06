@@ -1,5 +1,7 @@
 package unit.security
 
+import fr.dcproject.common.security.AccessDecision.DENIED
+import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
@@ -7,8 +9,6 @@ import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
-import fr.dcproject.security.AccessDecision.DENIED
-import fr.dcproject.security.AccessDecision.GRANTED
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -22,7 +22,7 @@ import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("common/security"), Tag("unit"))
 internal class WorkgroupAccessControlTest {
     private val tesla = CitizenBasic(
         user = User(

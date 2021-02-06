@@ -1,6 +1,6 @@
 package fr.dcproject.component.views
 
-import fr.dcproject.utils.waitElasticsearchIsUp
+import fr.dcproject.common.utils.waitElasticsearchIsUp
 import org.elasticsearch.client.Request
 import org.elasticsearch.client.RestClient
 

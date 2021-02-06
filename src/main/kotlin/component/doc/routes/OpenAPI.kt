@@ -1,6 +1,6 @@
 package fr.dcproject.component.doc.routes
 
-import fr.dcproject.utils.readResource
+import fr.dcproject.common.utils.readResource
 import io.ktor.application.call
 import io.ktor.http.ContentType
 import io.ktor.locations.KtorExperimentalLocationsAPI

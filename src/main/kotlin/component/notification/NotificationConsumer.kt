@@ -11,7 +11,6 @@ import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.dcproject.messages.NotificationEmailSender
 import io.ktor.utils.io.errors.IOException
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands

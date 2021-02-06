@@ -1,12 +1,12 @@
 package fr.dcproject.component.workgroup.routes.members
 
+import fr.dcproject.common.security.assert
+import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
-import fr.dcproject.security.assert
-import fr.dcproject.utils.receiveOrBadRequest
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode

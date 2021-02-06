@@ -2,9 +2,9 @@ package fr.dcproject.component.article
 
 import fr.dcproject.common.entity.CreatedBy
 import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.common.security.AccessControl
+import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.security.AccessControl
-import fr.dcproject.security.AccessResponse
 
 class ArticleAccessControl(private val articleRepo: ArticleRepository) : AccessControl() {
     fun <S : ArticleAuthI<*>> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse =

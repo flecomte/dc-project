@@ -1,7 +1,7 @@
 package fr.dcproject.component.citizen
 
-import fr.dcproject.security.AccessControl
-import fr.dcproject.security.AccessResponse
+import fr.dcproject.common.security.AccessControl
+import fr.dcproject.common.security.AccessResponse
 import fr.postgresjson.entity.EntityDeletedAt
 
 class CitizenAccessControl : AccessControl() {
