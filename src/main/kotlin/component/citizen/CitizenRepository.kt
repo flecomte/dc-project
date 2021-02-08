@@ -40,11 +40,11 @@ class CitizenRepository(override var requester: Requester) : RepositoryI {
             "search" to search
         )
 
-    fun upsert(citizen: CitizenFull): Citizen? = requester
+    fun upsert(citizen: Citizen): Citizen? = requester
         .getFunction("upsert_citizen")
         .selectOne("resource" to citizen)
 
-    fun insertWithUser(citizen: CitizenFull): Citizen? = requester
+    fun insertWithUser(citizen: CitizenForCreate): Citizen? = requester
         .getFunction("insert_citizen_with_user")
         .selectOne("resource" to citizen)
 }

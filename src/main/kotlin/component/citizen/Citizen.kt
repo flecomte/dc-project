@@ -1,6 +1,7 @@
 package fr.dcproject.component.citizen
 
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
 import fr.dcproject.component.citizen.CitizenI.Name
@@ -13,6 +14,18 @@ import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.entity.UuidEntityI
 import org.joda.time.DateTime
 import java.util.UUID
+
+class CitizenForCreate(
+    val name: Name,
+    val email: String,
+    val birthday: DateTime,
+    val voteAnonymous: Boolean = true,
+    val followAnonymous: Boolean = true,
+    override val user: UserForCreate,
+    id: UUID = UUID.randomUUID(),
+) : CitizenI,
+    CitizenRefWithUser(id, user),
+    EntityCreatedAt by EntityCreatedAtImp()
 
 class Citizen(
     override val id: UUID = UUID.randomUUID(),

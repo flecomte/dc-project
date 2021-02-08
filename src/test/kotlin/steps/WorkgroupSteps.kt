@@ -1,8 +1,8 @@
 package steps
 
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.auth.UserForCreate
+import fr.dcproject.component.citizen.CitizenForCreate
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
@@ -39,17 +39,17 @@ class WorkgroupSteps : En, KoinTest {
                 get<CitizenRepository>().findByUsername(it.toLowerCase().replace(' ', '-'))
             } ?: run {
                 val username = "paul-langevin".toLowerCase() + UUID.randomUUID()
-                val user = User(
+                val user = UserForCreate(
                     username = username,
-                    plainPassword = "azerty"
+                    password = "azerty",
                 )
-                Citizen(
+                CitizenForCreate(
                     name = CitizenI.Name("Paul", "Langevin"),
                     email = "$username@dc-project.fr",
                     birthday = DateTime.now(),
                     user = user
-                ).also {
-                    get<CitizenRepository>().insertWithUser(it)
+                ).let {
+                    get<CitizenRepository>().insertWithUser(it) ?: error("Unable to create User")
                 }
             }
 

@@ -7,7 +7,7 @@ begin
     select
         coalesce(t.id, uuid_generate_v4()),
         t.username,
-        crypt(resource->>'plain_password', gen_salt('bf', 8)),
+        crypt(resource->>'password', gen_salt('bf', 8)),
         case when t.blocked_at is not null then now() else null end,
         t.roles
     from json_populate_record(null::"user", resource) t

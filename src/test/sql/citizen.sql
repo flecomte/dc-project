@@ -4,7 +4,7 @@ declare
     wrong_citizen              json;
     _user_id                   uuid := fixture_user();
     created_citizen            json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com"}';
-    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
+    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "password": "azerty", "roles": ["ROLE_USER"]}}';
     selected_citizen           json;
 begin
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', _user_id::text), true)::json;

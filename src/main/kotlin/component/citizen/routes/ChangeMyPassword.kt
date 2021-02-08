@@ -3,6 +3,7 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.auth.UserWithPassword
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenAccessControl
@@ -31,8 +32,12 @@ object ChangeMyPassword {
             ac.assert { canChangePassword(it.citizen, citizenOrNull) }
             val content = call.receiveOrBadRequest<ChangePasswordCitizenRequest.Input>()
             userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword)) ?: throw BadRequestException("Bad Password")
-            citizen.user.plainPassword = content.newPassword
-            userRepository.changePassword(citizen.user)
+            userRepository.changePassword(
+                UserWithPassword(
+                    citizen.user.id,
+                    content.newPassword,
+                )
+            )
 
             call.respond(HttpStatusCode.Created)
         }

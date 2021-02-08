@@ -3,10 +3,11 @@ package fr.dcproject.component.auth.routes
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.jwt.makeToken
 import fr.dcproject.component.auth.routes.Register.RegisterRequest.Input
-import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenForCreate
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import io.ktor.application.call
@@ -39,21 +40,21 @@ object Register {
             )
             data class User(
                 val username: String,
-                val plainPassword: String? = null
+                val password: String
             )
         }
     }
 
     fun Route.authRegister(citizenRepo: CitizenRepository) {
-        fun Input.toCitizen(): Citizen = Citizen(
+        fun Input.toCitizen(): CitizenForCreate = CitizenForCreate(
             name = CitizenI.Name(name.firstName, name.lastName, name.civility),
             birthday = birthday,
             email = email,
             followAnonymous = followAnonymous,
             voteAnonymous = voteAnonymous,
-            user = User(
+            user = UserForCreate(
                 username = user.username,
-                plainPassword = user.plainPassword,
+                password = user.password,
                 roles = listOf(UserI.Roles.ROLE_USER)
             )
         )

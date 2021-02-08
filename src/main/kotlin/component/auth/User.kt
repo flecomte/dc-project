@@ -11,23 +11,34 @@ import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.UUID
 
-class User(
+class UserForCreate(
     id: UUID = UUID.randomUUID(),
     username: String,
+    override val password: String,
     blockedAt: DateTime? = null,
-    override var plainPassword: String? = null,
-    override var roles: List<Roles> = emptyList()
-) : UserFull,
-    UserBasic(id, username, blockedAt),
+    roles: List<Roles> = emptyList()
+) : User(id, username, blockedAt, roles),
+    UserWithPasswordI
+
+open class User(
+    id: UUID = UUID.randomUUID(),
+    var username: String,
+    var blockedAt: DateTime? = null,
+    var roles: List<Roles> = emptyList()
+) : UserRef(id),
     EntityCreatedAt by EntityCreatedAtImp(),
     EntityUpdatedAt by EntityUpdatedAtImp()
 
-@Deprecated("")
-open class UserBasic(
-    id: UUID = UUID.randomUUID(),
-    override var username: String,
-    override var blockedAt: DateTime? = null
-) : UserBasicI, UserRef(id)
+interface UserWithPasswordI {
+    val id: UUID
+    val password: String
+}
+
+class UserWithPassword(
+    id: UUID,
+    override val password: String,
+) : UserWithPasswordI,
+    UserRef(id)
 
 open class UserRef(
     id: UUID = UUID.randomUUID()
@@ -35,18 +46,6 @@ open class UserRef(
 
 interface UserI : UuidEntityI, Principal {
     enum class Roles { ROLE_USER, ROLE_ADMIN }
-}
-
-@Deprecated("")
-interface UserBasicI : UserI {
-    var username: String
-    var blockedAt: DateTime?
-}
-
-@Deprecated("")
-interface UserFull : UserBasicI, EntityCreatedAt, EntityUpdatedAt {
-    var plainPassword: String?
-    var roles: List<Roles>
 }
 
 interface UserForAuthI : UserI {

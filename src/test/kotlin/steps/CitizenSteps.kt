@@ -1,7 +1,7 @@
 package steps
 
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.auth.UserForCreate
+import fr.dcproject.component.citizen.CitizenForCreate
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import io.cucumber.datatable.DataTable
@@ -40,12 +40,12 @@ class CitizenSteps : En, KoinTest {
         val id: UUID = id ?: params?.get("id")?.let { UUID.fromString(it) } ?: UUID.randomUUID()
         val email = params?.get("email") ?: ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr"
 
-        val user = User(
+        val user = UserForCreate(
             id = id,
             username = "$firstName-$lastName".toLowerCase(),
-            plainPassword = "azerty"
+            password = "azerty",
         )
-        val citizen = Citizen(
+        val citizen = CitizenForCreate(
             id = id,
             name = CitizenI.Name(firstName, lastName),
             email = email,

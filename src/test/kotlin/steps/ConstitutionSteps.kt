@@ -2,7 +2,9 @@ package steps
 
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.citizen.Citizen
+import fr.dcproject.component.citizen.CitizenForCreate
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.citizen.CitizenWithUserI
@@ -18,7 +20,6 @@ import org.joda.time.DateTime
 import org.koin.test.KoinTest
 import org.koin.test.get
 import java.util.UUID
-import fr.dcproject.component.auth.User as UserEntity
 
 class ConstitutionSteps : En, KoinTest {
     init {
@@ -55,16 +56,16 @@ class ConstitutionSteps : En, KoinTest {
         } else {
             val first = "firstName" + UUID.randomUUID().toString()
             val last = "lastName" + UUID.randomUUID().toString()
-            Citizen(
+            CitizenForCreate(
                 birthday = DateTime.now(),
                 name = CitizenI.Name(
                     first,
                     last
                 ),
                 email = "$first@fakeemail.com",
-                user = UserEntity(username = username, plainPassword = "azerty")
-            ).also {
-                get<CitizenRepository>().insertWithUser(it)
+                user = UserForCreate(username = username, password = "azerty")
+            ).let {
+                get<CitizenRepository>().insertWithUser(it) ?: error("Unable to create User")
             }
         }
 

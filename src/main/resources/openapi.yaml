@@ -1330,7 +1330,7 @@ components:
         - $ref: '#/components/schemas/UserBase'
         - type: object
           properties:
-            plain_password:
+            password:
               type: string
               required: true
               example:

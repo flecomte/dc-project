@@ -1,7 +1,7 @@
 @auth
 Feature: Auth routes
 
-  Scenario: The route for create citizen must response a 200 and return object
+  Scenario: I can resiter
     When I send a POST request to "/register" with body:
     """
     {
@@ -9,7 +9,7 @@ Feature: Auth routes
       "birthday": "2001-01-01",
       "user":{
         "username": "george-junior",
-        "plain_password": "azerty"
+        "password": "azerty"
       },
       "email": "george-junior@gmail.com"
     }
@@ -20,7 +20,7 @@ Feature: Auth routes
     eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.
     """
 
-  Scenario: The route for create citizen must response a 400 and return object
+  Scenario: I cannot create user if no username was sent
     When I send a POST request to "/register" with body:
     """
     {
@@ -28,18 +28,19 @@ Feature: Auth routes
       "birthday": "2001-01-01",
       "user":{
         "username": "",
-        "plain_password": ""
+        "password": ""
       }
     }
     """
     Then the response status code should be 400
 
-  Scenario: The route for create citizen must response a 200 and return object
+  Scenario: I can login with username and password
+    The route for create citizen must response a 200 and return object
     Given I have citizen Niels Bohr
     When I send a POST request to "/login" with body:
     """
     {
-      "name": "niels-bohr",
+      "username": "niels-bohr",
       "password": "azerty"
     }
     """
