@@ -1,10 +1,10 @@
 package integration.auth
 
 import integration.BaseTest
-import integration.`Then the response should be`
+import integration.asserts.`Then the response should be`
+import integration.asserts.`when`.`When I send a POST request`
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.amshove.kluent.`should be null`
@@ -26,7 +26,7 @@ class RegisterTest : BaseTest() {
     @Category(RegisterTest::class)
     fun `I can register`() {
         withIntegrationApplication {
-            `I send a POST request`("/register") {
+            `When I send a POST request`("/register") {
                 """
                 {
                   "name": {"first_name":"George", "last_name":"MICHEL"},
@@ -38,7 +38,7 @@ class RegisterTest : BaseTest() {
                   "email": "george-junior@gmail.com"
                 }
                 """
-            }.`Then the response should be` (HttpStatusCode.OK) {
+            }.`Then the response should be`(HttpStatusCode.OK) {
                 content
                     .`should not be null`()
                     .`should contain`("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.")
@@ -49,7 +49,7 @@ class RegisterTest : BaseTest() {
     @Test
     fun `I cannot register if no username was sent`() {
         withIntegrationApplication {
-            `I send a POST request`("/register") {
+            `When I send a POST request`("/register") {
                 """
                 {
                   "name": {"first_name":"George2", "last_name":"MICHEL2"},
@@ -60,7 +60,7 @@ class RegisterTest : BaseTest() {
                   }
                 }
                 """
-            }.`Then the response should be` (HttpStatusCode.BadRequest) {
+            }.`Then the response should be`(HttpStatusCode.BadRequest) {
                 content.`should be null`()
             }
         }

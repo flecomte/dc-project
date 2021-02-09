@@ -7,22 +7,13 @@ import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.migration.Migrations
-import io.ktor.http.ContentType
-import io.ktor.http.HttpHeaders
-import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.server.testing.TestApplicationCall
 import io.ktor.server.testing.TestApplicationEngine
-import io.ktor.server.testing.TestApplicationRequest
-import io.ktor.server.testing.TestApplicationResponse
 import io.ktor.server.testing.createTestEnvironment
-import io.ktor.server.testing.setBody
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.sync.RedisCommands
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.amshove.kluent.`should be`
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -48,36 +39,6 @@ abstract class BaseTest : KoinTest {
         test: TestApplicationEngine.() -> R
     ): R {
         return engine.test()
-    }
-
-    public fun TestApplicationEngine.`I send a GET request`(uri: String? = null, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
-        val setupOveride: TestApplicationRequest.() -> Unit = {
-            method = HttpMethod.Get
-            if (uri != null) {
-                this.uri = uri
-            }
-            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            setup?.let { it() }
-        }
-        return handleRequest(true, setupOveride)
-    }
-
-    public fun TestApplicationEngine.`I send a POST request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
-        val setupOveride: TestApplicationRequest.() -> Unit = {
-            method = HttpMethod.Post
-            if (uri != null) {
-                this.uri = uri
-            }
-            addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            setup?.let { it() }?.let {
-                setBody(it.trimIndent())
-            }
-        }
-        return handleRequest(true, setupOveride)
-    }
-
-    fun TestApplicationRequest.`with body`(body: String) {
-        setBody(body.trimIndent())
     }
 
     @BeforeAll
@@ -113,14 +74,4 @@ abstract class BaseTest : KoinTest {
         get<Connection>()
             .sendQuery("rollback to savepoint test_begin;", listOf())
     }
-}
-
-
-fun TestApplicationCall.`Then the response should be`(status: HttpStatusCode? = null, block: TestApplicationResponse.() -> Unit): TestApplicationCall {
-    if (status != null) {
-        response.status().`should be`(status)
-    }
-
-    block(response)
-    return this
 }
