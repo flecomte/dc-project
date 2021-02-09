@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.application.Env.PROD
+import fr.dcproject.application.Env.TEST
 import fr.dcproject.common.security.AccessDeniedException
 import fr.dcproject.component.article.articleKoinModule
 import fr.dcproject.component.article.routes.installArticleRoutes
@@ -68,6 +69,7 @@ import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
+import org.koin.dsl.module
 import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
@@ -87,6 +89,8 @@ fun Application.module(env: Env = PROD) {
         Slf4jLog()
         modules(
             listOf(
+                if (env == TEST) module { single { Configuration("application-test.conf") } }
+                else module { single { Configuration() } },
                 KoinModule,
                 articleKoinModule,
                 authKoinModule,

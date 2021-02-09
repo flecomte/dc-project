@@ -25,8 +25,6 @@ import org.koin.dsl.module
 
 @KtorExperimentalAPI
 val KoinModule = module {
-    single { Configuration() }
-
     // SQL connection
     single {
         val config: Configuration = get()
