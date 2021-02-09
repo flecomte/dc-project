@@ -50,28 +50,34 @@ abstract class BaseTest : KoinTest {
         return engine.test()
     }
 
-    public fun TestApplicationEngine.handleGetRequest(uri: String? = null, body: TestApplicationRequest.() -> String): TestApplicationCall {
+    public fun TestApplicationEngine.`I send a GET request`(uri: String? = null, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
         val setupOveride: TestApplicationRequest.() -> Unit = {
             method = HttpMethod.Get
             if (uri != null) {
                 this.uri = uri
             }
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            setBody(body().trimIndent())
+            setup?.let { it() }
         }
         return handleRequest(true, setupOveride)
     }
 
-    public fun TestApplicationEngine.handlePostRequest(uri: String? = null, body: TestApplicationRequest.() -> String): TestApplicationCall {
+    public fun TestApplicationEngine.`I send a POST request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
         val setupOveride: TestApplicationRequest.() -> Unit = {
             method = HttpMethod.Post
             if (uri != null) {
                 this.uri = uri
             }
             addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
-            setBody(body().trimIndent())
+            setup?.let { it() }?.let {
+                setBody(it.trimIndent())
+            }
         }
         return handleRequest(true, setupOveride)
+    }
+
+    fun TestApplicationRequest.`with body`(body: String) {
+        setBody(body.trimIndent())
     }
 
     @BeforeAll
@@ -110,10 +116,11 @@ abstract class BaseTest : KoinTest {
 }
 
 
-fun TestApplicationCall.`should be respond`(status: HttpStatusCode? = null, block: TestApplicationResponse.() -> Unit) {
+fun TestApplicationCall.`Then the response should be`(status: HttpStatusCode? = null, block: TestApplicationResponse.() -> Unit): TestApplicationCall {
     if (status != null) {
         response.status().`should be`(status)
     }
 
     block(response)
+    return this
 }

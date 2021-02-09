@@ -1,0 +1,29 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Unit and functional tests" type="JUnit" factoryName="JUnit" singleton="false" show_console_on_std_err="true">
+    <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
+    <useClassPathOnly />
+    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
+    <option name="ALTERNATIVE_JRE_PATH" value="corretto-11" />
+    <option name="PACKAGE_NAME" value="" />
+    <option name="MAIN_CLASS_NAME" value="" />
+    <option name="METHOD_NAME" value="" />
+    <option name="TEST_OBJECT" value="pattern" />
+    <option name="VM_PARAMETERS" value="-ea -Djdk.attach.allowAttachSelf=true" />
+    <option name="PARAMETERS" value="" />
+    <option name="TEST_SEARCH_SCOPE">
+      <value defaultName="wholeProject" />
+    </option>
+    <envs>
+      <env name="SEND_GRID_KEY" value="$SEND_GRID_KEY$" />
+    </envs>
+    <dir value="$PROJECT_DIR$" />
+    <patterns>
+      <pattern testClass="unit..*" />
+      <pattern testClass="functional..*" />
+    </patterns>
+    <tag value="!functional" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
