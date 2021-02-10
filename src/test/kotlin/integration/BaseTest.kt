@@ -14,7 +14,6 @@ import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.sync.RedisCommands
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.isActive
 import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
@@ -22,9 +21,6 @@ import org.junit.jupiter.api.BeforeEach
 import org.koin.test.KoinTest
 import org.koin.test.get
 
-@ExperimentalCoroutinesApi
-@KtorExperimentalAPI
-@KtorExperimentalLocationsAPI
 abstract class BaseTest : KoinTest {
     companion object {
         private var init = false
@@ -44,6 +40,9 @@ abstract class BaseTest : KoinTest {
         return engine.test()
     }
 
+    @ExperimentalCoroutinesApi
+    @KtorExperimentalAPI
+    @KtorExperimentalLocationsAPI
     @BeforeAll
     fun before() {
         engine.start()

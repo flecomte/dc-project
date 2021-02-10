@@ -1,6 +1,5 @@
 package integration
 
-import integration.BaseTest
 import integration.asserts.`And have property`
 import integration.asserts.`And the response should not be null`
 import integration.asserts.`Then the response should be`
@@ -13,17 +12,11 @@ import integration.asserts.given.`authenticated as`
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
-@ExperimentalCoroutinesApi
-@KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("citizen"))
 class `Citizen routes` : BaseTest() {

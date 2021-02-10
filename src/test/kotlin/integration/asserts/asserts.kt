@@ -40,7 +40,7 @@ infix fun TestApplicationResponse.`And have property`(path: String): Pair<JsonPa
     }
 
 infix fun Pair<JsonPath, Any>.`whish contains`(expected: Any): Pair<JsonPath, Any> = this.apply {
-    expected `should be equal to` second
+    second `should be equal to` expected
 }
 
 fun TestApplicationResponse.`And the response should contain`(path: String, valueExpected: String) {

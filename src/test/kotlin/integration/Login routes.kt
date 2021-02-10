@@ -1,6 +1,5 @@
 package integration
 
-import integration.BaseTest
 import integration.asserts.`And the response should not be null`
 import integration.asserts.`Then the response should be`
 import integration.asserts.`and should contains`
@@ -9,17 +8,11 @@ import integration.asserts.given.`Given I have citizen`
 import integration.asserts.given.`authenticated as`
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.NoContent
-import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.util.KtorExperimentalAPI
-import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
-@ExperimentalCoroutinesApi
-@KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("auth"))
 class `Login routes` : BaseTest() {
