@@ -1,4 +1,4 @@
-package integration.asserts.given
+package integration.steps.given
 
 import com.auth0.jwt.JWT
 import fr.dcproject.component.auth.jwt.JwtConfig

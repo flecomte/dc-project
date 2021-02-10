@@ -1,4 +1,4 @@
-package integration.asserts
+package integration.steps
 
 import com.jayway.jsonpath.JsonPath
 import io.ktor.http.HttpStatusCode

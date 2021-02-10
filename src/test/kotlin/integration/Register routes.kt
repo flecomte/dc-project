@@ -1,7 +1,7 @@
 package integration
 
-import integration.asserts.`Then the response should be`
-import integration.asserts.`when`.`When I send a POST request`
+import integration.steps.`Then the response should be`
+import integration.steps.`when`.`When I send a POST request`
 import io.ktor.http.HttpStatusCode
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should contain`

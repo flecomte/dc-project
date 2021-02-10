@@ -1,11 +1,11 @@
 package integration
 
-import integration.asserts.`And the response should not be null`
-import integration.asserts.`Then the response should be`
-import integration.asserts.`and should contains`
-import integration.asserts.`when`.`When I send a POST request`
-import integration.asserts.given.`Given I have citizen`
-import integration.asserts.given.`authenticated as`
+import integration.steps.`And the response should not be null`
+import integration.steps.`Then the response should be`
+import integration.steps.`and should contains`
+import integration.steps.`when`.`When I send a POST request`
+import integration.steps.given.`Given I have citizen`
+import integration.steps.given.`authenticated as`
 import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import org.junit.jupiter.api.Tag

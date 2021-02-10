@@ -1,4 +1,4 @@
-package integration.asserts.given
+package integration.steps.given
 
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.UserForCreate
@@ -13,7 +13,6 @@ import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role.MASTER
 import io.ktor.server.testing.TestApplicationEngine
 import org.joda.time.DateTime
 import org.koin.core.context.GlobalContext
-import org.koin.test.get
 import java.util.UUID
 
 fun TestApplicationEngine.`Given I have workgroup`(

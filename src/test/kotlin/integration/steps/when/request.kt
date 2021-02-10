@@ -1,4 +1,4 @@
-package integration.asserts.`when`
+package integration.steps.`when`
 
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders

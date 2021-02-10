@@ -1,4 +1,4 @@
-package integration.asserts.given
+package integration.steps.given
 
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.UserForCreate

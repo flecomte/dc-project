@@ -1,18 +1,18 @@
 package integration
 
-import integration.asserts.`And have property`
-import integration.asserts.`And the response should not be null`
-import integration.asserts.`Then the response should be`
-import integration.asserts.`when`.`When I send a GET request`
-import integration.asserts.`when`.`When I send a POST request`
-import integration.asserts.`whish contains`
-import integration.asserts.and
-import integration.asserts.given.`Given I have article created by workgroup`
-import integration.asserts.given.`Given I have article`
-import integration.asserts.given.`Given I have articles`
-import integration.asserts.given.`Given I have citizen`
-import integration.asserts.given.`Given I have workgroup`
-import integration.asserts.given.`authenticated as`
+import integration.steps.`And have property`
+import integration.steps.`And the response should not be null`
+import integration.steps.`Then the response should be`
+import integration.steps.`when`.`When I send a GET request`
+import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`whish contains`
+import integration.steps.and
+import integration.steps.given.`Given I have article created by workgroup`
+import integration.steps.given.`Given I have article`
+import integration.steps.given.`Given I have articles`
+import integration.steps.given.`Given I have citizen`
+import integration.steps.given.`Given I have workgroup`
+import integration.steps.given.`authenticated as`
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
