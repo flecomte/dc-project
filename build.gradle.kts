@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 import org.slf4j.LoggerFactory
@@ -32,8 +33,9 @@ plugins {
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
     id("org.owasp.dependencycheck") version "6.0.5"
-    id("org.sonarqube") version "2.7"
-    id("net.nemerosa.versioning") version "2.13.1"
+    id("org.sonarqube") version "3.1.1"
+    id("net.nemerosa.versioning") version "2.14.0"
+    id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
 }
 
 application {
@@ -70,6 +72,7 @@ tasks.test {
     useJUnit()
     useJUnitPlatform()
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
+    finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 //    maxHeapSize = "1G"
 }
 
@@ -100,12 +103,38 @@ publishing {
 }
 
 jacoco {
-    toolVersion = "0.8.3"
+    toolVersion = "0.8.6"
+    applyTo(tasks.run.get())
 }
-
+tasks.register<JacocoReport>("applicationCodeCoverageReport") {
+    executionData(tasks.run.get())
+    sourceSets(sourceSets.main.get())
+}
 tasks.jacocoTestReport {
+    dependsOn(tasks.test)
     reports {
         xml.isEnabled = true
+        html.isEnabled = true
+    }
+}
+
+detekt {
+    buildUponDefaultConfig = true // preconfigure defaults
+//    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
+//    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
+
+    reports {
+        html.enabled = true // observe findings in your browser with structure and code snippets
+        xml.enabled = true // checkstyle like format mainly for integrations like Jenkins
+        txt.enabled = true // similar to the console output, contains issue signature to manually edit baseline files
+        sarif.enabled = true // standardized SARIF format (https://sarifweb.azurewebsites.net/) to support integrations with Github Code Scanning
+    }
+}
+
+tasks {
+    withType<Detekt> {
+        // Target version of the generated JVM bytecode. It is used for type resolution.
+        this.jvmTarget = "11"
     }
 }
 

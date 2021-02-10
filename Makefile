@@ -34,7 +34,7 @@ run-docker: ## Build and Run all docker services (alias: rd)
 rdd: run-docker-dependencies
 
 run-docker-dependencies: ## Build and Run dependencies docker services (alias: rdd)
-	docker-compose up -d --build openapi rabbitmq redis elasticsearch db
+	docker-compose up -d --build openapi rabbitmq redis elasticsearch db sonarqube_db sonarqube
 
 pm: publish-maven
 
