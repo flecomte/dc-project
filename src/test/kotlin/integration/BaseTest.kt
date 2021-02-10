@@ -14,6 +14,8 @@ import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.sync.RedisCommands
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.isActive
+import org.junit.jupiter.api.AfterAll
 import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.BeforeAll
 import org.junit.jupiter.api.BeforeEach
@@ -32,8 +34,9 @@ abstract class BaseTest : KoinTest {
             .apply { setUri(config.rabbitmq) }
             .newConnection()
             .createChannel()
-        private val engine = TestApplicationEngine(createTestEnvironment())
     }
+
+    private val engine = TestApplicationEngine(createTestEnvironment())
 
     protected fun <R> withIntegrationApplication(
         test: TestApplicationEngine.() -> R
@@ -43,17 +46,24 @@ abstract class BaseTest : KoinTest {
 
     @BeforeAll
     fun before() {
+        engine.start()
+        engine.application.module(TEST)
         if (init == false) {
-            engine.start()
-            engine.application.module(TEST)
             init = true
             get<Migrations>().run {
                 forceAllDown()
                 run()
             }
-            get<Connection>()
-                .sendQuery("start transaction;", listOf())
         }
+        get<Connection>()
+            .sendQuery("start transaction;", listOf())
+    }
+
+    @AfterAll
+    fun after() {
+        get<Connection>()
+            .sendQuery("rollback;", listOf())
+        engine.stop(0, 0)
     }
 
     @BeforeEach

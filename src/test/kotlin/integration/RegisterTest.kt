@@ -1,6 +1,5 @@
-package integration.auth
+package integration
 
-import integration.BaseTest
 import integration.asserts.`Then the response should be`
 import integration.asserts.`when`.`When I send a POST request`
 import io.ktor.http.HttpStatusCode

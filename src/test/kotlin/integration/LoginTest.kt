@@ -1,4 +1,4 @@
-package integration.auth
+package integration
 
 import integration.BaseTest
 import integration.asserts.`And the response should not be null`

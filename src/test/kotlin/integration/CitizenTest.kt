@@ -1,4 +1,4 @@
-package integration.citizen
+package integration
 
 import integration.BaseTest
 import integration.asserts.`And have property`
