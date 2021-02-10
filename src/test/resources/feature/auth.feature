@@ -1,4 +1,5 @@
 @auth
+@disable
 Feature: Auth routes
 
   Scenario: I can resiter

@@ -34,3 +34,28 @@ fun TestApplicationEngine.`Given I have citizen`(
 
     return repo.insertWithUser(citizen)
 }
+
+fun createCitizen(createdByUsername: String? = null): Citizen {
+    val citizenRepository: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
+
+    val username = (createdByUsername ?: "username" + UUID.randomUUID().toString())
+        .toLowerCase().replace(' ', '-')
+
+    return if (createdByUsername != null) {
+        citizenRepository.findByUsername(createdByUsername) ?: error("Citizen not exist")
+    } else {
+        val first = "firstName" + UUID.randomUUID().toString()
+        val last = "lastName" + UUID.randomUUID().toString()
+        CitizenForCreate(
+            birthday = DateTime.now(),
+            name = CitizenI.Name(
+                first,
+                last
+            ),
+            email = "$first@fakeemail.com",
+            user = UserForCreate(username = username, password = "azerty")
+        ).let {
+            citizenRepository.insertWithUser(it) ?: error("Unable to create User")
+        }
+    }
+}

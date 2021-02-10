@@ -1,4 +1,5 @@
 @citizen
+@disable
 Feature: citizens routes
 
   Scenario: I can get Citizens informations
