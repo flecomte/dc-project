@@ -18,8 +18,8 @@ import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("common/security"), Tag("unit"))
-internal class CitizenAccessControlTest {
+@Tags(Tag("security"), Tag("unit"))
+internal class `Citizen Access Control` {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",

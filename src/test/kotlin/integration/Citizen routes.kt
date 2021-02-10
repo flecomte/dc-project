@@ -26,7 +26,7 @@ import org.junit.jupiter.api.TestInstance
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("citizen"))
-class CitizenTest : BaseTest() {
+class `Citizen routes` : BaseTest() {
     @Test
     fun `I can get Citizens informations`() {
         withIntegrationApplication {

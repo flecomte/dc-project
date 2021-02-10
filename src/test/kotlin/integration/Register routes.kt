@@ -20,9 +20,8 @@ import org.junit.jupiter.api.TestInstance
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("auth"))
-class RegisterTest : BaseTest() {
+class `Register routes` : BaseTest() {
     @Test
-    @Category(RegisterTest::class)
     fun `I can register`() {
         withIntegrationApplication {
             `When I send a POST request`("/register") {

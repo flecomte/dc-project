@@ -22,8 +22,8 @@ import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("common/security"), Tag("unit"))
-internal class WorkgroupAccessControlTest {
+@Tags(Tag("security"), Tag("unit"))
+internal class `Workgroup Access Control` {
     private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",

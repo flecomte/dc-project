@@ -22,7 +22,7 @@ import org.junit.jupiter.api.TestInstance
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("auth"))
-class LoginTest : BaseTest() {
+class `Login routes` : BaseTest() {
     @Test
     fun `I can login with username and password`() {
         withIntegrationApplication {

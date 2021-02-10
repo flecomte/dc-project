@@ -24,8 +24,8 @@ import fr.dcproject.component.article.ArticleRepository as ArticleRepo
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("common/security"), Tag("unit"))
-internal class ArticleAccessControlTest {
+@Tags(Tag("security"), Tag("unit"))
+internal class `Article Access Control` {
     private val tesla = CitizenCart(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
         user = User(

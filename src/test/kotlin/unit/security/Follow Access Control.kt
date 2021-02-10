@@ -9,8 +9,8 @@ import fr.dcproject.component.citizen.Citizen
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.vote.VoteAccessControl
-import fr.dcproject.component.vote.entity.VoteForUpdate
+import fr.dcproject.component.follow.Follow
+import fr.dcproject.component.follow.FollowAccessControl
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -20,14 +20,12 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("common/security"), Tag("unit"))
-internal class VoteAccessControlTest {
-    private val tesla = Citizen(
-        id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),
+@Tags(Tag("security"), Tag("unit"))
+internal class `Follow Access Control` {
+    private val tesla = CitizenBasic(
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -37,8 +35,7 @@ internal class VoteAccessControlTest {
         name = CitizenI.Name("Nicolas", "Tesla"),
         followAnonymous = false
     )
-    private val tesla3 = CitizenBasic(
-        id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),
+    private val tesla2 = Citizen(
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
@@ -49,7 +46,7 @@ internal class VoteAccessControlTest {
         followAnonymous = false
     )
 
-    private val einstein = Citizen(
+    private val einstein = CitizenBasic(
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
         user = User(
             username = "albert-einstein",
@@ -70,6 +67,18 @@ internal class VoteAccessControlTest {
         name = CitizenI.Name("Albert", "Einstein")
     )
 
+    private val einstein3 = Citizen(
+        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
+        user = User(
+            username = "albert-einstein",
+            roles = listOf(UserI.Roles.ROLE_USER)
+        ),
+        birthday = DateTime.now(),
+        email = "einstein@best.com",
+        name = CitizenI.Name("Albert", "Einstein"),
+        followAnonymous = true
+    )
+
     private val article1 = ArticleForView(
         content = "Hi",
         createdBy = einstein2,
@@ -77,68 +86,69 @@ internal class VoteAccessControlTest {
         title = "Super article"
     )
 
-    private val vote1 = VoteEntity(
-        createdBy = tesla3,
-        target = article1,
-        note = 1
+    private val follow1 = Follow(
+        createdBy = tesla,
+        target = article1
     )
 
-    private val voteForUpdate = VoteForUpdate(
-        createdBy = tesla,
-        target = article1,
-        note = 1
-    )
-
-    private val voteOnDeleted = VoteForUpdate(
-        createdBy = tesla,
-        target = ArticleForView(
-            content = "Hi",
-            createdBy = einstein2,
-            description = "blablabla",
-            title = "Super article"
-        ).copy(deletedAt = DateTime.now()),
-        note = 1
+    private val followAnon = Follow(
+        createdBy = einstein,
+        target = article1
     )
 
     @Test
-    fun `can be view your the vote`() {
-        VoteAccessControl()
-            .canView(vote1, tesla)
+    fun `can be view the follow`() {
+        FollowAccessControl()
+            .canView(follow1, tesla2)
             .decision `should be` GRANTED
     }
 
     @Test
-    fun `can not be view vote of other`() {
-        VoteAccessControl()
-            .canView(vote1, einstein)
+    fun `can be view the follow list`() {
+        FollowAccessControl()
+            .canView(listOf(follow1), tesla2)
+            .decision `should be` GRANTED
+    }
+
+    @Test
+    fun `can be view your anonymous follow`() {
+        FollowAccessControl()
+            .canView(followAnon, einstein3)
+            .decision `should be` GRANTED
+    }
+
+    @Test
+    fun `can not be view the anonymous follow of other`() {
+        FollowAccessControl()
+            .canView(followAnon, tesla2)
             .decision `should be` DENIED
     }
 
     @Test
-    fun `can be view your votes list`() {
-        VoteAccessControl()
-            .canView(listOf(vote1), tesla)
+    fun `can be follow article`() {
+        FollowAccessControl()
+            .canCreate(follow1, tesla2)
             .decision `should be` GRANTED
     }
 
     @Test
-    fun `can be vote an article`() {
-        VoteAccessControl()
-            .canCreate(voteForUpdate, tesla)
-            .decision `should be` GRANTED
-    }
-
-    @Test
-    fun `can not be vote if not connected`() {
-        VoteAccessControl()
-            .canCreate(voteForUpdate, null)
+    fun `can not be follow article if not connected`() {
+        FollowAccessControl()
+            .canCreate(follow1, null)
             .decision `should be` DENIED
     }
 
     @Test
-    fun `can not be vote an article if article is deleted`() {
-        VoteAccessControl()
-            .canCreate(voteOnDeleted, tesla)
+    fun `can be unfollow article`() {
+        FollowAccessControl()
+            .canDelete(follow1, tesla2)
+            .decision `should be` GRANTED
+    }
+
+    @Test
+    fun `can not be unfollow article if not connected`() {
+        FollowAccessControl()
+            .canDelete(follow1, null)
             .decision `should be` DENIED
     }
 }
