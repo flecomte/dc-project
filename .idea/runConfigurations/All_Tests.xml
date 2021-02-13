@@ -1,6 +1,12 @@
 <component name="ProjectRunConfigurationManager">
   <configuration default="false" name="All Tests" type="JUnit" factoryName="JUnit" singleton="false" show_console_on_std_err="true">
     <useClassPathOnly />
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="fr.dcproject.*" />
+        <option name="ENABLED" value="true" />
+      </pattern>
+    </extension>
     <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="corretto-11" />
     <option name="PACKAGE_NAME" value="" />
@@ -25,6 +31,9 @@
     <tag value="!functional" />
     <method v="2">
       <option name="Make" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="SQL Fixtures on DEV" run_configuration_type="ShConfigurationType" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint Format" run_configuration_type="GradleRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Pitest" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
 </component>

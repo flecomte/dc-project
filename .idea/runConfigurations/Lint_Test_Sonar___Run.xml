@@ -20,6 +20,8 @@
       </option>
       <option name="vmOptions" value="" />
     </ExternalSystemSettings>
+    <ExternalSystemDebugServerProcess>true</ExternalSystemDebugServerProcess>
+    <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <extension name="net.ashald.envfile">
       <option name="IS_ENABLED" value="false" />
       <option name="IS_SUBST" value="false" />
@@ -30,9 +32,10 @@
         <ENTRY IS_ENABLED="true" PARSER="runconfig" />
       </ENTRIES>
     </extension>
-    <GradleScriptDebugEnabled>true</GradleScriptDebugEnabled>
+    <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Lint Format" run_configuration_type="GradleRunConfiguration" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="All Tests" run_configuration_type="JUnit" />
       <option name="RunConfigurationTask" enabled="true" run_configuration_name="Sonarqube" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
