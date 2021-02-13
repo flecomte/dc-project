@@ -36,6 +36,7 @@ plugins {
     id("org.sonarqube") version "3.1.1"
     id("net.nemerosa.versioning") version "2.14.0"
     id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
+    id("info.solidsoft.pitest") version "1.5.2"
 }
 
 application {
@@ -138,6 +139,15 @@ tasks {
     }
 }
 
+pitest {
+    targetClasses.add("fr.dcproject.*") // by default "${project.group}.*"
+    threads.set(8)
+    outputFormats.set(listOf("HTML"))
+    jvmArgs.set(listOf("-Xmx1024m"))
+    junit5PluginVersion.set("0.12")
+    excludedClasses.set(listOf("fr.dcproject.component.notification.*"))
+}
+
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
 }
@@ -186,4 +196,8 @@ dependencies {
     testImplementation("org.amshove.kluent:kluent:1.61")
     testImplementation("io.cucumber:cucumber-java8:$cucumber_version")
     testImplementation("io.cucumber:cucumber-junit:$cucumber_version")
+    pitest("org.pitest:pitest-junit5-plugin:0.5")
+    testImplementation("io.mockk:mockk-agent-api:1.10.5")
+    testImplementation("io.mockk:mockk-agent-jvm:1.10.5")
+    testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
 }
