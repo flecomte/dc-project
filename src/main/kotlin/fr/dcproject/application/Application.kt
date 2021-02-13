@@ -173,7 +173,6 @@ fun Application.module(env: Env = PROD) {
     }
 
     install(StatusPages) {
-        // TODO move to postgresJson lib
         exception<CompletionException> { e ->
             val parent = e.cause?.cause
             if (parent is GenericDatabaseException) {
@@ -199,8 +198,11 @@ fun Application.module(env: Env = PROD) {
         method(HttpMethod.Put)
         method(HttpMethod.Delete)
         header(HttpHeaders.Authorization)
-        anyHost()
-        // host("localhost:4200", schemes = listOf("http", "https"))
+        if (env == PROD) {
+            host("localhost:4200", schemes = listOf("http", "https"))
+        } else {
+            anyHost()
+        }
         allowCredentials = true
         allowSameOrigin = true
         maxAge = Duration.ofDays(1)

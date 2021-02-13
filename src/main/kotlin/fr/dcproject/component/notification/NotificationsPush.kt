@@ -37,8 +37,8 @@ class NotificationsPush private constructor(
 ) {
     class Builder(val redisClient: RedisClient) {
         private val redisConnection = redisClient.connect() ?: error("Unable to connect to redis")
-        private val redisConnectionPubSub = redisClient.connectPubSub() ?: error("Unable to connect to redis")
-        private val redis: RedisAsyncCommands<String, String> = redisConnection.async() ?: error("Unable to connect to redis")
+        private val redisConnectionPubSub = redisClient.connectPubSub() ?: error("Unable to connect to redis PubSub")
+        private val redis: RedisAsyncCommands<String, String> = redisConnection.async() ?: error("Unable to connect to redis Async")
 
         fun build(
             citizen: CitizenI,
@@ -93,7 +93,7 @@ class NotificationsPush private constructor(
             addListener(listener)
 
             /* Register to the events */
-            async()?.psubscribe("__key*__:$key") ?: error("Unable to connect to redis")
+            async()?.psubscribe("__key*__:$key") ?: error("Unable to subscribe to redis events")
         }
     }
 
