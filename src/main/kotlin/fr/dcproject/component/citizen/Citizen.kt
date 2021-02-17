@@ -38,6 +38,7 @@ class Citizen(
     deletedAt: DateTime? = null
 ) : CitizenFull,
     CitizenBasicI,
+    CitizenWithUserI,
     CitizenRef(id),
     CitizenCartI,
     EntityCreatedAt by EntityCreatedAtImp(),

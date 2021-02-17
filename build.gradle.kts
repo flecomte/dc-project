@@ -200,4 +200,5 @@ dependencies {
     testImplementation("io.mockk:mockk-agent-api:1.10.5")
     testImplementation("io.mockk:mockk-agent-jvm:1.10.5")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlin_version")
+    testImplementation("com.thedeanda:lorem:2.1")
 }

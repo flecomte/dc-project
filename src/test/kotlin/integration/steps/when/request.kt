@@ -8,8 +8,8 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.setBody
 
-public fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
-    val setupOveride: TestApplicationRequest.() -> Unit = {
+fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+    return handleRequest(true) {
         method = HttpMethod.Get
         if (uri != null) {
             this.uri = uri
@@ -17,10 +17,9 @@ public fun TestApplicationEngine.`When I send a GET request`(uri: String? = null
         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
         setup?.let { it() }
     }
-    return handleRequest(true, setupOveride)
 }
 
-public fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
     val setupOveride: TestApplicationRequest.() -> Unit = {
         method = HttpMethod.Post
         if (uri != null) {
@@ -34,7 +33,7 @@ public fun TestApplicationEngine.`When I send a POST request`(uri: String? = nul
     return handleRequest(true, setupOveride)
 }
 
-public fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
     val setupOveride: TestApplicationRequest.() -> Unit = {
         method = HttpMethod.Put
         if (uri != null) {

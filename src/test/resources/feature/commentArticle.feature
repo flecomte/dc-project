@@ -1,4 +1,5 @@
 @comment
+@disable
 Feature: comment Article
 
   Scenario: Can comment an article

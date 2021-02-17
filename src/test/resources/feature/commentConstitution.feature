@@ -1,4 +1,5 @@
 @comment
+@disable
 Feature: comment Constitution
 
   Scenario: Can comment an constitution

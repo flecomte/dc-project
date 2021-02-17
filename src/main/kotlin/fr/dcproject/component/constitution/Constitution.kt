@@ -48,7 +48,7 @@ open class ConstitutionSimple<Cr : CitizenWithUserI, T : TitleSimple<*>>(
     id: UUID = UUID.randomUUID(),
     val title: String,
     val anonymous: Boolean = true,
-    val titles: MutableList<T> = mutableListOf(),
+    val titles: List<T> = listOf(),
     val draft: Boolean = false,
     val lastVersion: Boolean = false,
     override val createdBy: Cr,
@@ -73,7 +73,7 @@ open class ConstitutionSimple<Cr : CitizenWithUserI, T : TitleSimple<*>>(
     ) : TitleRef(id)
 }
 
-open class ConstitutionRef(id: UUID = UUID.randomUUID()) : ConstitutionS(id) {
+open class ConstitutionRef(id: UUID? = null) : ConstitutionS(id ?: UUID.randomUUID()) {
     open class TitleRef(
         id: UUID = UUID.randomUUID()
     ) : UuidEntity(id)

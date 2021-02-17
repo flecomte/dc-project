@@ -14,7 +14,7 @@ fun TestApplicationRequest.`authenticated as`(
 ): Citizen {
     val username = "$firstName-$lastName".toLowerCase()
     val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
-    val citizen = repo.findByUsername(username) ?: error("Cititzen not exist with username $username")
+    val citizen = repo.findByUsername(username) ?: error("Citizen not exist with username $username")
     val jwtAsString: String = JWT.create()
         .withIssuer("dc-project.fr")
         .withClaim("id", citizen.user.id.toString())

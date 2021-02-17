@@ -1,4 +1,5 @@
 @comment
+@disable
 Feature: comment
 
   Scenario: Can comment childrens

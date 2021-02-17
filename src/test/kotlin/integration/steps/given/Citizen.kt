@@ -17,7 +17,7 @@ fun TestApplicationEngine.`Given I have citizen`(
     email: String = ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr",
     id: String = UUID.randomUUID().toString()
 ): Citizen? {
-    val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
+    val repo: CitizenRepository by lazy { GlobalContext.get().koin.get() }
 
     val user = UserForCreate(
         id = id.toUUID(),
@@ -36,7 +36,7 @@ fun TestApplicationEngine.`Given I have citizen`(
 }
 
 fun createCitizen(createdByUsername: String? = null): Citizen {
-    val citizenRepository: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
 
     val username = (createdByUsername ?: "username" + UUID.randomUUID().toString())
         .toLowerCase().replace(' ', '-')

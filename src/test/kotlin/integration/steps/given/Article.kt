@@ -1,7 +1,9 @@
 package integration.steps.given
 
+import com.thedeanda.lorem.LoremIpsum
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleForUpdate
+import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.workgroup.WorkgroupRef
 import io.ktor.server.testing.TestApplicationEngine
@@ -33,19 +35,19 @@ fun createArticle(
     id: UUID? = null,
     workgroup: WorkgroupRef? = null,
     createdByUsername: String? = null
-) {
-    val articleRepository: ArticleRepository by lazy<ArticleRepository> { GlobalContext.get().koin.get() }
+): ArticleForView {
+    val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
 
     val createdBy = createCitizen(createdByUsername)
 
     val article = ArticleForUpdate(
         id = id ?: UUID.randomUUID(),
-        title = "hello",
-        content = "bla bla bla",
-        description = "A super article",
+        title = LoremIpsum().getTitle(3),
+        content = LoremIpsum().getParagraphs(1, 2),
+        description = LoremIpsum().getParagraphs(1, 2),
         createdBy = createdBy,
         workgroup = workgroup,
         versionId = UUID.randomUUID()
     )
-    articleRepository.upsert(article)
+    return articleRepository.upsert(article) ?: error("Cannot create article")
 }
