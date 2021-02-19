@@ -1,4 +1,5 @@
 @constitution
+@disable
 Feature: constitution
 
   Scenario: The route for get constitutions must response a 200

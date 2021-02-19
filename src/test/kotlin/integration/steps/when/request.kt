@@ -20,7 +20,7 @@ fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, setup
 }
 
 fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
-    val setupOveride: TestApplicationRequest.() -> Unit = {
+    return handleRequest(true) {
         method = HttpMethod.Post
         if (uri != null) {
             this.uri = uri
@@ -30,11 +30,10 @@ fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, setu
             setBody(it.trimIndent())
         }
     }
-    return handleRequest(true, setupOveride)
 }
 
 fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
-    val setupOveride: TestApplicationRequest.() -> Unit = {
+    return handleRequest(true) {
         method = HttpMethod.Put
         if (uri != null) {
             this.uri = uri
@@ -44,7 +43,19 @@ fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, setup
             setBody(it.trimIndent())
         }
     }
-    return handleRequest(true, setupOveride)
+}
+
+fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+    return handleRequest(true) {
+        method = HttpMethod.Delete
+        if (uri != null) {
+            this.uri = uri
+        }
+        addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
+        setup?.let { it() }?.let {
+            setBody(it.trimIndent())
+        }
+    }
 }
 
 fun TestApplicationRequest.`with body`(body: String) {
