@@ -66,7 +66,7 @@ fun TestApplicationResponse.`And the response should contain list`(path: String,
     }
 }
 
-val TestApplicationResponse.`And the response should not be null` get() = content.`should not be null`()
+fun TestApplicationResponse.`And the response should not be null`() = content.`should not be null`()
 fun TestApplicationResponse.`And the response should be null`() = content.`should be null`()
 infix fun String.`and should contains`(expected: String) = this
     .`should not be null`()

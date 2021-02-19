@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("auth"))
+@Tags(Tag("integration"), Tag("auth"), Tag("register"))
 class `Register routes` : BaseTest() {
     @Test
     fun `I can register`() {

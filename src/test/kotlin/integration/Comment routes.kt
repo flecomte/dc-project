@@ -15,7 +15,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("citizen"))
+@Tags(Tag("integration"), Tag("comment"))
 class `Comment routes` : BaseTest() {
     @Test
     fun `I can get comments children`() {
@@ -26,7 +26,7 @@ class `Comment routes` : BaseTest() {
             `When I send a GET request`("/comments/da22fc55-b0fd-42a5-a317-9583b1bb93c5/children") {
                 `authenticated as`("John", "Dalton")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
             }
         }
     }

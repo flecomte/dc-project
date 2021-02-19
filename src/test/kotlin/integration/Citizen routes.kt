@@ -27,7 +27,7 @@ class `Citizen routes` : BaseTest() {
             `When I send a GET request`("/citizens") {
                 `authenticated as`("Jean", "Perrin")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
             }
         }
     }
@@ -39,7 +39,7 @@ class `Citizen routes` : BaseTest() {
             `When I send a GET request`("/citizens/47a05c0f-7329-46c3-a7d0-325db37e9114") {
                 `authenticated as`("Linus", "Pauling")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And have property`("$.id") `whish contains` "47a05c0f-7329-46c3-a7d0-325db37e9114"
             }
         }
@@ -52,7 +52,7 @@ class `Citizen routes` : BaseTest() {
             `When I send a GET request`("/citizens/current") {
                 `authenticated as`("Henri", "Becquerel")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And have property`("$.id") `whish contains` "47356809-c8ef-4649-8b99-1c5cb9886d38"
             }
         }

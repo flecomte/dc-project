@@ -14,7 +14,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("auth"))
+@Tags(Tag("integration"), Tag("auth"), Tag("login"))
 class `Login routes` : BaseTest() {
     @Test
     fun `I can login with username and password`() {
@@ -28,7 +28,7 @@ class `Login routes` : BaseTest() {
                 }
                 """
             }.`Then the response should be`(HttpStatusCode.OK) {
-                `And the response should not be null` `and should contains` "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9."
+                `And the response should not be null`() `and should contains` "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9."
             }
         }
     }

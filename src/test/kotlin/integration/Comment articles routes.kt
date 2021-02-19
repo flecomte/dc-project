@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("citizen"))
+@Tags(Tag("integration"), Tag("comment"), Tag("article"))
 class `Comment articles routes` : BaseTest() {
     @Test
     fun `I can comment article`() {
@@ -34,7 +34,7 @@ class `Comment articles routes` : BaseTest() {
                 }
                 """
             } `Then the response should be` Created and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.target.id", "aa16c635-28da-46f0-9a89-934eef88c7ca")
                 `And the response should contain`("$.content", "Hello mister")
             }
@@ -51,7 +51,7 @@ class `Comment articles routes` : BaseTest() {
             `When I send a GET request`("/articles/6166c078-ca97-4366-b0aa-2a5cd558c78a/comments") {
                 `authenticated as`("Enrico", "Fermi")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.result[0].target.id", "6166c078-ca97-4366-b0aa-2a5cd558c78a")
             }
         }
@@ -67,7 +67,7 @@ class `Comment articles routes` : BaseTest() {
             `When I send a GET request`("/articles/5e209f63-57ce-43ca-922a-273b0d62f567/comments?sort=votes") {
                 `authenticated as`("Pierre", "Curie")
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.result[0].votes.up", 0)
             }
         }
@@ -81,7 +81,7 @@ class `Comment articles routes` : BaseTest() {
             `Given I have comment on article`(article = "17df7fb9-b388-4e20-ab19-29c29972da01", createdByUsername = "erwin-schrodinger")
             `When I send a GET request`("/citizens/292a20cc-4a60-489e-9866-a95d38ffaf47/comments/articles") {
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.current_page", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.result[0]created_by.id", "292a20cc-4a60-489e-9866-a95d38ffaf47")
@@ -101,7 +101,7 @@ class `Comment articles routes` : BaseTest() {
                 Hello boy
                 """
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.content", "Hello boy")
             }
         }
@@ -120,7 +120,7 @@ class `Comment articles routes` : BaseTest() {
             )
             `When I send a GET request`("/comments/edd296a8-fc7a-4717-a2bb-9f035ceca3c2") {
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.content", "Hello boy")
             }
         }

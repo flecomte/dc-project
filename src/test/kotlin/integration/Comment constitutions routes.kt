@@ -19,7 +19,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("citizen"))
+@Tags(Tag("integration"), Tag("constitution"), Tag("comment"))
 class `Comment constitutions routes` : BaseTest() {
     @Test
     fun `I can comment constitution`() {
@@ -34,7 +34,7 @@ class `Comment constitutions routes` : BaseTest() {
                 }
                 """
             } `Then the response should be` Created and {
-                `And the response should not be null`
+                `And the response should not be null`()
             }
         }
     }
@@ -47,7 +47,7 @@ class `Comment constitutions routes` : BaseTest() {
             `Given I have comment on constitution`(constitution = "34ddd50a-da00-4a90-a869-08baa2a121be", createdByUsername = "charles-darwin")
             `When I send a GET request`("/citizens/46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5/comments/constitutions") {
             } `Then the response should be` OK and {
-                `And the response should not be null`
+                `And the response should not be null`()
                 `And the response should contain`("$.current_page", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.result[0].created_by.id", "46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5")
