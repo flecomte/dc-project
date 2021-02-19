@@ -1423,7 +1423,7 @@ components:
               required: false
               default: []
               example: [power, press]
-            annonymous:
+            anonymous:
               type: boolean
               required: false
               default: true
@@ -1467,7 +1467,7 @@ components:
               default: []
               items:
                 $ref: '#/components/schemas/TitleBase'
-            annonymous:
+            anonymous:
               type: boolean
               required: false
               default: true

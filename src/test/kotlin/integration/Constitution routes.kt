@@ -66,7 +66,7 @@ class `Constitution routes` : BaseTest() {
                 {
                    "version_id":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
                    "title":"Hello world!",
-                   "annonymous":true,
+                   "anonymous":true,
                    "titles":[
                       {
                          "name":"plop",

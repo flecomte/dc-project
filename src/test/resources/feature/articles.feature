@@ -41,7 +41,7 @@ Feature: articles routes
     {
       "version_id": "09c418b6-63ba-448b-b38b-502b41cd500e",
       "title": "title2",
-      "annonymous": false,
+      "anonymous": false,
       "content": "content2",
       "description": "description2",
       "tags": [
