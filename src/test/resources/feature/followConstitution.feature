@@ -1,4 +1,5 @@
 @follow
+@disable
 Feature: follow Constitution
 
   # Constitution
