@@ -1,4 +1,5 @@
 @opinion
+@disable
 Feature: Opinion
 
   Scenario: Can get all opinion choices

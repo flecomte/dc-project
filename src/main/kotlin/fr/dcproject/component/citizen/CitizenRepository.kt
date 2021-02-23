@@ -1,6 +1,7 @@
 package fr.dcproject.component.citizen
 
 import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.citizen.CitizenI.Name
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
@@ -16,9 +17,13 @@ class CitizenRepository(override var requester: Requester) : RepositoryI {
         .getFunction("find_citizen_by_user_id")
         .selectOne("user_id" to user.id)
 
-    fun findByUsername(unsername: String): Citizen? = requester
+    fun findByUsername(username: String): Citizen? = requester
         .getFunction("find_citizen_by_username")
-        .selectOne("username" to unsername)
+        .selectOne("username" to username)
+
+    fun findByName(name: Name): Citizen? = requester
+        .getFunction("find_citizen_by_name")
+        .selectOne("name" to name)
 
     fun findByEmail(email: String): Citizen? = requester
         .getFunction("find_citizen_by_email")

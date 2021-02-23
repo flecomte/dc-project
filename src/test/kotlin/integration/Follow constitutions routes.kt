@@ -8,9 +8,7 @@ import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.and
-import integration.steps.given.`And follow article`
 import integration.steps.given.`And follow constitution`
-import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`authenticated as`
@@ -24,7 +22,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("article"), Tag("follow"))
+@Tags(Tag("integration"), Tag("constitution"), Tag("follow"))
 class `Follow constitutions routes` : BaseTest() {
     @Test
     fun `I can follow constitution`() {

@@ -10,6 +10,7 @@ import fr.postgresjson.entity.EntityCreatedAt
 import fr.postgresjson.entity.EntityCreatedAtImp
 import fr.postgresjson.entity.EntityDeletedAt
 import fr.postgresjson.entity.EntityDeletedAtImp
+import fr.postgresjson.entity.Serializable
 import fr.postgresjson.entity.UuidEntity
 import fr.postgresjson.entity.UuidEntityI
 import org.joda.time.DateTime
@@ -101,7 +102,7 @@ interface CitizenI : UuidEntityI {
         override val civility: String? = null
     ) : NameI
 
-    interface NameI {
+    interface NameI : Serializable {
         val firstName: String
         val lastName: String
         val civility: String?
