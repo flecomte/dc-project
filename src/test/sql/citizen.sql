@@ -35,9 +35,17 @@ begin
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
+    -- get citizen by username and check the first name
+    select find_citizen_by_username(created_citizen#>>'{user, username}') into selected_citizen;
+    assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
+
+    -- get citizen by name and check the first name
+    select find_citizen_by_name(created_citizen->'name') into selected_citizen;
+    assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
+
     rollback;
 
-    -- check if fint by id return null if citizen not exist
+    -- check if find by id return null if citizen not exist
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen is null, format('citizen must be null if not exist, %s', selected_citizen);
 
