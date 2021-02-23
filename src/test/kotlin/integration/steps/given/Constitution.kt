@@ -3,6 +3,7 @@ package integration.steps.given
 import com.thedeanda.lorem.LoremIpsum
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.constitution.Constitution
 import fr.dcproject.component.constitution.ConstitutionRepository
@@ -15,9 +16,9 @@ import java.util.UUID
 fun TestApplicationEngine.`Given I have constitution`(
     id: String? = null,
     titles: List<TitleSimple<ArticleRef>>? = null,
-    createdByUsername: String? = null
+    createdBy: Name? = null
 ) {
-    createConstitution(id?.toUUID(), titles, createdByUsername)
+    createConstitution(id?.toUUID(), titles, createdBy)
 }
 
 fun TestApplicationEngine.`Given I have constitutions`(
@@ -41,11 +42,11 @@ fun createTitle(): TitleSimple<ArticleRef> {
 fun createConstitution(
     id: UUID? = null,
     titles: List<TitleSimple<ArticleRef>>? = null,
-    createdByUsername: String? = null
+    createdBy: Name? = null
 ): Constitution {
     val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().koin.get() }
 
-    val createdBy: CitizenWithUserI = createCitizen(createdByUsername)
+    val createdBy: CitizenWithUserI = createCitizen(createdBy)
 
     val constitution = ConstitutionSimple(
         id = id ?: UUID.randomUUID(),

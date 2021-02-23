@@ -5,6 +5,7 @@ import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleForUpdate
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.workgroup.WorkgroupRef
 import io.ktor.server.testing.TestApplicationEngine
 import org.koin.core.context.GlobalContext
@@ -13,9 +14,9 @@ import java.util.UUID
 fun TestApplicationEngine.`Given I have article`(
     id: String? = null,
     workgroup: WorkgroupRef? = null,
-    createdByUsername: String? = null
+    createdBy: Name? = null
 ) {
-    createArticle(id?.toUUID(), workgroup, createdByUsername)
+    createArticle(id?.toUUID(), workgroup, createdBy)
 }
 
 fun TestApplicationEngine.`Given I have articles`(
@@ -34,18 +35,18 @@ fun TestApplicationEngine.`Given I have article created by workgroup`(
 fun createArticle(
     id: UUID? = null,
     workgroup: WorkgroupRef? = null,
-    createdByUsername: String? = null
+    createdBy: Name? = null
 ): ArticleForView {
     val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
 
-    val createdBy = createCitizen(createdByUsername)
+    val citizen = createCitizen(createdBy)
 
     val article = ArticleForUpdate(
         id = id ?: UUID.randomUUID(),
         title = LoremIpsum().getTitle(3),
         content = LoremIpsum().getParagraphs(1, 2),
         description = LoremIpsum().getParagraphs(1, 2),
-        createdBy = createdBy,
+        createdBy = citizen,
         workgroup = workgroup,
         versionId = UUID.randomUUID()
     )

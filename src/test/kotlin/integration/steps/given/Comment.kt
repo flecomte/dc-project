@@ -5,6 +5,7 @@ import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.comment.generic.CommentForUpdate
 import fr.dcproject.component.comment.generic.CommentRepository
 import fr.dcproject.component.constitution.ConstitutionRef
@@ -16,10 +17,10 @@ import java.util.UUID
 fun TestApplicationEngine.`Given I have comment on article`(
     id: String? = null,
     article: String? = null,
-    createdByUsername: String? = null,
+    createdBy: Name? = null,
     content: String? = null,
 ) {
-    createComment(id?.toUUID(), ArticleRef(article?.toUUID()), createdByUsername, content)
+    createComment(id?.toUUID(), ArticleRef(article?.toUUID()), createdBy, content)
 }
 
 fun TestApplicationEngine.`Given I have comments on article`(
@@ -34,14 +35,14 @@ fun TestApplicationEngine.`Given I have comments on article`(
 fun createComment(
     id: UUID? = null,
     article: ArticleRef? = null,
-    createdByUsername: String? = null,
+    createdBy: Name? = null,
     content: String? = null
 ) {
     val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
     createCommentOnTarget(
         id,
         article?.id?.let { articleRepository.findById(article.id) } ?: createArticle(article?.id),
-        createdByUsername,
+        createdBy,
         content
     )
 }
@@ -49,23 +50,23 @@ fun createComment(
 fun TestApplicationEngine.`Given I have comment on constitution`(
     id: String? = null,
     constitution: String? = null,
-    createdByUsername: String? = null,
+    createdBy: Name? = null,
     content: String? = null,
 ) {
-    createComment(id?.toUUID(), ConstitutionRef(constitution?.toUUID()), createdByUsername, content)
+    createComment(id?.toUUID(), ConstitutionRef(constitution?.toUUID()), createdBy, content)
 }
 
 fun createComment(
     id: UUID? = null,
     constitution: ConstitutionRef? = null,
-    createdByUsername: String? = null,
+    createdBy: Name? = null,
     content: String? = null
 ) {
     val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().koin.get() }
     createCommentOnTarget(
         id,
         constitution?.id?.let { constitutionRepository.findById(constitution.id) } ?: createConstitution(constitution?.id),
-        createdByUsername,
+        createdBy,
         content
     )
 }
@@ -73,11 +74,11 @@ fun createComment(
 fun createCommentOnTarget(
     id: UUID? = null,
     target: TargetI,
-    createdByUsername: String? = null,
+    createdBy: Name? = null,
     content: String? = null
 ) {
     val commentRepository: CommentRepository by lazy { GlobalContext.get().koin.get() }
-    val createdBy = createCitizen(createdByUsername)
+    val createdBy = createCitizen(createdBy)
     val comment = CommentForUpdate(
         id = id ?: UUID.randomUUID(),
         createdBy = createdBy,

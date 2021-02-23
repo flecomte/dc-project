@@ -1,5 +1,6 @@
 package integration
 
+import fr.dcproject.component.citizen.CitizenI.Name
 import integration.steps.`And the response should contain`
 import integration.steps.`And the response should not be null`
 import integration.steps.`Then the response should be`
@@ -47,7 +48,7 @@ class `Comment articles routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Enrico", "Fermi")
             `Given I have article`(id = "6166c078-ca97-4366-b0aa-2a5cd558c78a")
-            `Given I have comment on article`(article = "6166c078-ca97-4366-b0aa-2a5cd558c78a", createdByUsername = "enrico-fermi")
+            `Given I have comment on article`(article = "6166c078-ca97-4366-b0aa-2a5cd558c78a", createdBy = Name("Enrico", "Fermi"))
             `When I send a GET request`("/articles/6166c078-ca97-4366-b0aa-2a5cd558c78a/comments") {
                 `authenticated as`("Enrico", "Fermi")
             } `Then the response should be` OK and {
@@ -63,7 +64,7 @@ class `Comment articles routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Pierre", "Curie")
             `Given I have article`(id = "5e209f63-57ce-43ca-922a-273b0d62f567")
-            `Given I have comment on article`(article = "5e209f63-57ce-43ca-922a-273b0d62f567", createdByUsername = "pierre-curie")
+            `Given I have comment on article`(article = "5e209f63-57ce-43ca-922a-273b0d62f567", createdBy = Name("Pierre", "Curie"))
             `When I send a GET request`("/articles/5e209f63-57ce-43ca-922a-273b0d62f567/comments?sort=votes") {
                 `authenticated as`("Pierre", "Curie")
             } `Then the response should be` OK and {
@@ -77,8 +78,8 @@ class `Comment articles routes` : BaseTest() {
     fun `I can get comments on articles of the current citizen`() {
         withIntegrationApplication {
             `Given I have citizen`("Erwin", "Schrodinger", id = "292a20cc-4a60-489e-9866-a95d38ffaf47")
-            `Given I have article`(id = "17df7fb9-b388-4e20-ab19-29c29972da01", createdByUsername = "erwin-schrodinger")
-            `Given I have comment on article`(article = "17df7fb9-b388-4e20-ab19-29c29972da01", createdByUsername = "erwin-schrodinger")
+            `Given I have article`(id = "17df7fb9-b388-4e20-ab19-29c29972da01", createdBy = Name("Erwin", "Schrodinger"))
+            `Given I have comment on article`(article = "17df7fb9-b388-4e20-ab19-29c29972da01", createdBy = Name("Erwin", "Schrodinger"))
             `When I send a GET request`("/citizens/292a20cc-4a60-489e-9866-a95d38ffaf47/comments/articles") {
             } `Then the response should be` OK and {
                 `And the response should not be null`()
@@ -94,7 +95,7 @@ class `Comment articles routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Hubert", "Reeves")
             `Given I have article`(id = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1")
-            `Given I have comment on article`(article = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1", createdByUsername = "hubert-reeves", id = "fd30d20f-656c-42c6-8955-f61c04537464")
+            `Given I have comment on article`(article = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1", createdBy = Name("Hubert", "Reeves"), id = "fd30d20f-656c-42c6-8955-f61c04537464")
             `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464") {
                 `authenticated as`("Hubert", "Reeves")
                 """
@@ -114,7 +115,7 @@ class `Comment articles routes` : BaseTest() {
             `Given I have article`(id = "3897465b-19d2-43a0-86ea-1e29dbb11ec9")
             `Given I have comment on article`(
                 article = "3897465b-19d2-43a0-86ea-1e29dbb11ec9",
-                createdByUsername = "alfred-kastler",
+                createdBy = Name("Alfred", "Kastler"),
                 id = "edd296a8-fc7a-4717-a2bb-9f035ceca3c2",
                 content = "Hello boy"
             )

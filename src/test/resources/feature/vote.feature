@@ -1,4 +1,5 @@
 @vote
+@disable
 Feature: vote Article
 
   Scenario: Can Vote article

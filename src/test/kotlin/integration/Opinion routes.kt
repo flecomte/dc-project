@@ -51,7 +51,7 @@ class `Opinion routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Isaac", "Newton", id = "2f414045-95d9-42ca-a3a9-8cdde52ad253")
             `Given I have an opinion choice`("Opinion4", id = "0f4f1721-3136-44f1-9f31-1459f3317b15")
-            `Given I have article`(id = "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b", createdByUsername = "isaac-newton")
+            `Given I have article`(id = "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b", createdBy = Name("Isaac", "Newton"))
             `When I send a PUT request`("/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/opinions") {
                 `authenticated as`("Isaac", "Newton")
                 """

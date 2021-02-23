@@ -1,5 +1,6 @@
 package integration
 
+import fr.dcproject.component.citizen.CitizenI.Name
 import integration.steps.`And the response should contain list`
 import integration.steps.`And the response should contain`
 import integration.steps.`And the response should not be null`
@@ -43,8 +44,8 @@ class `Comment constitutions routes` : BaseTest() {
     fun `I can get comments on constitutions of the current citizen`() {
         withIntegrationApplication {
             `Given I have citizen`("Charles", "Darwin", id = "46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5")
-            `Given I have constitution`(id = "34ddd50a-da00-4a90-a869-08baa2a121be", createdByUsername = "charles-darwin")
-            `Given I have comment on constitution`(constitution = "34ddd50a-da00-4a90-a869-08baa2a121be", createdByUsername = "charles-darwin")
+            `Given I have constitution`(id = "34ddd50a-da00-4a90-a869-08baa2a121be", createdBy = Name("Charles", "Darwin"))
+            `Given I have comment on constitution`(constitution = "34ddd50a-da00-4a90-a869-08baa2a121be", createdBy = Name("Charles", "Darwin"))
             `When I send a GET request`("/citizens/46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5/comments/constitutions") {
             } `Then the response should be` OK and {
                 `And the response should not be null`()
