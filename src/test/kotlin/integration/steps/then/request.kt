@@ -48,9 +48,17 @@ infix fun Pair<JsonPath, Any>.`whish contains`(expected: Any): Pair<JsonPath, An
     second `should be equal to` expected
 }
 
-fun <T> TestApplicationResponse.`And the response should contain`(path: String, valueExpected: T?): T {
+inline fun <reified T> TestApplicationResponse.`And the response should contain`(path: String, valueExpected: T?): T {
     return JsonPath.read<T?>(content, path).also {
-        assertEquals<T?>(valueExpected, it ?: throw AssertionError("\"$path -> ${valueExpected}\" element not found on json response"))
+        it.let {
+            if (it is JSONArray && it.count() == 1 && it.first() is T?) {
+                it.first() as T?
+            } else {
+                it
+            }
+        }.let {
+            assertEquals<T?>(valueExpected, it ?: throw AssertionError("\"$path -> ${valueExpected}\" element not found on json response"))
+        }
     }
 }
 

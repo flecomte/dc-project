@@ -1,4 +1,5 @@
 @workgroup
+@disable
 Feature: Workgroup
 
   Scenario: Can get one workgroup
