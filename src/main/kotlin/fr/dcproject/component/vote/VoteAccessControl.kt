@@ -1,15 +1,15 @@
 package fr.dcproject.component.vote
 
+import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.postgresjson.entity.EntityDeletedAt
 import fr.dcproject.component.vote.entity.Vote as VoteEntity
 
 class VoteAccessControl : AccessControl() {
-    fun <S> canCreate(subject: VoteForUpdateI<S, *>, citizen: CitizenI?): AccessResponse where S : EntityDeletedAt, S : TargetI = when {
+    fun <S> canCreate(subject: VoteForUpdateI<S, *>, citizen: CitizenI?): AccessResponse where S : DeletedAt, S : TargetI = when {
         citizen == null -> denied("You must be connected for vote", "vote.create.connected")
         subject.target.isDeleted() -> denied("You cannot vote on deleted target", "vote.create.isDeleted")
         else -> granted()

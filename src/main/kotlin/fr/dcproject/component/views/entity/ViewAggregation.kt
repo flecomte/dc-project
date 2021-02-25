@@ -1,13 +1,12 @@
 package fr.dcproject.component.views.entity
 
+import fr.dcproject.common.entity.UpdatedAt
 import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
 
 class ViewAggregation(
     val total: Int,
     val unique: Int
 ) : EntityI,
-    EntityUpdatedAt by EntityUpdatedAtImp() {
+    UpdatedAt by UpdatedAt.Imp() {
     constructor() : this(0, 0)
 }

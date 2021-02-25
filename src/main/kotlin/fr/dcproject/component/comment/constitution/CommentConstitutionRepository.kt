@@ -1,5 +1,6 @@
 package fr.dcproject.component.comment.constitution
 
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
@@ -9,7 +10,6 @@ import fr.dcproject.component.comment.generic.CommentRepositoryAbs
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs<ConstitutionRef>(requester) {
@@ -36,7 +36,7 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
     }
 
     override fun findByTarget(
-        target: UuidEntityI,
+        target: EntityI,
         page: Int,
         limit: Int,
         sort: CommentArticleRepository.Sort

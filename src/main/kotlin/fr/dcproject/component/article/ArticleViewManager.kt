@@ -1,6 +1,6 @@
 package fr.dcproject.component.article
 
-import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.common.utils.contentToString
 import fr.dcproject.common.utils.getJsonField
 import fr.dcproject.common.utils.toIso
@@ -16,7 +16,7 @@ import java.util.UUID
 /**
  * Wrapper for manage views with elasticsearch
  */
-class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<A> where A : VersionableRef, A : ArticleI {
+class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<A> where A : VersionableId, A : ArticleI {
     /**
      * Add view on article to elasticsearch
      */

@@ -5,25 +5,21 @@ import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.comment.generic.CommentRef
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.dcproject.component.opinion.entity.OpinionRef
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf
 
 interface ExtraI<T : TargetI, C : CitizenI> :
-    UuidEntityI,
+    EntityI,
     HasTarget<T>,
-    EntityCreatedAt,
-    EntityCreatedBy<C>
+    CreatedAt,
+    CreatedBy<C>
 
 interface HasTarget<T : TargetI> {
     val target: T
 }
 
-open class TargetRef(id: UUID? = null, reference: String = "") : TargetI, UuidEntity(id) {
+open class TargetRef(id: UUID? = null, reference: String = "") : TargetI, Entity(id) {
 
     final override val reference: String
         get() = if (field != "") field else TargetI.getReference(this)
@@ -33,7 +29,7 @@ open class TargetRef(id: UUID? = null, reference: String = "") : TargetI, UuidEn
     }
 }
 
-interface TargetI : UuidEntityI {
+interface TargetI : EntityI {
     enum class TargetName(val targetReference: String) {
         Article("article"),
         Constitution("constitution"),

@@ -1,5 +1,6 @@
 package fr.dcproject.component.comment.article
 
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
@@ -9,7 +10,6 @@ import fr.dcproject.component.comment.generic.CommentForView
 import fr.dcproject.component.comment.generic.CommentRepositoryAbs
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<ArticleForView>(requester) {
@@ -36,7 +36,7 @@ class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<Arti
     }
 
     override fun findByTarget(
-        target: UuidEntityI,
+        target: EntityI,
         page: Int,
         limit: Int,
         sort: Sort

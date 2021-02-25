@@ -1,5 +1,8 @@
 package fr.dcproject.component.opinion.entity
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
@@ -9,11 +12,6 @@ import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 @Deprecated("")
@@ -24,8 +22,8 @@ open class Opinion<T : TargetI>(
     val choice: OpinionChoice
 ) : OpinionRef(id),
     ExtraI<T, CitizenBasicI>,
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy) {
+    CreatedAt by CreatedAt.Imp(),
+    CreatedBy<CitizenBasicI> by CreatedBy.Imp(createdBy) {
 
     fun getName(): String = choice.name
 }
@@ -45,10 +43,10 @@ data class OpinionForUpdate<T : TargetI>(
     override val createdBy: CitizenRef
 ) : OpinionRef(id),
     HasTarget<T>,
-    EntityCreatedBy<CitizenI> by EntityCreatedByImp(createdBy)
+    CreatedBy<CitizenI> by CreatedBy.Imp(createdBy)
 
 open class OpinionRef(
     override val id: UUID
 ) : OpinionI, TargetRef(id)
 
-interface OpinionI : UuidEntityI
+interface OpinionI : EntityI

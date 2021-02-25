@@ -1,18 +1,15 @@
 package fr.dcproject.component.vote.entity
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.UpdatedAt
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 @Deprecated("")
@@ -24,9 +21,9 @@ class Vote<T : TargetI>(
     var anonymous: Boolean = true
 ) : ExtraI<T, CitizenBasicI>,
     VoteRef(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<CitizenBasicI> by EntityCreatedByImp(createdBy),
-    EntityUpdatedAt by EntityUpdatedAtImp() {
+    CreatedAt by CreatedAt.Imp(),
+    CreatedBy<CitizenBasicI> by CreatedBy.Imp(createdBy),
+    UpdatedAt by UpdatedAt.Imp() {
     init {
         if (note > 1 && note < -1) {
             error("note must be 1, 0 or -1")
@@ -41,9 +38,9 @@ class VoteForUpdate<T : TargetI, C : CitizenI>(
     override val createdBy: C
 ) : VoteRef(id),
     VoteForUpdateI<T, C>,
-    EntityCreatedBy<C> by EntityCreatedByImp<C>(createdBy)
+    CreatedBy<C> by CreatedBy.Imp<C>(createdBy)
 
-interface VoteForUpdateI<T : TargetI, C : CitizenI> : VoteI, HasTarget<T>, EntityCreatedBy<C> {
+interface VoteForUpdateI<T : TargetI, C : CitizenI> : VoteI, HasTarget<T>, CreatedBy<C> {
     override val id: UUID
     val note: Int
     override val target: T
@@ -54,4 +51,4 @@ open class VoteRef(
     override val id: UUID
 ) : VoteI
 
-interface VoteI : UuidEntityI
+interface VoteI : EntityI

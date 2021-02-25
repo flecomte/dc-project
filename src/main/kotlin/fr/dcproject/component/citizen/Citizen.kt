@@ -1,18 +1,16 @@
 package fr.dcproject.component.citizen
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.DeletedAt
+import fr.dcproject.common.entity.Entity
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
 import fr.dcproject.component.citizen.CitizenI.Name
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
 import fr.postgresjson.entity.Serializable
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityI
 import org.joda.time.DateTime
 import java.util.UUID
 
@@ -26,7 +24,7 @@ class CitizenForCreate(
     id: UUID = UUID.randomUUID(),
 ) : CitizenI,
     CitizenRefWithUser(id, user),
-    EntityCreatedAt by EntityCreatedAtImp()
+    CreatedAt by CreatedAt.Imp()
 
 class Citizen(
     override val id: UUID = UUID.randomUUID(),
@@ -42,8 +40,8 @@ class Citizen(
     CitizenWithUserI,
     CitizenRef(id),
     CitizenCartI,
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityDeletedAt by EntityDeletedAtImp(deletedAt) {
+    CreatedAt by CreatedAt.Imp(),
+    DeletedAt by DeletedAt.Imp(deletedAt) {
     var workgroups: List<WorkgroupAndRoles> = emptyList()
 
     class WorkgroupAndRoles(
@@ -64,7 +62,7 @@ data class CitizenBasic(
     override val deletedAt: DateTime? = null
 ) : CitizenBasicI,
     CitizenRefWithUser(id, user),
-    EntityDeletedAt by EntityDeletedAtImp(deletedAt)
+    DeletedAt by DeletedAt.Imp(deletedAt)
 
 @Deprecated("")
 open class CitizenSimple(
@@ -92,10 +90,10 @@ open class CitizenRefWithUser(
 
 open class CitizenRef(
     id: UUID = UUID.randomUUID()
-) : UuidEntity(id),
+) : Entity(id),
     CitizenI
 
-interface CitizenI : UuidEntityI {
+interface CitizenI : EntityI {
     data class Name(
         override val firstName: String,
         override val lastName: String,
@@ -111,7 +109,7 @@ interface CitizenI : UuidEntityI {
 }
 
 @Deprecated("")
-interface CitizenBasicI : CitizenWithUserI, CitizenWithEmail, EntityDeletedAt {
+interface CitizenBasicI : CitizenWithUserI, CitizenWithEmail, DeletedAt {
     val name: Name
     val birthday: DateTime
     val voteAnonymous: Boolean

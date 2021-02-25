@@ -1,17 +1,25 @@
 package fr.dcproject.common.entity
 
-import fr.postgresjson.entity.EntityVersioning
 import java.util.UUID
 
-interface VersionableRef {
+interface VersionableId {
     val versionId: UUID
+
+    class Imp(
+        versionId: UUID? = null,
+    ) : VersionableId {
+        override val versionId: UUID = versionId ?: UUID.randomUUID()
+    }
 }
 
-class VersionableRefImp(
+interface Versionable : VersionableId {
     override val versionId: UUID
-) : VersionableRef
+    val versionNumber: Int
 
-interface Versionable : VersionableRef, EntityVersioning<UUID, Int> {
-    override val versionId: UUID
-    override val versionNumber: Int
+    class Imp(
+        override val versionNumber: Int,
+        versionId: UUID? = null,
+    ) : Versionable {
+        override val versionId: UUID = versionId ?: UUID.randomUUID()
+    }
 }

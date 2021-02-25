@@ -1,7 +1,7 @@
 package fr.dcproject.component.article
 
 import fr.dcproject.common.entity.CreatedBy
-import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
@@ -28,7 +28,7 @@ class ArticleAccessControl(private val articleRepo: ArticleRepository) : AccessC
     fun <S> canUpsert(subject: S, citizen: CitizenI?): AccessResponse
         where S : ArticleI,
               S : CreatedBy<*>,
-              S : VersionableRef {
+              S : VersionableId {
         if (citizen == null) return denied("You must be connected to create article", "article.create.notConnected")
         /* The new Article must by created by the same citizen of the connected citizen */
         if (subject.createdBy.id == citizen.id) {

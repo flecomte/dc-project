@@ -1,14 +1,14 @@
 package fr.dcproject.component.citizen
 
+import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.postgresjson.entity.EntityDeletedAt
 
 class CitizenAccessControl : AccessControl() {
-    fun <S> canView(subjects: List<S>, connectedCitizen: CitizenI?): AccessResponse where S : CitizenI, S : EntityDeletedAt =
+    fun <S> canView(subjects: List<S>, connectedCitizen: CitizenI?): AccessResponse where S : CitizenI, S : DeletedAt =
         canAll(subjects) { canView(it, connectedCitizen) }
 
-    fun <S> canView(subject: S, connectedCitizen: CitizenI?): AccessResponse where S : CitizenI, S : EntityDeletedAt {
+    fun <S> canView(subject: S, connectedCitizen: CitizenI?): AccessResponse where S : CitizenI, S : DeletedAt {
         if (connectedCitizen == null) return denied("You must be connected to view citizen", "citizen.view.connected")
         return if (subject.isDeleted()) denied("You cannot view a deleted citizen", "citizen.view.deleted")
         else granted()

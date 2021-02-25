@@ -1,21 +1,17 @@
 package fr.dcproject.component.comment.generic
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
+import fr.dcproject.common.entity.UpdatedAt
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
 import org.joda.time.DateTime
 import java.util.UUID
 
@@ -31,9 +27,9 @@ class CommentForView<T : TargetI, C : CitizenRef>(
     CommentWithParentI<T>,
     CommentForUpdate<T, C>(id, createdBy, target, content, parent, deletedAt),
     CommentWithTargetI<T>,
-    EntityCreatedBy<C> by EntityCreatedByImp(createdBy),
-    EntityUpdatedAt by EntityUpdatedAtImp(),
-    EntityDeletedAt by EntityDeletedAtImp(),
+    CreatedBy<C> by CreatedBy.Imp(createdBy),
+    UpdatedAt by UpdatedAt.Imp(),
+    DeletedAt by DeletedAt.Imp(),
     Votable by VotableImp(),
     TargetI {
     constructor(
@@ -59,9 +55,9 @@ open class CommentForUpdate<T : TargetI, C : CitizenRef>(
     CommentWithParentI<T>,
     ExtraI<T, C>,
     CommentWithTargetI<T>,
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<C>,
-    EntityDeletedAt,
+    CreatedAt by CreatedAt.Imp(),
+    CreatedBy<C>,
+    DeletedAt,
     TargetI {
     constructor(
         createdBy: C,
@@ -82,7 +78,7 @@ open class CommentParent<T : TargetI>(
 ) : CommentRef(id),
     CommentParentI<T>
 
-interface CommentParentI<T : TargetI> : CommentI, EntityDeletedAt, CommentWithTargetI<T>
+interface CommentParentI<T : TargetI> : CommentI, DeletedAt, CommentWithTargetI<T>
 
 interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, HasTarget<T>
 

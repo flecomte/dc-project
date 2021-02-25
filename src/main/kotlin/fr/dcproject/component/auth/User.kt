@@ -1,12 +1,10 @@
 package fr.dcproject.component.auth
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.Entity
+import fr.dcproject.common.entity.EntityI
+import fr.dcproject.common.entity.UpdatedAt
 import fr.dcproject.component.auth.UserI.Roles
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityI
 import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.UUID
@@ -26,8 +24,8 @@ open class User(
     var blockedAt: DateTime? = null,
     var roles: List<Roles> = emptyList()
 ) : UserRef(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityUpdatedAt by EntityUpdatedAtImp()
+    CreatedAt by CreatedAt.Imp(),
+    UpdatedAt by UpdatedAt.Imp()
 
 interface UserWithPasswordI {
     val id: UUID
@@ -42,9 +40,9 @@ class UserWithPassword(
 
 open class UserRef(
     id: UUID = UUID.randomUUID()
-) : UserI, UuidEntity(id)
+) : UserI, Entity(id)
 
-interface UserI : UuidEntityI, Principal {
+interface UserI : EntityI, Principal {
     enum class Roles { ROLE_USER, ROLE_ADMIN }
 }
 

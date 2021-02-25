@@ -1,22 +1,18 @@
 package fr.dcproject.component.workgroup
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.DeletedAt
+import fr.dcproject.common.entity.Entity
+import fr.dcproject.common.entity.EntityI
+import fr.dcproject.common.entity.UpdatedAt
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
-import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityI
+import fr.postgresjson.entity.Serializable
 import java.util.UUID
 
 @Deprecated("")
@@ -37,8 +33,8 @@ data class Workgroup <C : CitizenBasicI>(
         anonymous,
         createdBy
     ),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityUpdatedAt by EntityUpdatedAtImp()
+    CreatedAt by CreatedAt.Imp(),
+    UpdatedAt by UpdatedAt.Imp()
 
 @Deprecated("")
 open class WorkgroupSimple<Z : CitizenI>(
@@ -49,22 +45,22 @@ open class WorkgroupSimple<Z : CitizenI>(
     open var anonymous: Boolean = true,
     createdBy: Z
 ) : WorkgroupRef(id),
-    EntityCreatedBy<Z> by EntityCreatedByImp(createdBy),
-    EntityDeletedAt by EntityDeletedAtImp()
+    CreatedBy<Z> by CreatedBy.Imp(createdBy),
+    DeletedAt by DeletedAt.Imp()
 
 class WorkgroupCart(
     override val id: UUID,
     override val name: String
 ) : WorkgroupCartI
 
-interface WorkgroupCartI : UuidEntityI {
+interface WorkgroupCartI : EntityI {
     val name: String
 }
 open class WorkgroupRef(
     id: UUID? = null
-) : UuidEntity(id ?: UUID.randomUUID()), WorkgroupI
+) : Entity(id ?: UUID.randomUUID()), WorkgroupI
 
-interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, EntityCreatedBy<Z>, EntityDeletedAt {
+interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, CreatedBy<Z>, DeletedAt {
     val anonymous: Boolean
 
     fun isMember(user: UserI): Boolean = members.isMember(user)
@@ -83,7 +79,7 @@ interface WorkgroupWithMembersI<Z : CitizenI> : WorkgroupI {
     class Member<C : CitizenI> (
         val citizen: C,
         val roles: List<Role> = emptyList()
-    ) : EntityI {
+    ) : fr.postgresjson.entity.EntityI {
         enum class Role {
             MASTER,
             MANAGER,
@@ -113,4 +109,4 @@ fun <Z : CitizenWithUserI> List<Member<Z>>.getRoles(user: UserI): List<Role> =
 fun <Z : CitizenWithUserI> List<Member<Z>>.getRoles(citizen: CitizenI): List<Role> =
     firstOrNull { it.citizen.id == citizen.id }?.roles ?: emptyList()
 
-interface WorkgroupI : UuidEntityI
+interface WorkgroupI : EntityI

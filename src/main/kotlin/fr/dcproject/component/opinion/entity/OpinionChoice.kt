@@ -1,11 +1,9 @@
 package fr.dcproject.component.opinion.entity
 
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityI
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.DeletedAt
+import fr.dcproject.common.entity.Entity
+import fr.dcproject.common.entity.EntityI
 import java.util.UUID
 
 class OpinionChoice(
@@ -13,12 +11,12 @@ class OpinionChoice(
     val name: String,
     val target: List<String>?
 ) : OpinionChoiceRef(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityDeletedAt by EntityDeletedAtImp()
+    CreatedAt by CreatedAt.Imp(),
+    DeletedAt by DeletedAt.Imp()
 
 open class OpinionChoiceRef(
     id: UUID?
 ) : OpinionChoiceI,
-    UuidEntity(id ?: UUID.randomUUID())
+    Entity(id ?: UUID.randomUUID())
 
-interface OpinionChoiceI : UuidEntityI
+interface OpinionChoiceI : EntityI

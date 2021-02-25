@@ -1,21 +1,17 @@
 package fr.dcproject.component.constitution
 
+import fr.dcproject.common.entity.CreatedAt
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.DeletedAt
+import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
+import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleI
 import fr.dcproject.component.citizen.CitizenSimple
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
-import fr.postgresjson.entity.EntityVersioning
-import fr.postgresjson.entity.UuidEntity
-import fr.postgresjson.entity.UuidEntityVersioning
 import java.util.UUID
 
 class Constitution(
@@ -54,10 +50,10 @@ open class ConstitutionSimple<Cr : CitizenWithUserI, T : TitleSimple<*>>(
     override val createdBy: Cr,
     versionId: UUID = UUID.randomUUID()
 ) : ConstitutionRef(id),
-    EntityVersioning<UUID, Int> by UuidEntityVersioning(versionId = versionId, versionNumber = 0),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<Cr> by EntityCreatedByImp(createdBy),
-    EntityDeletedAt by EntityDeletedAtImp() {
+    VersionableId by VersionableId.Imp(versionId),
+    CreatedAt by CreatedAt.Imp(),
+    CreatedBy<Cr> by CreatedBy.Imp(createdBy),
+    DeletedAt by DeletedAt.Imp() {
 
     init {
         titles.forEachIndexed { index, title ->
@@ -76,7 +72,7 @@ open class ConstitutionSimple<Cr : CitizenWithUserI, T : TitleSimple<*>>(
 open class ConstitutionRef(id: UUID? = null) : ConstitutionS(id ?: UUID.randomUUID()) {
     open class TitleRef(
         id: UUID = UUID.randomUUID()
-    ) : UuidEntity(id)
+    ) : Entity(id)
 }
 
 sealed class ConstitutionS(id: UUID = UUID.randomUUID()) : TargetRef(id), TargetI

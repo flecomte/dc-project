@@ -1,7 +1,7 @@
 package fr.dcproject.common.dto
 
-import fr.postgresjson.entity.EntityCreatedAt
 import org.joda.time.DateTime
+import fr.dcproject.common.entity.CreatedAt as EntityCreatedAt
 
 interface CreatedAt {
     val createdAt: DateTime

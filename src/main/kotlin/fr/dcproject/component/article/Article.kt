@@ -1,9 +1,13 @@
 package fr.dcproject.component.article
 
+import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.DeletedAt
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.common.entity.VersionableRef
+import fr.dcproject.common.entity.Versionable
+import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenCartI
 import fr.dcproject.component.citizen.CitizenI
@@ -16,12 +20,6 @@ import fr.dcproject.component.workgroup.WorkgroupCart
 import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.dcproject.component.workgroup.WorkgroupSimple
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityDeletedAt
-import fr.postgresjson.entity.EntityDeletedAtImp
-import fr.postgresjson.entity.EntityVersioning
-import fr.postgresjson.entity.UuidEntityI
 import org.joda.time.DateTime
 import java.util.UUID
 
@@ -42,16 +40,16 @@ data class ArticleForView(
 ) : ArticleRef(id),
     ArticleAuthI<CitizenRef>,
     ArticleWithTitleI,
-    EntityVersioning<UUID, Int>,
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityDeletedAt by EntityDeletedAtImp(deletedAt),
-    VersionableRef,
+    Versionable,
+    CreatedAt by CreatedAt.Imp(),
+    DeletedAt by DeletedAt.Imp(deletedAt),
+    VersionableId,
     Opinionable,
     Votable by VotableImp() {
     val lastVersion: Boolean = false
 }
 
-interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, VersionableRef, TargetI, CreatedBy<C> {
+interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, VersionableId, TargetI, CreatedBy<C> {
     val anonymous: Boolean
     val content: String
     val description: String
@@ -74,7 +72,7 @@ class ArticleForUpdate(
 ) : ArticleRef(id),
     ArticleForUpdateI<CitizenRef>,
     ArticleAuthI<CitizenRef>,
-    VersionableRef {
+    VersionableId {
     val tags: List<String> = tags.distinct()
 }
 
@@ -99,7 +97,7 @@ open class ArticleRef(
     id: UUID? = null
 ) : ArticleI, TargetRef(id)
 
-interface ArticleI : UuidEntityI, TargetI
+interface ArticleI : EntityI, TargetI
 
 interface ArticleWithTitleI : ArticleI {
     val title: String
@@ -108,6 +106,6 @@ interface ArticleWithTitleI : ArticleI {
 interface ArticleAuthI<U : CitizenI> :
     ArticleI,
     CreatedBy<U>,
-    EntityDeletedAt {
+    DeletedAt {
     val draft: Boolean
 }

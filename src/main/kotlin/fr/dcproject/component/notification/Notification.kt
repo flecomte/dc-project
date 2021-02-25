@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
+import fr.dcproject.common.entity.Entity
 import fr.dcproject.component.article.ArticleForView
-import fr.postgresjson.entity.UuidEntity
 import org.joda.time.DateTime
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -47,7 +47,7 @@ open class Notification(
 }
 
 open class EntityNotification(
-    val target: UuidEntity,
+    val target: Entity,
     type: String,
     val action: String
 ) : Notification(type)

@@ -1,8 +1,6 @@
 package fr.dcproject.component.vote.entity
 
-import fr.postgresjson.entity.EntityI
-import fr.postgresjson.entity.EntityUpdatedAt
-import fr.postgresjson.entity.EntityUpdatedAtImp
+import fr.dcproject.common.entity.UpdatedAt
 
 class VoteAggregation(
     val up: Int,
@@ -10,7 +8,7 @@ class VoteAggregation(
     val down: Int,
     val total: Int,
     val score: Int
-) : EntityI,
-    EntityUpdatedAt by EntityUpdatedAtImp() {
+) : fr.postgresjson.entity.EntityI,
+    UpdatedAt by UpdatedAt.Imp() {
     constructor() : this(0, 0, 0, 0, 0)
 }

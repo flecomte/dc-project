@@ -1,16 +1,14 @@
 package fr.dcproject.component.follow
 
+import fr.dcproject.common.entity.Created
+import fr.dcproject.common.entity.CreatedBy
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenI
-import fr.postgresjson.entity.EntityCreatedAt
-import fr.postgresjson.entity.EntityCreatedAtImp
-import fr.postgresjson.entity.EntityCreatedBy
-import fr.postgresjson.entity.EntityCreatedByImp
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 @Deprecated("")
@@ -28,8 +26,7 @@ open class FollowSimple<T : TargetI, C : CitizenI>(
     override var target: T
 ) : ExtraI<T, C>,
     FollowRef(id),
-    EntityCreatedAt by EntityCreatedAtImp(),
-    EntityCreatedBy<C> by EntityCreatedByImp(createdBy)
+    Created<C> by Created.Imp(createdBy)
 
 class FollowForUpdate<T : TargetI, C : CitizenI>(
     id: UUID = UUID.randomUUID(),
@@ -37,10 +34,10 @@ class FollowForUpdate<T : TargetI, C : CitizenI>(
     override val createdBy: C
 ) : FollowRef(id),
     HasTarget<T>,
-    EntityCreatedBy<C> by EntityCreatedByImp<C>(createdBy)
+    CreatedBy<C> by CreatedBy.Imp<C>(createdBy)
 
 open class FollowRef(
     override val id: UUID
 ) : FollowI
 
-interface FollowI : UuidEntityI
+interface FollowI : EntityI

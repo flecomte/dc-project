@@ -4,6 +4,7 @@ import com.sendgrid.helpers.mail.Mail
 import com.sendgrid.helpers.mail.objects.Content
 import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.common.email.Mailer
+import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleWithTitleI
@@ -11,7 +12,6 @@ import fr.dcproject.component.citizen.CitizenBasicI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
 import fr.dcproject.component.follow.FollowSimple
-import fr.postgresjson.entity.UuidEntityI
 import java.util.UUID
 
 class NotificationEmailSender(
@@ -43,7 +43,7 @@ class NotificationEmailSender(
         }
     }
 
-    private fun generateHtmlContent(citizen: CitizenBasicI, target: UuidEntityI): String? {
+    private fun generateHtmlContent(citizen: CitizenBasicI, target: EntityI): String? {
         return when (target) {
             is ArticleWithTitleI -> """
                 Hello ${citizen.name.getFullName()},<br/>
@@ -53,7 +53,7 @@ class NotificationEmailSender(
         }
     }
 
-    private fun generateContent(citizen: CitizenBasicI, target: UuidEntityI): String {
+    private fun generateContent(citizen: CitizenBasicI, target: EntityI): String {
         return when (target) {
             is ArticleWithTitleI -> """
                 Hello ${citizen.name.getFullName()},
