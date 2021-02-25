@@ -25,7 +25,6 @@
     <patterns>
       <pattern testClass="unit..*" />
       <pattern testClass="functional..*" />
-      <pattern testClass="CucumberTest" />
       <pattern testClass="integration..*" />
     </patterns>
     <tag value="!functional" />

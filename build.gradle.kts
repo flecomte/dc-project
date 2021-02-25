@@ -10,7 +10,6 @@ val coroutinesVersion: String by project
 val logback_version: String by project
 val koinVersion: String by project
 val jackson_version: String by project
-val cucumber_version: String by project
 
 group = "com.github.flecomte"
 version = versioning.info.run {
@@ -194,8 +193,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.amshove.kluent:kluent:1.61")
-    testImplementation("io.cucumber:cucumber-java8:$cucumber_version")
-    testImplementation("io.cucumber:cucumber-junit:$cucumber_version")
     pitest("org.pitest:pitest-junit5-plugin:0.5")
     testImplementation("io.mockk:mockk-agent-api:1.10.5")
     testImplementation("io.mockk:mockk-agent-jvm:1.10.5")

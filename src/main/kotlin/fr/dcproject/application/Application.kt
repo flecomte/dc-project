@@ -78,7 +78,7 @@ import java.util.concurrent.CompletionException
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
-enum class Env { PROD, TEST, CUCUMBER }
+enum class Env { PROD, TEST }
 
 @ExperimentalCoroutinesApi
 @KtorExperimentalAPI

@@ -2,7 +2,6 @@
   <configuration default="false" name="Integration Tests" type="JUnit" factoryName="JUnit" singleton="false" show_console_on_std_err="true">
     <output_file path="$PROJECT_DIR$/var/log/test/out.log" is_save="true" />
     <useClassPathOnly />
-    <option name="ALTERNATIVE_JRE_PATH_ENABLED" value="true" />
     <option name="ALTERNATIVE_JRE_PATH" value="corretto-11" />
     <option name="PACKAGE_NAME" value="" />
     <option name="MAIN_CLASS_NAME" value="" />
