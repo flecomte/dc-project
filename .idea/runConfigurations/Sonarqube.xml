@@ -19,7 +19,7 @@
     <ExternalSystemReattachDebugProcess>true</ExternalSystemReattachDebugProcess>
     <DebugAllEnabled>false</DebugAllEnabled>
     <method v="2">
-      <option name="RunConfigurationTask" enabled="true" run_configuration_name="All Tests" run_configuration_type="JUnit" />
+      <option name="RunConfigurationTask" enabled="true" run_configuration_name="Test" run_configuration_type="GradleRunConfiguration" />
     </method>
   </configuration>
 </component>
