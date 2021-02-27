@@ -86,14 +86,14 @@ class NotificationConsumerTest {
             followArticleRepo = followArticleRepo,
             followConstitutionRepo = mockk(),
             notificationEmailSender = emailSender,
-            exchangeName = "notification_test",
+            exchangeName = "notification",
         ).apply { start() }
         verify { rabbitFactory.newConnection() }
 
         /* Push message */
         Publisher(
             factory = rabbitFactory,
-            exchangeName = "notification_test",
+            exchangeName = "notification",
         ).publish(
             ArticleUpdateNotification(
                 ArticleForView(

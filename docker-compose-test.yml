@@ -1,0 +1,44 @@
+version: '3.8'
+services:
+  rabbitmq:
+    container_name: ${APP_NAME}_rabbitmq_test
+    image: rabbitmq:management-alpine
+    ports:
+      - 5672:5672
+      - 15672:15672
+
+  redis:
+    container_name: ${APP_NAME}_redis_test
+    image: redis:6-alpine
+    ports:
+      - 6380:6379
+
+  elasticsearch:
+    container_name: ${APP_NAME}_elasticsearch_test
+    image: elasticsearch:6.7.1
+    ports:
+      - 9201:9200
+      - 9301:9300
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://elasticsearch:9200"]
+      interval: 3s
+      timeout: 2s
+      retries: 20
+
+  db:
+    container_name: ${APP_NAME}_postgresql_test
+    build:
+      context: docker/postgresql
+    ports:
+      - 5433:5432
+    environment:
+      POSTGRES_PASSWORD: ${DB_NAME}
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_DB: ${DB_PWD}
+    depends_on:
+      - elasticsearch
+    healthcheck:
+      test: [ "CMD", "pg_isready", "-q", "-d", "${DB_NAME}", "-U", "${DB_USER}" ]
+      interval: 3s
+      timeout: 2s
+      retries: 20
