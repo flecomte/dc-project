@@ -1,12 +1,12 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import com.typesafe.config.ConfigFactory
+import fr.postgresjson.connexion.Connection
+import fr.postgresjson.connexion.Requester
+import fr.postgresjson.migration.Migrations
 import io.gitlab.arturbosch.detekt.Detekt
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 import org.slf4j.LoggerFactory
-import fr.postgresjson.connexion.Connection
-import fr.postgresjson.migration.Migrations
-import com.typesafe.config.ConfigFactory
-import fr.postgresjson.connexion.Requester
 
 val ktorVersion = "1.5.0"
 val kotlinVersion = "1.4.30"
@@ -71,7 +71,7 @@ val migration by tasks.registering {
     dependsOn(tasks.named("composeUp"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("${buildDir}/../src/main/resources/application.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/../src/main/resources/application.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -94,7 +94,7 @@ val migrationTest by tasks.registering {
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
     doLast {
-        val config = ConfigFactory.parseFile(file("${buildDir}/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -119,7 +119,7 @@ val testSql by tasks.registering {
     finalizedBy(tasks.named("testComposeDown"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("${buildDir}/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
 
         val connection = Connection(
             host = config.getString("db.host"),
@@ -140,7 +140,7 @@ val testSql by tasks.registering {
 
         Requester.RequesterFactory(
             connection = connection,
-            queriesDirectory = file("${buildDir}/../src/test/sql").toURI()
+            queriesDirectory = file("$buildDir/../src/test/sql").toURI()
         ).createRequester().run {
             getQueries().map {
                 try {
@@ -183,8 +183,8 @@ tasks.test {
     useJUnitPlatform()
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
-    dependsOn(tasks.pitest)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+    finalizedBy(tasks.pitest)
 }
 
 apply(plugin = "docker-compose")

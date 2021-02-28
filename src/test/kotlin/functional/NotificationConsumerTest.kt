@@ -1,6 +1,7 @@
 package functional
 
 import com.rabbitmq.client.ConnectionFactory
+import com.rabbitmq.client.ShutdownSignalException
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
@@ -27,6 +28,7 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
+import org.slf4j.LoggerFactory
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
 @Tags(Tag("functional"))
@@ -43,8 +45,14 @@ class NotificationConsumerTest {
                 .apply { setUri(config.rabbitmq) }
                 .run {
                     newConnection().createChannel().apply {
-                        queuePurge("push")
-                        queuePurge("email")
+                        try {
+                            queuePurge("push")
+                            queuePurge("email")
+                        } catch (e: ShutdownSignalException) {
+                            LoggerFactory.getLogger(NotificationConsumerTest::class.qualifiedName).run {
+                                info("queue not exist")
+                            }
+                        }
                     }
                 }
         }
@@ -67,9 +75,7 @@ class NotificationConsumerTest {
         val asyncCommand = spyk(redisClient.connect().async())
         every { redisClient.connect().async() } returns asyncCommand
 
-        val rabbitFactory: ConnectionFactory = spyk {
-            ConnectionFactory().apply { setUri(config.rabbitmq) }
-        }
+        val rabbitFactory: ConnectionFactory = ConnectionFactory().apply { setUri(config.rabbitmq) }
         val followArticleRepo = mockk<FollowArticleRepository> {
             every { findFollowsByTarget(any()) } returns flow {
                 FollowSimple(
@@ -88,7 +94,6 @@ class NotificationConsumerTest {
             notificationEmailSender = emailSender,
             exchangeName = "notification",
         ).apply { start() }
-        verify { rabbitFactory.newConnection() }
 
         /* Push message */
         Publisher(
@@ -110,6 +115,6 @@ class NotificationConsumerTest {
         verify(timeout = 1000) { emailSender.sendEmail(any()) }
         verify(timeout = 1000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
 
-//        consumer.close()
+        consumer.close()
     }
 }

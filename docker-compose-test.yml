@@ -4,8 +4,8 @@ services:
     container_name: ${APP_NAME}_rabbitmq_test
     image: rabbitmq:management-alpine
     ports:
-      - 5672:5672
-      - 15672:15672
+      - 5673:5672
+      - 15673:15672
 
   redis:
     container_name: ${APP_NAME}_redis_test
