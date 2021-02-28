@@ -191,6 +191,8 @@ dockerCompose {
     useComposeFiles = listOf("docker-compose.yml")
     startedServices = listOf("db", "elasticsearch", "rabbitmq", "redis")
     stopContainers = false
+    removeVolumes = false
+    removeContainers = false
     isRequiredBy(project.tasks.run)
     createNested("test").apply {
         projectName = "dc-project_test"
@@ -203,9 +205,12 @@ dockerCompose {
         projectName = "dc-project"
         useComposeFiles = listOf("docker-compose-sonar.yml")
         stopContainers = false
+        removeVolumes = false
+        removeContainers = false
 //        isRequiredBy(project.tasks.sonarqube)
     }
 }
+tasks.sonarqube.configure { dependsOn(tasks.named("sonarqubeComposeUp")) }
 
 publishing {
     if (versioning.info.dirty == false) {
