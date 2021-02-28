@@ -39,7 +39,6 @@ plugins {
     id("org.sonarqube") version "3.1.1"
     id("net.nemerosa.versioning") version "2.14.0"
     id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
-    id("info.solidsoft.pitest") version "1.5.2"
     id("com.avast.gradle.docker-compose") version "0.14.0"
 }
 
@@ -184,7 +183,6 @@ tasks.test {
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
-    finalizedBy(tasks.pitest)
 }
 
 apply(plugin = "docker-compose")
@@ -273,15 +271,6 @@ tasks {
     }
 }
 
-pitest {
-    targetClasses.add("fr.dcproject.*") // by default "${project.group}.*"
-    threads.set(8)
-    outputFormats.set(listOf("HTML"))
-    jvmArgs.set(listOf("-Xmx1024m"))
-    junit5PluginVersion.set("0.12")
-    excludedClasses.set(listOf("fr.dcproject.component.notification.*"))
-}
-
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
 }
@@ -330,7 +319,6 @@ dependencies {
     testImplementation("io.mockk:mockk:1.10.6")
     testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
     testImplementation("org.amshove.kluent:kluent:1.61")
-    pitest("org.pitest:pitest-junit5-plugin:0.5")
     testImplementation("io.mockk:mockk-agent-api:1.10.6")
     testImplementation("io.mockk:mockk-agent-jvm:1.10.6")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
