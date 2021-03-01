@@ -4,9 +4,11 @@ import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
@@ -25,12 +27,10 @@ import java.util.UUID
 @Execution(CONCURRENT)
 @Tags(Tag("security"), Tag("unit"))
 internal class `Opinion Access Control` {
-    private val tesla = CitizenBasic(
-        user = User(
+    private val tesla = CitizenCreator(
+        user = UserCreator(
             username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
         email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla"),
         followAnonymous = false

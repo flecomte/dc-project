@@ -7,34 +7,24 @@ import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenCreator
+import fr.dcproject.component.citizen.CitizenCreatorI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import java.util.UUID
 
-@Deprecated("")
 open class Opinion<T : TargetI>(
     id: UUID = UUID.randomUUID(),
-    override val createdBy: CitizenBasic,
+    override val createdBy: CitizenCreator,
     override val target: T,
     val choice: OpinionChoice
 ) : OpinionRef(id),
-    ExtraI<T, CitizenBasicI>,
+    ExtraI<T, CitizenCreatorI>,
     CreatedAt by CreatedAt.Imp(),
-    CreatedBy<CitizenBasicI> by CreatedBy.Imp(createdBy) {
+    CreatedBy<CitizenCreatorI> by CreatedBy.Imp(createdBy) {
 
     fun getName(): String = choice.name
 }
-
-@Deprecated("")
-class OpinionArticle(
-    id: UUID = UUID.randomUUID(),
-    createdBy: CitizenBasic,
-    target: ArticleRef,
-    choice: OpinionChoice
-) : Opinion<ArticleRef>(id, createdBy, target, choice)
 
 data class OpinionForUpdate<T : TargetI>(
     override val id: UUID = UUID.randomUUID(),

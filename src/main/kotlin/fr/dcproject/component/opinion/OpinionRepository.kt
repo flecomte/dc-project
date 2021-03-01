@@ -12,7 +12,6 @@ import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
 import fr.dcproject.component.opinion.entity.Opinion as OpinionEntity
-import fr.dcproject.component.opinion.entity.OpinionArticle as OpinionArticleEntity
 import fr.dcproject.component.opinion.entity.OpinionChoice as OpinionChoiceEntity
 
 open class OpinionChoiceRepository(override val requester: Requester) : RepositoryI {
@@ -66,8 +65,8 @@ abstract class OpinionRepository<T : TargetRef>(requester: Requester) : OpinionC
     /**
      * Create an Opinion on target (article,...)
      */
-    abstract fun updateOpinions(opinions: List<OpinionForUpdate<*>>): List<OpinionEntity<T>>
-    fun updateOpinions(opinion: OpinionForUpdate<*>): List<OpinionEntity<T>> =
+    abstract fun updateOpinions(opinions: List<OpinionForUpdate<T>>): List<OpinionEntity<T>>
+    fun updateOpinions(opinion: OpinionForUpdate<T>): List<OpinionEntity<T>> =
         updateOpinions(listOf(opinion))
 
     abstract fun addOpinion(opinion: OpinionForUpdate<T>): OpinionEntity<T>
@@ -138,7 +137,7 @@ class OpinionRepositoryArticle(requester: Requester) : OpinionRepository<Article
     /**
      * Update Opinions on Article (Delete old one)
      */
-    override fun updateOpinions(opinions: List<OpinionForUpdate<*>>): List<OpinionArticleEntity> {
+    override fun updateOpinions(opinions: List<OpinionForUpdate<ArticleRef>>): List<OpinionEntity<ArticleRef>> {
         return requester
             /* TODO change SQL function to not use .first() and pass all createdBy and target */
             .getFunction("update_citizen_opinions_by_target_id")
@@ -153,7 +152,7 @@ class OpinionRepositoryArticle(requester: Requester) : OpinionRepository<Article
     /**
      * Add Opinions on Article
      */
-    override fun addOpinion(opinion: OpinionForUpdate<ArticleRef>): OpinionArticleEntity {
+    override fun addOpinion(opinion: OpinionForUpdate<ArticleRef>): OpinionEntity<ArticleRef> {
         return requester
             .getFunction("upsert_opinion")
             .selectOne("resource" to opinion)!!
