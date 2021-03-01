@@ -164,6 +164,14 @@ tasks.withType<Jar> {
     }
 }
 
+tasks.withType<KotlinCompile> {
+    kotlinOptions {
+        jvmTarget = "11"
+        sourceCompatibility = "11"
+        targetCompatibility = "11"
+    }
+}
+
 tasks.named<ShadowJar>("shadowJar") {
     mergeServiceFiles("META-INF/services")
     archiveFileName.set("${archiveBaseName.get()}-latest-all.${archiveExtension.get()}")

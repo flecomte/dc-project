@@ -9,9 +9,8 @@ import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleWithTitleI
 import fr.dcproject.component.citizen.CitizenBasicI
-import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.follow.FollowSimple
+import fr.dcproject.component.follow.FollowForView
 import java.util.UUID
 
 class NotificationEmailSender(
@@ -20,7 +19,7 @@ class NotificationEmailSender(
     private val citizenRepo: CitizenRepository,
     private val articleRepo: ArticleRepository
 ) {
-    fun sendEmail(follow: FollowSimple<out TargetRef, CitizenRef>) {
+    fun sendEmail(follow: FollowForView<out TargetRef>) {
         val citizen = citizenRepo.findById(follow.createdBy.id) ?: noCitizen(follow.createdBy.id)
         val target = when (follow.target.reference) {
             "article" ->

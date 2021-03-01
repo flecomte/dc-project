@@ -7,10 +7,9 @@ import com.rabbitmq.client.Consumer
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
 import fr.dcproject.component.follow.FollowConstitutionRepository
-import fr.dcproject.component.follow.FollowSimple
+import fr.dcproject.component.follow.FollowForView
 import io.ktor.utils.io.errors.IOException
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands
@@ -108,6 +107,6 @@ class NotificationConsumer(
     private class DecodedMessage(
         val event: EntityNotification,
         val rawMessage: String,
-        val follow: FollowSimple<out TargetRef, CitizenRef>
+        val follow: FollowForView<out TargetRef>
     )
 }

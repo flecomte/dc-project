@@ -4,13 +4,14 @@ import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.follow.Follow
 import fr.dcproject.component.follow.FollowAccessControl
+import fr.dcproject.component.follow.FollowForView
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -25,12 +26,10 @@ import java.util.UUID
 @Execution(CONCURRENT)
 @Tags(Tag("security"), Tag("unit"))
 internal class `Follow Access Control` {
-    private val tesla = CitizenBasic(
-        user = User(
+    private val tesla = CitizenCreator(
+        user = UserCreator(
             username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
         email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla"),
         followAnonymous = false
@@ -46,13 +45,11 @@ internal class `Follow Access Control` {
         followAnonymous = false
     )
 
-    private val einstein = CitizenBasic(
+    private val einstein = CitizenCreator(
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
-        user = User(
+        user = UserCreator(
             username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
         email = "einstein@best.com",
         name = CitizenI.Name("Albert", "Einstein"),
         followAnonymous = true
@@ -86,12 +83,12 @@ internal class `Follow Access Control` {
         title = "Super article"
     )
 
-    private val follow1 = Follow(
+    private val follow1 = FollowForView(
         createdBy = tesla,
         target = article1
     )
 
-    private val followAnon = Follow(
+    private val followAnon = FollowForView(
         createdBy = einstein,
         target = article1
     )

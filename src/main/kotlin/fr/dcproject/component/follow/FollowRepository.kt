@@ -5,7 +5,6 @@ import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
 import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.constitution.ConstitutionRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -14,21 +13,20 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
 import fr.dcproject.component.constitution.Constitution as ConstitutionEntity
-import fr.dcproject.component.follow.Follow as FollowEntity
 
 sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(
         citizen: CitizenI,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<FollowEntity<OUT>> =
+    ): Paginated<FollowForView<OUT>> =
         findByCitizen(citizen.id, page, limit)
 
     open fun findByCitizen(
         citizenId: UUID,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<FollowEntity<OUT>> {
+    ): Paginated<FollowForView<OUT>> {
         return requester
             .getFunction("find_follows_by_citizen")
             .select(
@@ -61,7 +59,7 @@ sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requ
     open fun findFollow(
         citizen: CitizenI,
         target: TargetRef
-    ): FollowEntity<OUT>? =
+    ): FollowForView<OUT>? =
         requester
             .getFunction("find_follow")
             .selectOne(
@@ -73,7 +71,7 @@ sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requ
     fun findFollowsByTarget(
         target: Entity,
         bulkSize: Int = 300
-    ): Flow<FollowSimple<IN, CitizenRef>> = flow {
+    ): Flow<FollowForView<IN>> = flow {
         var nextPage = 1
         do {
             val paginate = findFollowsByTarget(target, nextPage, bulkSize)
@@ -88,7 +86,7 @@ sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requ
         target: Entity,
         page: Int = 1,
         limit: Int = 300
-    ): Paginated<FollowSimple<IN, CitizenRef>>
+    ): Paginated<FollowForView<IN>>
 }
 
 class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRef, ArticleForView>(requester) {
@@ -96,7 +94,7 @@ class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRe
         citizenId: UUID,
         page: Int,
         limit: Int
-    ): Paginated<FollowEntity<ArticleForView>> {
+    ): Paginated<FollowForView<ArticleForView>> {
         return requester.run {
             getFunction("find_follows_article_by_citizen")
                 .select(
@@ -111,7 +109,7 @@ class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRe
         target: Entity,
         page: Int,
         limit: Int
-    ): Paginated<FollowSimple<ArticleRef, CitizenRef>> {
+    ): Paginated<FollowForView<ArticleRef>> {
         return requester
             .getFunction("find_follows_article_by_target")
             .select(
@@ -127,7 +125,7 @@ class FollowConstitutionRepository(requester: Requester) : FollowRepository<Cons
         citizenId: UUID,
         page: Int,
         limit: Int
-    ): Paginated<FollowEntity<ConstitutionEntity>> {
+    ): Paginated<FollowForView<ConstitutionEntity>> {
         return requester.run {
             getFunction("find_follows_constitution_by_citizen")
                 .select(
@@ -142,7 +140,7 @@ class FollowConstitutionRepository(requester: Requester) : FollowRepository<Cons
         target: Entity,
         page: Int,
         limit: Int
-    ): Paginated<FollowSimple<ConstitutionRef, CitizenRef>> {
+    ): Paginated<FollowForView<ConstitutionRef>> {
         TODO("Not yet implemented")
     }
 }

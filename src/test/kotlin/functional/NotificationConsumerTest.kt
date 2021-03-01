@@ -5,9 +5,12 @@ import com.rabbitmq.client.ShutdownSignalException
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.auth.UserCreator
+import fr.dcproject.component.citizen.CitizenCreator
+import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.follow.FollowArticleRepository
-import fr.dcproject.component.follow.FollowSimple
+import fr.dcproject.component.follow.FollowForView
 import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.NotificationConsumer
 import fr.dcproject.component.notification.NotificationEmailSender
@@ -78,8 +81,8 @@ class NotificationConsumerTest {
         val rabbitFactory: ConnectionFactory = ConnectionFactory().apply { setUri(config.rabbitmq) }
         val followArticleRepo = mockk<FollowArticleRepository> {
             every { findFollowsByTarget(any()) } returns flow {
-                FollowSimple(
-                    createdBy = CitizenRef(),
+                FollowForView(
+                    createdBy = CitizenCreator(name = CitizenI.Name("John", "Doe"), email = "john.doe@dc-project.com", user = UserCreator(username = "john-doe")),
                     target = ArticleRef(),
                 ).let { emit(it) }
             }

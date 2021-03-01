@@ -5,6 +5,7 @@ import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
@@ -48,6 +49,28 @@ class Citizen(
         val roles: List<String>,
         val workgroup: WorkgroupSimple<CitizenRef>
     )
+}
+
+data class CitizenCreator(
+    override var id: UUID = UUID.randomUUID(),
+    override var name: Name,
+    override var email: String,
+    override var voteAnonymous: Boolean = true,
+    override var followAnonymous: Boolean = true,
+    override val user: UserCreator,
+    override val deletedAt: DateTime? = null
+) : CitizenCreatorI,
+    CitizenRefWithUser(id, user),
+    DeletedAt by DeletedAt.Imp(deletedAt)
+
+interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, DeletedAt {
+    override val id: UUID
+    override val name: Name
+    override val email: String
+    val voteAnonymous: Boolean
+    val followAnonymous: Boolean
+    override val user: UserCreator
+    override val deletedAt: DateTime?
 }
 
 @Deprecated("")

@@ -27,6 +27,15 @@ open class User(
     CreatedAt by CreatedAt.Imp(),
     UpdatedAt by UpdatedAt.Imp()
 
+class UserCreator(
+    id: UUID = UUID.randomUUID(),
+    override val username: String,
+) : UserRef(id), UserWithUsername
+
+interface UserWithUsername {
+    val username: String
+}
+
 interface UserWithPasswordI {
     val id: UUID
     val password: String

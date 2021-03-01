@@ -6,27 +6,18 @@ import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
-import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import java.util.UUID
 
-@Deprecated("")
-class Follow<T : TargetI>(
+open class FollowForView<T : TargetI>(
     id: UUID = UUID.randomUUID(),
-    override val createdBy: CitizenBasic,
+    override val createdBy: CitizenCreator,
     override var target: T
-) : ExtraI<T, CitizenBasicI>,
-    FollowSimple<T, CitizenBasicI>(id, createdBy, target)
-
-@Deprecated("")
-open class FollowSimple<T : TargetI, C : CitizenI>(
-    id: UUID = UUID.randomUUID(),
-    override val createdBy: C,
-    override var target: T
-) : ExtraI<T, C>,
+) : ExtraI<T, CitizenRef>,
     FollowRef(id),
-    Created<C> by Created.Imp(createdBy)
+    Created<CitizenRef> by Created.Imp(createdBy)
 
 class FollowForUpdate<T : TargetI, C : CitizenI>(
     id: UUID = UUID.randomUUID(),
