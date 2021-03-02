@@ -20,10 +20,11 @@ class UserForCreate(
 
 open class User(
     id: UUID = UUID.randomUUID(),
-    var username: String,
+    override var username: String,
     var blockedAt: DateTime? = null,
     var roles: List<Roles> = emptyList()
 ) : UserRef(id),
+    UserWithUsername,
     CreatedAt by CreatedAt.Imp(),
     UpdatedAt by UpdatedAt.Imp()
 
@@ -32,12 +33,11 @@ class UserCreator(
     override val username: String,
 ) : UserRef(id), UserWithUsername
 
-interface UserWithUsername {
+interface UserWithUsername : UserI {
     val username: String
 }
 
-interface UserWithPasswordI {
-    val id: UUID
+interface UserWithPasswordI : UserI {
     val password: String
 }
 

@@ -47,7 +47,9 @@ object GetOneArticle {
         val draft = article.draft
         val lastVersion = article.lastVersion
         val createdBy = article.createdBy
-        val workgroup = article.workgroup // TODO change to workgroup DTO
+        val workgroup = article.workgroup?.let { Workgroup(article.workgroup.id, article.workgroup.name) }
+
+        class Workgroup(val id: UUID, val name: String)
     }
 
     fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl, repo: ArticleRepository) {

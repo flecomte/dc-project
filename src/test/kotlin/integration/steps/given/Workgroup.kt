@@ -3,11 +3,12 @@ package integration.steps.given
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenForCreate
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.workgroup.Workgroup
+import fr.dcproject.component.workgroup.WorkgroupForUpdate
+import fr.dcproject.component.workgroup.WorkgroupForView
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role.MASTER
@@ -22,18 +23,18 @@ fun TestApplicationEngine.`Given I have workgroup`(
     description: String? = null,
     anonymous: Boolean? = null,
     createdBy: CitizenI.Name? = null,
-    callback: Workgroup<CitizenBasic>.() -> Unit = {},
+    callback: WorkgroupForView<CitizenCreator>.() -> Unit = {},
 ) {
-    val workgroup: Workgroup<CitizenBasic> = createWorkgroup(id?.toUUID(), name, description, anonymous, createdBy)
+    val workgroup: WorkgroupForView<CitizenCreator> = createWorkgroup(id?.toUUID(), name, description, anonymous, createdBy)
     callback(workgroup)
 }
-fun Workgroup<CitizenBasic>.`With members`(
+fun WorkgroupForView<CitizenCreator>.`With members`(
     vararg member: CitizenI.Name
 ) {
     addMemberToWorkgroup(this, *member)
 }
 
-fun addMemberToWorkgroup(workgroup: Workgroup<CitizenBasic>, vararg membersNames: CitizenI.Name) {
+fun addMemberToWorkgroup(workgroup: WorkgroupForView<CitizenCreator>, vararg membersNames: CitizenI.Name) {
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
     val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
 
@@ -53,7 +54,7 @@ private fun createWorkgroup(
     description: String? = null,
     anonymous: Boolean? = null,
     createdBy: CitizenI.Name? = null,
-): Workgroup<CitizenBasic> {
+): WorkgroupForView<CitizenCreator> {
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
     val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
 
@@ -75,12 +76,12 @@ private fun createWorkgroup(
         }
     }
 
-    val workgroup = Workgroup(
+    val workgroup = WorkgroupForUpdate(
         id = id ?: UUID.randomUUID(),
         name = name ?: "Les Incoruptible",
         description = description ?: "La vie est notre jeux",
         createdBy = creator,
-        anonymous = (anonymous ?: false) == true,
+        anonymous = anonymous ?: false,
         members = listOf(Member(creator, listOf(MASTER)))
     )
 

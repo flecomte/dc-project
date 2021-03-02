@@ -4,6 +4,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
+import fr.dcproject.component.workgroup.WorkgroupForUpdate
 import fr.dcproject.component.workgroup.WorkgroupRepository
 import fr.dcproject.component.workgroup.routes.EditWorkgroup.PutWorkgroupRequest.Input
 import io.ktor.application.call
@@ -32,11 +33,15 @@ object EditWorkgroup {
         put<PutWorkgroupRequest> {
             repo.findById(it.workgroupId)?.let { old ->
                 call.receiveOrBadRequest<Input>().run {
-                    old.copy(
+                    WorkgroupForUpdate(
+                        id = old.id,
                         name = name ?: old.name,
                         description = description ?: old.description,
+                        createdBy = old.createdBy,
                         logo = logo ?: old.logo,
-                        anonymous = anonymous ?: old.anonymous
+                        anonymous = anonymous ?: old.anonymous,
+                        deletedAt = old.deletedAt,
+                        members = old.members,
                     ).let { workgroup ->
                         ac.assert { canUpdate(workgroup, citizenOrNull) }
                         repo.upsert(workgroup)

@@ -7,46 +7,46 @@ import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.UpdatedAt
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenCreatorI
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
-import fr.postgresjson.entity.Serializable
+import org.joda.time.DateTime
 import java.util.UUID
 
-@Deprecated("")
-data class Workgroup <C : CitizenBasicI>(
+data class WorkgroupForView<C : CitizenCreatorI>(
     override val id: UUID = UUID.randomUUID(),
-    override var name: String,
-    override var description: String,
-    override var logo: String? = null,
+    val name: String,
+    val description: String,
+    val logo: String? = null,
     override var anonymous: Boolean = true,
     override val createdBy: C,
     override var members: List<Member<C>> = emptyList()
 ) : WorkgroupWithAuthI<C>,
-    WorkgroupSimple<C>(
-        id,
-        name,
-        description,
-        logo,
-        anonymous,
-        createdBy
-    ),
+    WorkgroupRef(id),
+    CreatedBy<C> by CreatedBy.Imp(createdBy),
     CreatedAt by CreatedAt.Imp(),
-    UpdatedAt by UpdatedAt.Imp()
-
-@Deprecated("")
-open class WorkgroupSimple<Z : CitizenI>(
-    id: UUID? = null,
-    open var name: String,
-    open var description: String,
-    open var logo: String? = null,
-    open var anonymous: Boolean = true,
-    createdBy: Z
-) : WorkgroupRef(id),
-    CreatedBy<Z> by CreatedBy.Imp(createdBy),
+    UpdatedAt by UpdatedAt.Imp(),
     DeletedAt by DeletedAt.Imp()
+
+data class WorkgroupForUpdate<C : CitizenWithUserI>(
+    override val id: UUID,
+    override val name: String,
+    override val description: String,
+    override val createdBy: C,
+    override val logo: String? = null,
+    override val anonymous: Boolean = true,
+    override val members: List<Member<C>> = listOf(),
+    override val deletedAt: DateTime? = null,
+) : WorkgroupRef(id),
+    WorkgroupForUpdateI<C>,
+    CreatedBy<C> by CreatedBy.Imp(createdBy)
+
+interface WorkgroupForUpdateI<C : CitizenWithUserI> : WorkgroupWithAuthI<C>, WorkgroupCartI, CreatedBy<C> {
+    val description: String
+    val logo: String?
+}
 
 class WorkgroupCart(
     override val id: UUID,
@@ -56,6 +56,7 @@ class WorkgroupCart(
 interface WorkgroupCartI : EntityI {
     val name: String
 }
+
 open class WorkgroupRef(
     id: UUID? = null
 ) : Entity(id ?: UUID.randomUUID()), WorkgroupI
@@ -74,9 +75,9 @@ interface WorkgroupWithAuthI<Z : CitizenWithUserI> : WorkgroupWithMembersI<Z>, C
 }
 
 interface WorkgroupWithMembersI<Z : CitizenI> : WorkgroupI {
-    var members: List<Member<Z>>
+    val members: List<Member<Z>>
 
-    class Member<C : CitizenI> (
+    class Member<C : CitizenI>(
         val citizen: C,
         val roles: List<Role> = emptyList()
     ) : fr.postgresjson.entity.EntityI {

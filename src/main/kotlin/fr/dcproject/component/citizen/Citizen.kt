@@ -9,8 +9,9 @@ import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserForCreate
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.auth.UserRef
+import fr.dcproject.component.auth.UserWithUsername
 import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.component.workgroup.WorkgroupSimple
+import fr.dcproject.component.workgroup.WorkgroupRef
 import fr.postgresjson.entity.Serializable
 import org.joda.time.DateTime
 import java.util.UUID
@@ -38,6 +39,7 @@ class Citizen(
     deletedAt: DateTime? = null
 ) : CitizenFull,
     CitizenBasicI,
+    CitizenCreatorI,
     CitizenWithUserI,
     CitizenRef(id),
     CitizenCartI,
@@ -47,7 +49,7 @@ class Citizen(
 
     class WorkgroupAndRoles(
         val roles: List<String>,
-        val workgroup: WorkgroupSimple<CitizenRef>
+        val workgroup: WorkgroupRef
     )
 }
 
@@ -69,7 +71,7 @@ interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, De
     override val email: String
     val voteAnonymous: Boolean
     val followAnonymous: Boolean
-    override val user: UserCreator
+    override val user: UserWithUsername
     override val deletedAt: DateTime?
 }
 

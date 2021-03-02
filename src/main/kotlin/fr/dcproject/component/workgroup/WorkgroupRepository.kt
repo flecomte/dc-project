@@ -1,7 +1,9 @@
 package fr.dcproject.component.workgroup
 
 import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -11,10 +13,10 @@ import fr.postgresjson.repository.RepositoryI.Direction
 import fr.postgresjson.serializer.serialize
 import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
-import fr.dcproject.component.workgroup.Workgroup as WorkgroupEntity
+import fr.dcproject.component.workgroup.WorkgroupForView as WorkgroupEntity
 
 class WorkgroupRepository(override var requester: Requester) : RepositoryI {
-    fun findById(id: UUID): WorkgroupEntity<CitizenBasic>? {
+    fun findById(id: UUID): WorkgroupEntity<CitizenCreator>? {
         val function = requester.getFunction("find_workgroup_by_id")
         return function.selectOne("id" to id)
     }
@@ -26,7 +28,7 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
         direction: Direction? = null,
         search: String? = null,
         filter: Filter = Filter()
-    ): Paginated<WorkgroupEntity<CitizenBasic>> {
+    ): Paginated<WorkgroupEntity<CitizenCreator>> {
         return requester
             .getFunction("find_workgroups")
             .select(
@@ -39,7 +41,7 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
             )
     }
 
-    fun <C : CitizenI, W : WorkgroupSimple<C>> upsert(workgroup: W): WorkgroupEntity<CitizenBasic> = requester
+    fun <C : CitizenI, W : WorkgroupForUpdateI<C>> upsert(workgroup: W): WorkgroupEntity<CitizenCreator> = requester
         .getFunction("upsert_workgroup")
         .selectOne("resource" to workgroup) ?: error("query 'upsert_workgroup' return null")
 
@@ -47,10 +49,10 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
         .getFunction("delete_workgroup")
         .perform("id" to workgroup.id)
 
-    fun addMember(workgroup: WorkgroupI, member: Member<CitizenI>): Member<CitizenBasic>? =
+    fun addMember(workgroup: WorkgroupI, member: Member<CitizenI>): Member<CitizenRef>? =
         addMember(workgroup, member.citizen, member.roles)
 
-    fun addMember(workgroup: WorkgroupI, citizen: CitizenI, roles: List<Member.Role>): Member<CitizenBasic>? = requester
+    fun addMember(workgroup: WorkgroupI, citizen: CitizenI, roles: List<Member.Role>): Member<CitizenRef>? = requester
         .getFunction("add_workgroup_member")
         .selectOne(
             "id" to workgroup.id,
@@ -80,14 +82,6 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
             "id" to workgroup.id,
             "members" to members
         )
-
-    fun <W : WorkgroupWithMembersI<Z>, Z : CitizenI> updateMembers(workgroup: W): W {
-        updateMembers(workgroup, workgroup.members).let {
-            workgroup.members = it as List<Member<Z>>
-        }
-
-        return workgroup
-    }
 
     class Filter(
         val createdById: String? = null,

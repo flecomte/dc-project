@@ -19,7 +19,6 @@ import fr.dcproject.component.vote.entity.VotableImp
 import fr.dcproject.component.workgroup.WorkgroupCart
 import fr.dcproject.component.workgroup.WorkgroupCartI
 import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.component.workgroup.WorkgroupSimple
 import org.joda.time.DateTime
 import java.util.UUID
 
@@ -33,7 +32,7 @@ data class ArticleForView(
     override val createdBy: CitizenRef,
     override val versionNumber: Int = 0,
     override val versionId: UUID = UUID.randomUUID(),
-    val workgroup: WorkgroupSimple<CitizenRef>? = null,
+    val workgroup: WorkgroupCart? = null,
     override val opinions: Opinions = emptyMap(),
     override val draft: Boolean = false,
     override val deletedAt: DateTime? = null
