@@ -2,7 +2,7 @@ package fr.dcproject.application
 
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.databind.PropertyNamingStrategy
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.databind.module.SimpleModule
 import com.fasterxml.jackson.datatype.joda.JodaModule
@@ -68,7 +68,7 @@ val KoinModule = module {
     single<ObjectMapper> {
         jacksonObjectMapper().apply {
             registerModule(SimpleModule())
-            propertyNamingStrategy = PropertyNamingStrategy.SNAKE_CASE
+            propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
 
             registerModule(JodaModule())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)

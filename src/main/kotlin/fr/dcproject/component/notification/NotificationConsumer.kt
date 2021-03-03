@@ -94,7 +94,7 @@ class NotificationConsumer(
 
     private suspend fun followersFromMessage(body: ByteArray, action: suspend (DecodedMessage) -> Unit) {
         val rawMessage: String = body.toString(Charsets.UTF_8)
-        val notification: EntityNotification = Notification.fromString<EntityNotification>(rawMessage) ?: error("Unable to deserialize notification message from rabbit")
+        val notification: EntityNotification = Notification.fromString(rawMessage)
         val follows = when (notification.type) {
             "article" -> followArticleRepo.findFollowsByTarget(notification.target)
             "constitution" -> followConstitutionRepo.findFollowsByTarget(notification.target)

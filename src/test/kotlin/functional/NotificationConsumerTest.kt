@@ -114,9 +114,9 @@ class NotificationConsumerTest {
         ).await()
 
         /* Check if notifications sent */
-        verify(timeout = 1000) { followArticleRepo.findFollowsByTarget(any()) }
-        verify(timeout = 1000) { emailSender.sendEmail(any()) }
-        verify(timeout = 1000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
+        verify(timeout = 2000) { followArticleRepo.findFollowsByTarget(any()) }
+        verify(timeout = 2000) { emailSender.sendEmail(any()) }
+        verify(timeout = 2000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
 
         consumer.close()
     }

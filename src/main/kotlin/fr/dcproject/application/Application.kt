@@ -53,7 +53,6 @@ import io.ktor.features.ContentNegotiation
 import io.ktor.features.DataConversion
 import io.ktor.features.NotFoundException
 import io.ktor.features.StatusPages
-import io.ktor.features.maxAge
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
 import io.ktor.http.HttpStatusCode
@@ -205,7 +204,7 @@ fun Application.module(env: Env = PROD) {
         }
         allowCredentials = true
         allowSameOrigin = true
-        maxAge = Duration.ofDays(1)
+        maxAgeInSeconds = Duration.ofDays(1).seconds
     }
 
     if (env == PROD) {

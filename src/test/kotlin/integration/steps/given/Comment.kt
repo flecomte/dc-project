@@ -78,10 +78,10 @@ fun createCommentOnTarget(
     content: String? = null
 ) {
     val commentRepository: CommentRepository by lazy { GlobalContext.get().koin.get() }
-    val createdBy = createCitizen(createdBy)
+    val creator = createCitizen(createdBy)
     val comment = CommentForUpdate(
         id = id ?: UUID.randomUUID(),
-        createdBy = createdBy,
+        createdBy = creator,
         target = target,
         content = content ?: LoremIpsum().getParagraphs(1, 3)
     )
