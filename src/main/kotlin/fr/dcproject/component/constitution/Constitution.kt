@@ -9,7 +9,7 @@ import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.component.article.ArticleForListing
 import fr.dcproject.component.article.ArticleI
-import fr.dcproject.component.citizen.CitizenSimple
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenWithUserI
 import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
 import java.util.UUID
@@ -21,8 +21,8 @@ class Constitution(
     titles: MutableList<TitleSimple<ArticleForListing>> = mutableListOf(),
     draft: Boolean = false,
     lastVersion: Boolean = false,
-    override val createdBy: CitizenSimple
-) : ConstitutionSimple<CitizenSimple, TitleSimple<ArticleForListing>>(
+    override val createdBy: CitizenCreator
+) : ConstitutionSimple<CitizenCreator, TitleSimple<ArticleForListing>>(
     id,
     title = title,
     anonymous = anonymous,

@@ -15,7 +15,7 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import java.util.UUID
 import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.component.vote.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.VoteForView as VoteEntity
 
 abstract class VoteRepositoryAbs<T : TargetI>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteForUpdateI<T, *>, anonymous: Boolean? = null): VoteAggregation {

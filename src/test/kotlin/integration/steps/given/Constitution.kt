@@ -46,13 +46,13 @@ fun createConstitution(
 ): Constitution {
     val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().koin.get() }
 
-    val createdBy: CitizenWithUserI = createCitizen(createdBy)
+    val creator: CitizenWithUserI = createCitizen(createdBy)
 
     val constitution = ConstitutionSimple(
         id = id ?: UUID.randomUUID(),
         title = LoremIpsum().getTitle(3),
         titles = titles ?: createTitles(5),
-        createdBy = createdBy,
+        createdBy = creator,
         versionId = UUID.randomUUID()
     )
     return constitutionRepository.upsert(constitution) ?: error("Cannot create constitution")

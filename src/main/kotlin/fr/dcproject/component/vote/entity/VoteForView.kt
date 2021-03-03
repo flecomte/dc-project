@@ -7,22 +7,21 @@ import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.UpdatedAt
-import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenBasicI
+import fr.dcproject.component.citizen.CitizenCreator
+import fr.dcproject.component.citizen.CitizenCreatorI
 import fr.dcproject.component.citizen.CitizenI
 import java.util.UUID
 
-@Deprecated("")
-class Vote<T : TargetI>(
+class VoteForView<T : TargetI>(
     id: UUID = UUID.randomUUID(),
-    override val createdBy: CitizenBasic,
+    override val createdBy: CitizenCreator,
     override val target: T,
     var note: Int,
     var anonymous: Boolean = true
-) : ExtraI<T, CitizenBasicI>,
+) : ExtraI<T, CitizenCreatorI>,
     VoteRef(id),
     CreatedAt by CreatedAt.Imp(),
-    CreatedBy<CitizenBasicI> by CreatedBy.Imp(createdBy),
+    CreatedBy<CitizenCreatorI> by CreatedBy.Imp(createdBy),
     UpdatedAt by UpdatedAt.Imp() {
     init {
         if (note > 1 && note < -1) {

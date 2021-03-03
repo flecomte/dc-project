@@ -5,7 +5,7 @@ import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.CitizenAccessControl
-import fr.dcproject.component.citizen.CitizenBasic
+import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenI
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
@@ -20,32 +20,26 @@ import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 @Execution(CONCURRENT)
 @Tags(Tag("security"), Tag("unit"))
 internal class `Citizen Access Control` {
-    private val tesla = CitizenBasic(
+    private val tesla = CitizenCart(
         user = User(
             username = "nicolas-tesla",
             roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
-        email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla")
     )
-    private val einstein = CitizenBasic(
+    private val einstein = CitizenCart(
         user = User(
             username = "albert-einstein",
             roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
-        email = "einstein@best.com",
         name = CitizenI.Name("Albert", "Einstein")
     )
 
-    private val curie = CitizenBasic(
+    private val curie = CitizenCart(
         user = User(
             username = "marie-curie",
             roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
-        email = "curie@best.com",
         name = CitizenI.Name("Marie", "Curie"),
         deletedAt = DateTime.now()
     )

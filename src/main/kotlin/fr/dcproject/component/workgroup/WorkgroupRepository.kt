@@ -1,6 +1,5 @@
 package fr.dcproject.component.workgroup
 
-import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.citizen.CitizenRef
@@ -59,24 +58,24 @@ class WorkgroupRepository(override var requester: Requester) : RepositoryI {
             "members" to Member(citizen, roles).serialize()
         )
 
-    fun <Z : CitizenI> addMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenBasic>> = requester
+    fun <Z : CitizenI> addMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenCreator>> = requester
         .getFunction("add_workgroup_members")
         .select(
             "id" to workgroup.id,
             "members" to members.serialize()
         )
 
-    fun <Z : CitizenI> removeMember(workgroup: WorkgroupI, memberToDelete: Member<Z>): List<Member<CitizenBasic>> =
+    fun <Z : CitizenI> removeMember(workgroup: WorkgroupI, memberToDelete: Member<Z>): List<Member<CitizenCreator>> =
         removeMembers(workgroup, listOf(memberToDelete))
 
-    fun <Z : CitizenI> removeMembers(workgroup: WorkgroupI, membersToDelete: List<Member<Z>>): List<Member<CitizenBasic>> = requester
+    fun <Z : CitizenI> removeMembers(workgroup: WorkgroupI, membersToDelete: List<Member<Z>>): List<Member<CitizenCreator>> = requester
         .getFunction("remove_workgroup_members")
         .select(
             "id" to workgroup.id,
             "members" to membersToDelete
         )
 
-    fun <Z : CitizenI> updateMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenBasic>> = requester
+    fun <Z : CitizenI> updateMembers(workgroup: WorkgroupI, members: List<Member<Z>>): List<Member<CitizenCreator>> = requester
         .getFunction("update_workgroup_members")
         .select(
             "id" to workgroup.id,

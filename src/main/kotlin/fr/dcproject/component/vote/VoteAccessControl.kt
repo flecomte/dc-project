@@ -6,7 +6,7 @@ import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.entity.VoteForUpdateI
-import fr.dcproject.component.vote.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.VoteForView as VoteEntity
 
 class VoteAccessControl : AccessControl() {
     fun <S> canCreate(subject: VoteForUpdateI<S, *>, citizen: CitizenI?): AccessResponse where S : DeletedAt, S : TargetI = when {

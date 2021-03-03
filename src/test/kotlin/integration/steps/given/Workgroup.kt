@@ -34,6 +34,7 @@ fun WorkgroupForView<CitizenCreator>.`With members`(
     addMemberToWorkgroup(this, *member)
 }
 
+@Suppress("UNCHECKED_CAST")
 fun addMemberToWorkgroup(workgroup: WorkgroupForView<CitizenCreator>, vararg membersNames: CitizenI.Name) {
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
     val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
@@ -58,8 +59,8 @@ private fun createWorkgroup(
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
     val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
 
-    val createdBy = createdBy ?: CitizenI.Name("Paul", "Langevin")
-    val creator = citizenRepository.findByName(createdBy) ?: run {
+    val creatorName = createdBy ?: CitizenI.Name("Paul", "Langevin")
+    val creator = citizenRepository.findByName(creatorName) ?: run {
         val username = ("username" + UUID.randomUUID().toString())
             .toLowerCase().replace(' ', '-')
         val user = UserForCreate(
@@ -67,7 +68,7 @@ private fun createWorkgroup(
             password = "azerty",
         )
         CitizenForCreate(
-            name = createdBy,
+            name = creatorName,
             email = "$username@dc-project.fr",
             birthday = DateTime.now(),
             user = user

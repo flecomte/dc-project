@@ -4,10 +4,11 @@ import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
+import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserI
 import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
+import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.entity.VoteForUpdate
@@ -20,7 +21,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.component.vote.entity.Vote as VoteEntity
+import fr.dcproject.component.vote.entity.VoteForView
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
@@ -37,13 +38,11 @@ internal class `Vote Access Control` {
         name = CitizenI.Name("Nicolas", "Tesla"),
         followAnonymous = false
     )
-    private val tesla3 = CitizenBasic(
+    private val tesla3 = CitizenCreator(
         id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),
-        user = User(
+        user = UserCreator(
             username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        birthday = DateTime.now(),
         email = "tesla@best.com",
         name = CitizenI.Name("Nicolas", "Tesla"),
         followAnonymous = false
@@ -77,7 +76,7 @@ internal class `Vote Access Control` {
         title = "Super article"
     )
 
-    private val vote1 = VoteEntity(
+    private val vote1 = VoteForView(
         createdBy = tesla3,
         target = article1,
         note = 1

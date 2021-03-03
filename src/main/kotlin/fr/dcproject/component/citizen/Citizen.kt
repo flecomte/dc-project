@@ -32,13 +32,12 @@ class Citizen(
     override val id: UUID = UUID.randomUUID(),
     override val name: Name,
     override val email: String,
-    override val birthday: DateTime,
+    val birthday: DateTime,
     override val voteAnonymous: Boolean = true,
     override val followAnonymous: Boolean = true,
     override val user: User,
     deletedAt: DateTime? = null
-) : CitizenFull,
-    CitizenBasicI,
+) : CitizenWithEmail,
     CitizenCreatorI,
     CitizenWithUserI,
     CitizenRef(id),
@@ -75,33 +74,14 @@ interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, De
     override val deletedAt: DateTime?
 }
 
-@Deprecated("")
-data class CitizenBasic(
-    override var id: UUID = UUID.randomUUID(),
-    override var name: Name,
-    override var email: String,
-    override var birthday: DateTime,
-    override var voteAnonymous: Boolean = true,
-    override var followAnonymous: Boolean = true,
-    override val user: User,
-    override val deletedAt: DateTime? = null
-) : CitizenBasicI,
-    CitizenRefWithUser(id, user),
-    DeletedAt by DeletedAt.Imp(deletedAt)
-
-@Deprecated("")
-open class CitizenSimple(
-    id: UUID = UUID.randomUUID(),
-    var name: Name,
-    user: UserRef
-) : CitizenRefWithUser(id, user)
-
 class CitizenCart(
     id: UUID = UUID.randomUUID(),
     override val name: Name,
-    override val user: UserRef
+    override val user: UserRef,
+    override val deletedAt: DateTime? = null,
 ) : CitizenRef(id),
-    CitizenCartI
+    CitizenCartI,
+    DeletedAt by DeletedAt.Imp(deletedAt)
 
 interface CitizenCartI : CitizenI, CitizenWithUserI {
     val name: Name
@@ -131,19 +111,6 @@ interface CitizenI : EntityI {
         val civility: String?
         fun getFullName(): String = "${civility ?: ""} $firstName $lastName".trim()
     }
-}
-
-@Deprecated("")
-interface CitizenBasicI : CitizenWithUserI, CitizenWithEmail, DeletedAt {
-    val name: Name
-    val birthday: DateTime
-    val voteAnonymous: Boolean
-    val followAnonymous: Boolean
-}
-
-@Deprecated("")
-interface CitizenFull : CitizenBasicI {
-    override val user: User
 }
 
 interface CitizenWithUserI : CitizenI {

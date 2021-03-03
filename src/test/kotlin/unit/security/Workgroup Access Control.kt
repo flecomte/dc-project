@@ -5,14 +5,13 @@ import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.WorkgroupWithMembersI
 import org.amshove.kluent.`should be`
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -35,25 +34,8 @@ internal class `Workgroup Access Control` {
         followAnonymous = false
     )
 
-    private val einstein = CitizenBasic(
+    private val einstein = CitizenRef(
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
-        user = User(
-            username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
-        ),
-        birthday = DateTime.now(),
-        email = "einstein@best.com",
-        name = CitizenI.Name("Albert", "Einstein"),
-        followAnonymous = true
-    )
-
-    private val einstein2 = CitizenCart(
-        id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
-        user = User(
-            username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
-        ),
-        name = CitizenI.Name("Albert", "Einstein")
     )
 
     private val workgroupPublic = WorkgroupEntity(

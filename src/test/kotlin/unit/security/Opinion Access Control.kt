@@ -6,15 +6,14 @@ import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.auth.User
 import fr.dcproject.component.auth.UserCreator
 import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenBasic
 import fr.dcproject.component.citizen.CitizenCart
 import fr.dcproject.component.citizen.CitizenCreator
 import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.entity.Opinion
 import fr.dcproject.component.opinion.entity.OpinionChoice
 import org.amshove.kluent.`should be`
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -36,16 +35,8 @@ internal class `Opinion Access Control` {
         followAnonymous = false
     )
 
-    private val einstein = CitizenBasic(
+    private val einstein = CitizenRef(
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
-        user = User(
-            username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
-        ),
-        birthday = DateTime.now(),
-        email = "einstein@best.com",
-        name = CitizenI.Name("Albert", "Einstein"),
-        followAnonymous = true
     )
 
     private val einstein2 = CitizenCart(

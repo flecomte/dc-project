@@ -1,16 +1,10 @@
 package unit.security
 
 import fr.dcproject.common.security.AccessDecision.GRANTED
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenBasic
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.CitizenRef
 import fr.dcproject.component.opinion.OpinionChoiceAccessControl
 import fr.dcproject.component.opinion.entity.OpinionChoice
 import org.amshove.kluent.`should be`
-import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -23,32 +17,12 @@ import java.util.UUID
 @Execution(CONCURRENT)
 @Tags(Tag("security"), Tag("unit"))
 internal class `OpinionChoice Access Control` {
-    private val tesla = CitizenBasic(
+    private val tesla = CitizenRef(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
-        user = User(
-            username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
-        ),
-        birthday = DateTime.now(),
-        email = "tesla@best.com",
-        name = CitizenI.Name("Nicolas", "Tesla"),
-        followAnonymous = false
     )
 
-    private val tesla2 = CitizenCart(
+    private val tesla2 = CitizenRef(
         id = UUID.fromString("e6efc288-4283-4729-a268-6debb18de1a0"),
-        user = User(
-            username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
-        ),
-        name = CitizenI.Name("Nicolas", "Tesla")
-    )
-
-    private val article1 = ArticleForView(
-        content = "Hi",
-        createdBy = tesla2,
-        description = "blablabla",
-        title = "Super article"
     )
 
     private val choice1 = OpinionChoice(
