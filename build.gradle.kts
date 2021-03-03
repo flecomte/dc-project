@@ -4,6 +4,7 @@ import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
 import io.gitlab.arturbosch.detekt.Detekt
+import org.gradle.internal.os.OperatingSystem
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 import org.slf4j.LoggerFactory
@@ -277,12 +278,22 @@ detekt {
     }
 }
 
-tasks {
-    withType<Detekt> {
-        // Target version of the generated JVM bytecode. It is used for type resolution.
-        this.jvmTarget = "11"
+tasks.withType<Detekt> {
+    // Target version of the generated JVM bytecode. It is used for type resolution.
+    this.jvmTarget = "11"
+}
+
+val setMaxMapCount = tasks.create<Exec>("setMaxMapCount") {
+    group = "docker"
+    doFirst {
+        if (OperatingSystem.current().isWindows) {
+            commandLine("cmd", "/c", "Powershell -ExecutionPolicy Bypass; wsl -d docker-desktop sysctl -w vm.max_map_count=262144")
+        } else if (OperatingSystem.current().isLinux) {
+            commandLine("sysctl -w vm.max_map_count=262144")
+        }
     }
 }
+tasks.named("testComposeUp").configure { dependsOn(setMaxMapCount) }
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
