@@ -2,13 +2,13 @@ package integration.steps.given
 
 import com.thedeanda.lorem.LoremIpsum
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.component.constitution.Constitution
-import fr.dcproject.component.constitution.ConstitutionRepository
-import fr.dcproject.component.constitution.ConstitutionSimple
-import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenI.Name
+import fr.dcproject.component.citizen.database.CitizenWithUserI
+import fr.dcproject.component.constitution.database.Constitution
+import fr.dcproject.component.constitution.database.ConstitutionRepository
+import fr.dcproject.component.constitution.database.ConstitutionSimple
+import fr.dcproject.component.constitution.database.ConstitutionSimple.TitleSimple
 import io.ktor.server.testing.TestApplicationEngine
 import org.koin.core.context.GlobalContext
 import java.util.UUID

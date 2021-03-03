@@ -4,7 +4,10 @@ import fr.dcproject.common.entity.CreatedBy
 import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.article.database.ArticleAuthI
+import fr.dcproject.component.article.database.ArticleI
+import fr.dcproject.component.article.database.ArticleRepository
+import fr.dcproject.component.citizen.database.CitizenI
 
 class ArticleAccessControl(private val articleRepo: ArticleRepository) : AccessControl() {
     fun <S : ArticleAuthI<*>> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse =

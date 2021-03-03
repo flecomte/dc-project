@@ -1,14 +1,14 @@
 package integration.steps.given
 
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.constitution.ConstitutionRef
-import fr.dcproject.component.follow.FollowArticleRepository
-import fr.dcproject.component.follow.FollowConstitutionRepository
-import fr.dcproject.component.follow.FollowForUpdate
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.Citizen
+import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRepository
+import fr.dcproject.component.constitution.database.ConstitutionRef
+import fr.dcproject.component.follow.database.FollowArticleRepository
+import fr.dcproject.component.follow.database.FollowConstitutionRepository
+import fr.dcproject.component.follow.database.FollowForUpdate
 import io.ktor.server.testing.TestApplicationEngine
 import org.koin.core.context.GlobalContext
 

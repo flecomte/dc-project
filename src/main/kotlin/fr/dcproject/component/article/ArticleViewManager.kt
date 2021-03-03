@@ -4,7 +4,8 @@ import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.common.utils.contentToString
 import fr.dcproject.common.utils.getJsonField
 import fr.dcproject.common.utils.toIso
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.article.database.ArticleI
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.views.ViewManager
 import fr.dcproject.component.views.entity.ViewAggregation
 import org.elasticsearch.client.Request

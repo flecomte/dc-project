@@ -2,8 +2,8 @@ package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.auth.citizenOrNull
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call

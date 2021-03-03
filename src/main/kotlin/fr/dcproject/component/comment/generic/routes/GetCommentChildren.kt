@@ -3,7 +3,7 @@ package fr.dcproject.component.comment.generic.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentAccessControl
-import fr.dcproject.component.comment.generic.CommentRepository
+import fr.dcproject.component.comment.generic.database.CommentRepository
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import io.ktor.application.call

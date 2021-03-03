@@ -1,9 +1,9 @@
 package unit.security
 
 import fr.dcproject.common.security.AccessDecision.GRANTED
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.OpinionChoiceAccessControl
-import fr.dcproject.component.opinion.entity.OpinionChoice
+import fr.dcproject.component.opinion.database.OpinionChoice
 import org.amshove.kluent.`should be`
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags

@@ -6,11 +6,11 @@ import com.sendgrid.helpers.mail.objects.Email
 import fr.dcproject.common.email.Mailer
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.component.article.ArticleWithTitleI
-import fr.dcproject.component.citizen.CitizenCreatorI
-import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.follow.FollowForView
+import fr.dcproject.component.article.database.ArticleRepository
+import fr.dcproject.component.article.database.ArticleWithTitleI
+import fr.dcproject.component.citizen.database.CitizenCreatorI
+import fr.dcproject.component.citizen.database.CitizenRepository
+import fr.dcproject.component.follow.database.FollowForView
 import java.util.UUID
 
 class NotificationEmailSender(

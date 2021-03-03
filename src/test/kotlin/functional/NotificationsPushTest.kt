@@ -2,8 +2,8 @@ package functional
 
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.application.Configuration
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.Notification
 import fr.dcproject.component.notification.NotificationsPush

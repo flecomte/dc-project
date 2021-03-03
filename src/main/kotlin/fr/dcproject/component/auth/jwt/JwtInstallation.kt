@@ -1,7 +1,7 @@
 package fr.dcproject.component.auth.jwt
 
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.auth.database.User
+import fr.dcproject.component.auth.database.UserRepository
 import io.ktor.application.ApplicationCall
 import io.ktor.auth.Authentication
 import io.ktor.auth.jwt.jwt

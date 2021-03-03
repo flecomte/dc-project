@@ -2,13 +2,13 @@ package fr.dcproject.component.vote.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.article.ArticleRepository
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.vote.VoteAccessControl
-import fr.dcproject.component.vote.VoteArticleRepository
-import fr.dcproject.component.vote.entity.VoteForUpdate
+import fr.dcproject.component.vote.database.VoteArticleRepository
+import fr.dcproject.component.vote.database.VoteForUpdate
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode

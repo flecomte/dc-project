@@ -1,4 +1,4 @@
-package fr.dcproject.component.opinion.entity
+package fr.dcproject.component.opinion.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
@@ -7,10 +7,10 @@ import fr.dcproject.common.entity.ExtraI
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.citizen.CitizenCreator
-import fr.dcproject.component.citizen.CitizenCreatorI
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenCreatorI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import java.util.UUID
 
 open class Opinion<T : TargetI>(

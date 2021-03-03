@@ -2,17 +2,17 @@ package unit.security
 
 import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserCreator
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenCreator
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.auth.database.User
+import fr.dcproject.component.auth.database.UserCreator
+import fr.dcproject.component.auth.database.UserI
+import fr.dcproject.component.citizen.database.CitizenCart
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
-import fr.dcproject.component.opinion.entity.Opinion
-import fr.dcproject.component.opinion.entity.OpinionChoice
+import fr.dcproject.component.opinion.database.Opinion
+import fr.dcproject.component.opinion.database.OpinionChoice
 import org.amshove.kluent.`should be`
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags

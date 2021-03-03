@@ -1,10 +1,10 @@
-package fr.dcproject.component.auth
+package fr.dcproject.component.auth.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.UpdatedAt
-import fr.dcproject.component.auth.UserI.Roles
+import fr.dcproject.component.auth.database.UserI.Roles
 import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.UUID

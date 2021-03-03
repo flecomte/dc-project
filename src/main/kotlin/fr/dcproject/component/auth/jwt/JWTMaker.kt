@@ -1,7 +1,7 @@
 package fr.dcproject.component.auth.jwt
 
 import com.auth0.jwt.JWT
-import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.auth.database.UserI
 
 /**
  * Produce a token for this combination of User and Account

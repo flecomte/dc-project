@@ -1,4 +1,4 @@
-package fr.dcproject.component.opinion.entity
+package fr.dcproject.component.opinion.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.DeletedAt

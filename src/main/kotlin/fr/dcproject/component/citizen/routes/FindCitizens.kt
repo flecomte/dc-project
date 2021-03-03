@@ -3,7 +3,7 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenAccessControl
-import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.citizen.database.CitizenRepository
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.repository.RepositoryI

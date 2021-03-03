@@ -2,7 +2,7 @@ package fr.dcproject.component.auth.routes
 
 import com.fasterxml.jackson.databind.exc.MismatchedInputException
 import fr.dcproject.common.utils.receiveOrBadRequest
-import fr.dcproject.component.auth.UserRepository
+import fr.dcproject.component.auth.database.UserRepository
 import fr.dcproject.component.auth.jwt.makeToken
 import fr.dcproject.component.auth.routes.Login.LoginRequest.Input
 import io.ktor.application.call

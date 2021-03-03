@@ -1,6 +1,6 @@
 package integration
 
-import fr.dcproject.component.citizen.CitizenI.Name
+import fr.dcproject.component.citizen.database.CitizenI.Name
 import integration.steps.`And the response should contain list`
 import integration.steps.`And the response should contain`
 import integration.steps.`Then the response should be`

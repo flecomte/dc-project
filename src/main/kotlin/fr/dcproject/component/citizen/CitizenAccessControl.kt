@@ -3,6 +3,7 @@ package fr.dcproject.component.citizen
 import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
+import fr.dcproject.component.citizen.database.CitizenI
 
 class CitizenAccessControl : AccessControl() {
     fun <S> canView(subjects: List<S>, connectedCitizen: CitizenI?): AccessResponse where S : CitizenI, S : DeletedAt =

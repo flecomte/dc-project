@@ -2,9 +2,9 @@ package fr.dcproject.component.vote.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.vote.VoteAccessControl
-import fr.dcproject.component.vote.VoteArticleRepository
+import fr.dcproject.component.vote.database.VoteArticleRepository
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import io.ktor.application.call

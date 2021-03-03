@@ -2,11 +2,11 @@ package unit.security
 
 import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserI
+import fr.dcproject.component.auth.database.User
+import fr.dcproject.component.auth.database.UserI
 import fr.dcproject.component.citizen.CitizenAccessControl
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.database.CitizenCart
+import fr.dcproject.component.citizen.database.CitizenI
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag

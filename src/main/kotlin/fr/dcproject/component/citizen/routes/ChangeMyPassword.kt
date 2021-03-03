@@ -2,12 +2,12 @@ package fr.dcproject.component.citizen.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
-import fr.dcproject.component.auth.UserRepository
-import fr.dcproject.component.auth.UserWithPassword
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.database.UserRepository
+import fr.dcproject.component.auth.database.UserWithPassword
 import fr.dcproject.component.citizen.CitizenAccessControl
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import io.ktor.application.call
 import io.ktor.auth.UserPasswordCredential
 import io.ktor.features.BadRequestException

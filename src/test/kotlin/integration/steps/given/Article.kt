@@ -2,11 +2,11 @@ package integration.steps.given
 
 import com.thedeanda.lorem.LoremIpsum
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.article.ArticleForUpdate
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.article.database.ArticleForUpdate
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleRepository
+import fr.dcproject.component.citizen.database.CitizenI.Name
+import fr.dcproject.component.workgroup.database.WorkgroupRef
 import io.ktor.server.testing.TestApplicationEngine
 import org.koin.core.context.GlobalContext
 import java.util.UUID

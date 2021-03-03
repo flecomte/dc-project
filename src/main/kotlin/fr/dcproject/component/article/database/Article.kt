@@ -1,4 +1,4 @@
-package fr.dcproject.component.article
+package fr.dcproject.component.article.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
@@ -8,17 +8,17 @@ import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.Versionable
 import fr.dcproject.common.entity.VersionableId
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenCartI
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenCart
+import fr.dcproject.component.citizen.database.CitizenCartI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.entity.Opinionable
 import fr.dcproject.component.opinion.entity.Opinions
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
-import fr.dcproject.component.workgroup.WorkgroupCart
-import fr.dcproject.component.workgroup.WorkgroupCartI
-import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.workgroup.database.WorkgroupCart
+import fr.dcproject.component.workgroup.database.WorkgroupCartI
+import fr.dcproject.component.workgroup.database.WorkgroupRef
 import org.joda.time.DateTime
 import java.util.UUID
 

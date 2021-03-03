@@ -1,9 +1,9 @@
-package fr.dcproject.component.workgroup
+package fr.dcproject.component.workgroup.database
 
-import fr.dcproject.component.citizen.CitizenCreator
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI.Member
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
@@ -12,7 +12,7 @@ import fr.postgresjson.repository.RepositoryI.Direction
 import fr.postgresjson.serializer.serialize
 import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
-import fr.dcproject.component.workgroup.WorkgroupForView as WorkgroupEntity
+import fr.dcproject.component.workgroup.database.WorkgroupForView as WorkgroupEntity
 
 class WorkgroupRepository(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): WorkgroupEntity<CitizenCreator>? {

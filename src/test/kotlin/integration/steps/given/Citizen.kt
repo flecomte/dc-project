@@ -1,11 +1,11 @@
 package integration.steps.given
 
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.auth.UserForCreate
-import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenForCreate
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.auth.database.UserForCreate
+import fr.dcproject.component.citizen.database.Citizen
+import fr.dcproject.component.citizen.database.CitizenForCreate
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRepository
 import io.ktor.server.testing.TestApplicationEngine
 import org.joda.time.DateTime
 import org.koin.core.context.GlobalContext

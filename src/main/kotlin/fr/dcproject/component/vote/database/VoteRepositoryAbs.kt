@@ -1,21 +1,20 @@
-package fr.dcproject.component.vote
+package fr.dcproject.component.vote.database
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.comment.generic.CommentForView
-import fr.dcproject.component.constitution.Constitution
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.comment.generic.database.CommentForView
+import fr.dcproject.component.constitution.database.Constitution
 import fr.dcproject.component.vote.entity.VoteAggregation
-import fr.dcproject.component.vote.entity.VoteForUpdateI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import java.util.UUID
-import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.component.vote.entity.VoteForView as VoteEntity
+import fr.dcproject.component.citizen.database.Citizen as CitizenEntity
+import fr.dcproject.component.vote.database.VoteForView as VoteEntity
 
 abstract class VoteRepositoryAbs<T : TargetI>(override var requester: Requester) : RepositoryI {
     fun vote(vote: VoteForUpdateI<T, *>, anonymous: Boolean? = null): VoteAggregation {

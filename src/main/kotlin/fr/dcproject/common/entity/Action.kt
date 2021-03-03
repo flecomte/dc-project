@@ -1,6 +1,6 @@
 package fr.dcproject.common.entity
 
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.database.CitizenI
 
 interface Created<C : CitizenI> : CreatedAt, CreatedBy<C> {
     class Imp<C : CitizenI>(createdBy: C) :

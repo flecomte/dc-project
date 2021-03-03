@@ -1,4 +1,4 @@
-package fr.dcproject.component.auth
+package fr.dcproject.component.auth.database
 
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI

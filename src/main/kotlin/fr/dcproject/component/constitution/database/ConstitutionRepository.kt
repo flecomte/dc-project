@@ -1,15 +1,15 @@
-package fr.dcproject.component.constitution
+package fr.dcproject.component.constitution.database
 
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenWithUserI
+import fr.dcproject.component.constitution.database.ConstitutionSimple.TitleSimple
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import fr.postgresjson.repository.RepositoryI.Direction
 import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
-import fr.dcproject.component.constitution.Constitution as ConstitutionEntity
+import fr.dcproject.component.constitution.database.Constitution as ConstitutionEntity
 
 class ConstitutionRepository(override var requester: Requester) : RepositoryI {
     fun findById(id: UUID): ConstitutionEntity? {

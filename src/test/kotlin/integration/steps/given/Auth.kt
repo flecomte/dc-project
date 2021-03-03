@@ -2,8 +2,8 @@ package integration.steps.given
 
 import com.auth0.jwt.JWT
 import fr.dcproject.component.auth.jwt.JwtConfig
-import fr.dcproject.component.citizen.Citizen
-import fr.dcproject.component.citizen.CitizenRepository
+import fr.dcproject.component.citizen.database.Citizen
+import fr.dcproject.component.citizen.database.CitizenRepository
 import io.ktor.http.HttpHeaders
 import io.ktor.server.testing.TestApplicationRequest
 import org.koin.core.context.GlobalContext

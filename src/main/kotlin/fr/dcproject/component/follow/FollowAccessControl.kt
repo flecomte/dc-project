@@ -2,7 +2,9 @@ package fr.dcproject.component.follow
 
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.follow.database.FollowForView
+import fr.dcproject.component.follow.database.FollowI
 
 class FollowAccessControl : AccessControl() {
     fun canCreate(subject: FollowI, citizen: CitizenI?): AccessResponse {

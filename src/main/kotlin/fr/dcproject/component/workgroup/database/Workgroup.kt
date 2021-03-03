@@ -1,4 +1,4 @@
-package fr.dcproject.component.workgroup
+package fr.dcproject.component.workgroup.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
@@ -6,12 +6,12 @@ import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.UpdatedAt
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenCreatorI
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
+import fr.dcproject.component.auth.database.UserI
+import fr.dcproject.component.citizen.database.CitizenCreatorI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenWithUserI
+import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI.Member
+import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI.Member.Role
 import org.joda.time.DateTime
 import java.util.UUID
 

@@ -1,18 +1,17 @@
-package fr.dcproject.component.opinion
+package fr.dcproject.component.opinion.database
 
 import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.opinion.entity.OpinionForUpdate
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import net.pearx.kasechange.toSnakeCase
 import java.util.UUID
-import fr.dcproject.component.citizen.Citizen as CitizenEntity
-import fr.dcproject.component.opinion.entity.Opinion as OpinionEntity
-import fr.dcproject.component.opinion.entity.OpinionChoice as OpinionChoiceEntity
+import fr.dcproject.component.citizen.database.Citizen as CitizenEntity
+import fr.dcproject.component.opinion.database.Opinion as OpinionEntity
+import fr.dcproject.component.opinion.database.OpinionChoice as OpinionChoiceEntity
 
 open class OpinionChoiceRepository(override val requester: Requester) : RepositoryI {
     /**

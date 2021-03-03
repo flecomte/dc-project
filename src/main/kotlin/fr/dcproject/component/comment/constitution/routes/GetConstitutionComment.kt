@@ -2,9 +2,9 @@ package fr.dcproject.component.comment.constitution.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.comment.constitution.CommentConstitutionRepository
+import fr.dcproject.component.comment.constitution.database.CommentConstitutionRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
-import fr.dcproject.component.constitution.ConstitutionRef
+import fr.dcproject.component.constitution.database.ConstitutionRef
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI

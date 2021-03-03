@@ -3,7 +3,7 @@ package fr.dcproject.component.constitution.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.constitution.ConstitutionAccessControl
-import fr.dcproject.component.constitution.ConstitutionRepository
+import fr.dcproject.component.constitution.database.ConstitutionRepository
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.repository.RepositoryI

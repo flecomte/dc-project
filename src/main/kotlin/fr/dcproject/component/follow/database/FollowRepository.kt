@@ -1,18 +1,18 @@
-package fr.dcproject.component.follow
+package fr.dcproject.component.follow.database
 
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.constitution.ConstitutionRef
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.constitution.database.ConstitutionRef
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import java.util.UUID
-import fr.dcproject.component.constitution.Constitution as ConstitutionEntity
+import fr.dcproject.component.constitution.database.Constitution as ConstitutionEntity
 
 sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requester: Requester) : RepositoryI {
     open fun findByCitizen(

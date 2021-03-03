@@ -3,8 +3,8 @@ package fr.dcproject.component.workgroup.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
-import fr.dcproject.component.workgroup.WorkgroupRef
-import fr.dcproject.component.workgroup.WorkgroupRepository
+import fr.dcproject.component.workgroup.database.WorkgroupRef
+import fr.dcproject.component.workgroup.database.WorkgroupRepository
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI

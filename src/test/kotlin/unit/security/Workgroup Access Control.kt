@@ -2,15 +2,12 @@ package unit.security
 
 import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserCreator
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.citizen.CitizenCart
-import fr.dcproject.component.citizen.CitizenCreator
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.auth.database.UserCreator
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI
+import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI
 import org.amshove.kluent.`should be`
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -19,7 +16,7 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.component.workgroup.WorkgroupForView as WorkgroupEntity
+import fr.dcproject.component.workgroup.database.WorkgroupForView as WorkgroupEntity
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)

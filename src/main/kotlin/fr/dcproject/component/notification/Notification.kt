@@ -8,7 +8,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.dcproject.common.entity.Entity
-import fr.dcproject.component.article.ArticleForView
+import fr.dcproject.component.article.database.ArticleForView
 import org.joda.time.DateTime
 import java.util.concurrent.atomic.AtomicInteger
 

@@ -5,7 +5,9 @@ import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.comment.generic.database.CommentI
+import fr.dcproject.component.comment.generic.database.CommentWithParentI
 
 class CommentAccessControl : AccessControl() {
     fun <S> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse

@@ -1,12 +1,12 @@
 package integration.steps.given
 
 import fr.dcproject.common.utils.toUUID
-import fr.dcproject.component.article.ArticleRepository
-import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.component.citizen.CitizenRepository
-import fr.dcproject.component.vote.VoteArticleRepository
+import fr.dcproject.component.article.database.ArticleRepository
+import fr.dcproject.component.citizen.database.CitizenI.Name
+import fr.dcproject.component.citizen.database.CitizenRepository
+import fr.dcproject.component.vote.database.VoteArticleRepository
+import fr.dcproject.component.vote.database.VoteForUpdate
 import fr.dcproject.component.vote.entity.VoteAggregation
-import fr.dcproject.component.vote.entity.VoteForUpdate
 import io.ktor.server.testing.TestApplicationEngine
 import org.koin.core.context.GlobalContext
 import java.util.UUID

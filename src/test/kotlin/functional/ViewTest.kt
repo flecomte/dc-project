@@ -2,9 +2,9 @@ package functional
 
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
-import fr.dcproject.component.article.ArticleForView
 import fr.dcproject.component.article.ArticleViewManager
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.citizen.database.CitizenRef
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
 import io.ktor.util.KtorExperimentalAPI

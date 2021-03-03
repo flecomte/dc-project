@@ -1,17 +1,17 @@
-package fr.dcproject.component.citizen
+package fr.dcproject.component.citizen.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
-import fr.dcproject.component.auth.User
-import fr.dcproject.component.auth.UserCreator
-import fr.dcproject.component.auth.UserForCreate
-import fr.dcproject.component.auth.UserI
-import fr.dcproject.component.auth.UserRef
-import fr.dcproject.component.auth.UserWithUsername
-import fr.dcproject.component.citizen.CitizenI.Name
-import fr.dcproject.component.workgroup.WorkgroupRef
+import fr.dcproject.component.auth.database.User
+import fr.dcproject.component.auth.database.UserCreator
+import fr.dcproject.component.auth.database.UserForCreate
+import fr.dcproject.component.auth.database.UserI
+import fr.dcproject.component.auth.database.UserRef
+import fr.dcproject.component.auth.database.UserWithUsername
+import fr.dcproject.component.citizen.database.CitizenI.Name
+import fr.dcproject.component.workgroup.database.WorkgroupRef
 import fr.postgresjson.entity.Serializable
 import org.joda.time.DateTime
 import java.util.UUID

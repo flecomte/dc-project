@@ -2,6 +2,7 @@ package fr.dcproject.component.auth
 
 import fr.dcproject.application.Configuration
 import fr.dcproject.common.email.Mailer
+import fr.dcproject.component.auth.database.UserRepository
 import org.koin.dsl.module
 
 val authKoinModule = module {

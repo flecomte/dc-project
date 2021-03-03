@@ -1,4 +1,4 @@
-package fr.dcproject.component.comment.generic
+package fr.dcproject.component.comment.generic.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
@@ -9,7 +9,7 @@ import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.UpdatedAt
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
 import org.joda.time.DateTime

@@ -1,4 +1,4 @@
-package fr.dcproject.component.constitution
+package fr.dcproject.component.constitution.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.CreatedBy
@@ -7,11 +7,11 @@ import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.VersionableId
-import fr.dcproject.component.article.ArticleForListing
-import fr.dcproject.component.article.ArticleI
-import fr.dcproject.component.citizen.CitizenCreator
-import fr.dcproject.component.citizen.CitizenWithUserI
-import fr.dcproject.component.constitution.ConstitutionSimple.TitleSimple
+import fr.dcproject.component.article.database.ArticleForListing
+import fr.dcproject.component.article.database.ArticleI
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenWithUserI
+import fr.dcproject.component.constitution.database.ConstitutionSimple.TitleSimple
 import java.util.UUID
 
 class Constitution(

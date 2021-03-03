@@ -1,11 +1,11 @@
-package fr.dcproject.component.comment.generic
+package fr.dcproject.component.comment.generic.database
 
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI

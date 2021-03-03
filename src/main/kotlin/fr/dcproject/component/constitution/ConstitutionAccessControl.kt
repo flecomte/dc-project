@@ -4,7 +4,10 @@ import fr.dcproject.common.entity.CreatedBy
 import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.dcproject.component.citizen.CitizenI
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.constitution.database.ConstitutionRef
+import fr.dcproject.component.constitution.database.ConstitutionS
+import fr.dcproject.component.constitution.database.ConstitutionSimple
 
 class ConstitutionAccessControl : AccessControl() {
     fun canCreate(subject: ConstitutionS, citizen: CitizenI?): AccessResponse = when {

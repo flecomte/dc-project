@@ -1,9 +1,9 @@
 package fr.dcproject.component.comment.article.routes
 
 import fr.dcproject.common.security.assert
-import fr.dcproject.component.article.ArticleRef
+import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.comment.article.CommentArticleRepository
+import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI

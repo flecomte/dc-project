@@ -1,10 +1,10 @@
 package fr.dcproject.common.entity
 
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.comment.generic.CommentRef
-import fr.dcproject.component.constitution.ConstitutionRef
-import fr.dcproject.component.opinion.entity.OpinionRef
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.comment.generic.database.CommentRef
+import fr.dcproject.component.constitution.database.ConstitutionRef
+import fr.dcproject.component.opinion.database.OpinionRef
 import java.util.UUID
 import kotlin.reflect.KClass
 import kotlin.reflect.full.isSubclassOf

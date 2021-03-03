@@ -1,13 +1,13 @@
-package fr.dcproject.component.comment.article
+package fr.dcproject.component.comment.article.database
 
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.citizen.CitizenRef
-import fr.dcproject.component.comment.generic.CommentForView
-import fr.dcproject.component.comment.generic.CommentRepositoryAbs
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.comment.generic.database.CommentForView
+import fr.dcproject.component.comment.generic.database.CommentRepositoryAbs
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import java.util.UUID

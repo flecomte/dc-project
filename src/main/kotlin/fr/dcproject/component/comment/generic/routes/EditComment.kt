@@ -3,8 +3,8 @@ package fr.dcproject.component.comment.generic.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentAccessControl
-import fr.dcproject.component.comment.generic.CommentRef
-import fr.dcproject.component.comment.generic.CommentRepository
+import fr.dcproject.component.comment.generic.database.CommentRef
+import fr.dcproject.component.comment.generic.database.CommentRepository
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode

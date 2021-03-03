@@ -5,9 +5,9 @@ import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentAccessControl
-import fr.dcproject.component.comment.generic.CommentForUpdate
-import fr.dcproject.component.comment.generic.CommentRef
-import fr.dcproject.component.comment.generic.CommentRepository
+import fr.dcproject.component.comment.generic.database.CommentForUpdate
+import fr.dcproject.component.comment.generic.database.CommentRef
+import fr.dcproject.component.comment.generic.database.CommentRepository
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode

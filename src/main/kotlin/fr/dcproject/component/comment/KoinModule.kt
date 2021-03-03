@@ -1,9 +1,9 @@
 package fr.dcproject.component.comment
 
-import fr.dcproject.component.comment.article.CommentArticleRepository
-import fr.dcproject.component.comment.constitution.CommentConstitutionRepository
+import fr.dcproject.component.comment.article.database.CommentArticleRepository
+import fr.dcproject.component.comment.constitution.database.CommentConstitutionRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
-import fr.dcproject.component.comment.generic.CommentRepository
+import fr.dcproject.component.comment.generic.database.CommentRepository
 import org.koin.dsl.module
 
 val commentKoinModule = module {

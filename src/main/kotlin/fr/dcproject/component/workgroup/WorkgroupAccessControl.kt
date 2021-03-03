@@ -2,8 +2,10 @@ package fr.dcproject.component.workgroup
 
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
-import fr.dcproject.component.citizen.CitizenI
-import fr.dcproject.component.workgroup.WorkgroupWithMembersI.Member.Role
+import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.workgroup.database.WorkgroupI
+import fr.dcproject.component.workgroup.database.WorkgroupWithAuthI
+import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI.Member.Role
 
 class WorkgroupAccessControl : AccessControl() {
     fun canCreate(subject: WorkgroupI, citizen: CitizenI?): AccessResponse {

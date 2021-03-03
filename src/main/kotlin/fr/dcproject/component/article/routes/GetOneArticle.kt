@@ -4,10 +4,10 @@ import fr.dcproject.common.dto.CreatedAt
 import fr.dcproject.common.dto.Versionable
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
-import fr.dcproject.component.article.ArticleForView
-import fr.dcproject.component.article.ArticleRef
-import fr.dcproject.component.article.ArticleRepository
 import fr.dcproject.component.article.ArticleViewManager
+import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.opinion.dto.Opinionable
 import fr.dcproject.component.views.dto.Viewable

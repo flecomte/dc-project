@@ -7,9 +7,9 @@ import com.rabbitmq.client.Consumer
 import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
 import fr.dcproject.common.entity.TargetRef
-import fr.dcproject.component.follow.FollowArticleRepository
-import fr.dcproject.component.follow.FollowConstitutionRepository
-import fr.dcproject.component.follow.FollowForView
+import fr.dcproject.component.follow.database.FollowArticleRepository
+import fr.dcproject.component.follow.database.FollowConstitutionRepository
+import fr.dcproject.component.follow.database.FollowForView
 import io.ktor.utils.io.errors.IOException
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.async.RedisAsyncCommands

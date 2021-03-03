@@ -4,11 +4,11 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.constitution.ConstitutionRef
-import fr.dcproject.component.constitution.ConstitutionRepository
+import fr.dcproject.component.constitution.database.ConstitutionRef
+import fr.dcproject.component.constitution.database.ConstitutionRepository
 import fr.dcproject.component.vote.VoteAccessControl
-import fr.dcproject.component.vote.VoteConstitutionRepository
-import fr.dcproject.component.vote.entity.VoteForUpdate
+import fr.dcproject.component.vote.database.VoteConstitutionRepository
+import fr.dcproject.component.vote.database.VoteForUpdate
 import fr.dcproject.component.vote.routes.VoteConstitution.ConstitutionVoteRequest.Input
 import io.ktor.application.call
 import io.ktor.features.NotFoundException

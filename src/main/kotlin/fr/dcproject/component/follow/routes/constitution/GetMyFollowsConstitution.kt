@@ -2,9 +2,9 @@ package fr.dcproject.component.follow.routes.constitution
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.citizen.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
-import fr.dcproject.component.follow.FollowConstitutionRepository
+import fr.dcproject.component.follow.database.FollowConstitutionRepository
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location

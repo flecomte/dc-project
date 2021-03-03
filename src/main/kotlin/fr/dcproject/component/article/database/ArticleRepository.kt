@@ -1,4 +1,4 @@
-package fr.dcproject.component.article
+package fr.dcproject.component.article.database
 
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
