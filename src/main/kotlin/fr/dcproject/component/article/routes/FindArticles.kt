@@ -1,5 +1,6 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.common.dto.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForListing
@@ -44,7 +45,33 @@ object FindArticles {
         get<ArticlesRequest> {
             repo.findArticles(it)
                 .apply { ac.assert { canView(result, citizenOrNull) } }
-                .let { call.respond(it) }
+                .let {
+                    call.respond(
+                        it.toOutput {
+                            object {
+                                val id = it.id
+                                val title = it.title
+                                val createdBy = object {
+                                    val id = it.createdBy.id
+                                    val name = it.createdBy.name.let {
+                                        object {
+                                            val firstName = it.firstName
+                                            val lastName = it.lastName
+                                        }
+                                    }
+                                    val email = it.createdBy.email
+                                }
+                                val workgroup = it.workgroup?.let {
+                                    object {
+                                        val id = it.id
+                                        val name = it.name
+                                    }
+                                }
+                                val draft = it.draft
+                            }
+                        }
+                    )
+                }
         }
     }
 }

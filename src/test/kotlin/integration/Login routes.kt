@@ -1,8 +1,8 @@
 package integration
 
-import integration.steps.`And the response should not be null`
-import integration.steps.`Then the response should be`
-import integration.steps.`and should contains`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.`and should contains`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`authenticated as`

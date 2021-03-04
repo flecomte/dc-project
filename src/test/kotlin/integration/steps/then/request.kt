@@ -1,8 +1,9 @@
-package integration.steps
+package integration.steps.then
 
 import assert.assertGreaterThan
 import assert.assertLessThan
 import com.jayway.jsonpath.JsonPath
+import com.jayway.jsonpath.PathNotFoundException
 import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.TestApplicationCall
 import io.ktor.server.testing.TestApplicationResponse
@@ -12,8 +13,10 @@ import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should be`
 import org.amshove.kluent.`should not be null`
 import org.amshove.kluent.shouldContain
+import org.junit.jupiter.api.assertThrows
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 fun TestApplicationCall.`Then the response should be`(status: HttpStatusCode? = null, block: TestApplicationResponse.() -> Unit): TestApplicationCall = this.apply {
     if (status != null) {
@@ -59,6 +62,26 @@ inline fun <reified T> TestApplicationResponse.`And the response should contain`
         }.let {
             assertEquals<T?>(valueExpected, it ?: throw AssertionError("\"$path -> ${valueExpected}\" element not found on json response"))
         }
+    }
+}
+
+fun TestApplicationResponse.`And the response should not contain`(path: String) {
+    assertThrows<PathNotFoundException> {
+        JsonPath.read(content, path)
+    }
+}
+
+fun TestApplicationResponse.`And the response should contain pattern`(path: String, expectedRegex: String): Any {
+    return JsonPath.read<Any?>(content, path).also {
+        it.let {
+            if (it is JSONArray && it.count() == 1) {
+                it.first()
+            } else {
+                it
+            }
+        }?.let {
+            assertTrue(expectedRegex.toRegex().containsMatchIn(it.toString()))
+        } ?: throw AssertionError("\"$path -> element not found on json response")
     }
 }
 

@@ -1,18 +1,21 @@
 package integration
 
-import integration.steps.`And have property`
-import integration.steps.`And the response should not be null`
-import integration.steps.`Then the response should be`
+import integration.steps.then.`And have property`
+import integration.steps.then.`And the response should contain pattern`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
-import integration.steps.`whish contains`
-import integration.steps.and
+import integration.steps.then.`whish contains`
+import integration.steps.then.and
 import integration.steps.given.`Given I have article created by workgroup`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have articles`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should contain list`
+import integration.steps.then.`And the response should not contain`
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -28,6 +31,11 @@ class `Article routes` : BaseTest() {
             `Given I have articles`(3)
             `When I send a GET request`("/articles") `Then the response should be` OK and {
                 `And the response should not be null`()
+                `And the response should contain pattern`("$.result[0].created_by.name.first_name", "firstName.+")
+                `And the response should contain pattern`("$.result[1].created_by.name.first_name", "firstName.+")
+                `And the response should contain pattern`("$.result[2].created_by.name.first_name", "firstName.+")
+                `And the response should not contain`("$.result[3]")
+                `And the response should contain list`("$.result", 3, 3)
             }
         }
     }

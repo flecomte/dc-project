@@ -8,8 +8,8 @@ import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.Versionable
 import fr.dcproject.common.entity.VersionableId
-import fr.dcproject.component.citizen.database.CitizenCart
 import fr.dcproject.component.citizen.database.CitizenCartI
+import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.entity.Opinionable
@@ -78,7 +78,7 @@ class ArticleForUpdate(
 class ArticleForListing(
     id: UUID? = null,
     override val title: String,
-    override val createdBy: CitizenCart,
+    override val createdBy: CitizenCreator,
     override val workgroup: WorkgroupCart?,
     override val deletedAt: DateTime?,
     override val draft: Boolean

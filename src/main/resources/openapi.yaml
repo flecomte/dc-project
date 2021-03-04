@@ -243,7 +243,37 @@ paths:
                       result:
                         type: array
                         items:
-                          $ref: '#/components/schemas/ArticleResponse'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            title:
+                              type: string
+                            created_by:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: object
+                                  properties:
+                                    first_name:
+                                      type: string
+                                    last_name:
+                                      type: string
+                                email:
+                                  type: string
+                            workgroup:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: string
+                            draft:
+                              type: boolean
     post:
       security:
         - JWTAuth: []
