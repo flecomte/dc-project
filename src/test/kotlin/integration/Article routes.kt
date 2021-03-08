@@ -14,6 +14,7 @@ import integration.steps.given.`Given I have articles`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And schema must be valid`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should not contain`
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -36,6 +37,7 @@ class `Article routes` : BaseTest() {
                 `And the response should contain pattern`("$.result[2].created_by.name.first_name", "firstName.+")
                 `And the response should not contain`("$.result[3]")
                 `And the response should contain list`("$.result", 3, 3)
+                `And schema must be valid`()
             }
         }
     }

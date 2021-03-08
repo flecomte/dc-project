@@ -1,0 +1,188 @@
+openapi: 3.0.2
+info:
+  version: '0.1'
+  title: 'DC Project'
+  description: 'A free comunity program for create constitution'
+
+paths:
+  /articles:
+    get:
+      summary: Get all articles
+      tags:
+        - article
+      operationId: getArticles
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/articleSort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/createdBy'
+        - name: workgroup
+          in: query
+          description: ID of workgroup
+          example: 82a0e60a-bb55-dbc0-1c3d-0a804df2b5df
+          required: false
+          schema:
+            type: string
+            format: uuid
+      responses:
+        200:
+          description: The Article objects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            title:
+                              type: string
+                            created_by:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: object
+                                  properties:
+                                    first_name:
+                                      type: string
+                                    last_name:
+                                      type: string
+                                email:
+                                  type: string
+                            workgroup:
+                              type: object
+                              nullable: true
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: string
+                            draft:
+                              type: boolean
+
+components:
+  parameters:
+    page:
+      name: page
+      in: query
+      description: The current page
+      example: 1
+      required: false
+      schema:
+        default: 1
+        type: integer
+        minimum: 1
+    limit:
+      name: limit
+      in: query
+      description: The number of object per page
+      example: 50
+      required: false
+      schema:
+        default: 50
+        type: integer
+        minimum: 1
+        maximum: 50
+    sort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: first_name
+      required: false
+      schema:
+        type: string
+    articleSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - title
+          - createdAt
+          - vote
+          - popularity
+    direction:
+      name: direction
+      in: query
+      description: The sort direction
+      example: asc
+      required: false
+      schema:
+        type: string
+        default: asc
+        enum: [asc, desc]
+    search:
+      name: search
+      in: query
+      description: A text to seach
+      example: content50
+      required: false
+      schema:
+        type: string
+    createdBy:
+      name: createdBy
+      in: query
+      description: filter by Author
+      example: 4d673bfa-eaef-4290-b52f-85a9c8a7eba5
+      required: false
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    UUID:
+      type: string
+      pattern: '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
+      description: UUID
+      format: uuid
+      example:
+        e74be8e4-6823-47c4-bd1b-789725b2fa8e
+    UuidEntity:
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+    Paginated:
+      properties:
+        result:
+          type: array
+          items:
+            $ref: '#/components/schemas/UuidEntity'
+        count:
+          type: integer
+          minimum: 0
+          example: 1
+        currentPage:
+          type: integer
+          minimum: 0
+          example: 1
+        limit:
+          type: integer
+          minimum: 0
+          example: 50
+        offset:
+          type: integer
+          minimum: 0
+          example: 1
+        total:
+          type: integer
+          minimum: 0
+          example: 1
+servers:
+  - description: localhost
+    url: http://localhost:8080
+  - description: production
+    url: http://dc-project.fr

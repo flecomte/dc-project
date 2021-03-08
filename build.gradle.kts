@@ -347,4 +347,6 @@ dependencies {
     testImplementation("io.mockk:mockk-agent-jvm:1.10.6")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
     testImplementation("com.thedeanda:lorem:2.1")
+    testImplementation("org.openapi4j:openapi-operation-validator:1.0.6")
+    testImplementation("org.openapi4j:openapi-parser:1.0.6")
 }
