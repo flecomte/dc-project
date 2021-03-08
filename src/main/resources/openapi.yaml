@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
   version: '0.1'
   title: 'DC Project'
@@ -157,17 +157,18 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - old_password
+                - new_password
               properties:
                 old_password:
                   type: string
                   format: password
-                  required: true
                   example:
                     azerty
                 new_password:
                   type: string
                   format: password
-                  required: true
                   example:
                     qwerty
       responses:
@@ -762,6 +763,8 @@ paths:
     parameters:
       - $ref: '#/components/parameters/opinion'
     get:
+      security:
+        - {}
       summary: Get one opinion Choices
       tags:
         - opinion
@@ -923,6 +926,8 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - name
               properties:
                 id:
                   type: string
@@ -931,7 +936,6 @@ paths:
                 name:
                   type: string
                   example: Les partisants du RIC
-                  required: true
                 description:
                   type: string
                   example: Group formé pour la conception d'un RIC
@@ -1000,11 +1004,12 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - name
               properties:
                 name:
                   type: string
                   example: Les partisants du RIC
-                  required: true
                 description:
                   type: string
                   example: Group formé pour la conception d'un RIC
@@ -1314,7 +1319,6 @@ components:
       properties:
         last_version:
           type: boolean
-          required: false
           default: false
 
     Paginated:
@@ -1345,10 +1349,11 @@ components:
           example: 1
 
     UserBase:
+      required:
+        - username
       properties:
         username:
           type: string
-          required: true
           example:
             john-doe
     UserResponse:
@@ -1359,10 +1364,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserBase'
         - type: object
+          required:
+            - password
           properties:
             password:
               type: string
-              required: true
               example:
                 azerty
               format: password
@@ -1378,18 +1384,19 @@ components:
               $ref: '#/components/schemas/UserResponse'
     CitizenBase:
       type: object
+      required:
+        - first_name
+        - last_name
       properties:
         name:
           type: object
           properties:
             first_name:
               type: string
-              required: true
               example:
                 john
             last_name:
               type: string
-              required: true
               example:
                 Doe
         birthday:
@@ -1412,17 +1419,18 @@ components:
       $ref: '#/components/schemas/CitizenRequest'
 
     LoginRequest:
+      required:
+        - name
+        - password
       properties:
         name:
           type: string
           description: username
-          required: true
           example:
             john-doe
         password:
           type: string
           description: Pasword
-          required: true
           example:
             azerty
 
@@ -1430,41 +1438,41 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - title
+            - content
+            - description
+            - tags
+            - anonymous
+            - draft
           properties:
             title:
               type: string
-              required: true
               example:
                 Limit power of press
             content:
               type: string
-              required: true
               example:
                 Lorem upsum...
             description:
               type: string
-              required: true
               example:
                 I think is the bether choice
             tags:
               type: array
               items:
                 type: string
-              required: false
               default: []
               example: [power, press]
             anonymous:
               type: boolean
-              required: false
               default: true
             draft:
               type: boolean
-              required: false
               default: false
             workgroup:
               allOf:
                 - $ref: '#/components/schemas/UuidEntity'
-                - required: false
                 - default: null
         - $ref: '#/components/schemas/versionId'
     ArticleResponse:
@@ -1485,25 +1493,23 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - title
           properties:
             title:
               type: string
-              required: true
               example:
                 Constitution for the liberty
             titles:
               type: array
-              required: false
               default: []
               items:
                 $ref: '#/components/schemas/TitleBase'
             anonymous:
               type: boolean
-              required: false
               default: true
             draft:
               type: boolean
-              required: false
               default: false
         - $ref: '#/components/schemas/versionId'
     ConstitutionResponse:
@@ -1531,10 +1537,11 @@ components:
 
     TitleBase:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
-          required: true
           example:
             The liberties
         rank:
@@ -1582,10 +1589,11 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - content
           properties:
             content:
               type: string
-              required: true
               example:
                 Lorem ipsum...
     CommentRequest:
@@ -1599,14 +1607,15 @@ components:
         - $ref: '#/components/schemas/Extra'
         - $ref: '#/components/schemas/Votable'
         - type: object
+          required:
+            - parent_ids
+            - parent
           properties:
             parents_ids:
               type: array
-              required: false
               items:
                 $ref: '#/components/schemas/UUID'
             parent:
-              required: false
               allOf:
                 - $ref: '#/components/schemas/UUID'
 
@@ -1621,12 +1630,13 @@ components:
     VoteBase:
       allOf:
         - type: object
+          required:
+            - note
           properties:
             note:
               type: integer
               minimum: -1
               maximum: 1
-              required: true
     VoteRequest:
       allOf:
         - $ref: '#/components/schemas/VoteBase'
@@ -1688,6 +1698,8 @@ components:
       description: Opinion Choice
       allOf:
         - type: object
+          required:
+            - name
           properties:
             id:
               type: string
@@ -1697,7 +1709,6 @@ components:
               example: opinion1
             target:
               type: array
-              required: false
               nullable: true
               items:
                 type: string
@@ -1719,12 +1730,12 @@ components:
             target:
               type: object
               properties:
-                  id:
-                    type: string
-                    format: uuid
-                  reference:
-                    type: string
-                    example: article
+                id:
+                  type: string
+                  format: uuid
+                reference:
+                  type: string
+                  example: article
             choice:
               type: object
               allOf:
