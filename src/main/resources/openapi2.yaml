@@ -38,6 +38,7 @@ paths:
                     properties:
                       result:
                         type: array
+                        maxItems: 50
                         items:
                           properties:
                             id:
@@ -47,6 +48,7 @@ paths:
                               type: string
                             created_by:
                               type: object
+                              additionalProperties: false
                               properties:
                                 id:
                                   type: string
@@ -63,6 +65,7 @@ paths:
                             workgroup:
                               type: object
                               nullable: true
+                              additionalProperties: false
                               properties:
                                 id:
                                   type: string
@@ -71,6 +74,69 @@ paths:
                                   type: string
                             draft:
                               type: boolean
+  /articles/{article}:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get one article
+      tags:
+        - article
+      operationId: getArticle
+      responses:
+        200:
+          description: The Article objects
+          content:
+            application/json:
+              schema:
+                additionalProperties: false
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  title:
+                    type: string
+                  anonymous:
+                    type: boolean
+                  content:
+                    type: string
+                  description:
+                    type: string
+                  tags:
+                    type: array
+                    items:
+                      type: string
+                  draft:
+                    type: boolean
+                  last_version:
+                    type: boolean
+                  created_by:
+                    type: object
+                    additionalProperties: false
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: object
+                        properties:
+                          first_name:
+                            type: string
+                          last_name:
+                            type: string
+                      email:
+                        type: string
+                  workgroup:
+                    type: object
+                    nullable: true
+                    additionalProperties: false
+                    properties:
+                      id:
+                        type: string
+                        format: uuid
+                      name:
+                        type: string
 
 components:
   parameters:
@@ -143,6 +209,17 @@ components:
       schema:
         type: string
         format: uuid
+
+    article:
+      name: article
+      in: path
+      required: true
+      description: the ID of article
+      example: d91aa0cd-61d6-83cc-41bb-8d5656e130f7
+      schema:
+        type: string
+        format: uuid
+
   schemas:
     UUID:
       type: string
@@ -159,6 +236,7 @@ components:
       properties:
         result:
           type: array
+          maxItems: 50
           items:
             $ref: '#/components/schemas/UuidEntity'
         count:
@@ -172,6 +250,7 @@ components:
         limit:
           type: integer
           minimum: 0
+          maximum: 50
           example: 50
         offset:
           type: integer
@@ -181,6 +260,14 @@ components:
           type: integer
           minimum: 0
           example: 1
+
+  securitySchemes:
+    JWTAuth:
+      type: http
+      scheme: bearer
+      description: call /login to get token
+      bearerFormat: JWT
+
 servers:
   - description: localhost
     url: http://localhost:8080

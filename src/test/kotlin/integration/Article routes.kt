@@ -58,6 +58,18 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
+    fun `I can get article by id`() {
+        withIntegrationApplication {
+            `Given I have article`(id = "65cda9f3-8991-4420-8d41-1da9da72c9bb")
+            `When I send a GET request`("/articles/65cda9f3-8991-4420-8d41-1da9da72c9bb") `Then the response should be` OK and {
+                `And the response should not be null`()
+                `And have property`("$.id") `whish contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
+                `And schema must be valid`()
+            }
+        }
+    }
+
+    @Test
     fun `I can get versions of article by the id`() {
         withIntegrationApplication {
             `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
@@ -65,17 +77,6 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And have property`("$.total") `whish contains` 1
                 `And have property`("$.result[0].id") `whish contains` "13e6091c-8fed-4600-b079-a97a6b7a9800"
-            }
-        }
-    }
-
-    @Test
-    fun `I can get article by id`() {
-        withIntegrationApplication {
-            `Given I have article`(id = "65cda9f3-8991-4420-8d41-1da9da72c9bb")
-            `When I send a GET request`("/articles/65cda9f3-8991-4420-8d41-1da9da72c9bb") `Then the response should be` OK and {
-                `And the response should not be null`()
-                `And have property`("$.id") `whish contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
             }
         }
     }
