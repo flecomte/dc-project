@@ -52,6 +52,7 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And have property`("$.total") `whish contains` 1
                 `And have property`("$.result[0]workgroup.name") `whish contains` "Les papy"
+                `And schema must be valid`()
             }
         }
     }
