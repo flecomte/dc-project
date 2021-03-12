@@ -29,7 +29,7 @@ data class ArticleForView(
     val content: String,
     val description: String,
     val tags: List<String> = emptyList(),
-    override val createdBy: CitizenRef,
+    override val createdBy: CitizenCreator,
     override val versionNumber: Int = 0,
     override val versionId: UUID = UUID.randomUUID(),
     val workgroup: WorkgroupCart? = null,
@@ -37,7 +37,7 @@ data class ArticleForView(
     override val draft: Boolean = false,
     override val deletedAt: DateTime? = null
 ) : ArticleRef(id),
-    ArticleAuthI<CitizenRef>,
+    ArticleAuthI<CitizenCreator>,
     ArticleWithTitleI,
     Versionable,
     CreatedAt by CreatedAt.Imp(),
@@ -79,9 +79,10 @@ class ArticleForListing(
     id: UUID? = null,
     override val title: String,
     override val createdBy: CitizenCreator,
-    override val workgroup: WorkgroupCart?,
-    override val deletedAt: DateTime?,
-    override val draft: Boolean
+    override val workgroup: WorkgroupCart? = null,
+    override val deletedAt: DateTime? = null,
+    override val draft: Boolean = false,
+    val lastVersion: Boolean = false
 ) : ArticleForListingI,
     ArticleRef(id),
     ArticleAuthI<CitizenCartI>,

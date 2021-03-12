@@ -3,7 +3,9 @@ package functional
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.application.Configuration
 import fr.dcproject.component.article.database.ArticleForView
-import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.auth.database.UserCreator
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.Notification
 import fr.dcproject.component.notification.NotificationsPush
@@ -53,7 +55,11 @@ internal class NotificationsPushTest {
         every { redisClient.connect().async() } returns asyncCommand
 
         /* Citizen of notification */
-        val citizen = CitizenRef()
+        val citizen = CitizenCreator(
+            name = CitizenI.Name(firstName = "", lastName = ""),
+            email = "",
+            user = UserCreator(username = ""),
+        )
         /* Article is the target of the notification */
         val article = ArticleForView(
             content = "content..",

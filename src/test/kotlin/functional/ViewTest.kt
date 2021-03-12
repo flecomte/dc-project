@@ -4,6 +4,9 @@ import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
 import fr.dcproject.component.article.ArticleViewManager
 import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.auth.database.UserCreator
+import fr.dcproject.component.citizen.database.CitizenCreator
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRef
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
@@ -27,9 +30,13 @@ class ViewTest {
     @Test
     fun `test View Article`() {
         val article = ArticleForView(
-            id = UUID.randomUUID(),
             versionId = UUID.randomUUID(),
-            createdBy = CitizenRef(),
+            createdBy = CitizenCreator(
+                id = UUID.randomUUID(),
+                name = CitizenI.Name(firstName = "", lastName = ""),
+                email = "",
+                user = UserCreator(username = ""),
+            ),
             content = "",
             description = "",
             title = ""

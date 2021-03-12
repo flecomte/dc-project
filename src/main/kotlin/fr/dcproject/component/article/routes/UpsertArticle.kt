@@ -4,7 +4,6 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForUpdate
-import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.Input
 import fr.dcproject.component.auth.citizen
@@ -57,9 +56,16 @@ object UpsertArticle {
         post<UpsertArticleRequest> {
             val article = call.convertRequestToEntity()
             ac.assert { canUpsert(article, citizenOrNull) }
-            val newArticle: ArticleForView = repo.upsert(article) ?: error("Article not updated")
-            call.respond(newArticle)
-            publisher.publish(ArticleUpdateNotification(newArticle))
+            repo.upsert(article)?.let { a ->
+                call.respond(
+                    object {
+                        val id: UUID = a.id
+                        val versionId = a.versionId
+                        val versionNumber = a.versionNumber
+                    }
+                )
+                publisher.publish(ArticleUpdateNotification(a))
+            } ?: error("Article not updated")
         }
     }
 }

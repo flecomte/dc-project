@@ -7,7 +7,6 @@ import fr.dcproject.component.auth.database.User
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.auth.database.UserI
 import fr.dcproject.component.citizen.database.Citizen
-import fr.dcproject.component.citizen.database.CitizenCart
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.vote.VoteAccessControl
@@ -60,13 +59,13 @@ internal class `Vote Access Control` {
         followAnonymous = true
     )
 
-    private val einstein2 = CitizenCart(
+    private val einstein2 = CitizenCreator(
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
-        user = User(
+        user = UserCreator(
             username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
         ),
-        name = CitizenI.Name("Albert", "Einstein")
+        name = CitizenI.Name("Albert", "Einstein"),
+        email = "albert-einstein@email.com"
     )
 
     private val article1 = ArticleForView(

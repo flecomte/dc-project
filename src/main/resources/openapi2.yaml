@@ -1,6 +1,6 @@
 openapi: 3.0.2
 info:
-  version: '0.1'
+  version: ''
   title: 'DC Project'
   description: 'A free comunity program for create constitution'
 
@@ -46,7 +46,7 @@ paths:
                               format: uuid
                             title:
                               type: string
-                            created_by:
+                            createdBy:
                               type: object
                               additionalProperties: false
                               properties:
@@ -56,9 +56,9 @@ paths:
                                 name:
                                   type: object
                                   properties:
-                                    first_name:
+                                    firstName:
                                       type: string
-                                    last_name:
+                                    lastName:
                                       type: string
                                 email:
                                   type: string
@@ -74,6 +74,71 @@ paths:
                                   type: string
                             draft:
                               type: boolean
+    post:
+      security:
+        - JWTAuth: []
+      summary: Create new Article
+      tags:
+        - article
+      operationId: insertArticle
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - title
+                - content
+                - description
+                - tags
+                - anonymous
+                - draft
+              properties:
+                title:
+                  type: string
+                  example:
+                    Limit power of press
+                content:
+                  type: string
+                  example:
+                    Lorem upsum...
+                description:
+                  type: string
+                  example:
+                    I think is the bether choice
+                tags:
+                  type: array
+                  items:
+                    type: string
+                  default: [ ]
+                  example: [ power, press ]
+                anonymous:
+                  type: boolean
+                  default: true
+                draft:
+                  type: boolean
+                  default: false
+                workgroup:
+                  allOf:
+                    - $ref: '#/components/schemas/UuidEntity'
+                    - default: null
+      responses:
+        200:
+          description: Article created
+          content:
+            application/json:
+              schema:
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  versionId:
+                    type: string
+                    format: uuid
+                  versionNumber:
+                    type: integer
+        401:
+          $ref: '#/components/responses/401'
   /articles/{article}:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -90,53 +155,66 @@ paths:
           content:
             application/json:
               schema:
-                additionalProperties: false
-                properties:
-                  id:
-                    type: string
-                    format: uuid
-                  title:
-                    type: string
-                  anonymous:
-                    type: boolean
-                  content:
-                    type: string
-                  description:
-                    type: string
-                  tags:
-                    type: array
-                    items:
-                      type: string
-                  draft:
-                    type: boolean
-                  last_version:
-                    type: boolean
-                  created_by:
-                    type: object
-                    additionalProperties: false
+                $ref: '#/components/schemas/ArticleResponse'
+
+  /articles/{article}/versions:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    get:
+      summary: Get all versions of articles
+      tags:
+        - article
+      operationId: getArticleVersions
+      responses:
+        200:
+          description: The versions of Article
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
                     properties:
-                      id:
-                        type: string
-                        format: uuid
-                      name:
-                        type: object
-                        properties:
-                          first_name:
-                            type: string
-                          last_name:
-                            type: string
-                      email:
-                        type: string
-                  workgroup:
-                    type: object
-                    nullable: true
-                    additionalProperties: false
-                    properties:
-                      id:
-                        type: string
-                        format: uuid
-                      name:
-                        type: string
+                      result:
+                        type: array
+                        items:
+                          additionalProperties: false
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            title:
+                              type: string
+                            draft:
+                              type: boolean
+                            lastVersion:
+                              type: boolean
+                            createdBy:
+                              type: object
+                              additionalProperties: false
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: object
+                                  properties:
+                                    firstName:
+                                      type: string
+                                    lastName:
+                                      type: string
+                                email:
+                                  type: string
+                            workgroup:
+                              type: object
+                              nullable: true
+                              additionalProperties: false
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: string
 
 components:
   parameters:
@@ -165,7 +243,7 @@ components:
       name: sort
       in: query
       description: The sort field name
-      example: first_name
+      example: firstName
       required: false
       schema:
         type: string
@@ -220,6 +298,14 @@ components:
         type: string
         format: uuid
 
+  responses:
+    401:
+      description: Unautorized
+      content:
+        application/json:
+          schema:
+            description: noting
+
   schemas:
     UUID:
       type: string
@@ -260,6 +346,120 @@ components:
           type: integer
           minimum: 0
           example: 1
+    ArticleResponse:
+      additionalProperties: false
+      required:
+        - id
+        - versionId
+        - versionNumber
+        - title
+        - anonymous
+        - content
+        - description
+        - tags
+        - draft
+        - lastVersion
+        - createdBy
+        - views
+        - opinions
+        - votes
+      properties:
+        id:
+          type: string
+          format: uuid
+        versionId:
+          type: string
+          format: uuid
+        versionNumber:
+          type: integer
+          minimum: 0
+        title:
+          type: string
+        anonymous:
+          type: boolean
+        content:
+          type: string
+        description:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        draft:
+          type: boolean
+        lastVersion:
+          type: boolean
+        createdAt:
+          type: string
+          format: 'date-time'
+        createdBy:
+          type: object
+          additionalProperties: false
+          required:
+            - id
+            - name
+            - email
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: object
+              required:
+                - firstName
+                - lastName
+              properties:
+                firstName:
+                  type: string
+                lastName:
+                  type: string
+            email:
+              type: string
+        workgroup:
+          type: object
+          nullable: true
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+        views:
+          additionalProperties: false
+          required:
+            - total
+            - unique
+          properties:
+            total:
+              type: integer
+            unique:
+              type: integer
+        opinions:
+          additionalProperties:
+            type: integer
+          example:
+            'good writed': 5
+            'to short': 19
+        votes:
+          additionalProperties: false
+          required:
+            - up
+            - neutral
+            - down
+            - total
+            - score
+          properties:
+            up:
+              type: integer
+            neutral:
+              type: integer
+            down:
+              type: integer
+            total:
+              type: integer
+            score:
+              type: integer
 
   securitySchemes:
     JWTAuth:

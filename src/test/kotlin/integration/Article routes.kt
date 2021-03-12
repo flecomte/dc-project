@@ -32,9 +32,9 @@ class `Article routes` : BaseTest() {
             `Given I have articles`(3)
             `When I send a GET request`("/articles") `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And the response should contain pattern`("$.result[0].created_by.name.first_name", "firstName.+")
-                `And the response should contain pattern`("$.result[1].created_by.name.first_name", "firstName.+")
-                `And the response should contain pattern`("$.result[2].created_by.name.first_name", "firstName.+")
+                `And the response should contain pattern`("$.result[0].createdBy.name.firstName", "firstName.+")
+                `And the response should contain pattern`("$.result[1].createdBy.name.firstName", "firstName.+")
+                `And the response should contain pattern`("$.result[2].createdBy.name.firstName", "firstName.+")
                 `And the response should not contain`("$.result[3]")
                 `And the response should contain list`("$.result", 3, 3)
                 `And schema must be valid`()
@@ -77,6 +77,7 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And have property`("$.total") `whish contains` 1
                 `And have property`("$.result[0].id") `whish contains` "13e6091c-8fed-4600-b079-a97a6b7a9800"
+                `And schema must be valid`()
             }
         }
     }
@@ -89,7 +90,7 @@ class `Article routes` : BaseTest() {
                 `authenticated as`("John", "Doe")
                 """
                 {
-                  "version_id": "09c418b6-63ba-448b-b38b-502b41cd500e",
+                  "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
                   "title": "title2",
                   "anonymous": false,
                   "content": "content2",
@@ -101,8 +102,8 @@ class `Article routes` : BaseTest() {
                 """
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.version_id") `whish contains` "09c418b6-63ba-448b-b38b-502b41cd500e"
-                `And have property`("$.title") `whish contains` "title2"
+                `And have property`("$.versionId") `whish contains` "09c418b6-63ba-448b-b38b-502b41cd500e"
+                `And schema must be valid`()
             }
         }
     }

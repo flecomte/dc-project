@@ -13,10 +13,17 @@ begin
     into resource, total
     from (
         select
-            a.*,
-            find_citizen_by_id_with_user(a.created_by_id) as created_by,
-            find_workgroup_by_id(a.workgroup_id) as workgroup,
-            count_vote(a.id) as votes
+           a.id,
+           a.created_at,
+           find_citizen_by_id_with_user(a.created_by_id) as created_by,
+           find_workgroup_by_id(a.workgroup_id) as workgroup,
+           a.version_id,
+           a.version_number,
+           a.title,
+           a.deleted_at,
+           a.draft,
+           a.last_version,
+           count_vote(a.id) as votes
         from article as a
         where a.version_id = _version_id
         order by a.version_number desc

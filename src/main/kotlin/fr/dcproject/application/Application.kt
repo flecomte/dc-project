@@ -138,11 +138,11 @@ fun Application.module(env: Env = PROD) {
 
     install(ContentNegotiation) {
         jackson {
-            propertyNamingStrategy = PropertyNamingStrategies.SNAKE_CASE
+            propertyNamingStrategy = PropertyNamingStrategies.LOWER_CAMEL_CASE
 
             registerModule(JodaModule())
             disable(SerializationFeature.WRITE_DATES_AS_TIMESTAMPS)
-            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
+            configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, true)
             configure(SerializationFeature.INDENT_OUTPUT, true)
             setDefaultPrettyPrinter(
                 DefaultPrettyPrinter().apply {

@@ -8,7 +8,6 @@ import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.follow.database.FollowArticleRepository
 import fr.dcproject.component.follow.database.FollowForView
 import fr.dcproject.component.notification.ArticleUpdateNotification
@@ -108,7 +107,11 @@ class NotificationConsumerTest {
                     title = "MyTitle",
                     content = "myContent",
                     description = "myDescription",
-                    createdBy = CitizenRef()
+                    createdBy = CitizenCreator(
+                        name = CitizenI.Name(firstName = "", lastName = ""),
+                        email = "",
+                        user = UserCreator(username = ""),
+                    )
                 )
             )
         ).await()
