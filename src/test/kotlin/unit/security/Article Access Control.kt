@@ -48,6 +48,7 @@ internal class `Article Access Control` {
     private fun getRepo(article: ArticleForListing): ArticleRepo {
         return mockk {
             every { find(1, 1, any()) } returns Paginated(listOf(article), 0, 1, 1)
+            every { findVersionsByVersionId(1, 1, any()) } returns Paginated(listOf(article), 0, 1, 1)
         }
     }
 

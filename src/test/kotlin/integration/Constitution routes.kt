@@ -65,7 +65,7 @@ class `Constitution routes` : BaseTest() {
                 `authenticated as`("Henri", "Poincaré")
                 `with body`("""
                 {
-                   "version_id":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
+                   "versionId":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
                    "title":"Hello world!",
                    "anonymous":true,
                    "titles":[
@@ -78,7 +78,7 @@ class `Constitution routes` : BaseTest() {
                 """)
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.version_id") `whish contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
+                `And have property`("$.versionId") `whish contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
                 `And have property`("$.title") `whish contains` "Hello world!"
             }
         }
