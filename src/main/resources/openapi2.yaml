@@ -2,7 +2,7 @@ openapi: 3.0.2
 info:
   version: ''
   title: 'DC Project'
-  description: 'A free comunity program for create constitution'
+  description: 'A free community program for create constitution'
 
 paths:
   /articles:
@@ -91,8 +91,6 @@ paths:
                 - content
                 - description
                 - tags
-                - anonymous
-                - draft
               properties:
                 title:
                   type: string
@@ -156,7 +154,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
-
   /articles/{article}/versions:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -216,6 +213,49 @@ paths:
                                 name:
                                   type: string
 
+  /login:
+    post:
+      summary: sign in
+      tags:
+        - authentification
+      operationId: login
+      requestBody:
+        description: Login
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - username
+                - password
+              properties:
+                username:
+                  type: string
+                  description: username
+                  example:
+                    john-doe
+                password:
+                  type: string
+                  description: Pasword
+                  example:
+                    azerty
+      responses:
+        200:
+          description: return JWT
+          content:
+            text/plain:
+              schema:
+                type: string
+                format: byte
+                example:
+                  'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag'
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+                    example:
+                      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag'
 components:
   parameters:
     page:
