@@ -50,17 +50,26 @@ fun TestApplicationResponse.operation(route: String? = null, callback: Operation
     }
 }
 
-fun TestApplicationResponse.`And the schema must be valid`(route: String? = null, contentType: ContentType? = ContentType.Application.Json) {
-    operation(route) { api, uri ->
+fun TestApplicationResponse.`And the schema response body must be valid`(contentType: ContentType? = ContentType.Application.Json) {
+    operation { api, uri ->
         /* Validate Response */
         this.apply {
             val status = call.response.status()
+            val responseContent: JsonNode = if (content != null)
+                ObjectMapper().readTree(content)
+            else TextNode("")
+
             getResponse(status?.value?.toString() ?: error("HttpStatus not found"))
                 ?.getContentMediaType(contentType.toString())
                 ?.schema
-                ?.validate(api, ObjectMapper().readTree(content))
+                ?.validate(api, responseContent)
                 ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$this $uri".""")
         }
+    }
+}
+
+fun TestApplicationResponse.`And the schema parameters must be valid`() {
+    operation { api, uri ->
         /* Validate Request URL */
         this.apply {
             Url(call.request.uri).parameters.forEach { parameter: String, values: List<String> ->

@@ -30,7 +30,7 @@ services:
     build:
       context: docker/postgresql
     ports:
-      - 5433:5432
+      - 15432:5432
     environment:
       POSTGRES_PASSWORD: ${DB_NAME}
       POSTGRES_USER: ${DB_USER}

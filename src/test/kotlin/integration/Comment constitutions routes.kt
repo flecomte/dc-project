@@ -15,7 +15,6 @@ import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`authenticated as`
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
-import io.ktor.server.testing.setBody
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -51,9 +50,9 @@ class `Comment constitutions routes` : BaseTest() {
             `When I send a GET request`("/citizens/46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5/comments/constitutions") {
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And the response should contain`("$.current_page", 1)
+                `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
-                `And the response should contain`("$.result[0].created_by.id", "46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5")
+                `And the response should contain`("$.result[0].createdBy.id", "46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5")
                 `And the response should contain`("$.result[0].target.id", "34ddd50a-da00-4a90-a869-08baa2a121be")
                 `And the response should contain list`("$.result[*]", 1, 1)
             }

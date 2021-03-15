@@ -1,5 +1,6 @@
 package integration
 
+import integration.steps.`when`.Validate
 import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
@@ -67,8 +68,8 @@ class `Citizen routes` : BaseTest() {
                 `authenticated as`("Georges", "Charpak")
                 `with body`("""
                 {
-                  "old_password": "azerty",
-                  "new_password": "qwerty"
+                  "oldPassword": "azerty",
+                  "newPassword": "qwerty"
                 }
                 """)
             } `Then the response should be` Created
@@ -79,7 +80,7 @@ class `Citizen routes` : BaseTest() {
     fun `I cannot change my password if request is bad formated`() {
         withIntegrationApplication {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
-            `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change") {
+            `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change", Validate.RESPONSE_BODY) {
                 `authenticated as`("Louis", "Breguet")
                 `with body`("""
                 {

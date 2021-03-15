@@ -47,7 +47,7 @@ class `Follow articles routes` : BaseTest() {
                 `authenticated as`("Johannes", "Kepler")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And the response should contain`("$.current_page", 1)
+                `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
             }
         }

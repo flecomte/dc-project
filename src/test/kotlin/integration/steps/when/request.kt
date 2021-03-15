@@ -1,7 +1,9 @@
 package integration.steps.`when`
 
-import integration.steps.then.`And the schema must be valid`
+import fr.dcproject.common.BitMaskI
+import integration.steps.then.`And the schema parameters must be valid`
 import integration.steps.then.`And the schema request body must be valid`
+import integration.steps.then.`And the schema response body must be valid`
 import io.ktor.application.ApplicationCall
 import io.ktor.http.ContentType
 import io.ktor.http.HttpHeaders
@@ -11,7 +13,31 @@ import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.setBody
 
-fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: Boolean = true, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+enum class Validate(override val bit: Long) : BitMaskI {
+    REQUEST_BODY(1),
+    REQUEST_PARAM(2),
+    REQUEST(3),
+    RESPONSE_BODY(4),
+    ALL(7);
+}
+
+fun TestApplicationCall.valid(validate: Validate): TestApplicationCall {
+    if (Validate.RESPONSE_BODY in validate) {
+        response.`And the schema response body must be valid`()
+    }
+    if (Validate.REQUEST_PARAM in validate) {
+        response.`And the schema parameters must be valid`()
+    }
+    if (Validate.REQUEST_BODY in validate) {
+        requestBody?.let { body ->
+            response.`And the schema request body must be valid`(body)
+        }
+    }
+
+    return this
+}
+
+fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Get
         if (uri != null) {
@@ -19,17 +45,10 @@ fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, valid
         }
         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
         setup?.let { it() }
-    }.apply {
-        if (validate) {
-            response.`And the schema must be valid`()
-            requestBody?.let { body ->
-                response.`And the schema request body must be valid`(body)
-            }
-        }
-    }
+    }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, validate: Boolean = true, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Post
         if (uri != null) {
@@ -38,17 +57,10 @@ fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, vali
         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
         addHeader(HttpHeaders.Accept, ContentType.Application.Json.toString())
         setup?.let { it() }
-    }.apply {
-        if (validate) {
-            response.`And the schema must be valid`()
-            requestBody?.let { body ->
-                response.`And the schema request body must be valid`(body)
-            }
-        }
-    }
+    }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, validate: Boolean = true, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Put
         if (uri != null) {
@@ -56,17 +68,10 @@ fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, valid
         }
         addHeader(HttpHeaders.ContentType, ContentType.Application.Json.toString())
         setup?.let { it() }
-    }.apply {
-        if (validate) {
-            response.`And the schema must be valid`()
-            requestBody?.let { body ->
-                response.`And the schema request body must be valid`(body)
-            }
-        }
-    }
+    }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: Boolean = true, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Delete
         if (uri != null) {
@@ -76,14 +81,7 @@ fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, va
         setup?.let { it() }?.let {
             setBody(it.trimIndent())
         }
-    }.apply {
-        if (validate) {
-            response.`And the schema must be valid`()
-            requestBody?.let { body ->
-                response.`And the schema request body must be valid`(body)
-            }
-        }
-    }
+    }.valid(validate)
 }
 
 private val requestBodies: MutableMap<ApplicationCall, String> = mutableMapOf()

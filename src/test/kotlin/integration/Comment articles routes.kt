@@ -84,9 +84,9 @@ class `Comment articles routes` : BaseTest() {
             `When I send a GET request`("/citizens/292a20cc-4a60-489e-9866-a95d38ffaf47/comments/articles") {
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And the response should contain`("$.current_page", 1)
+                `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
-                `And the response should contain`("$.result[0]created_by.id", "292a20cc-4a60-489e-9866-a95d38ffaf47")
+                `And the response should contain`("$.result[0]createdBy.id", "292a20cc-4a60-489e-9866-a95d38ffaf47")
             }
         }
     }

@@ -1,12 +1,15 @@
 package integration
 
-import integration.steps.then.`Then the response should be`
+import integration.steps.`when`.Validate
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
-import io.ktor.http.HttpStatusCode
-import org.amshove.kluent.`should be null`
-import org.amshove.kluent.`should contain`
-import org.amshove.kluent.`should not be null`
+import integration.steps.then.`And the response should be null`
+import integration.steps.then.`And the response should contain pattern`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -21,7 +24,7 @@ class `Register routes` : BaseTest() {
             `When I send a POST request`("/register") {
                 `with body`("""
                 {
-                  "name": {"first_name":"George", "last_name":"MICHEL"},
+                  "name": {"firstName":"George", "lastName":"MICHEL"},
                   "birthday": "2001-01-01",
                   "user":{
                     "username": "george-junior",
@@ -30,10 +33,9 @@ class `Register routes` : BaseTest() {
                   "email": "george-junior@gmail.com"
                 }
                 """)
-            }.`Then the response should be`(HttpStatusCode.OK) {
-                content
-                    .`should not be null`()
-                    .`should contain`("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.")
+            } `Then the response should be` OK and {
+                `And the response should not be null`()
+                `And the response should contain pattern`("$.token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.")
             }
         }
     }
@@ -41,19 +43,19 @@ class `Register routes` : BaseTest() {
     @Test
     fun `I cannot register if no username was sent`() {
         withIntegrationApplication {
-            `When I send a POST request`("/register") {
+            `When I send a POST request`("/register", Validate.RESPONSE_BODY) {
                 `with body`("""
                 {
-                  "name": {"first_name":"George2", "last_name":"MICHEL2"},
+                  "name": {"firstName":"George2", "lastName":"MICHEL2"},
                   "birthday": "2001-01-01",
                   "user":{
-                    "username": "",
                     "password": ""
-                  }
+                  },
+                  "email": "george-junior@gmail.com"
                 }
                 """)
-            }.`Then the response should be`(HttpStatusCode.BadRequest) {
-                content.`should be null`()
+            } `Then the response should be` BadRequest and {
+                `And the response should be null`()
             }
         }
     }

@@ -256,6 +256,82 @@ paths:
                     type: string
                     example:
                       'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag'
+  /register:
+    post:
+      summary: Create account
+      tags:
+        - authentification
+      operationId: register
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - birthday
+                - email
+                - user
+              properties:
+                name:
+                  type: object
+                  required:
+                    - firstName
+                    - lastName
+                  properties:
+                    firstName:
+                      type: string
+                      example:
+                        john
+                    lastName:
+                      type: string
+                      example:
+                        Doe
+                birthday:
+                  type: string
+                  format: 'date'
+                  example: '1984-12-25'
+                email:
+                  type: string
+                  format: email
+                  example: my.email@dc-project.fr
+                user:
+                  type: object
+                  required:
+                    - username
+                    - password
+                  properties:
+                    username:
+                      type: string
+                      example:
+                        john-doe
+                    password:
+                      type: string
+                      example:
+                        azerty
+                      format: password
+
+      responses:
+        200:
+          description: User created and JWT returned
+          content:
+            text/plain:
+              example:
+                'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag'
+            application/json:
+              schema:
+                properties:
+                  token:
+                    type: string
+                    example:
+                      'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag'
+        400:
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                description: sdf
+
 components:
   parameters:
     page:

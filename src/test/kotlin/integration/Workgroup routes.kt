@@ -50,11 +50,11 @@ class `Workgroup routes` : BaseTest() {
                 `And the response should contain`("$.id", "ab469134-bf14-4856-b093-ae1aa990f977")
                 `And the response should contain`("$.name", "Les Mousquets")
                 `And the response should contain`(
-                    "$.members[*].citizen.name[?(@.first_name=='Stephen')].first_name",
+                    "$.members[*].citizen.name[?(@.firstName=='Stephen')].firstName",
                     "Stephen"
                 )
                 `And the response should contain`(
-                    "$.members[*].citizen.name[?(@.first_name=='Sadi')].first_name",
+                    "$.members[*].citizen.name[?(@.firstName=='Sadi')].firstName",
                     "Sadi"
                 )
             }

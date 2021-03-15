@@ -65,7 +65,7 @@ class `Vote routes` : BaseTest() {
             `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles") {
                 `authenticated as`("Carl", "Gauss")
             } `Then the response should be` OK and {
-                `And the response should contain`("$.current_page", 1)
+                `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.total", 1)
                 `And the response should contain`("$.result[0].note", 1)

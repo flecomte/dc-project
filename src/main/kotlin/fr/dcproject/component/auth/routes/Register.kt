@@ -11,10 +11,12 @@ import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRepository
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
+import io.ktor.http.ContentType
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.post
+import io.ktor.request.accept
 import io.ktor.response.respond
 import io.ktor.response.respondText
 import io.ktor.routing.Route
@@ -61,8 +63,17 @@ object Register {
         post<RegisterRequest> {
             try {
                 val citizen = call.receiveOrBadRequest<Input>().toCitizen()
-                val createdCitizen = citizenRepo.insertWithUser(citizen)?.user ?: throw BadRequestException("Bad request")
-                call.respondText(createdCitizen.makeToken())
+                citizenRepo.insertWithUser(citizen)?.user?.makeToken()?.let { token ->
+                    if (call.request.accept() == ContentType.Application.Json.toString()) {
+                        call.respond(
+                            object {
+                                val token: String = token
+                            }
+                        )
+                    } else {
+                        call.respondText(token)
+                    }
+                } ?: throw BadRequestException("Bad request")
             } catch (e: MissingKotlinParameterException) {
                 call.respond(HttpStatusCode.BadRequest)
             }
