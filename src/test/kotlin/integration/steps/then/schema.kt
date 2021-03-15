@@ -20,6 +20,7 @@ import org.openapi4j.schema.validator.ValidationData
 import org.openapi4j.schema.validator.v3.SchemaValidator
 import java.io.File
 import kotlin.test.assertTrue
+import kotlin.test.fail
 
 fun Schema.validate(api: OpenApi3, toValidate: JsonNode) {
     val validationContext: ValidationContext<OAI3> = ValidationContext(api.context)
@@ -32,19 +33,20 @@ fun Schema.validate(api: OpenApi3, toValidate: JsonNode) {
 }
 
 fun TestApplicationResponse.operation(route: String? = null, callback: Operation.(OpenApi3, String) -> Unit): Operation {
-    return OpenApi3Parser().parse(File("/openapi2.yaml".getResource().toURI()), true).let { api: OpenApi3 ->
-        val operation = call.request.httpMethod
+    val filePath = "/openapi2.yaml"
+    return OpenApi3Parser().parse(File(filePath.getResource().toURI()), true).let { api: OpenApi3 ->
+        val httpMethod = call.request.httpMethod
         val uri = route ?: "/" + Url(call.request.uri).encodedPath
         val path = api.paths
             .keys
             .firstOrNull { uri.matches(it.replace("""\{[^{}]+}""".toRegex(), "[^/]+").toRegex()) }
 
         api.getPath(path)
-            ?.getOperation(operation.value.toLowerCase())
+            ?.getOperation(httpMethod.value.toLowerCase())
             ?.apply {
                 this.callback(api, uri)
             }
-            ?: error("""No path found for "$operation $uri".""")
+            ?: fail("""No path found for "${httpMethod.value} $uri". (on file "$filePath")""")
     }
 }
 
@@ -57,7 +59,7 @@ fun TestApplicationResponse.`And the schema must be valid`(route: String? = null
                 ?.getContentMediaType(contentType.toString())
                 ?.schema
                 ?.validate(api, ObjectMapper().readTree(content))
-                ?: error("""No path found for "$this $uri" for status ${status.value} with media type "$contentType".""")
+                ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$this $uri".""")
         }
         /* Validate Request URL */
         this.apply {
@@ -65,7 +67,7 @@ fun TestApplicationResponse.`And the schema must be valid`(route: String? = null
                 getParametersIn(api.context, "query")
                     ?.firstOrNull { it.name == parameter }?.schema
                     ?.validate(api, TextNode(values.first()))
-                    ?: error("""No path found for "$this $uri" for status "$parameter".""")
+                    ?: error("""No parameter found ($parameter) for "$this $uri".""")
             }
         }
     }
