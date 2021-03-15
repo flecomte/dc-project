@@ -2,6 +2,7 @@ package integration
 
 import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`with body`
 import io.ktor.http.HttpStatusCode
 import org.amshove.kluent.`should be null`
 import org.amshove.kluent.`should contain`
@@ -18,7 +19,7 @@ class `Register routes` : BaseTest() {
     fun `I can register`() {
         withIntegrationApplication {
             `When I send a POST request`("/register") {
-                """
+                `with body`("""
                 {
                   "name": {"first_name":"George", "last_name":"MICHEL"},
                   "birthday": "2001-01-01",
@@ -28,7 +29,7 @@ class `Register routes` : BaseTest() {
                   },
                   "email": "george-junior@gmail.com"
                 }
-                """
+                """)
             }.`Then the response should be`(HttpStatusCode.OK) {
                 content
                     .`should not be null`()
@@ -41,7 +42,7 @@ class `Register routes` : BaseTest() {
     fun `I cannot register if no username was sent`() {
         withIntegrationApplication {
             `When I send a POST request`("/register") {
-                """
+                `with body`("""
                 {
                   "name": {"first_name":"George2", "last_name":"MICHEL2"},
                   "birthday": "2001-01-01",
@@ -50,7 +51,7 @@ class `Register routes` : BaseTest() {
                     "password": ""
                   }
                 }
-                """
+                """)
             }.`Then the response should be`(HttpStatusCode.BadRequest) {
                 content.`should be null`()
             }

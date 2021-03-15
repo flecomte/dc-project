@@ -5,6 +5,7 @@ import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
+import integration.steps.`when`.`with body`
 import integration.steps.then.`whish contains`
 import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
@@ -64,12 +65,12 @@ class `Citizen routes` : BaseTest() {
             `Given I have citizen`("Georges", "Charpak", id = "0c966522-4071-43e5-a3ca-cfff2557f2cf")
             `When I send a PUT request`("/citizens/0c966522-4071-43e5-a3ca-cfff2557f2cf/password/change") {
                 `authenticated as`("Georges", "Charpak")
-                """
+                `with body`("""
                 {
                   "old_password": "azerty",
                   "new_password": "qwerty"
                 }
-                """
+                """)
             } `Then the response should be` Created
         }
     }
@@ -80,12 +81,12 @@ class `Citizen routes` : BaseTest() {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
             `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change") {
                 `authenticated as`("Louis", "Breguet")
-                """
+                `with body`("""
                 {
                   "plup": "azerty",
                   "gloup": "qwerty"
                 }
-                """
+                """)
             } `Then the response should be` BadRequest
         }
     }

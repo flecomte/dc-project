@@ -7,6 +7,7 @@ import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`with body`
 import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have comment on constitution`
@@ -14,6 +15,7 @@ import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`authenticated as`
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.server.testing.setBody
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -29,11 +31,11 @@ class `Comment constitutions routes` : BaseTest() {
             `Given I have constitution`(id = "1707c287-a472-4a62-89f2-9e85030e915c")
             `When I send a POST request`("/constitutions/1707c287-a472-4a62-89f2-9e85030e915c/comments") {
                 `authenticated as`("Nicolas", "Copernic")
-                """
+                `with body`("""
                 {
                   "content": "Hello mister"
                 }
-                """
+                """)
             } `Then the response should be` Created and {
                 `And the response should not be null`()
             }

@@ -5,6 +5,7 @@ import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`with body`
 import integration.steps.then.`whish contains`
 import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
@@ -62,7 +63,7 @@ class `Constitution routes` : BaseTest() {
             `Given I have citizen`("Henri", "Poincaré")
             `When I send a POST request`("/constitutions") {
                 `authenticated as`("Henri", "Poincaré")
-                """
+                `with body`("""
                 {
                    "version_id":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
                    "title":"Hello world!",
@@ -74,7 +75,7 @@ class `Constitution routes` : BaseTest() {
                       }
                    ]
                 }
-                """
+                """)
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And have property`("$.version_id") `whish contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"

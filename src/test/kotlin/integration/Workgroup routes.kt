@@ -9,6 +9,7 @@ import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`When I send a PUT request`
+import integration.steps.`when`.`with body`
 import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have workgroup`
@@ -66,14 +67,14 @@ class `Workgroup routes` : BaseTest() {
             `Given I have citizen`("Werner", "Heisenberg")
             `When I send a POST request`("/workgroups") {
                 `authenticated as`("Werner", "Heisenberg")
-                """
+                `with body`("""
                 {
                     "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
                     "name":"Les Bouffons",
                     "description":"La vie est belle",
                     "anonymous":false
                 }
-                """
+                """)
             } `Then the response should be` Created and {
                 `And the response should contain`("$.id", "f496d86d-6654-4068-91ff-90e1dbcc5f38")
                 `And the response should contain`("$.name", "Les Bouffons")
@@ -128,7 +129,7 @@ class `Workgroup routes` : BaseTest() {
             `Given I have workgroup`("b0ea1922-3bc6-44e2-aa7c-40158998cfbb", createdBy = Name("Blaise", "Pascal"))
             `When I send a POST request`("/workgroups/b0ea1922-3bc6-44e2-aa7c-40158998cfbb/members") {
                 `authenticated as`("Blaise", "Pascal")
-                """
+                `with body`("""
                 [
                     {
                         "citizen": {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
@@ -139,7 +140,7 @@ class `Workgroup routes` : BaseTest() {
                         "roles": ["MASTER"]
                     }
                 ]
-                """
+                """)
             } `Then the response should be` Created
         }
     }
@@ -189,7 +190,7 @@ class `Workgroup routes` : BaseTest() {
             }
             `When I send a PUT request`("/workgroups/784fe6bc-7635-4ae2-b080-3a4743b998bf/members") {
                 `authenticated as`("Leon", "Foucault")
-                """
+                `with body`("""
                 [
                   {
                     "citizen": {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
@@ -200,7 +201,7 @@ class `Workgroup routes` : BaseTest() {
                     "roles": ["MASTER"]
                   }
                 ]
-                """
+                """)
             } `Then the response should be` OK and {
                 `And the response should contain list`("$", 2, 2)
                 `And the response should contain`("$.[0]citizen.id", "be3b0926-8628-4426-804a-75188a6eb315")
