@@ -11,6 +11,9 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import org.joda.time.DateTime
+import org.joda.time.format.ISODateTimeFormat
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object GetCurrentCitizen {
@@ -24,7 +27,25 @@ object GetCurrentCitizen {
                 call.respond(HttpStatusCode.Unauthorized)
             } else {
                 ac.assert { canView(currentUser, citizenOrNull) }
-                call.respond(citizen)
+                call.respond(
+                    object {
+                        val id: UUID = citizen.id
+                        val name: Any = citizen.name.let { n ->
+                            object {
+                                val firstName: String = n.firstName
+                                val lastName: String = n.lastName
+                            } 
+                        }
+                        val email: String = citizen.email
+                        val birthday: String = citizen.birthday.run {
+                            toString(ISODateTimeFormat.date())
+                        }
+                        val createdAt: DateTime = citizen.createdAt
+                        val user: Any = object {
+                            val username: String = citizen.user.username
+                        }
+                    }
+                )
             }
         }
     }

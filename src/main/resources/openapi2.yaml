@@ -418,6 +418,66 @@ paths:
         401:
           $ref: '#/components/responses/401'
 
+  /citizens/current:
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get Citizen
+      tags:
+        - citizen
+      operationId: getCurrentCitizen
+      responses:
+        200:
+          description: The Citizen object
+          content:
+            application/json:
+              schema:
+                type: object
+                required:
+                  - id
+                  - name
+                  - email
+                  - createdAt
+                properties:
+                  id:
+                    $ref: '#/components/schemas/UUID'
+                  name:
+                    type: object
+                    required:
+                      - firstName
+                      - lastName
+                    properties:
+                      firstName:
+                        type: string
+                        example:
+                          john
+                      lastName:
+                        type: string
+                        example:
+                          Doe
+                  email:
+                    type: string
+                    format: email
+                    example: my.email@dc-project.fr
+                  birthday:
+                    type: string
+                    format: 'date'
+                    example: '1984-12-25'
+                  createdAt:
+                    type: string
+                    format: 'date-time'
+                  user:
+                    type: object
+                    required:
+                      - username
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/UUID'
+                      username:
+                        type: string
+                        example:
+                          john-doe
+
 components:
   parameters:
     page:

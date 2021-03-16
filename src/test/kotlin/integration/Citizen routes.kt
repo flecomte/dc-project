@@ -35,7 +35,7 @@ class `Citizen routes` : BaseTest() {
     }
 
     @Test
-    fun `I can get specific Citizen informations`() {
+    fun `I can get specific Citizen information`() {
         withIntegrationApplication {
             `Given I have citizen`("Linus", "Pauling", id = "47a05c0f-7329-46c3-a7d0-325db37e9114")
             `When I send a GET request`("/citizens/47a05c0f-7329-46c3-a7d0-325db37e9114") {
@@ -48,7 +48,7 @@ class `Citizen routes` : BaseTest() {
     }
 
     @Test
-    fun `I can get my citizen informations when I was connected`() {
+    fun `I can get my citizen information when I was connected`() {
         withIntegrationApplication {
             `Given I have citizen`("Henri", "Becquerel", id = "47356809-c8ef-4649-8b99-1c5cb9886d38")
             `When I send a GET request`("/citizens/current") {
@@ -77,7 +77,7 @@ class `Citizen routes` : BaseTest() {
     }
 
     @Test
-    fun `I cannot change my password if request is bad formated`() {
+    fun `I cannot change my password if request is bad formatted`() {
         withIntegrationApplication {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
             `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change", Validate.RESPONSE_BODY) {
