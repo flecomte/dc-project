@@ -35,7 +35,7 @@ class CitizenRepository(override var requester: Requester) : RepositoryI {
         sort: String? = null,
         direction: RepositoryI.Direction? = null,
         search: String? = null
-    ): Paginated<CitizenCart> = requester
+    ): Paginated<CitizenCreator> = requester
         .getFunction("find_citizens")
         .select(
             page,

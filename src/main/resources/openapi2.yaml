@@ -362,6 +362,62 @@ paths:
         404:
           description: no user with this email
 
+  /citizens:
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get all citizens
+      tags:
+        - citizen
+      operationId: getCitizens
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+      responses:
+        200:
+          description: The Citizen objects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                            - id
+                            - name
+                            - email
+                          properties:
+                            id:
+                              $ref: '#/components/schemas/UUID'
+                            name:
+                              type: object
+                              required:
+                                - firstName
+                                - lastName
+                              properties:
+                                firstName:
+                                  type: string
+                                  example:
+                                    john
+                                lastName:
+                                  type: string
+                                  example:
+                                    Doe
+                            email:
+                              type: string
+                              format: email
+                              example: my.email@dc-project.fr
+        401:
+          $ref: '#/components/responses/401'
+
 components:
   parameters:
     page:

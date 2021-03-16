@@ -23,7 +23,7 @@ import org.junit.jupiter.api.TestInstance
 @Tags(Tag("integration"), Tag("citizen"))
 class `Citizen routes` : BaseTest() {
     @Test
-    fun `I can get Citizens informations`() {
+    fun `I can get Citizens information`() {
         withIntegrationApplication {
             `Given I have citizen`("Jean", "Perrin", id = "5267a5c6-af42-4a02-aa2b-6b71d2e43973")
             `When I send a GET request`("/citizens") {
