@@ -389,32 +389,7 @@ paths:
                       result:
                         type: array
                         items:
-                          type: object
-                          required:
-                            - id
-                            - name
-                            - email
-                          properties:
-                            id:
-                              $ref: '#/components/schemas/UUID'
-                            name:
-                              type: object
-                              required:
-                                - firstName
-                                - lastName
-                              properties:
-                                firstName:
-                                  type: string
-                                  example:
-                                    john
-                                lastName:
-                                  type: string
-                                  example:
-                                    Doe
-                            email:
-                              type: string
-                              format: email
-                              example: my.email@dc-project.fr
+                          $ref: '#/components/schemas/CitizenListResponse'
         401:
           $ref: '#/components/responses/401'
 
@@ -432,52 +407,29 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                required:
-                  - id
-                  - name
-                  - email
-                  - createdAt
-                properties:
-                  id:
-                    $ref: '#/components/schemas/UUID'
-                  name:
-                    type: object
-                    required:
-                      - firstName
-                      - lastName
-                    properties:
-                      firstName:
-                        type: string
-                        example:
-                          john
-                      lastName:
-                        type: string
-                        example:
-                          Doe
-                  email:
-                    type: string
-                    format: email
-                    example: my.email@dc-project.fr
-                  birthday:
-                    type: string
-                    format: 'date'
-                    example: '1984-12-25'
-                  createdAt:
-                    type: string
-                    format: 'date-time'
-                  user:
-                    type: object
-                    required:
-                      - username
-                    properties:
-                      id:
-                        $ref: '#/components/schemas/UUID'
-                      username:
-                        type: string
-                        example:
-                          john-doe
+                $ref: '#/components/schemas/CitizenResponse'
 
+  /citizens/{citizen}:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get Citizen
+      tags:
+        - citizen
+      operationId: getCitizen
+      responses:
+        200:
+          description: The Citizen object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CitizenResponse'
+        404:
+          description: Citizen not found
+        401:
+          $ref: '#/components/responses/401'
 components:
   parameters:
     page:
@@ -556,6 +508,16 @@ components:
       required: true
       description: the ID of article
       example: d91aa0cd-61d6-83cc-41bb-8d5656e130f7
+      schema:
+        type: string
+        format: uuid
+
+    citizen:
+      name: citizen
+      in: path
+      description: ID of citizen
+      example: 6434f4f9-f570-f22a-c134-8668350651ff
+      required: true
       schema:
         type: string
         format: uuid
@@ -723,6 +685,81 @@ components:
             score:
               type: integer
 
+    CitizenListResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: object
+          required:
+            - firstName
+            - lastName
+          properties:
+            firstName:
+              type: string
+              example:
+                john
+            lastName:
+              type: string
+              example:
+                Doe
+        email:
+          type: string
+          format: email
+          example: my.email@dc-project.fr
+    CitizenResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - name
+        - email
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: object
+          required:
+            - firstName
+            - lastName
+          properties:
+            firstName:
+              type: string
+              example:
+                john
+            lastName:
+              type: string
+              example:
+                Doe
+        email:
+          type: string
+          format: email
+          example: my.email@dc-project.fr
+        birthday:
+          type: string
+          format: 'date'
+          example: '1984-12-25'
+        createdAt:
+          type: string
+          format: 'date-time'
+        user:
+          type: object
+          required:
+            - username
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            username:
+              type: string
+              example:
+                john-doe
   securitySchemes:
     JWTAuth:
       type: http
