@@ -392,7 +392,6 @@ paths:
                           $ref: '#/components/schemas/CitizenListResponse'
         401:
           $ref: '#/components/responses/401'
-
   /citizens/current:
     get:
       security:
@@ -408,7 +407,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CitizenResponse'
-
   /citizens/{citizen}:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -430,6 +428,45 @@ paths:
           description: Citizen not found
         401:
           $ref: '#/components/responses/401'
+  /citizens/{citizen}/password/change:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    put:
+      security:
+        - JWTAuth: [ ]
+      summary: Change Citizen Password
+      tags:
+        - citizen
+      operationId: changePassword
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              required:
+                - oldPassword
+                - newPassword
+              properties:
+                oldPassword:
+                  type: string
+                  format: password
+                  example:
+                    azerty
+                newPassword:
+                  type: string
+                  format: password
+                  example:
+                    qwerty
+      responses:
+        201:
+          description: Password changed
+        400:
+          description: Bad request
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          description: Citizen not found
+
 components:
   parameters:
     page:
