@@ -59,11 +59,13 @@ fun TestApplicationResponse.`And the schema response body must be valid`(content
                 ObjectMapper().readTree(content)
             else TextNode("")
 
-            getResponse(status?.value?.toString() ?: error("HttpStatus not found"))
-                ?.getContentMediaType(contentType.toString())
-                ?.schema
-                ?.validate(api, responseContent)
-                ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$this $uri".""")
+            val response = getResponse(status?.value?.toString() ?: error("HttpStatus not found")) ?: fail("""No Status "${status.value}" found for "$this $uri".""")
+            val schema = response.getContentMediaType(contentType.toString())?.schema
+
+            if (content != null) {
+                schema?.validate(api, responseContent)
+                    ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$this $uri".""")
+            }
         }
     }
 }

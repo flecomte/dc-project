@@ -310,7 +310,6 @@ paths:
                       example:
                         azerty
                       format: password
-
       responses:
         200:
           description: User created and JWT returned
@@ -331,6 +330,37 @@ paths:
             application/json:
               schema:
                 description: sdf
+  /auth/passwordless:
+    post:
+      summary: Send a connexion link by email
+      description: Send a connexion link by email with the token required to the connexion
+      externalDocs:
+        description: Explanation of Passwordless auth
+        url: https://en.wikipedia.org/wiki/Passwordless_authentication
+      tags:
+        - authentification
+      operationId: passwordless
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: email to send the token
+                  example:
+                    my.email@dc-project.fr
+                url:
+                  type: string
+                  description: url tu redirect with the token
+                  example:
+                    http://dc-project.fr/auth/passwordless
+      responses:
+        204:
+          description: email send
+        404:
+          description: no user with this email
 
 components:
   parameters:
