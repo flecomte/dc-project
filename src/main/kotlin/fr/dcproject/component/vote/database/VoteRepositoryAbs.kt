@@ -4,8 +4,8 @@ import com.fasterxml.jackson.core.type.TypeReference
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.comment.generic.database.CommentForView
 import fr.dcproject.component.constitution.database.Constitution
 import fr.dcproject.component.vote.entity.VoteAggregation
@@ -86,31 +86,31 @@ class VoteArticleRepository(requester: Requester) : VoteRepositoryAbs<ArticleFor
         )
 }
 
-class VoteArticleCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<ArticleForView, CitizenRef>>(requester) {
+class VoteArticleCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<ArticleForView, CitizenCreatorI>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<VoteEntity<CommentForView<ArticleForView, CitizenRef>>> =
+    ): Paginated<VoteEntity<CommentForView<ArticleForView, CitizenCreatorI>>> =
         findByCitizen(
             citizen.id,
             "article",
-            object : TypeReference<List<VoteEntity<CommentForView<ArticleForView, CitizenRef>>>>() {},
+            object : TypeReference<List<VoteEntity<CommentForView<ArticleForView, CitizenCreatorI>>>>() {},
             page,
             limit
         )
 }
 
-class VoteCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<TargetRef, CitizenRef>>(requester) {
+class VoteCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentForView<TargetRef, CitizenCreatorI>>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<VoteEntity<CommentForView<TargetRef, CitizenRef>>> =
+    ): Paginated<VoteEntity<CommentForView<TargetRef, CitizenCreatorI>>> =
         findByCitizen(
             citizen.id,
             "article",
-            object : TypeReference<List<VoteEntity<CommentForView<TargetRef, CitizenRef>>>>() {},
+            object : TypeReference<List<VoteEntity<CommentForView<TargetRef, CitizenCreatorI>>>>() {},
             page,
             limit
         )

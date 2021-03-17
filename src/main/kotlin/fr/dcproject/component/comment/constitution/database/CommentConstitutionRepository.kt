@@ -2,8 +2,8 @@ package fr.dcproject.component.comment.constitution.database
 
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
+import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.generic.database.CommentForView
 import fr.dcproject.component.comment.generic.database.CommentRepositoryAbs
@@ -13,7 +13,7 @@ import fr.postgresjson.connexion.Requester
 import java.util.UUID
 
 class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs<ConstitutionRef>(requester) {
-    override fun findById(id: UUID): CommentForView<ConstitutionRef, CitizenRef>? {
+    override fun findById(id: UUID): CommentForView<ConstitutionRef, CitizenCreatorI>? {
         return requester
             .getFunction("find_comment_by_id")
             .selectOne(mapOf("id" to id))
@@ -23,7 +23,7 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
         citizen: CitizenI,
         page: Int,
         limit: Int
-    ): Paginated<CommentForView<ConstitutionRef, CitizenRef>> {
+    ): Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
                 .select(
@@ -40,7 +40,7 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
         page: Int,
         limit: Int,
         sort: CommentArticleRepository.Sort
-    ): Paginated<CommentForView<ConstitutionRef, CitizenRef>> {
+    ): Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_target")
                 .select(

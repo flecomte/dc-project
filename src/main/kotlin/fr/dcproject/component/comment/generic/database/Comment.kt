@@ -9,13 +9,14 @@ import fr.dcproject.common.entity.HasTarget
 import fr.dcproject.common.entity.TargetI
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.common.entity.UpdatedAt
-import fr.dcproject.component.citizen.database.CitizenRef
+import fr.dcproject.component.citizen.database.CitizenCreatorI
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.vote.entity.Votable
 import fr.dcproject.component.vote.entity.VotableImp
 import org.joda.time.DateTime
 import java.util.UUID
 
-class CommentForView<T : TargetI, C : CitizenRef>(
+class CommentForView<T : TargetI, C : CitizenCreatorI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: C,
     override val target: T,
@@ -44,7 +45,7 @@ class CommentForView<T : TargetI, C : CitizenRef>(
     )
 }
 
-open class CommentForUpdate<T : TargetI, C : CitizenRef>(
+open class CommentForUpdate<T : TargetI, C : CitizenI>(
     override val id: UUID = UUID.randomUUID(),
     override val createdBy: C,
     override val target: T,

@@ -470,6 +470,41 @@ paths:
   /articles/{article}/comments:
     parameters:
       - $ref: '#/components/parameters/article'
+    get:
+      summary: Get comments of one article
+      tags:
+        - comment
+        - article
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/search'
+        - name: sort
+          in: query
+          required: false
+          example:
+            - created_at
+            - votes
+          schema:
+            type: string
+            default: created_at
+            enum:
+              - created_at
+              - votes
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
     post:
       security:
         - JWTAuth: [ ]
