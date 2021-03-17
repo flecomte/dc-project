@@ -573,6 +573,33 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         401:
           $ref: '#/components/responses/401'
+  /citizens/{citizen}/comments/articles:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: all article comments for one citizen
+      tags:
+        - comment
+        - article
+        - citizen
+      responses:
+        200:
+          description: Comments
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
 
 components:
   parameters:
