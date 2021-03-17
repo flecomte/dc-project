@@ -74,12 +74,14 @@ object GetArticleComments {
                                 }
                             }
                         }
-                        val votes: Any = object {
-                            val up: Int = 0
-                            val neutral: Int = 0
-                            val down: Int = 0
-                            val total: Int = 0
-                            val score: Int = 0
+                        val votes: Any = comment.votes.let { v ->
+                            object {
+                                val up: Int = v.up
+                                val neutral: Int = v.neutral
+                                val down: Int = v.down
+                                val total: Int = v.total
+                                val score: Int = v.score
+                            }
                         }
                     }
                 }

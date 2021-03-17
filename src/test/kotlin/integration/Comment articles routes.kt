@@ -100,7 +100,9 @@ class `Comment articles routes` : BaseTest() {
             `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464") {
                 `authenticated as`("Hubert", "Reeves")
                 `with body`("""
-                Hello boy
+                {
+                  "content": "Hello boy"
+                }
                 """)
             } `Then the response should be` OK and {
                 `And the response should not be null`()

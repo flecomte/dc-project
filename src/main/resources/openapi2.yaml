@@ -493,7 +493,7 @@ paths:
               - votes
       responses:
         200:
-          description: Return Comment and children
+          description: Return paginated comments of article
           content:
             application/json:
               schema:
@@ -526,7 +526,7 @@ paths:
                     Lorem ipsum...
       responses:
         201:
-          description: Return Comment and children
+          description: Return created Comment
           content:
             application/json:
               schema:
@@ -542,11 +542,38 @@ paths:
         - comment
       responses:
         200:
-          description: Return Comment and children
+          description: Return Comment
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Edit existing comment
+      tags:
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example:
+                    Lorem ipsum...
+      responses:
+        200:
+          description: Return updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
+
 components:
   parameters:
     page:
