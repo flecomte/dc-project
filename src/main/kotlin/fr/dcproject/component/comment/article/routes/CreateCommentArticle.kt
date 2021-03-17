@@ -43,6 +43,7 @@ object CreateCommentArticle {
                     object {
                         val id: UUID = comment.id
                         val content: String = comment.content
+                        val childrenCount: Int = 0
                         val createdAt: DateTime = comment.createdAt
                         val parent: Any? = comment.parent?.let { p ->
                             object {
