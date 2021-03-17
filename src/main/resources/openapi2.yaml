@@ -621,6 +621,75 @@ paths:
                           $ref: '#/components/schemas/CommentResponse'
         401:
           $ref: '#/components/responses/401'
+  /citizens/{citizen}/comments/constitutions:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: all constitution comments for one citizen
+      tags:
+        - comment
+        - constitution
+        - citizen
+      responses:
+        200:
+          description: Comments
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
+  /constitutions/{constitution}/comments:
+    parameters:
+      - $ref: '#/components/parameters/constitution'
+    get:
+      summary: Get comment and children of one constitution
+      tags:
+        - comment
+        - constitution
+      responses:
+        200:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: Create Comment to constitution
+      tags:
+        - comment
+        - constitution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example:
+                    Lorem ipsum...
+      responses:
+        201:
+          description: Return created comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
 
 components:
   parameters:
@@ -720,6 +789,16 @@ components:
       description: The ID of comment
       example: 701dc504-db49-7e3a-2c0a-32542507ea57
       required: true
+      schema:
+        type: string
+        format: uuid
+
+    constitution:
+      name: constitution
+      in: path
+      required: true
+      description: the ID of constitution
+      example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
       schema:
         type: string
         format: uuid
