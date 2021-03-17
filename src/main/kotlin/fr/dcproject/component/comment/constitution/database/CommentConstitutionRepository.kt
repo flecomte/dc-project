@@ -2,6 +2,7 @@ package fr.dcproject.component.comment.constitution.database
 
 import fr.dcproject.common.entity.EntityI
 import fr.dcproject.common.entity.TargetI
+import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.comment.article.database.CommentArticleRepository
@@ -26,12 +27,13 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
     ): Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_citizen")
-                .select(
+                .select<CommentForView<ConstitutionRef, CitizenCreator>>(
                     page,
                     limit,
                     "created_by_id" to citizen.id,
                     "reference" to TargetI.getReference(ConstitutionRef::class)
                 )
+                as Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>>
         }
     }
 
@@ -43,12 +45,13 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
     ): Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_target")
-                .select(
+                .select<CommentForView<ConstitutionRef, CitizenCreator>>(
                     page,
                     limit,
                     "target_id" to target.id,
                     "sort" to sort.sql
                 )
+                as Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>>
         }
     }
 }
