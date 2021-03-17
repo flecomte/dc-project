@@ -467,6 +467,38 @@ paths:
         404:
           description: Citizen not found
 
+  /articles/{article}/comments:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    post:
+      security:
+        - JWTAuth: [ ]
+      summary: Create Comment to article
+      tags:
+        - comment
+        - article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example:
+                    Lorem ipsum...
+      responses:
+        201:
+          description: Return Comment and children
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        401:
+          $ref: '#/components/responses/401'
+
 components:
   parameters:
     page:
@@ -758,6 +790,7 @@ components:
         - name
         - email
         - createdAt
+        - user
       properties:
         id:
           $ref: '#/components/schemas/UUID'
@@ -791,12 +824,98 @@ components:
           required:
             - username
           properties:
-            id:
-              $ref: '#/components/schemas/UUID'
             username:
               type: string
               example:
                 john-doe
+    CitizenCreator:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - name
+        - user
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        name:
+          type: object
+          required:
+            - firstName
+            - lastName
+          properties:
+            firstName:
+              type: string
+              example:
+                john
+            lastName:
+              type: string
+              example:
+                Doe
+        user:
+          type: object
+          required:
+            - username
+          properties:
+            username:
+              type: string
+              example:
+                john-doe
+
+    CommentResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - content
+        - parent
+        - createdAt
+        - createdBy
+        - votes
+        - target
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        content:
+          type: string
+          example:
+            Lorem ipsum...
+        parent:
+          nullable: true
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            reference:
+              type: string
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        createdAt:
+          type: string
+          format: 'date-time'
+        target:
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            reference:
+              type: string
+        votes:
+          properties:
+            up:
+              type: number
+              minimum: 0
+            neutral:
+              type: number
+              minimum: 0
+            down:
+              type: number
+              minimum: 0
+            total:
+              type: number
+              minimum: 0
+            score:
+              type: number
+
   securitySchemes:
     JWTAuth:
       type: http
