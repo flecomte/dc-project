@@ -573,6 +573,27 @@ paths:
                 $ref: '#/components/schemas/CommentResponse'
         401:
           $ref: '#/components/responses/401'
+  /comments/{comment}/children:
+    parameters:
+      - $ref: '#/components/parameters/comment'
+    get:
+      summary: Get Comment children by Comment ID
+      tags:
+        - comment
+      responses:
+        200:
+          description: Return Comment children
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
   /citizens/{citizen}/comments/articles:
     parameters:
       - $ref: '#/components/parameters/citizen'
