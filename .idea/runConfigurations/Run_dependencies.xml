@@ -12,6 +12,11 @@
           </list>
         </option>
         <option name="commandLineOptions" value="--build" />
+        <option name="secondarySourceFiles">
+          <list>
+            <option value="docker-compose-sonar.yml" />
+          </list>
+        </option>
         <option name="services">
           <list>
             <option value="db" />

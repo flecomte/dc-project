@@ -1,9 +1,0 @@
-<component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Check" type="CompoundRunConfigurationType">
-    <toRun name="Pitest" type="GradleRunConfiguration" />
-    <toRun name="Lint Format" type="GradleRunConfiguration" />
-    <toRun name="All Tests" type="JUnit" />
-    <toRun name="Test All SQL" type="ShConfigurationType" />
-    <method v="2" />
-  </configuration>
-</component>
