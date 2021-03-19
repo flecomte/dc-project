@@ -16,6 +16,7 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object FindArticles {
@@ -51,15 +52,21 @@ object FindArticles {
                             object {
                                 val id = it.id
                                 val title = it.title
-                                val createdBy = object {
-                                    val id = it.createdBy.id
-                                    val name = it.createdBy.name.let {
-                                        object {
-                                            val firstName = it.firstName
-                                            val lastName = it.lastName
+                                val createdBy: Any = it.createdBy.let { c ->
+                                    object {
+                                        val id: UUID = c.id
+                                        val name: Any = c.name.let { n ->
+                                            object {
+                                                val firstName: String = n.firstName
+                                                val lastName: String = n.lastName
+                                            }
+                                        }
+                                        val user: Any = c.user.let { u ->
+                                            object {
+                                                val username: String = u.username
+                                            }
                                         }
                                     }
-                                    val email = it.createdBy.email
                                 }
                                 val workgroup = it.workgroup?.let {
                                     object {

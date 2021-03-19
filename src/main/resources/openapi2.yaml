@@ -40,6 +40,12 @@ paths:
                         type: array
                         maxItems: 50
                         items:
+                          required:
+                            - id
+                            - title
+                            - createdBy
+                            - workgroup
+                            - draft
                           properties:
                             id:
                               type: string
@@ -47,21 +53,7 @@ paths:
                             title:
                               type: string
                             createdBy:
-                              type: object
-                              additionalProperties: false
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                name:
-                                  type: object
-                                  properties:
-                                    firstName:
-                                      type: string
-                                    lastName:
-                                      type: string
-                                email:
-                                  type: string
+                              $ref: '#/components/schemas/CitizenCreator'
                             workgroup:
                               type: object
                               nullable: true
@@ -117,9 +109,13 @@ paths:
                   type: boolean
                   default: false
                 workgroup:
-                  allOf:
-                    - $ref: '#/components/schemas/UuidEntity'
-                    - default: null
+                  default: null
+                  additionalProperties: false
+                  required:
+                    - id
+                  properties:
+                    id:
+                      $ref: "#/components/schemas/UUID"
       responses:
         200:
           description: Article created
