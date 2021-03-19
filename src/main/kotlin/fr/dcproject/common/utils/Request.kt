@@ -1,5 +1,6 @@
 package fr.dcproject.common.utils
 
+import com.fasterxml.jackson.databind.exc.UnrecognizedPropertyException
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
 import io.ktor.application.ApplicationCall
 import io.ktor.application.log
@@ -17,7 +18,10 @@ public suspend inline fun <reified T : Any> ApplicationCall.receiveOrBadRequest(
     return try {
         receive<T>(typeOf<T>())
     } catch (cause: MissingKotlinParameterException) {
-        application.log.debug("Conversion failed, throw bad exeption", cause)
+        application.log.debug("Conversion failed, throw bad exception", cause)
+        throw BadRequestException(message, cause)
+    } catch (cause: UnrecognizedPropertyException) {
+        application.log.debug("Conversion failed, throw bad exception", cause)
         throw BadRequestException(message, cause)
     }
 }
