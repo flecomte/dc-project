@@ -820,12 +820,23 @@ components:
         id:
           $ref: '#/components/schemas/UUID'
     Paginated:
+      required:
+        - total
+        - count
+        - currentPage
+        - limit
+        - offset
+        - result
       properties:
         result:
           type: array
           maxItems: 50
           items:
-            $ref: '#/components/schemas/UuidEntity'
+            required:
+              - id
+            properties:
+              id:
+                $ref: '#/components/schemas/UUID'
         count:
           type: integer
           minimum: 0
