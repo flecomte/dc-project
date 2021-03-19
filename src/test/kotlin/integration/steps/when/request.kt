@@ -16,12 +16,15 @@ import io.ktor.server.testing.setBody
 enum class Validate(override val bit: Long) : BitMaskI {
     REQUEST_BODY(1),
     REQUEST_PARAM(2),
-    REQUEST(3),
-    RESPONSE_BODY(4),
-    ALL(7);
+    REQUEST_HEADER(4),
+    REQUEST(1 + 2 + 4),
+    RESPONSE_BODY(8),
+    RESPONSE_HEADER(16),
+    RESPONSE(8 + 16),
+    ALL((1 + 2 + 4) + (8 + 16));
 }
 
-fun TestApplicationCall.valid(validate: Validate): TestApplicationCall {
+fun TestApplicationCall.valid(validate: BitMaskI): TestApplicationCall {
     if (Validate.RESPONSE_BODY in validate) {
         response.`And the schema response body must be valid`()
     }
@@ -48,7 +51,7 @@ fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, valid
     }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Post
         if (uri != null) {
@@ -60,7 +63,7 @@ fun TestApplicationEngine.`When I send a POST request`(uri: String? = null, vali
     }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Put
         if (uri != null) {

@@ -80,7 +80,7 @@ class `Citizen routes` : BaseTest() {
     fun `I cannot change my password if request is bad formatted`() {
         withIntegrationApplication {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
-            `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change", Validate.RESPONSE_BODY) {
+            `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change", Validate.ALL - Validate.RESPONSE_BODY) {
                 `authenticated as`("Louis", "Breguet")
                 `with body`("""
                 {
