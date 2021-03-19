@@ -1,6 +1,5 @@
 package fr.dcproject.component.constitution.routes
 
-import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.article.database.ArticleRef
@@ -9,12 +8,13 @@ import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.database.Citizen
 import fr.dcproject.component.citizen.database.CitizenWithUserI
 import fr.dcproject.component.constitution.ConstitutionAccessControl
+import fr.dcproject.component.constitution.database.ConstitutionForUpdate
+import fr.dcproject.component.constitution.database.ConstitutionForUpdate.TitleForUpdate
 import fr.dcproject.component.constitution.database.ConstitutionRepository
-import fr.dcproject.component.constitution.database.ConstitutionSimple
-import fr.dcproject.component.constitution.database.ConstitutionSimple.TitleSimple
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input.Title
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.post
@@ -27,30 +27,25 @@ object CreateConstitution {
     @Location("/constitutions")
     class PostConstitutionRequest {
         class Input(
-            var title: String,
-            var anonymous: Boolean = true,
-            var titles: MutableList<Title> = mutableListOf(),
-            var draft: Boolean = false,
-            var lastVersion: Boolean = false,
-            var versionId: UUID = UUID.randomUUID()
+            val title: String,
+            val anonymous: Boolean = true,
+            val titles: MutableList<Title> = mutableListOf(),
+            val draft: Boolean = false,
+            val versionId: UUID = UUID.randomUUID()
         ) {
-            init {
-                titles.forEachIndexed { index, title ->
-                    title.rank = index
-                }
-            }
 
             class Title(
-                id: UUID = UUID.randomUUID(),
-                var name: String,
-                var rank: Int? = null,
-                var articles: MutableList<ArticleRef> = mutableListOf()
-            ) : Entity(id)
+                val id: UUID = UUID.randomUUID(),
+                val name: String,
+                val articles: List<ArticleRef> = listOf()
+            ) {
+                class ArticleRef(val id: UUID)
+            }
         }
     }
 
     private fun getNewConstitution(input: Input, citizen: Citizen) = input.run {
-        ConstitutionSimple<CitizenWithUserI, TitleSimple<ArticleRef>>(
+        ConstitutionForUpdate<CitizenWithUserI, TitleForUpdate<ArticleRef>>(
             id = UUID.randomUUID(),
             title = title,
             titles = titles.create(),
@@ -59,23 +54,64 @@ object CreateConstitution {
         )
     }
 
-    private fun List<Title>.create(): MutableList<TitleSimple<ArticleRef>> =
+    private fun List<Title>.create(): MutableList<TitleForUpdate<ArticleRef>> =
         map { it.create() }.toMutableList()
 
-    private fun Title.create(): TitleSimple<ArticleRef> =
-        TitleSimple(
+    private fun Title.create(): TitleForUpdate<ArticleRef> =
+        TitleForUpdate(
             id,
             name,
-            rank,
-            articles
+            articles.map { ArticleRef(it.id) }
         )
 
     fun Route.createConstitution(repo: ConstitutionRepository, ac: ConstitutionAccessControl) {
         post<PostConstitutionRequest> {
             getNewConstitution(call.receiveOrBadRequest(), citizen).let {
                 ac.assert { canCreate(it, citizenOrNull) }
-                repo.upsert(it)
-                call.respond(it)
+                val c = repo.upsert(it) ?: error("Unable to create Constitution")
+                call.respond(
+                    HttpStatusCode.Created,
+                    object {
+                        val id: UUID = c.id
+                        val title: String = c.title
+                        val titles: List<Any> = c.titles.map { t ->
+                            object {
+                                val id: UUID = t.id
+                                val name: String = t.name
+                                val rank: Int = t.rank
+                                val articles: List<Any> = t.articles.map { a ->
+                                    val id = a.id
+                                    val title = a.title
+                                    val createdBy = a.createdBy.let { cr ->
+                                        object {
+                                            val id: UUID = cr.id
+                                            val name: Any = cr.name.let { n ->
+                                                object {
+                                                    val firstName: String = n.firstName
+                                                    val lastName: String = n.lastName
+                                                }
+                                            }
+                                            val user: Any = cr.user.let { u ->
+                                                object {
+                                                    val username: String = u.username
+                                                }
+                                            }
+                                        }
+                                    }
+                                    val workgroup: Any? = a.workgroup?.let { w ->
+                                        object {
+                                            val id = w.id
+                                            val name = w.name
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        val anonymous: Boolean = c.anonymous
+                        val draft: Boolean = c.draft
+                        val versionId: UUID = c.versionId
+                    }
+                )
             }
         }
     }

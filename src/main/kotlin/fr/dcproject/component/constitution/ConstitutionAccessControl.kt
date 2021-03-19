@@ -5,20 +5,20 @@ import fr.dcproject.common.entity.DeletedAt
 import fr.dcproject.common.security.AccessControl
 import fr.dcproject.common.security.AccessResponse
 import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.constitution.database.ConstitutionForListing
+import fr.dcproject.component.constitution.database.ConstitutionI
 import fr.dcproject.component.constitution.database.ConstitutionRef
-import fr.dcproject.component.constitution.database.ConstitutionS
-import fr.dcproject.component.constitution.database.ConstitutionSimple
 
 class ConstitutionAccessControl : AccessControl() {
-    fun canCreate(subject: ConstitutionS, citizen: CitizenI?): AccessResponse = when {
+    fun canCreate(subject: ConstitutionI, citizen: CitizenI?): AccessResponse = when {
         citizen == null -> denied("You must be connected to create constitution", "constitution.create.notConnected")
         else -> granted()
     }
 
-    fun <S : ConstitutionSimple<*, *>> canView(subjects: List<S>, citizen: CitizenI?): AccessResponse =
+    fun canView(subjects: List<ConstitutionForListing>, citizen: CitizenI?): AccessResponse =
         canAll(subjects) { canView(it, citizen) }
 
-    fun <S> canView(subject: S, citizen: CitizenI?): AccessResponse where S : DeletedAt, S : ConstitutionS = when {
+    fun <S> canView(subject: S, citizen: CitizenI?): AccessResponse where S : DeletedAt, S : ConstitutionI = when {
         subject.isDeleted() -> denied("You cannot view a deleted constitution", "constitution.view.deleted")
         else -> granted()
     }

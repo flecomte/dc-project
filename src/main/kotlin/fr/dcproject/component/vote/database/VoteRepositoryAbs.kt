@@ -7,7 +7,7 @@ import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.comment.generic.database.CommentForView
-import fr.dcproject.component.constitution.database.Constitution
+import fr.dcproject.component.constitution.database.ConstitutionForView
 import fr.dcproject.component.vote.entity.VoteAggregation
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
@@ -116,16 +116,16 @@ class VoteCommentRepository(requester: Requester) : VoteRepositoryAbs<CommentFor
         )
 }
 
-class VoteConstitutionRepository(requester: Requester) : VoteRepositoryAbs<Constitution>(requester) {
+class VoteConstitutionRepository(requester: Requester) : VoteRepositoryAbs<ConstitutionForView>(requester) {
     fun findByCitizen(
         citizen: CitizenEntity,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<VoteEntity<Constitution>> =
+    ): Paginated<VoteEntity<ConstitutionForView>> =
         findByCitizen(
             citizen.id,
             "constitution",
-            object : TypeReference<List<VoteEntity<Constitution>>>() {},
+            object : TypeReference<List<VoteEntity<ConstitutionForView>>>() {},
             page,
             limit
         )

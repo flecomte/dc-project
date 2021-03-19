@@ -15,7 +15,6 @@ begin
         select
             c.*,
             find_citizen_by_id_with_user(c.created_by_id) as created_by,
-            find_constitution_titles_by_id(c.id) as titles,
             zdb.score(c.ctid) _score
         from constitution as c
         where _search is null or _search = '' or c ==> dsl.multi_match('{title^3, intro}', _search)
