@@ -43,7 +43,7 @@ class `Register routes` : BaseTest() {
     @Test
     fun `I cannot register if no username was sent`() {
         withIntegrationApplication {
-            `When I send a POST request`("/register", Validate.ALL - Validate.RESPONSE_BODY) {
+            `When I send a POST request`("/register", Validate.ALL - Validate.REQUEST_BODY) {
                 `with body`("""
                 {
                   "name": {"firstName":"George2", "lastName":"MICHEL2"},
