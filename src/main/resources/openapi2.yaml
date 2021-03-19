@@ -815,10 +815,6 @@ components:
       format: uuid
       example:
         e74be8e4-6823-47c4-bd1b-789725b2fa8e
-    UuidEntity:
-      properties:
-        id:
-          $ref: '#/components/schemas/UUID'
     Paginated:
       required:
         - total
