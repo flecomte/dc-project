@@ -1112,6 +1112,9 @@ components:
         createdAt:
           type: string
           format: 'date-time'
+        updatedAt:
+          type: string
+          format: 'date-time'
         target:
           additionalProperties: false
           properties:

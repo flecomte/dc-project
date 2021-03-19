@@ -46,6 +46,7 @@ object GetArticleComments {
                         val content: String = comment.content
                         val childrenCount: Int = comment.childrenCount ?: 0
                         val createdAt: DateTime = comment.createdAt
+                        val updatedAt: DateTime = comment.updatedAt
                         val parent: Any? = comment.parent?.let { p ->
                             object {
                                 val id: UUID = p.id
