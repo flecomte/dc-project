@@ -40,32 +40,7 @@ paths:
                         type: array
                         maxItems: 50
                         items:
-                          required:
-                            - id
-                            - title
-                            - createdBy
-                            - workgroup
-                            - draft
-                          properties:
-                            id:
-                              type: string
-                              format: uuid
-                            title:
-                              type: string
-                            createdBy:
-                              $ref: '#/components/schemas/CitizenCreator'
-                            workgroup:
-                              type: object
-                              nullable: true
-                              additionalProperties: false
-                              properties:
-                                id:
-                                  type: string
-                                  format: uuid
-                                name:
-                                  type: string
-                            draft:
-                              type: boolean
+                          $ref: '#/components/schemas/ArticleListingResponse'
     post:
       security:
         - JWTAuth: []
@@ -968,6 +943,33 @@ components:
               type: integer
             score:
               type: integer
+    ArticleListingResponse:
+      required:
+        - id
+        - title
+        - createdBy
+        - workgroup
+        - draft
+      properties:
+        id:
+          type: string
+          format: uuid
+        title:
+          type: string
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        workgroup:
+          type: object
+          nullable: true
+          additionalProperties: false
+          properties:
+            id:
+              type: string
+              format: uuid
+            name:
+              type: string
+        draft:
+          type: boolean
 
     CitizenListResponse:
       additionalProperties: false
