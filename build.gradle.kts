@@ -11,7 +11,7 @@ import org.slf4j.LoggerFactory
 
 val ktorVersion = "1.5.0"
 val kotlinVersion = "1.4.30"
-val coroutinesVersion = "1.4.2"
+val coroutinesVersion = "1.4.3"
 val logbackVersion = "1.2.3"
 val koinVersion = "2.0.1"
 val jacksonVersion = "2.12.1"
@@ -31,8 +31,8 @@ plugins {
     maven
 
     id("maven-publish")
-    kotlin("jvm") version "1.4.21"
-    kotlin("plugin.serialization") version "1.4.21"
+    kotlin("jvm") version "1.4.30"
+    kotlin("plugin.serialization") version "1.4.30"
 
     id("com.github.johnrengelman.shadow") version "5.2.0"
     id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
