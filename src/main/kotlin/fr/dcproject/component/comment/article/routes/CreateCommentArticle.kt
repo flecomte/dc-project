@@ -10,6 +10,7 @@ import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.article.routes.CreateCommentArticle.PostArticleCommentRequest.Input
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.database.CommentForUpdate
+import fr.dcproject.component.comment.toOutput
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -17,7 +18,6 @@ import io.ktor.locations.Location
 import io.ktor.locations.post
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.joda.time.DateTime
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
@@ -39,35 +39,10 @@ object CreateCommentArticle {
             }.let { comment ->
                 ac.assert { canCreate(comment, citizenOrNull) }
                 repo.comment(comment)
+
                 call.respond(
                     HttpStatusCode.Created,
-                    object {
-                        val id: UUID = comment.id
-                        val content: String = comment.content
-                        val childrenCount: Int = 0
-                        val createdAt: DateTime = comment.createdAt
-                        val updatedAt: DateTime = comment.createdAt
-                        val parent: Any? = comment.parent?.let { p ->
-                            object {
-                                val id: UUID = p.id
-                                val reference: String = p.reference
-                            }
-                        }
-                        val target: Any = comment.target.let { t ->
-                            object {
-                                val id: UUID = t.id
-                                val reference: String = t.reference
-                            }
-                        }
-                        val createdBy: Any = comment.createdBy.toOutput()
-                        val votes: Any = object {
-                            val up: Int = 0
-                            val neutral: Int = 0
-                            val down: Int = 0
-                            val total: Int = 0
-                            val score: Int = 0
-                        }
-                    }
+                    comment.toOutput()
                 )
             }
         }

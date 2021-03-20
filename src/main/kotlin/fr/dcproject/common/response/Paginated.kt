@@ -1,4 +1,4 @@
-package fr.dcproject.common.dto
+package fr.dcproject.common.response
 
 import fr.dcproject.common.entity.EntityI
 import fr.postgresjson.connexion.Paginated

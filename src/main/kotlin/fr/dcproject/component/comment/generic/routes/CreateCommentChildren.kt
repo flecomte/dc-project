@@ -8,6 +8,7 @@ import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.database.CommentForUpdate
 import fr.dcproject.component.comment.generic.database.CommentRef
 import fr.dcproject.component.comment.generic.database.CommentRepository
+import fr.dcproject.component.comment.toOutput
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -38,7 +39,7 @@ object CreateCommentChildren {
             ac.assert { canCreate(newComment, citizenOrNull) }
             repo.comment(newComment)
 
-            call.respond(HttpStatusCode.Created, newComment)
+            call.respond(HttpStatusCode.Created, newComment.toOutput())
         }
     }
 }

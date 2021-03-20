@@ -1,6 +1,5 @@
 package fr.dcproject.component.article.routes
 
-import fr.dcproject.common.dto.toOutput
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl

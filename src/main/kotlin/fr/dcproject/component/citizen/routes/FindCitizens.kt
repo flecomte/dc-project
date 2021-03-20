@@ -1,6 +1,6 @@
 package fr.dcproject.component.citizen.routes
 
-import fr.dcproject.common.dto.toOutput
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.citizen.CitizenAccessControl
