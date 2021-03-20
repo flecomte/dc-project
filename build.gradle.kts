@@ -71,7 +71,7 @@ val migration by tasks.registering {
     dependsOn(tasks.named("composeUp"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/main/resources/application.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/main/application.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -81,8 +81,8 @@ val migration by tasks.registering {
         )
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI()
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI()
         ).run {
             run()
         }
@@ -94,7 +94,7 @@ val migrationTest by tasks.registering {
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -104,8 +104,8 @@ val migrationTest by tasks.registering {
         )
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI()
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI()
         ).run {
             run()
             connection.disconnect()
@@ -115,11 +115,13 @@ val migrationTest by tasks.registering {
 
 val testSql by tasks.registering {
     group = "verification"
+    dependsOn(tasks.named("processResources"))
+    dependsOn(tasks.named("processTestResources"))
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
 
         val connection = Connection(
             host = config.getString("db.host"),
@@ -131,16 +133,16 @@ val testSql by tasks.registering {
 
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI(),
-            file("$buildDir/../src/test/sql/fixtures").toURI()
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI(),
+            file("$buildDir/resources/test/sql/fixtures").toURI()
         ).run {
             run()
         }
 
         Requester.RequesterFactory(
             connection = connection,
-            queriesDirectory = file("$buildDir/../src/test/sql").toURI()
+            queriesDirectory = file("$buildDir/resources/test/sql").toURI()
         ).createRequester().run {
             getQueries().map {
                 try {
