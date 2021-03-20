@@ -267,6 +267,7 @@ tasks.jacocoTestReport {
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
+    ignoreFailures = true
 //    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 
@@ -281,6 +282,7 @@ detekt {
 tasks.withType<Detekt> {
     // Target version of the generated JVM bytecode. It is used for type resolution.
     this.jvmTarget = "11"
+    ignoreFailures = true
 }
 
 val setMaxMapCount = tasks.create<Exec>("setMaxMapCount") {

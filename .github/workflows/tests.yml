@@ -12,8 +12,7 @@ on:
       - '**'
 
 jobs:
-  tests:
-
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -22,7 +21,99 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
-    - uses: eskatos/gradle-command-action@v1
+
+    - name: Cache Gradle packages
+      uses: actions/cache@v2
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
+    - name: Build
+      uses: eskatos/gradle-command-action@v1
       with:
         gradle-version: 6.8
-        arguments: test
+        arguments: build -x test -x ktlintKotlinScriptCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x detekt
+    - name: Cleanup Gradle Cache
+      # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
+      # Restoring these files from a GitHub Actions cache might cause problems for future builds.
+      run: |
+        rm -f ~/.gradle/caches/modules-2/modules-2.lock
+        rm -f ~/.gradle/caches/modules-2/gc.properties
+
+    - name: processResources
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: processResources
+    - name: processTestResources
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: processResources
+    - uses: actions/upload-artifact@v2
+      with:
+        name: Build
+        path: build
+
+  testSql:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - uses: actions/download-artifact@v2
+      with:
+        name: Build
+        path: build
+    - name: TestSql
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: testSql
+
+  test:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - uses: actions/download-artifact@v2
+      with:
+        name: Build
+        path: build
+    - name: Test
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: test -x testSql
+
+  lint:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up JDK 11
+      uses: actions/setup-java@v1
+      with:
+        java-version: 11
+    - uses: actions/download-artifact@v2
+      with:
+        name: Build
+        path: build
+    - name: Lint
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: ktlintCheck
