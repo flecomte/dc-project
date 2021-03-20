@@ -1,5 +1,7 @@
 # DC Project
 
+[![Tests](https://github.com/flecomte/dc-project/actions/workflows/tests.yml/badge.svg)](https://github.com/flecomte/dc-project/actions/workflows/tests.yml)
+
 [Installation](./doc/installation)
 
 ### Run dockers

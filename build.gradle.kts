@@ -56,7 +56,7 @@ buildscript {
     }
     dependencies {
         classpath("com.typesafe:config:1.4.1")
-        classpath("com.github.flecomte:postgres-json:2.1.1")
+        classpath("com.github.flecomte:postgres-json:2.1.2")
     }
 }
 
@@ -136,9 +136,7 @@ val testSql by tasks.registering {
             file("$buildDir/resources/main/sql/migrations").toURI(),
             file("$buildDir/resources/main/sql/functions").toURI(),
             file("$buildDir/resources/test/sql/fixtures").toURI()
-        ).run {
-            run()
-        }
+        ).run()
 
         Requester.RequesterFactory(
             connection = connection,
@@ -295,7 +293,12 @@ val setMaxMapCount = tasks.create<Exec>("setMaxMapCount") {
         }
     }
 }
-tasks.named("testComposeUp").configure { dependsOn(setMaxMapCount) }
+
+tasks.named("testComposeUp").configure {
+    if (OperatingSystem.current().isWindows) {
+        dependsOn(setMaxMapCount)
+    }
+}
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
@@ -329,7 +332,7 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.3.0")
     implementation("com.auth0:java-jwt:3.12.0")
     implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
-    implementation("com.github.flecomte:postgres-json:2.1.1")
+    implementation("com.github.flecomte:postgres-json:2.1.2")
     implementation("com.sendgrid:sendgrid-java:4.7.1")
     implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") // TODO update to 6.0.2
     implementation("com.rabbitmq:amqp-client:5.10.0")
