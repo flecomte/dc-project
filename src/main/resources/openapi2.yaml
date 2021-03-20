@@ -662,6 +662,73 @@ paths:
         401:
           $ref: '#/components/responses/401'
 
+  /constitutions:
+    get:
+      summary: Get all constitutions
+      tags:
+        - constitution
+      operationId: getConstitutions
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+      responses:
+        200:
+          description: The Constitution objects
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/ConstitutionListingResponse'
+    post:
+      security:
+        - JWTAuth: [ ]
+      summary: Create new Constitution
+      tags:
+        - constitution
+      operationId: insertConstitution
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ConstitutionRequest'
+
+      responses:
+        201:
+          description: Constitution created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstitutionResponse'
+        401:
+          $ref: '#/components/responses/401'
+        400:
+          $ref: '#/components/responses/400'
+  /constitutions/{constitution}:
+    parameters:
+      - $ref: '#/components/parameters/constitution'
+    get:
+      summary: Get all constitutions
+      tags:
+        - constitution
+      operationId: getConstitutions
+      responses:
+        200:
+          description: The Constitution objects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ConstitutionResponse'
+
 components:
   parameters:
     page:
@@ -777,6 +844,12 @@ components:
   responses:
     401:
       description: Unautorized
+      content:
+        application/json:
+          schema:
+            description: noting
+    400:
+      description: BadReqest
       content:
         application/json:
           schema:
@@ -962,6 +1035,9 @@ components:
           type: object
           nullable: true
           additionalProperties: false
+          required:
+            - id
+            - name
           properties:
             id:
               type: string
@@ -1139,6 +1215,136 @@ components:
               minimum: 0
             score:
               type: number
+    ConstitutionRequest:
+      additionalProperties: false
+      description: The versionId field must be defined for update contitution
+      type: object
+      required:
+        - title
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+          example:
+            Constitution for the liberty
+        titles:
+          type: array
+          default: [ ]
+          items:
+            additionalProperties: false
+            type: object
+            required:
+              - name
+            properties:
+              id:
+                $ref: '#/components/schemas/UUID'
+              name:
+                type: string
+                example:
+                  The liberties
+              articles:
+                type: array
+                items:
+                  required:
+                    - id
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/UUID'
+        anonymous:
+          type: boolean
+          default: true
+        draft:
+          type: boolean
+          default: false
+        versionId:
+          $ref: '#/components/schemas/UUID'
+    ConstitutionResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - title
+        - titles
+        - anonymous
+        - draft
+        - versionId
+        - createdBy
+        - createdAt
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+          example:
+            Constitution for the liberty
+        titles:
+          type: array
+          default: [ ]
+          items:
+            additionalProperties: false
+            type: object
+            required:
+              - id
+              - name
+              - rank
+              - articles
+            properties:
+              id:
+                $ref: '#/components/schemas/UUID'
+              name:
+                type: string
+                example:
+                  The liberties
+              rank:
+                type: integer
+                minimum: 0
+                example: 0
+              createdBy:
+                $ref: '#/components/schemas/CitizenCreator'
+              createdAt:
+                type: string
+                format: 'date-time'
+              articles:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ArticleListingResponse'
+        anonymous:
+          type: boolean
+          default: true
+        draft:
+          type: boolean
+          default: false
+        versionId:
+          $ref: '#/components/schemas/UUID'
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        createdAt:
+          type: string
+          format: 'date-time'
+    ConstitutionListingResponse:
+      additionalProperties: false
+      type: object
+      required:
+        - id
+        - title
+        - versionId
+        - createdAt
+        - createdBy
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        title:
+          type: string
+          example:
+            Constitution for the liberty
+        versionId:
+          $ref: '#/components/schemas/UUID'
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        createdAt:
+          type: string
+          format: 'date-time'
 
   securitySchemes:
     JWTAuth:

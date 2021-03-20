@@ -20,6 +20,7 @@ import io.ktor.locations.Location
 import io.ktor.locations.post
 import io.ktor.response.respond
 import io.ktor.routing.Route
+import org.joda.time.DateTime
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
@@ -110,6 +111,23 @@ object CreateConstitution {
                         val anonymous: Boolean = c.anonymous
                         val draft: Boolean = c.draft
                         val versionId: UUID = c.versionId
+                        val createdAt: DateTime = c.createdAt
+                        val createdBy: Any = c.createdBy.let { c ->
+                            object {
+                                val id: UUID = c.id
+                                val name: Any = c.name.let { n ->
+                                    object {
+                                        val firstName: String = n.firstName
+                                        val lastName: String = n.lastName
+                                    }
+                                }
+                                val user: Any = c.user.let { u ->
+                                    object {
+                                        val username: String = u.username
+                                    }
+                                }
+                            }
+                        }
                     }
                 )
             }

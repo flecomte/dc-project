@@ -1,5 +1,6 @@
 package integration
 
+import integration.steps.`when`.Validate
 import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
@@ -12,6 +13,8 @@ import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`Given I have constitutions`
 import integration.steps.given.`authenticated as`
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
+import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -70,17 +73,39 @@ class `Constitution routes` : BaseTest() {
                    "anonymous":true,
                    "titles":[
                       {
-                         "name":"plop",
-                         "rank":0
+                         "name":"plop"
                       }
                    ]
                 }
                 """)
-            } `Then the response should be` OK and {
+            } `Then the response should be` Created and {
                 `And the response should not be null`()
                 `And have property`("$.versionId") `whish contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
                 `And have property`("$.title") `whish contains` "Hello world!"
             }
+        }
+    }
+
+    @Test
+    fun `I cannot create an constitution if bad request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Henri", "Poincaré")
+            `When I send a POST request`("/constitutions", Validate.ALL - Validate.REQUEST_BODY) {
+                `authenticated as`("Henri", "Poincaré")
+                `with body`("""
+                {
+                   "versionId":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
+                   "title":"Hello world!",
+                   "anonymous":true,
+                   "titles":[
+                      {
+                         "name":"plop",
+                         "wrongField":0
+                      }
+                   ]
+                }
+                """)
+            } `Then the response should be` BadRequest
         }
     }
 }
