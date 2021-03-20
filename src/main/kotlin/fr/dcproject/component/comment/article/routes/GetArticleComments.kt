@@ -1,6 +1,7 @@
 package fr.dcproject.component.comment.article.routes
 
 import fr.dcproject.common.dto.toOutput
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
@@ -59,22 +60,7 @@ object GetArticleComments {
                                 val reference: String = t.reference
                             }
                         }
-                        val createdBy: Any = comment.createdBy.let { c ->
-                            object {
-                                val id: UUID = c.id
-                                val name: Any = c.name.let { n ->
-                                    object {
-                                        val firstName: String = n.firstName
-                                        val lastName: String = n.lastName
-                                    }
-                                }
-                                val user: Any = c.user.let { u ->
-                                    object {
-                                        val username: String = u.username
-                                    }
-                                }
-                            }
-                        }
+                        val createdBy: Any = comment.createdBy.toOutput()
                         val votes: Any = comment.votes.let { v ->
                             object {
                                 val up: Int = v.up

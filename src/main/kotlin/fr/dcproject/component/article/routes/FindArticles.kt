@@ -1,6 +1,7 @@
 package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.dto.toOutput
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForListing
@@ -16,7 +17,6 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object FindArticles {
@@ -52,22 +52,7 @@ object FindArticles {
                             object {
                                 val id = it.id
                                 val title = it.title
-                                val createdBy: Any = it.createdBy.let { c ->
-                                    object {
-                                        val id: UUID = c.id
-                                        val name: Any = c.name.let { n ->
-                                            object {
-                                                val firstName: String = n.firstName
-                                                val lastName: String = n.lastName
-                                            }
-                                        }
-                                        val user: Any = c.user.let { u ->
-                                            object {
-                                                val username: String = u.username
-                                            }
-                                        }
-                                    }
-                                }
+                                val createdBy: Any = it.createdBy.toOutput()
                                 val workgroup = it.workgroup?.let {
                                     object {
                                         val id = it.id

@@ -1,6 +1,7 @@
 package fr.dcproject.component.constitution.routes
 
 import fr.dcproject.common.dto.toOutput
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.constitution.ConstitutionAccessControl
@@ -41,22 +42,7 @@ object FindConstitutions {
                         val title: String = c.title
                         val versionId: UUID = c.versionId
                         val createdAt: DateTime = c.createdAt
-                        val createdBy: Any = c.createdBy.let { c ->
-                            object {
-                                val id: UUID = c.id
-                                val name: Any = c.name.let { n ->
-                                    object {
-                                        val firstName: String = n.firstName
-                                        val lastName: String = n.lastName
-                                    }
-                                }
-                                val user: Any = c.user.let { u ->
-                                    object {
-                                        val username: String = u.username
-                                    }
-                                }
-                            }
-                        }
+                        val createdBy: Any = c.createdBy.toOutput()
                     }
                 }
             )
