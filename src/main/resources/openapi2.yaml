@@ -729,6 +729,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/ConstitutionResponse'
 
+  /articles/{article}/follows:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Return Follow or nothing if you not follow
+      tags:
+        - follow
+        - article
+      responses:
+        200:
+          description: Return your follow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponse'
+        404:
+          description: You not follow this article
+    post:
+      security:
+        - JWTAuth: [ ]
+      summary: Follow one article
+      tags:
+        - follow
+        - article
+      responses:
+        201:
+          description: Return only http status 201 on success
+    delete:
+      security:
+        - JWTAuth: [ ]
+      summary: Unfollow one article
+      tags:
+        - follow
+        - article
+      responses:
+        204:
+          description: Return only http status 204 on success
+        401:
+          $ref: '#/components/responses/401'
+
 components:
   parameters:
     page:
@@ -1342,6 +1384,32 @@ components:
         createdAt:
           type: string
           format: 'date-time'
+
+    FollowResponse:
+      additionalProperties: false
+      required:
+        - id
+        - createdBy
+        - createdAt
+        - target
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        createdAt:
+          type: string
+          format: 'date-time'
+        target:
+          required:
+            - id
+            - reference
+          additionalProperties: false
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            reference:
+              type: string
 
   securitySchemes:
     JWTAuth:

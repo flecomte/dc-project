@@ -59,7 +59,7 @@ sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requ
     open fun findFollow(
         citizen: CitizenI,
         target: TargetRef
-    ): FollowForView<OUT>? =
+    ): FollowForView<TargetRef>? =
         requester
             .getFunction("find_follow")
             .selectOne(
