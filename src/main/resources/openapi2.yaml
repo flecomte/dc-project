@@ -1035,9 +1035,6 @@ components:
           type: object
           nullable: true
           additionalProperties: false
-          required:
-            - id
-            - name
           properties:
             id:
               type: string
