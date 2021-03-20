@@ -1,12 +1,12 @@
 package integration
 
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
-import integration.steps.then.`and should contains`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.`and should contains`
 import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -23,15 +23,17 @@ class `Login routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Niels", "Bohr")
             `When I send a POST request`("/login") {
-                `with body`("""
-                {
-                  "username": "niels-bohr",
-                  "password": "azerty"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "username": "niels-bohr",
+                      "password": "azerty"
+                    }
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should not be null`() `and should contains` "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9."
-                //TODO valid requestBody
+                // TODO valid requestBody
             }
         }
     }
@@ -42,12 +44,14 @@ class `Login routes` : BaseTest() {
             `Given I have citizen`("Leonhard", "Euler", "fabrice.lecomte.be@gmail.com", id = "c606110c-ff0e-4d09-a79e-74632d7bf7bd")
             `When I send a POST request`("/auth/passwordless") {
                 `authenticated as`("Leonhard", "Euler")
-                `with body`("""
-                {
-                  "url": "https://dc-project.fr/password/reset",
-                  "email": "fabrice.lecomte.be@gmail.com"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "url": "https://dc-project.fr/password/reset",
+                      "email": "fabrice.lecomte.be@gmail.com"
+                    }
+                    """
+                )
             } `Then the response should be` NoContent
         }
     }

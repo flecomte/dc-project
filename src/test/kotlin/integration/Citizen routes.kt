@@ -1,16 +1,16 @@
 package integration
 
 import integration.steps.`when`.Validate
-import integration.steps.then.`And have property`
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.`whish contains`
-import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And have property`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.`whish contains`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
@@ -66,12 +66,14 @@ class `Citizen routes` : BaseTest() {
             `Given I have citizen`("Georges", "Charpak", id = "0c966522-4071-43e5-a3ca-cfff2557f2cf")
             `When I send a PUT request`("/citizens/0c966522-4071-43e5-a3ca-cfff2557f2cf/password/change") {
                 `authenticated as`("Georges", "Charpak")
-                `with body`("""
-                {
-                  "oldPassword": "azerty",
-                  "newPassword": "qwerty"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "oldPassword": "azerty",
+                      "newPassword": "qwerty"
+                    }
+                    """
+                )
             } `Then the response should be` Created
         }
     }
@@ -82,12 +84,14 @@ class `Citizen routes` : BaseTest() {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
             `When I send a PUT request`("/citizens/6cf2a19d-d15d-4ee5-b2a9-907afd26b525/password/change", Validate.ALL - Validate.REQUEST_BODY) {
                 `authenticated as`("Louis", "Breguet")
-                `with body`("""
-                {
-                  "plup": "azerty",
-                  "gloup": "qwerty"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "plup": "azerty",
+                      "gloup": "qwerty"
+                    }
+                    """
+                )
             } `Then the response should be` BadRequest
         }
     }

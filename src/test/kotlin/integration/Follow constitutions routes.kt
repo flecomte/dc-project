@@ -1,18 +1,18 @@
 package integration
 
-import integration.steps.then.`And the response should be null`
-import integration.steps.then.`And the response should contain`
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
-import integration.steps.then.and
 import integration.steps.given.`And follow constitution`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`authenticated as`
 import integration.steps.given.`with no content`
+import integration.steps.then.`And the response should be null`
+import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.OK

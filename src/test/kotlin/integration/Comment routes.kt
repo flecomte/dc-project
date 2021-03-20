@@ -1,13 +1,13 @@
 package integration
 
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
-import integration.steps.then.and
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have comment on article`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags

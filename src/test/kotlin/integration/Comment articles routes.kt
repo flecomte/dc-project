@@ -1,18 +1,18 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
-import integration.steps.then.`And the response should contain`
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.and
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have comment on article`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -30,11 +30,13 @@ class `Comment articles routes` : BaseTest() {
             `Given I have article`(id = "aa16c635-28da-46f0-9a89-934eef88c7ca")
             `When I send a POST request`("/articles/aa16c635-28da-46f0-9a89-934eef88c7ca/comments") {
                 `authenticated as`("Michael", "Faraday")
-                `with body`("""
-                {
-                  "content": "Hello mister"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "content": "Hello mister"
+                    }
+                    """
+                )
             } `Then the response should be` Created and {
                 `And the response should not be null`()
                 `And the response should contain`("$.target.id", "aa16c635-28da-46f0-9a89-934eef88c7ca")
@@ -99,11 +101,13 @@ class `Comment articles routes` : BaseTest() {
             `Given I have comment on article`(article = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1", createdBy = Name("Hubert", "Reeves"), id = "fd30d20f-656c-42c6-8955-f61c04537464")
             `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464") {
                 `authenticated as`("Hubert", "Reeves")
-                `with body`("""
-                {
-                  "content": "Hello boy"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "content": "Hello boy"
+                    }
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain`("$.content", "Hello boy")

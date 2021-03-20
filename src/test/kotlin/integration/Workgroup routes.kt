@@ -1,21 +1,21 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
-import integration.steps.then.`And the response should be null`
-import integration.steps.then.`And the response should contain list`
-import integration.steps.then.`And the response should contain`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.and
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`With members`
 import integration.steps.given.`authenticated as`
 import integration.steps.given.`with no content`
+import integration.steps.then.`And the response should be null`
+import integration.steps.then.`And the response should contain list`
+import integration.steps.then.`And the response should contain`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import integration.steps.then.`And have property`
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
@@ -68,14 +68,16 @@ class `Workgroup routes` : BaseTest() {
             `Given I have citizen`("Werner", "Heisenberg")
             `When I send a POST request`("/workgroups") {
                 `authenticated as`("Werner", "Heisenberg")
-                `with body`("""
-                {
-                    "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
-                    "name":"Les Bouffons",
-                    "description":"La vie est belle",
-                    "anonymous":false
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                        "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
+                        "name":"Les Bouffons",
+                        "description":"La vie est belle",
+                        "anonymous":false
+                    }
+                    """
+                )
             } `Then the response should be` Created and {
                 `And the response should contain`("$.id", "f496d86d-6654-4068-91ff-90e1dbcc5f38")
                 `And the response should contain`("$.name", "Les Bouffons")
@@ -171,18 +173,20 @@ class `Workgroup routes` : BaseTest() {
             `Given I have workgroup`("b0ea1922-3bc6-44e2-aa7c-40158998cfbb", createdBy = Name("Blaise", "Pascal"))
             `When I send a POST request`("/workgroups/b0ea1922-3bc6-44e2-aa7c-40158998cfbb/members") {
                 `authenticated as`("Blaise", "Pascal")
-                `with body`("""
-                [
-                    {
-                        "citizen": {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
-                        "roles": ["MASTER"]
-                    },
-                    {
-                        "citizen": {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"},
-                        "roles": ["MASTER"]
-                    }
-                ]
-                """)
+                `with body`(
+                    """
+                    [
+                        {
+                            "citizen": {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
+                            "roles": ["MASTER"]
+                        },
+                        {
+                            "citizen": {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"},
+                            "roles": ["MASTER"]
+                        }
+                    ]
+                    """
+                )
             } `Then the response should be` Created
         }
     }
@@ -231,18 +235,20 @@ class `Workgroup routes` : BaseTest() {
             }
             `When I send a PUT request`("/workgroups/784fe6bc-7635-4ae2-b080-3a4743b998bf/members") {
                 `authenticated as`("Leon", "Foucault")
-                `with body`("""
-                [
-                  {
-                    "citizen": {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
-                    "roles": ["MASTER"]
-                  },
-                  {
-                    "citizen": {"id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"},
-                    "roles": ["MASTER"]
-                  }
-                ]
-                """)
+                `with body`(
+                    """
+                    [
+                      {
+                        "citizen": {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
+                        "roles": ["MASTER"]
+                      },
+                      {
+                        "citizen": {"id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"},
+                        "roles": ["MASTER"]
+                      }
+                    ]
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should contain list`("$", 2, 2)
                 `And the response should contain`("$.[0]citizen.id", "be3b0926-8628-4426-804a-75188a6eb315")

@@ -1,12 +1,9 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
-import integration.steps.then.`And the response should contain`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.and
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have comment on article`
@@ -14,6 +11,9 @@ import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`Given I have vote +1 on article`
 import integration.steps.given.`Given I have vote -1 on article`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should contain`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -31,11 +31,13 @@ class `Vote routes` : BaseTest() {
             `Given I have article`(id = "835c5101-ca39-4038-a4e6-da6ee62ca6d5")
             `When I send a PUT request`("/articles/835c5101-ca39-4038-a4e6-da6ee62ca6d5/vote") {
                 `authenticated as`("Thalès", "Milet")
-                `with body`("""
-                {
-                  "note": 1
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "note": 1
+                    }
+                    """
+                )
             } `Then the response should be` Created
         }
     }
@@ -47,11 +49,13 @@ class `Vote routes` : BaseTest() {
             `Given I have constitution`(id = "76e79c89-efc1-492d-9e8f-dc9717363a11")
             `When I send a PUT request`("/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote") {
                 `authenticated as`("Gregor", "Mendel")
-                `with body`("""
-                {
-                  "note": 1
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "note": 1
+                    }
+                    """
+                )
             } `Then the response should be` Created
         }
     }
@@ -102,11 +106,13 @@ class `Vote routes` : BaseTest() {
             )
             `When I send a PUT request`("/comments/e793eccc-456b-4450-a292-46d592229b74/vote") {
                 `authenticated as`("Antoine", "Lavoisier")
-                `with body`("""
-                {
-                  "note": -1
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "note": -1
+                    }
+                    """
+                )
             } `Then the response should be` Created and {
                 `And the response should contain`("$.down", 1)
             }

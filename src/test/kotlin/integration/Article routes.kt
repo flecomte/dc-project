@@ -1,22 +1,22 @@
 package integration
 
-import integration.steps.then.`And have property`
-import integration.steps.then.`And the response should contain pattern`
-import integration.steps.then.`And the response should not be null`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.`whish contains`
-import integration.steps.then.and
 import integration.steps.given.`Given I have article created by workgroup`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have articles`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should contain list`
+import integration.steps.then.`And the response should contain pattern`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`And the response should not contain`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.`whish contains`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -84,18 +84,20 @@ class `Article routes` : BaseTest() {
             `Given I have citizen`("John", "Doe")
             `When I send a POST request`("/articles") {
                 `authenticated as`("John", "Doe")
-                `with body`("""
-                {
-                  "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
-                  "title": "title2",
-                  "anonymous": false,
-                  "content": "content2",
-                  "description": "description2",
-                  "tags": [
-                      "green"
-                  ]
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
+                      "title": "title2",
+                      "anonymous": false,
+                      "content": "content2",
+                      "description": "description2",
+                      "tags": [
+                          "green"
+                      ]
+                    }
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And have property`("$.versionId") `whish contains` "09c418b6-63ba-448b-b38b-502b41cd500e"

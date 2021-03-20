@@ -11,6 +11,7 @@ import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteForUpdate
+import fr.dcproject.component.vote.database.VoteForView
 import org.amshove.kluent.`should be`
 import org.joda.time.DateTime
 import org.junit.jupiter.api.Tag
@@ -20,7 +21,6 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 import java.util.UUID
-import fr.dcproject.component.vote.database.VoteForView
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
