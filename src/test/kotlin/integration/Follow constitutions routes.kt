@@ -37,7 +37,7 @@ class `Follow constitutions routes` : BaseTest() {
     }
 
     @Test
-    fun `I can get follow constitution`() {
+    fun `I can get my follow constitution`() {
         withIntegrationApplication {
             `Given I have constitution`(id = "7f642078-8e74-47fc-9712-0c37531674a0")
             `Given I have citizen`("André-Marie", "Ampère", id = "877b45b0-302d-487d-8944-6d03ccdbd0f8") {

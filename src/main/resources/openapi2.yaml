@@ -796,6 +796,75 @@ paths:
                         items:
                           $ref: '#/components/schemas/FollowResponse'
 
+  /constitutions/{constitution}/follows:
+    parameters:
+      - $ref: '#/components/parameters/constitution'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Return Follow or nothing if you not follow
+      tags:
+        - follow
+        - constitution
+      responses:
+        200:
+          description: Return your follow
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponse'
+        404:
+          description: You not follow this constitution
+    post:
+      security:
+        - JWTAuth: [ ]
+      summary: Follow one constitution
+      tags:
+        - follow
+        - constitution
+      responses:
+        201:
+          description: Return only http status 201 on success
+        401:
+          $ref: '#/components/responses/401'
+    delete:
+      security:
+        - JWTAuth: [ ]
+      summary: Unfollow one constitution
+      tags:
+        - follow
+        - constitution
+      responses:
+        204:
+          description: Return only http status 204 on success
+        401:
+          $ref: '#/components/responses/401'
+  /citizens/{citizen}/follows/constitutions:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Return Follow or nothing if you not follow
+      tags:
+        - follow
+        - constitution
+        - citizen
+      responses:
+        200:
+          description: Return your follows
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FollowResponse'
+
 components:
   parameters:
     page:
