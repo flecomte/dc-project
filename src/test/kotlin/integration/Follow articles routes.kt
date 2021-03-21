@@ -37,7 +37,7 @@ class `Follow articles routes` : BaseTest() {
     }
 
     @Test
-    fun `I can get follow article`() {
+    fun `I can get my follow article`() {
         withIntegrationApplication {
             `Given I have article`(id = "d743619a-1f6b-4d20-a2d6-8e81f0e6a4c8")
             `Given I have citizen`("Johannes", "Kepler", id = "e4592d53-3660-4264-8353-ebdbf5d9c41c") {
