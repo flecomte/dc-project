@@ -75,10 +75,15 @@ fun TestApplicationResponse.`And the schema parameters must be valid`() {
         /* Validate Request URL */
         this.apply {
             Url(call.request.uri).parameters.forEach { parameter: String, values: List<String> ->
-                getParametersIn(api.context, "query")
+                val schema = getParametersIn(api.context, "query")
                     ?.firstOrNull { it.name == parameter }?.schema
-                    ?.validate(api, TextNode(values.first()))
                     ?: error("""No parameter found ($parameter) for "$this $uri".""")
+
+                if (schema.type == "array") {
+                    schema.validate(api, ObjectMapper().valueToTree(values))
+                } else {
+                    schema.validate(api, TextNode(values.first()))
+                }
             }
         }
     }
