@@ -44,7 +44,10 @@ object OpinionArticle {
                 ac.assert { canCreate(opinions, citizenOrNull) }
                 repo.updateOpinions(opinions)
             }.let {
-                call.respond(HttpStatusCode.Created, it)
+                call.respond(
+                    HttpStatusCode.Created,
+                    it.map { it.toOutput() }
+                )
             }
         }
     }

@@ -7,6 +7,7 @@ import fr.dcproject.component.opinion.database.OpinionChoiceRef
 import fr.dcproject.component.opinion.database.OpinionChoiceRepository
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
@@ -26,7 +27,10 @@ object GetOpinionChoice {
             val opinionChoice = opinionChoiceRepository.findOpinionChoiceById(it.opinionChoice.id) ?: throw NotFoundException("OpinionChoice ${it.opinionChoice.id} not found")
             ac.assert { canView(it.opinionChoice, citizenOrNull) }
 
-            call.respond(opinionChoice)
+            call.respond(
+                HttpStatusCode.OK,
+                opinionChoice.toOutput()
+            )
         }
     }
 }

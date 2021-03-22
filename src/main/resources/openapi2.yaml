@@ -865,6 +865,137 @@ paths:
                         items:
                           $ref: '#/components/schemas/FollowResponse'
 
+  /opinions:
+    get:
+      summary: Get all opinions choices
+      tags:
+        - opinion
+      parameters:
+        - in: query
+          required: false
+          name: targets
+          description: opinion available for defined target
+          example:
+            - article
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        200:
+          description: return
+          content:
+            application/json:
+              schema:
+                description: Opinion Choice
+                type: array
+                items:
+                  $ref: '#/components/schemas/OpinionChoice'
+  /opinions/{opinion}:
+    parameters:
+      - $ref: '#/components/parameters/opinion'
+    get:
+      summary: Get one opinion Choices
+      tags:
+        - opinion
+      responses:
+        200:
+          description: return
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OpinionChoice'
+
+  /citizens/{citizen}/opinions:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Get all opinions of citizen filtered by target ids
+      tags:
+        - opinion
+        - citizen
+      parameters:
+        - in: query
+          required: true
+          name: id
+          description: target ids
+          example:
+            - 9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        200:
+          description: Opinions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Opinion'
+  /citizens/{citizen}/opinions/articles:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: []
+      summary: Get all opinions of one citizen
+      tags:
+        - opinion
+        - citizen
+      responses:
+        200:
+          description: Opinions
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/Opinion'
+
+  /articles/{article}/opinions:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Add Opinion on one article
+      tags:
+        - opinion
+        - article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                ids:
+                  type: array
+                  items:
+                    type: string
+                    format: uuid
+                    example: 6e978eb5-3c48-0def-b093-e01f43983adb
+      responses:
+        201:
+          description: Return the opinion
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Opinion'
+        401:
+          $ref: '#/components/responses/401'
+
 components:
   parameters:
     page:
@@ -973,6 +1104,16 @@ components:
       required: true
       description: the ID of constitution
       example: e74be8e4-6823-47c4-bd1b-789725b2fa8e
+      schema:
+        type: string
+        format: uuid
+
+    opinion:
+      in: path
+      required: true
+      name: opinion
+      description: Opinion ID
+      example: 6e978eb5-3c48-0def-b093-e01f43983adb
       schema:
         type: string
         format: uuid
@@ -1504,6 +1645,57 @@ components:
               $ref: '#/components/schemas/UUID'
             reference:
               type: string
+
+    OpinionChoice:
+      description: Opinion Choice
+      type: object
+      required:
+        - name
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: opinion1
+        target:
+          type: array
+          nullable: true
+          items:
+            type: string
+            description: the name of the target
+    Opinion:
+      description: Opinion
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: opinion1
+        target:
+          type: object
+          properties:
+            id:
+              type: string
+              format: uuid
+            reference:
+              type: string
+              example: article
+        choice:
+          type: object
+          allOf:
+            - $ref: '#/components/schemas/OpinionChoice'
+        reference:
+          type: string
+          example: opinion_on_article
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        createdAt:
+          type: string
+          format: 'date-time'
+
 
   securitySchemes:
     JWTAuth:

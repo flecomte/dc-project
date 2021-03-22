@@ -1,6 +1,7 @@
 package fr.dcproject.component.opinion.routes
 
 import fr.dcproject.common.entity.TargetRef
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
@@ -11,6 +12,7 @@ import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.connexion.Paginated
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
@@ -37,7 +39,10 @@ object GetMyOpinionsArticle {
         get<CitizenOpinionsArticleRequest> {
             val opinions: Paginated<Opinion<TargetRef>> = repo.findCitizenOpinions(citizen, it.page, it.limit)
             ac.assert { canView(opinions.result, citizenOrNull) }
-            call.respond(opinions)
+            call.respond(
+                HttpStatusCode.OK,
+                opinions.toOutput { it.toOutput() }
+            )
         }
     }
 }

@@ -118,7 +118,7 @@ class `Opinion routes` : BaseTest() {
     }
 
     @Test
-    fun `I can get all opinion of one citizen`() {
+    fun `I can get all my opinion of one article`() {
         withIntegrationApplication {
             `Given I have citizen`("Albert", "Einstein", id = "c1542096-3431-432d-8e35-9dc071d4c818")
             `Given I have an opinion choice`("Opinion9")
