@@ -38,7 +38,10 @@ object PutVoteOnArticle {
             )
             ac.assert { canCreate(vote, citizenOrNull) }
             val votes = repo.vote(vote)
-            call.respond(HttpStatusCode.Created, votes)
+            call.respond(
+                HttpStatusCode.Created,
+                votes.toOutput()
+            )
         }
     }
 }

@@ -795,7 +795,6 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/FollowResponse'
-
   /constitutions/{constitution}/follows:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -905,7 +904,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OpinionChoice'
-
   /citizens/{citizen}/opinions:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -961,7 +959,6 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Opinion'
-
   /articles/{article}/opinions:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -993,6 +990,136 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Opinion'
+        401:
+          $ref: '#/components/responses/401'
+
+  /constitutions/{constitution}/vote:
+    parameters:
+      - $ref: '#/components/parameters/constitution'
+    put:
+      security:
+        - JWTAuth: [ ]
+      summary: Vote for one constitution
+      tags:
+        - vote
+        - constitution
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        201:
+          description: Return only http status 201 on success
+  /citizens/{citizen}/votes:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Get Citizen
+      tags:
+        - vote
+        - citizen
+      operationId: getCitizenVotes
+      parameters:
+        - name: id
+          in: query
+          required: true
+          example:
+            - 1329ab90-edae-cfed-f863-c8cb069fa327
+            - cab54e50-ce85-bba0-da23-fc9f75feeaf5
+          schema:
+            type: array
+            items:
+              type: string
+              format: uuid
+      responses:
+        200:
+          description: The Votes objects
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VoteResponse'
+        404:
+          description: Citizen not found
+        401:
+          $ref: '#/components/responses/401'
+  /comments/{comment}/vote:
+    parameters:
+      - $ref: '#/components/parameters/comment'
+    put:
+      security:
+        - JWTAuth: []
+      summary: Vote for a comment
+      tags:
+        - vote
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        201:
+          description: Return votes aggregation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteAggregation'
+        401:
+          $ref: '#/components/responses/401'
+  /citizens/{citizen}/votes/articles:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: all article vote for one citizen
+      tags:
+        - vote
+        - article
+        - citizen
+      responses:
+        200:
+          description: Votes
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/VoteResponse'
+        401:
+          $ref: '#/components/responses/401'
+  /articles/{article}/vote:
+    parameters:
+      - $ref: '#/components/parameters/article'
+    put:
+      security:
+        - JWTAuth: [ ]
+      summary: Vote for one article
+      tags:
+        - vote
+        - article
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/VoteRequest'
+      responses:
+        201:
+          description: Return only http status 201 on success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VoteAggregation'
         401:
           $ref: '#/components/responses/401'
 
@@ -1696,6 +1823,74 @@ components:
           type: string
           format: 'date-time'
 
+    VoteRequest:
+      type: object
+      additionalProperties: false
+      required:
+        - note
+      properties:
+        note:
+          type: integer
+          minimum: -1
+          maximum: 1
+    VoteResponse:
+      type: object
+      additionalProperties: false
+      required:
+        - id
+        - note
+        - createdAt
+        - createdBy
+        - target
+      properties:
+        id:
+          $ref: '#/components/schemas/UUID'
+        note:
+          type: integer
+          minimum: -1
+          maximum: 1
+        createdAt:
+          type: string
+          format: 'date-time'
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        target:
+          required:
+            - id
+            - reference
+          properties:
+            id:
+              $ref: '#/components/schemas/UUID'
+            reference:
+              type: string
+    VoteAggregation:
+      additionalProperties: false
+      type: object
+      required:
+        - up
+        - neutral
+        - down
+        - total
+        - score
+        - updatedAt
+      properties:
+        up:
+          type: number
+          minimum: 0
+        neutral:
+          type: number
+          minimum: 0
+        down:
+          type: number
+          minimum: 0
+        total:
+          type: number
+          minimum: 0
+        score:
+          type: number
+        updatedAt:
+          type: string
+          format: 'date-time'
 
   securitySchemes:
     JWTAuth:

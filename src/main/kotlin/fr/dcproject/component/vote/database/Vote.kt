@@ -16,8 +16,8 @@ class VoteForView<T : TargetI>(
     id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenCreator,
     override val target: T,
-    var note: Int,
-    var anonymous: Boolean = true
+    val note: Int,
+    val anonymous: Boolean = true
 ) : ExtraI<T, CitizenCreatorI>,
     VoteRef(id),
     CreatedAt by CreatedAt.Imp(),

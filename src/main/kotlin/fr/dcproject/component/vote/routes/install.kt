@@ -4,7 +4,7 @@ import fr.dcproject.component.vote.routes.GetCitizenVotes.getCitizenVote
 import fr.dcproject.component.vote.routes.GetCitizenVotesOnArticle.getCitizenVotesOnArticle
 import fr.dcproject.component.vote.routes.PutVoteOnArticle.putVoteOnArticle
 import fr.dcproject.component.vote.routes.PutVoteOnComment.putVoteOnComment
-import fr.dcproject.component.vote.routes.VoteConstitution.voteConstitution
+import fr.dcproject.component.vote.routes.PutVoteOnConstitution.voteConstitution
 import io.ktor.auth.authenticate
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.Routing

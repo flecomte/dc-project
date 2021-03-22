@@ -9,7 +9,7 @@ import fr.dcproject.component.constitution.database.ConstitutionRepository
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteConstitutionRepository
 import fr.dcproject.component.vote.database.VoteForUpdate
-import fr.dcproject.component.vote.routes.VoteConstitution.ConstitutionVoteRequest.Input
+import fr.dcproject.component.vote.routes.PutVoteOnConstitution.ConstitutionVoteRequest.Input
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
 import io.ktor.http.HttpStatusCode
@@ -21,7 +21,7 @@ import io.ktor.routing.Route
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
-object VoteConstitution {
+object PutVoteOnConstitution {
     @Location("/constitutions/{constitution}/vote")
     class ConstitutionVoteRequest(constitution: UUID) {
         val constitution = ConstitutionRef(constitution)
