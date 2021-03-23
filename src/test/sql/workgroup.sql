@@ -9,6 +9,11 @@ declare
         "description": "test",
         "anonymous": false
     }';
+    created_workgroup_updated  json := '{
+        "name": "Le groupe des rouge",
+        "description": "red",
+        "anonymous": false
+    }';
     created_workgroup_2  json := '{
         "name": "hello",
         "description": "super",
@@ -22,11 +27,18 @@ begin
     created_workgroup := jsonb_set(created_workgroup::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
     assert created_workgroup#>>'{created_by, id}' = _citizen_id::text, format('citizenId in workgroup must be the same as citizen, %s != %s', created_workgroup#>>'{created_by, id}', _citizen_id::text);
 
-    -- upsert workgroup
+    -- insert workgroup
     select upsert_workgroup(created_workgroup) into created_workgroup;
     assert created_workgroup->>'description' is not null, 'description should not be null';
     assert (created_workgroup->>'name') = 'Le groupe des vert', format('name must be equal to "Le groupe des vert", %s instead', created_workgroup->>'name');
     assert (created_workgroup#>>'{members, 0, citizen, id}') = _citizen_id::text, 'workgroup must have creator in members on creation';
+
+    -- update workgroup
+    created_workgroup_updated := jsonb_set(created_workgroup_updated::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;
+    select upsert_workgroup(created_workgroup_updated) into created_workgroup_updated;
+    assert created_workgroup_updated->>'description' is not null, 'description should not be null';
+    assert (created_workgroup_updated->>'name') = 'Le groupe des rouge', format('name must be equal to "Le groupe des rouge", %s instead', created_workgroup_updated->>'name');
+    assert (created_workgroup_updated#>>'{members, 0, citizen, id}') = _citizen_id::text, 'workgroup must have creator in members on update';
 
     -- insert another workgroup
     created_workgroup_2 := jsonb_set(created_workgroup_2::jsonb, '{created_by}'::text[], jsonb_build_object('id', _citizen_id::text), true)::json;

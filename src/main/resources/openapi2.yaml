@@ -1207,62 +1207,38 @@ paths:
                 $ref: '#/components/schemas/Workgroup'
         404:
           description: Workshop not exist or are deleted
-#    put:
-#      summary: Edit one workgroup
-#      security:
-#        - JWTAuth: [ ]
-#      tags:
-#        - workgroup
-#      requestBody:
-#        content:
-#          application/json:
-#            schema:
-#              required:
-#                - name
-#              properties:
-#                name:
-#                  type: string
-#                  example: Les partisants du RIC
-#                description:
-#                  type: string
-#                  example: Group formé pour la conception d'un RIC
-#                logo:
-#                  type: string
-#                  nullable: true
-#                anonymous:
-#                  type: boolean
-#                  example: false
-#                  nullable: true
-#                  default: true
-#                owner:
-#                  type: string
-#                  format: uuid
-#                  example: 6434f4f9-f570-f22a-c134-8668350651ff
-#                  nullable: true
-#      responses:
-#        200:
-#          description: Workgroup updated
-#          content:
-#            application/json:
-#              schema:
-#                properties:
-#                  id:
-#                    type: string
-#                    format: uuid
-#                  name:
-#                    type: string
-#                    example: Les partisants du RIC
-#                  description:
-#                    type: string
-#                    example: Group formé pour la conception d'un RIC
-#                  logo:
-#                    type: string
-#                  anonymous:
-#                    type: boolean
-#                    example: false
-#                  owner:
-#                    type: string
-#                    format: uuid
+    put:
+      summary: Edit one workgroup
+      security:
+        - JWTAuth: [ ]
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              properties:
+                name:
+                  type: string
+                  example: Les partisants du RIC
+                description:
+                  type: string
+                  example: Group formé pour la conception d'un RIC
+                logo:
+                  type: string
+                  nullable: true
+                anonymous:
+                  type: boolean
+                  example: false
+                  nullable: true
+                  default: true
+      responses:
+        200:
+          description: Workgroup updated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workgroup'
     delete:
       summary: Delete one workgroup
       security:

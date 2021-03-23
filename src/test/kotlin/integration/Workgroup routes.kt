@@ -16,6 +16,7 @@ import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`With members`
 import integration.steps.given.`authenticated as`
 import integration.steps.given.`with no content`
+import integration.steps.then.`And have property`
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -85,6 +86,47 @@ class `Workgroup routes` : BaseTest() {
             `When I send a GET request`("/workgroups/f496d86d-6654-4068-91ff-90e1dbcc5f38") {
                 `authenticated as`("Werner", "Heisenberg")
             } `Then the response should be` OK
+        }
+    }
+
+    @Test
+    fun `I can edit a workgroup`() {
+        withIntegrationApplication {
+            `Given I have citizen`("John", "Wheeler")
+            `Given I have citizen`("Heinrich", "Hertz", id = "94f92424-c257-4582-907c-98564a8c4ac9")
+            `Given I have citizen`("William", "Thomson", id = "87909ba3-2069-431c-9924-219fd8411cf2")
+            `Given I have workgroup`("aa875a24-0050-4252-9130-d37391714e26", createdBy = Name("John", "Wheeler")) {
+                `With members`(
+                    Name("Heinrich", "Hertz"),
+                    Name("William", "Thomson"),
+                )
+            }
+            `When I send a PUT request`("/workgroups/aa875a24-0050-4252-9130-d37391714e26") {
+                `authenticated as`("John", "Wheeler")
+                `with body`("""
+                {
+                    "name":"La ratatouille",
+                    "description":"Une petite souris"
+                }
+                """)
+            } `Then the response should be` OK and {
+                `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
+                `And the response should contain`("$.name", "La ratatouille")
+                `And the response should contain`("$.description", "Une petite souris")
+
+                `And have property`("$.members")
+                `And the response should contain list`("$.members", 3, 3)
+                `And the response should contain`("$.members.[1]citizen.id", "94f92424-c257-4582-907c-98564a8c4ac9")
+                `And the response should contain`("$.members.[2]citizen.id", "87909ba3-2069-431c-9924-219fd8411cf2")
+            }
+
+            `When I send a GET request`("/workgroups/aa875a24-0050-4252-9130-d37391714e26") {
+                `authenticated as`("John", "Wheeler")
+            } `Then the response should be` OK and {
+                `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
+                `And the response should contain`("$.name", "La ratatouille")
+                `And the response should contain`("$.description", "Une petite souris")
+            }
         }
     }
 
