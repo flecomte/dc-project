@@ -45,7 +45,8 @@ object EditWorkgroup {
                     ).let { workgroup ->
                         ac.assert { canUpdate(workgroup, citizenOrNull) }
                         repo.upsert(workgroup)
-                        call.respond(HttpStatusCode.OK, it)
+                    }.let {
+                        call.respond(HttpStatusCode.OK, it.toOutput())
                     }
                 }
             } ?: call.respond(HttpStatusCode.NotFound)

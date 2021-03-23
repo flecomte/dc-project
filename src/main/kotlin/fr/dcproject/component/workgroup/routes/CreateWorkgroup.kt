@@ -1,5 +1,6 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
@@ -44,8 +45,11 @@ object CreateWorkgroup {
             }.let { workgroup ->
                 ac.assert { canCreate(workgroup, citizenOrNull) }
                 repo.upsert(workgroup)
-            }.let {
-                call.respond(HttpStatusCode.Created, it)
+            }.let { w ->
+                call.respond(
+                    HttpStatusCode.Created,
+                    w.toOutput()
+                )
             }
         }
     }

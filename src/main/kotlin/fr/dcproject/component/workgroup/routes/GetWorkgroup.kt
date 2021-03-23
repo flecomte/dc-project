@@ -25,7 +25,10 @@ object GetWorkgroup {
         get<WorkgroupRequest> {
             repo.findById(it.workgroup.id)?.let { workgroup ->
                 ac.assert { canView(workgroup, citizenOrNull) }
-                call.respond(workgroup)
+                call.respond(
+                    HttpStatusCode.OK,
+                    workgroup.toOutput()
+                )
             } ?: call.respond(HttpStatusCode.NotFound)
         }
     }

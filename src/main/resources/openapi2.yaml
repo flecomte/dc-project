@@ -1123,6 +1123,158 @@ paths:
         401:
           $ref: '#/components/responses/401'
 
+  /workgroups:
+    get:
+      summary: Get all Workgroup (Paginated)
+      security:
+        - JWTAuth: [ ]
+      tags:
+        - workgroup
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/workgroupSort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
+        - $ref: '#/components/parameters/createdBy'
+      responses:
+        200:
+          description: paginated list of workgroup
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/WorkgroupListing'
+    post:
+      summary: Create new Workgroup
+      security:
+        - JWTAuth: [ ]
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - name
+              properties:
+                id:
+                  type: string
+                  format: uuid
+                  nullable: true
+                name:
+                  type: string
+                  example: Les partisants du RIC
+                description:
+                  type: string
+                  example: Group formé pour la conception d'un RIC
+                logo:
+                  type: string
+                  nullable: true
+                anonymous:
+                  type: boolean
+                  example: false
+                  nullable: true
+                  default: true
+      responses:
+        201:
+          description: Workgroup created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workgroup'
+  /workgroups/{workgroup}:
+    parameters:
+      - $ref: '#/components/parameters/workgroup'
+    get:
+      summary: Get one workgroup by ID
+      security:
+        - JWTAuth: [ ]
+      tags:
+        - workgroup
+      responses:
+        200:
+          description: Workgroup
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workgroup'
+        404:
+          description: Workshop not exist or are deleted
+#    put:
+#      summary: Edit one workgroup
+#      security:
+#        - JWTAuth: [ ]
+#      tags:
+#        - workgroup
+#      requestBody:
+#        content:
+#          application/json:
+#            schema:
+#              required:
+#                - name
+#              properties:
+#                name:
+#                  type: string
+#                  example: Les partisants du RIC
+#                description:
+#                  type: string
+#                  example: Group formé pour la conception d'un RIC
+#                logo:
+#                  type: string
+#                  nullable: true
+#                anonymous:
+#                  type: boolean
+#                  example: false
+#                  nullable: true
+#                  default: true
+#                owner:
+#                  type: string
+#                  format: uuid
+#                  example: 6434f4f9-f570-f22a-c134-8668350651ff
+#                  nullable: true
+#      responses:
+#        200:
+#          description: Workgroup updated
+#          content:
+#            application/json:
+#              schema:
+#                properties:
+#                  id:
+#                    type: string
+#                    format: uuid
+#                  name:
+#                    type: string
+#                    example: Les partisants du RIC
+#                  description:
+#                    type: string
+#                    example: Group formé pour la conception d'un RIC
+#                  logo:
+#                    type: string
+#                  anonymous:
+#                    type: boolean
+#                    example: false
+#                  owner:
+#                    type: string
+#                    format: uuid
+    delete:
+      summary: Delete one workgroup
+      security:
+        - JWTAuth: [ ]
+      tags:
+        - workgroup
+      responses:
+        204:
+          description: Workgroup deleted
+        404:
+          description: Workshop not exist or are already deleted
+
 components:
   parameters:
     page:
@@ -1167,6 +1319,17 @@ components:
           - createdAt
           - vote
           - popularity
+    workgroupSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - name
+          - createdAt
     direction:
       name: direction
       in: query
@@ -1244,6 +1407,17 @@ components:
       schema:
         type: string
         format: uuid
+
+    workgroup:
+      name: workgroup
+      in: path
+      description: ID of workgroup
+      example: 82a0e60a-bb55-dbc0-1c3d-0a804df2b5df
+      required: true
+      schema:
+        type: string
+        format: uuid
+
 
   responses:
     401:
@@ -1891,6 +2065,67 @@ components:
         updatedAt:
           type: string
           format: 'date-time'
+
+    WorkgroupListing:
+      description: Workgroup
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Les partisants du RIC
+        description:
+          type: string
+          example: Group formé pour la conception d'un RIC
+        logo:
+          type: string
+          nullable: true
+
+    Workgroup:
+      description: Workgroup
+      type: object
+      required:
+        - id
+        - name
+        - description
+        - logo
+        - anonymous
+        - createdBy
+        - members
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+          example: Les partisants du RIC
+        description:
+          type: string
+          example: Group formé pour la conception d'un RIC
+        logo:
+          type: string
+          nullable: true
+        anonymous:
+          type: boolean
+        createdBy:
+          $ref: '#/components/schemas/CitizenCreator'
+        members:
+          type: array
+          items:
+            type: object
+            properties:
+              citizen:
+                type: object
+                items:
+                  properties:
+                    id:
+                      $ref: '#/components/schemas/UUID'
+              roles:
+                type: array
+                items:
+                  type: string
 
   securitySchemes:
     JWTAuth:

@@ -1,5 +1,6 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.citizenOrNull
@@ -7,6 +8,7 @@ import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
 import fr.postgresjson.repository.RepositoryI
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
@@ -43,7 +45,10 @@ object GetWorkgroups {
                     WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
                 )
             ac.assert { canView(workgroups.result, citizenOrNull) }
-            call.respond(workgroups)
+            call.respond(
+                HttpStatusCode.OK,
+                workgroups.toOutput { it.toOutputListing() }
+            )
         }
     }
 }
