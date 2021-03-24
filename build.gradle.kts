@@ -41,6 +41,7 @@ plugins {
     id("net.nemerosa.versioning") version "2.14.0"
     id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
     id("com.avast.gradle.docker-compose") version "0.14.0"
+    id("com.github.kt3k.coveralls") version "2.8.4"
 }
 
 application {
@@ -195,6 +196,10 @@ tasks.test {
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+coveralls {
+    sourceDirs.add("src/main/kotlin")
 }
 
 tasks.register("testAll") {

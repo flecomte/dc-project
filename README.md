@@ -2,6 +2,8 @@
 
 [![CodeFactor](https://www.codefactor.io/repository/github/flecomte/dc-project/badge?s=869dc426625a253a07bea95f9380e23fdb048b94)](https://www.codefactor.io/repository/github/flecomte/dc-project)
 [![Tests](https://github.com/flecomte/dc-project/actions/workflows/tests.yml/badge.svg)](https://github.com/flecomte/dc-project/actions/workflows/tests.yml)
+[![Coverage Status](https://coveralls.io/repos/github/flecomte/dc-project/badge.svg?branch=master)](https://coveralls.io/github/flecomte/dc-project?branch=master)
+
 
 [Installation](./doc/installation/Installation.md)
 
