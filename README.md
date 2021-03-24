@@ -3,7 +3,7 @@
 [![CodeFactor](https://www.codefactor.io/repository/github/flecomte/dc-project/badge?s=869dc426625a253a07bea95f9380e23fdb048b94)](https://www.codefactor.io/repository/github/flecomte/dc-project)
 [![Tests](https://github.com/flecomte/dc-project/actions/workflows/tests.yml/badge.svg)](https://github.com/flecomte/dc-project/actions/workflows/tests.yml)
 
-[Installation](./doc/installation)
+[Installation](./doc/installation/Installation.md)
 
 ### Run dockers
 ```bash
