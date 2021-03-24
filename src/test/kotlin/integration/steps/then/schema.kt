@@ -33,7 +33,7 @@ fun Schema.validate(api: OpenApi3, toValidate: JsonNode) {
 }
 
 fun TestApplicationResponse.operation(route: String? = null, callback: Operation.(OpenApi3, String) -> Unit): Operation {
-    val filePath = "/openapi2.yaml"
+    val filePath = "/openapi.yaml"
     return OpenApi3Parser().parse(File(filePath.getResource().toURI()), true).let { api: OpenApi3 ->
         val httpMethod = call.request.httpMethod
         val uri = route ?: "/" + Url(call.request.uri).encodedPath
