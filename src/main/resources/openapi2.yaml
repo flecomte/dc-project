@@ -1250,6 +1250,78 @@ paths:
           description: Workgroup deleted
         404:
           description: Workshop not exist or are already deleted
+  /workgroups/{workgroup}/members:
+    parameters:
+      - $ref: '#/components/parameters/workgroup'
+    post:
+      summary: Add members to the workgroup
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembersRequest'
+      responses:
+        201:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembersResponse'
+    put:
+      summary: Updates ALL members.
+      description: ⚠ PLEASE NOTE ⚠ This request removes all members who are not in request!
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MembersRequest'
+      responses:
+        200:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembersResponse'
+        400:
+          $ref: '#/components/responses/400'
+    delete:
+      summary: Delete members of workgroup
+      security:
+        - JWTAuth: []
+      tags:
+        - workgroup
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: members of workgroup
+              type: array
+              items:
+                type: object
+                properties:
+                  citizen:
+                    required:
+                      - id
+                    properties:
+                      id:
+                        $ref: '#/components/schemas/UUID'
+      responses:
+        200:
+          description: the list of members
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MembersResponse'
+        400:
+          $ref: '#/components/responses/400'
 
 components:
   parameters:
@@ -2058,7 +2130,6 @@ components:
         logo:
           type: string
           nullable: true
-
     Workgroup:
       description: Workgroup
       type: object
@@ -2088,20 +2159,49 @@ components:
         createdBy:
           $ref: '#/components/schemas/CitizenCreator'
         members:
-          type: array
-          items:
-            type: object
+          $ref: '#/components/schemas/MembersResponse'
+
+    MembersRequest:
+      description: members of workgroup
+      type: array
+      items:
+        type: object
+        properties:
+          citizen:
+            required:
+              - id
             properties:
-              citizen:
-                type: object
-                items:
-                  properties:
-                    id:
-                      $ref: '#/components/schemas/UUID'
-              roles:
-                type: array
-                items:
-                  type: string
+              id:
+                $ref: '#/components/schemas/UUID'
+          roles:
+            type: array
+            items:
+              type: string
+              enum:
+                - MASTER
+                - MANAGER
+                - EDITOR
+                - REPORTER
+              example: MASTER
+    MembersResponse:
+      description: members of workgroup
+      type: array
+      items:
+        description: Member of workgroup
+        type: object
+        properties:
+          citizen:
+            $ref: '#/components/schemas/CitizenCreator'
+          roles:
+            type: array
+            items:
+              type: string
+              enum:
+                - MASTER
+                - MANAGER
+                - EDITOR
+                - REPORTER
+              example: MASTER
 
   securitySchemes:
     JWTAuth:

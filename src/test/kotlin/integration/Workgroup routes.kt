@@ -204,8 +204,7 @@ class `Workgroup routes` : BaseTest() {
                 """
                 [
                   {
-                    "citizen": {"id":"87909ba3-2069-431c-9924-219fd8411cf2"},
-                    "roles": ["MASTER"]
+                    "citizen": {"id":"87909ba3-2069-431c-9924-219fd8411cf2"}
                   }
                 ]
                 """

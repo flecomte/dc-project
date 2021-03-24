@@ -7,6 +7,7 @@ import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
 import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI
+import fr.dcproject.component.workgroup.routes.toOutput
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -46,7 +47,10 @@ object UpdateMemberOfWorkgroup {
                     ac.assert { canUpdateMembers(workgroup, citizenOrNull) }
                     repo.updateMembers(workgroup, members)
                 }.let { members ->
-                    call.respond(HttpStatusCode.OK, members)
+                    call.respond(
+                        HttpStatusCode.OK,
+                        members.toOutput()
+                    )
                 }
             } ?: call.respond(HttpStatusCode.NotFound)
         }

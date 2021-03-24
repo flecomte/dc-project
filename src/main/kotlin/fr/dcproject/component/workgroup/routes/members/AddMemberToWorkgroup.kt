@@ -7,6 +7,7 @@ import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
 import fr.dcproject.component.workgroup.database.WorkgroupWithMembersI
+import fr.dcproject.component.workgroup.routes.toOutput
 import io.ktor.application.ApplicationCall
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -22,8 +23,8 @@ import java.util.UUID
 object AddMemberToWorkgroup {
     @Location("/workgroups/{workgroupId}/members")
     class WorkgroupsMembersRequest(val workgroupId: UUID) : KoinComponent {
-        class Input : MutableList<Input.Item> by mutableListOf() {
-            class Item(val citizen: CitizenRef, roles: List<String> = emptyList()) {
+        class Input : MutableList<Input.Member> by mutableListOf() {
+            class Member(val citizen: CitizenRef, roles: List<String> = emptyList()) {
                 val roles: List<WorkgroupWithMembersI.Member.Role> = roles.map {
                     WorkgroupWithMembersI.Member.Role.valueOf(it)
                 }
@@ -48,7 +49,10 @@ object AddMemberToWorkgroup {
                     ac.assert { canAddMembers(workgroup, citizenOrNull) }
                     repo.addMembers(workgroup, members)
                 }.let { members ->
-                    call.respond(HttpStatusCode.Created, members)
+                    call.respond(
+                        HttpStatusCode.Created,
+                        members.toOutput()
+                    )
                 }
             } ?: call.respond(HttpStatusCode.NotFound)
         }
