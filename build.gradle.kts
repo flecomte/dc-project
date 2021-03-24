@@ -191,8 +191,14 @@ tasks.test {
     useJUnitPlatform()
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
-    finalizedBy(tasks.ktlintCheck)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+tasks.register("testAll") {
+    group = "verification"
+    dependsOn(testSql)
+    dependsOn(tasks.test)
+    dependsOn(tasks.ktlintCheck)
 }
 
 apply(plugin = "docker-compose")

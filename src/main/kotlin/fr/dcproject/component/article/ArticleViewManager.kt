@@ -59,33 +59,33 @@ class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<
             //language=JSON
             setJsonEntity(
                 """
-            {
-              "size": 0,
-              "query": {
-                "bool": {
-                  "must": {
-                    "term": {
-                      "version_id": "${entity.versionId}"
+                {
+                  "size": 0,
+                  "query": {
+                    "bool": {
+                      "must": {
+                        "term": {
+                          "version_id": "${entity.versionId}"
+                        }
+                      }
+                    }
+                  },
+                  "aggs" : {
+                    "total": {
+                      "composite" : {
+                        "sources" : [
+                          { "version_id": { "terms": {"field": "version_id" } } }
+                        ]
+                      }
+                    },
+                    "unique" : {
+                      "cardinality" : {
+                        "field" : "user_ref",
+                        "precision_threshold": 1
+                      }
                     }
                   }
                 }
-              },
-              "aggs" : {
-                "total": {
-                  "composite" : {
-                    "sources" : [
-                      { "version_id": { "terms": {"field": "version_id" } } }
-                    ]
-                  }
-                },
-                "unique" : {
-                  "cardinality" : {
-                    "field" : "user_ref",
-                    "precision_threshold": 1
-                  }
-                }
-              }
-            }
                 """.trimIndent()
             )
         }
