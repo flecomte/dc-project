@@ -60,6 +60,9 @@ buildscript {
     }
 }
 
+tasks.distZip.configure { enabled = false }
+tasks.distTar.configure { enabled = false }
+
 tasks.withType<KotlinCompile> {
     kotlinOptions {
         jvmTarget = "11"
