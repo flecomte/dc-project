@@ -11,12 +11,12 @@ import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`With members`
 import integration.steps.given.`authenticated as`
 import integration.steps.given.`with no content`
+import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should be null`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
-import integration.steps.then.`And have property`
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -105,12 +105,14 @@ class `Workgroup routes` : BaseTest() {
             }
             `When I send a PUT request`("/workgroups/aa875a24-0050-4252-9130-d37391714e26") {
                 `authenticated as`("John", "Wheeler")
-                `with body`("""
-                {
-                    "name":"La ratatouille",
-                    "description":"Une petite souris"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                        "name":"La ratatouille",
+                        "description":"Une petite souris"
+                    }
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
                 `And the response should contain`("$.name", "La ratatouille")
