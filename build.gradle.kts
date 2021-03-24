@@ -56,7 +56,7 @@ buildscript {
     }
     dependencies {
         classpath("com.typesafe:config:1.4.1")
-        classpath("com.github.flecomte:postgres-json:2.1.1")
+        classpath("com.github.flecomte:postgres-json:2.1.2")
     }
 }
 
@@ -71,7 +71,7 @@ val migration by tasks.registering {
     dependsOn(tasks.named("composeUp"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/main/resources/application.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/main/application.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -81,8 +81,8 @@ val migration by tasks.registering {
         )
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI()
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI()
         ).run {
             run()
         }
@@ -94,7 +94,7 @@ val migrationTest by tasks.registering {
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
         val connection = Connection(
             host = config.getString("db.host"),
             port = config.getInt("db.port"),
@@ -104,8 +104,8 @@ val migrationTest by tasks.registering {
         )
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI()
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI()
         ).run {
             run()
             connection.disconnect()
@@ -115,11 +115,13 @@ val migrationTest by tasks.registering {
 
 val testSql by tasks.registering {
     group = "verification"
+    dependsOn(tasks.named("processResources"))
+    dependsOn(tasks.named("processTestResources"))
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
 
     doLast {
-        val config = ConfigFactory.parseFile(file("$buildDir/../src/test/resources/application-test.conf")).resolve()
+        val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
 
         val connection = Connection(
             host = config.getString("db.host"),
@@ -131,16 +133,14 @@ val testSql by tasks.registering {
 
         Migrations(
             connection,
-            file("$buildDir/../src/main/resources/sql/migrations").toURI(),
-            file("$buildDir/../src/main/resources/sql/functions").toURI(),
-            file("$buildDir/../src/test/sql/fixtures").toURI()
-        ).run {
-            run()
-        }
+            file("$buildDir/resources/main/sql/migrations").toURI(),
+            file("$buildDir/resources/main/sql/functions").toURI(),
+            file("$buildDir/resources/test/sql/fixtures").toURI()
+        ).run()
 
         Requester.RequesterFactory(
             connection = connection,
-            queriesDirectory = file("$buildDir/../src/test/sql").toURI()
+            queriesDirectory = file("$buildDir/resources/test/sql").toURI()
         ).createRequester().run {
             getQueries().map {
                 try {
@@ -267,6 +267,7 @@ tasks.jacocoTestReport {
 
 detekt {
     buildUponDefaultConfig = true // preconfigure defaults
+    ignoreFailures = true
 //    config = files("$projectDir/config/detekt.yml") // point to your custom config defining rules to run, overwriting default behavior
 //    baseline = file("$projectDir/config/baseline.xml") // a way of suppressing issues before introducing detekt
 
@@ -281,6 +282,7 @@ detekt {
 tasks.withType<Detekt> {
     // Target version of the generated JVM bytecode. It is used for type resolution.
     this.jvmTarget = "11"
+    ignoreFailures = true
 }
 
 val setMaxMapCount = tasks.create<Exec>("setMaxMapCount") {
@@ -293,7 +295,12 @@ val setMaxMapCount = tasks.create<Exec>("setMaxMapCount") {
         }
     }
 }
-tasks.named("testComposeUp").configure { dependsOn(setMaxMapCount) }
+
+tasks.named("testComposeUp").configure {
+    if (OperatingSystem.current().isWindows) {
+        dependsOn(setMaxMapCount)
+    }
+}
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
@@ -327,7 +334,7 @@ dependencies {
     implementation("net.pearx.kasechange:kasechange-jvm:1.3.0")
     implementation("com.auth0:java-jwt:3.12.0")
     implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
-    implementation("com.github.flecomte:postgres-json:2.1.1")
+    implementation("com.github.flecomte:postgres-json:2.1.2")
     implementation("com.sendgrid:sendgrid-java:4.7.1")
     implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") // TODO update to 6.0.2
     implementation("com.rabbitmq:amqp-client:5.10.0")

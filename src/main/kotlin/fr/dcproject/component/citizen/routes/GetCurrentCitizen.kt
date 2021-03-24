@@ -34,7 +34,7 @@ object GetCurrentCitizen {
                             object {
                                 val firstName: String = n.firstName
                                 val lastName: String = n.lastName
-                            } 
+                            }
                         }
                         val email: String = citizen.email
                         val birthday: String = citizen.birthday.run {

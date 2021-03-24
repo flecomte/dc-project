@@ -11,7 +11,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://localhost:5433/test</jdbc-url>
+      <jdbc-url>jdbc:postgresql://localhost:15432/test</jdbc-url>
     </data-source>
     <data-source source="LOCAL" name="sonar@localhost" uuid="ee78beab-120d-4740-ad21-d4d9e2121d25">
       <driver-ref>postgresql</driver-ref>

@@ -1,18 +1,18 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
-import integration.steps.then.`And the response should contain list`
-import integration.steps.then.`And the response should contain`
-import integration.steps.then.`Then the response should be`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
-import integration.steps.then.and
 import integration.steps.given.`Given I have an opinion choice`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have opinion on article`
 import integration.steps.given.`authenticated as`
+import integration.steps.then.`And the response should contain list`
+import integration.steps.then.`And the response should contain`
+import integration.steps.then.`Then the response should be`
+import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -55,13 +55,15 @@ class `Opinion routes` : BaseTest() {
             `Given I have article`(id = "9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b", createdBy = Name("Isaac", "Newton"))
             `When I send a PUT request`("/articles/9226c1a3-8091-c3fa-7d0d-c2e98c9bee7b/opinions") {
                 `authenticated as`("Isaac", "Newton")
-                `with body`("""
-                {
-                  "ids": [
-                    "0f4f1721-3136-44f1-9f31-1459f3317b15"
-                  ]
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "ids": [
+                        "0f4f1721-3136-44f1-9f31-1459f3317b15"
+                      ]
+                    }
+                    """
+                )
             } `Then the response should be` Created
         }
     }

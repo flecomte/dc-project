@@ -22,17 +22,19 @@ class `Register routes` : BaseTest() {
     fun `I can register`() {
         withIntegrationApplication {
             `When I send a POST request`("/register") {
-                `with body`("""
-                {
-                  "name": {"firstName":"George", "lastName":"MICHEL"},
-                  "birthday": "2001-01-01",
-                  "user":{
-                    "username": "george-junior",
-                    "password": "azerty"
-                  },
-                  "email": "george-junior@gmail.com"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "name": {"firstName":"George", "lastName":"MICHEL"},
+                      "birthday": "2001-01-01",
+                      "user":{
+                        "username": "george-junior",
+                        "password": "azerty"
+                      },
+                      "email": "george-junior@gmail.com"
+                    }
+                    """
+                )
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain pattern`("$.token", "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.")
@@ -44,16 +46,18 @@ class `Register routes` : BaseTest() {
     fun `I cannot register if no username was sent`() {
         withIntegrationApplication {
             `When I send a POST request`("/register", Validate.ALL - Validate.REQUEST_BODY) {
-                `with body`("""
-                {
-                  "name": {"firstName":"George2", "lastName":"MICHEL2"},
-                  "birthday": "2001-01-01",
-                  "user":{
-                    "password": ""
-                  },
-                  "email": "george-junior@gmail.com"
-                }
-                """)
+                `with body`(
+                    """
+                    {
+                      "name": {"firstName":"George2", "lastName":"MICHEL2"},
+                      "birthday": "2001-01-01",
+                      "user":{
+                        "password": ""
+                      },
+                      "email": "george-junior@gmail.com"
+                    }
+                    """
+                )
             } `Then the response should be` BadRequest and {
                 `And the response should be null`()
             }
