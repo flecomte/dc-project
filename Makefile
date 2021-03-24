@@ -15,12 +15,12 @@ help: ## This help.
 
 bd: build-docker
 
-build-docker: ## Build the docker image of application
+build-docker: ## Build the docker image of application (alias: bd)
 	docker build -t dc-project -f docker/app/Dockerfile .
 
 pd: publish-docker
 
-publish-docker: build-docker ## Publish docker image of application to Github
+publish-docker: build-docker ## Publish docker image of application to Github (alias: pd)
 	@git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
 	@cat ./GH_TOKEN.txt | docker login docker.pkg.github.com -u ${GITHUB_USERNAME} --password-stdin
 	@docker tag dc-project docker.pkg.github.com/flecomte/dc-project/dc-project:${VERSION}
@@ -28,27 +28,32 @@ publish-docker: build-docker ## Publish docker image of application to Github
 
 rd: run-docker
 
-run-docker: ## Build and Run all docker services
+run-docker: ## Build and Run all docker services (alias: rd)
 	docker-compose up -d --build
+
+rdd: run-docker-dependencies
+
+run-docker-dependencies: ## Build and Run dependencies docker services (alias: rdd)
+	docker-compose up -d --build openapi rabbitmq redis elasticsearch db sonarqube_db sonarqube
 
 pm: publish-maven
 
-publish-maven: ## Publish JAR file to Github
+publish-maven: ## Publish JAR file to Github (alias: pm)
 	@git diff --quiet --exit-code || (echo "The git is DIRTY !!! You cannot publish this crap!" && exit 1)
 	gradlew publish
 
 f: fixtures
 
-fixtures: ## Import fixtures
+fixtures: ## Import fixtures (alias: f)
 	bash src/main/resources/sql/fixtures/fixtures.sh
 
-reset-database: ## Import fixtures
+reset-database: ## Reset database !!!
 	cd src/main/resources/sql/ ; bash resetDB.sh
 
 test-sql: ## Test sql
 	cd src/test/sql/ ; bash test.sh 1
 
-v: vertion
+v: version
 
-vertion: ## Show current version
+version: ## Show current version (alias: v)
 	@echo ${VERSION}

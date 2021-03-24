@@ -1,4 +1,4 @@
-openapi: 3.0.1
+openapi: 3.0.0
 info:
   version: '0.1'
   title: 'DC Project'
@@ -37,12 +37,16 @@ paths:
             text/plain:
               example:
                 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJBdXRoZW50aWNhdGlvbiIsImlzcyI6ImRjLXByb2plY3QuZnIiLCJpZCI6ImQ1NDRhNmE4LWJhYjgtNDU2MC05NWIxLThhZjAyMDNkOTEwNCIsImV4cCI6MTU2NzA3Mzc0Mn0.0VTetv8fZFjVgpJ-bwJpidGNHJUOmgj8vuZcZXzwnLa7TtFwcXWvh3bDPYHqB66nmOfXyM57XnHDbmRwtipCag
-  /sso:
+  /auth/passwordless:
     post:
-      summary: Send email with JWT
+      summary: Send a connexion link by email
+      description: Send a connexion link by email with the token required to the connexion
+      externalDocs:
+        description: Explanation of Passwordless auth
+        url: https://en.wikipedia.org/wiki/Passwordless_authentication
       tags:
         - authentification
-      operationId: sso
+      operationId: passwordless
       requestBody:
         content:
           application/json:
@@ -58,7 +62,7 @@ paths:
                   type: string
                   description: url tu redirect with the token
                   example:
-                    http://dc-project.fr/sso
+                    http://dc-project.fr/auth/passwordless
 
       responses:
         204:
@@ -153,17 +157,18 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - old_password
+                - new_password
               properties:
                 old_password:
                   type: string
                   format: password
-                  required: true
                   example:
                     azerty
                 new_password:
                   type: string
                   format: password
-                  required: true
                   example:
                     qwerty
       responses:
@@ -239,7 +244,37 @@ paths:
                       result:
                         type: array
                         items:
-                          $ref: '#/components/schemas/ArticleResponse'
+                          properties:
+                            id:
+                              type: string
+                              format: uuid
+                            title:
+                              type: string
+                            created_by:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: object
+                                  properties:
+                                    first_name:
+                                      type: string
+                                    last_name:
+                                      type: string
+                                email:
+                                  type: string
+                            workgroup:
+                              type: object
+                              properties:
+                                id:
+                                  type: string
+                                  format: uuid
+                                name:
+                                  type: string
+                            draft:
+                              type: boolean
     post:
       security:
         - JWTAuth: []
@@ -728,6 +763,8 @@ paths:
     parameters:
       - $ref: '#/components/parameters/opinion'
     get:
+      security:
+        - {}
       summary: Get one opinion Choices
       tags:
         - opinion
@@ -889,6 +926,8 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - name
               properties:
                 id:
                   type: string
@@ -897,7 +936,6 @@ paths:
                 name:
                   type: string
                   example: Les partisants du RIC
-                  required: true
                 description:
                   type: string
                   example: Group formé pour la conception d'un RIC
@@ -966,11 +1004,12 @@ paths:
         content:
           application/json:
             schema:
+              required:
+                - name
               properties:
                 name:
                   type: string
                   example: Les partisants du RIC
-                  required: true
                 description:
                   type: string
                   example: Group formé pour la conception d'un RIC
@@ -1280,7 +1319,6 @@ components:
       properties:
         last_version:
           type: boolean
-          required: false
           default: false
 
     Paginated:
@@ -1311,10 +1349,11 @@ components:
           example: 1
 
     UserBase:
+      required:
+        - username
       properties:
         username:
           type: string
-          required: true
           example:
             john-doe
     UserResponse:
@@ -1325,10 +1364,11 @@ components:
       allOf:
         - $ref: '#/components/schemas/UserBase'
         - type: object
+          required:
+            - password
           properties:
-            plain_password:
+            password:
               type: string
-              required: true
               example:
                 azerty
               format: password
@@ -1342,22 +1382,21 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserResponse'
-            workgroups:
-              $ref: '#/components/schemas/WorkgroupSimple'
     CitizenBase:
       type: object
+      required:
+        - first_name
+        - last_name
       properties:
         name:
           type: object
           properties:
             first_name:
               type: string
-              required: true
               example:
                 john
             last_name:
               type: string
-              required: true
               example:
                 Doe
         birthday:
@@ -1375,24 +1414,23 @@ components:
           properties:
             user:
               $ref: '#/components/schemas/UserRequest'
-            workgroups:
-              $ref: '#/components/schemas/UuidEntity'
 
     RegisterRequest:
       $ref: '#/components/schemas/CitizenRequest'
 
     LoginRequest:
+      required:
+        - name
+        - password
       properties:
         name:
           type: string
           description: username
-          required: true
           example:
             john-doe
         password:
           type: string
           description: Pasword
-          required: true
           example:
             azerty
 
@@ -1400,41 +1438,41 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - title
+            - content
+            - description
+            - tags
+            - anonymous
+            - draft
           properties:
             title:
               type: string
-              required: true
               example:
                 Limit power of press
             content:
               type: string
-              required: true
               example:
                 Lorem upsum...
             description:
               type: string
-              required: true
               example:
                 I think is the bether choice
             tags:
               type: array
               items:
                 type: string
-              required: false
               default: []
               example: [power, press]
-            annonymous:
+            anonymous:
               type: boolean
-              required: false
               default: true
             draft:
               type: boolean
-              required: false
               default: false
             workgroup:
               allOf:
                 - $ref: '#/components/schemas/UuidEntity'
-                - required: false
                 - default: null
         - $ref: '#/components/schemas/versionId'
     ArticleResponse:
@@ -1455,25 +1493,23 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - title
           properties:
             title:
               type: string
-              required: true
               example:
                 Constitution for the liberty
             titles:
               type: array
-              required: false
               default: []
               items:
                 $ref: '#/components/schemas/TitleBase'
-            annonymous:
+            anonymous:
               type: boolean
-              required: false
               default: true
             draft:
               type: boolean
-              required: false
               default: false
         - $ref: '#/components/schemas/versionId'
     ConstitutionResponse:
@@ -1501,10 +1537,11 @@ components:
 
     TitleBase:
       type: object
+      required:
+        - name
       properties:
         name:
           type: string
-          required: true
           example:
             The liberties
         rank:
@@ -1552,10 +1589,11 @@ components:
       type: object
       allOf:
         - type: object
+          required:
+            - content
           properties:
             content:
               type: string
-              required: true
               example:
                 Lorem ipsum...
     CommentRequest:
@@ -1569,14 +1607,15 @@ components:
         - $ref: '#/components/schemas/Extra'
         - $ref: '#/components/schemas/Votable'
         - type: object
+          required:
+            - parent_ids
+            - parent
           properties:
             parents_ids:
               type: array
-              required: false
               items:
                 $ref: '#/components/schemas/UUID'
             parent:
-              required: false
               allOf:
                 - $ref: '#/components/schemas/UUID'
 
@@ -1591,12 +1630,13 @@ components:
     VoteBase:
       allOf:
         - type: object
+          required:
+            - note
           properties:
             note:
               type: integer
               minimum: -1
               maximum: 1
-              required: true
     VoteRequest:
       allOf:
         - $ref: '#/components/schemas/VoteBase'
@@ -1658,6 +1698,8 @@ components:
       description: Opinion Choice
       allOf:
         - type: object
+          required:
+            - name
           properties:
             id:
               type: string
@@ -1667,7 +1709,6 @@ components:
               example: opinion1
             target:
               type: array
-              required: false
               nullable: true
               items:
                 type: string
@@ -1689,12 +1730,12 @@ components:
             target:
               type: object
               properties:
-                  id:
-                    type: string
-                    format: uuid
-                  reference:
-                    type: string
-                    example: article
+                id:
+                  type: string
+                  format: uuid
+                reference:
+                  type: string
+                  example: article
             choice:
               type: object
               allOf:

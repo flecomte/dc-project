@@ -1,12 +1,13 @@
 #### BUILD ####
-FROM gradle:5.6.4-jdk11 AS build
+FROM gradle:6.8-jdk11 AS build
 COPY --chown=gradle:gradle . /home/gradle/src
 
 WORKDIR /home/gradle/src
 RUN gradle build -x test -x ktlintKotlinScriptCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck --no-daemon
+RUN gradle shadowJar
 
 #### RUN ####
-FROM adoptopenjdk/openjdk11:jre-11.0.4_11-alpine
+FROM amazoncorretto:11-alpine as run
 ENV APPLICATION_USER ktor
 RUN adduser -D -g '' $APPLICATION_USER
 

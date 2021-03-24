@@ -1,0 +1,66 @@
+@startuml
+title Notification
+|Server|
+partition Event {
+    start
+        :Article is modified;
+        :Send message to "notification" exchange (RabbitMQ);
+        :RabbitMQ send message to "push" and "email" queue;
+    stop
+}
+split
+    partition Email {
+        -[hidden]->
+        :Consume "email" queue<
+        repeat :get next notification;
+        :Get followers of article from DB;
+        while (loop on followers)
+             :Send email to the citizen>
+        endwhile
+        :ACK>
+        repeat while()
+        detach
+    }
+splitagain
+    partition Push {
+        -[hidden]->
+        :Consume "email" queue<
+        repeat :get next notification;
+        :Get followers of article from DB;
+        while (loop on followers)
+             :Send notification message to redis>
+        endwhile
+        :ACK>
+        repeat while()
+        detach
+    }
+splitagain
+    partition "Notification direct" {
+        -[hidden]->
+        |Client|
+        start
+        :Client arrive on the web site;
+        :Connect to the websocket;
+        |Server|
+        :Get citizen notification
+        from redis;
+        while (on each notifications)
+            :Send notification to websocket>
+        endwhile(no notification left)
+        |Client|
+        :show notification;
+        |Server|
+        :Subscribe to redis event;
+        repeat :On new notification;
+        :Get new notification from redis;
+        :Send notification to websocket>
+        |Client|
+        :show notification;
+        |Server|
+        repeat while (wait notification)
+        detach
+    }
+endsplit
+
+
+@enduml

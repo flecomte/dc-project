@@ -54,10 +54,10 @@ begin
 
         insert into article_relations (source_id, target_id, created_by_id)
         select
-            (resource->>'id')::uuid,
+            (rel->>'id')::uuid,
             id,
-            (resource#>>'{created_by, id}')::uuid
-        from json_populate_recordset(null::article, resource->>'relations');
+            (rel#>>'{created_by, id}')::uuid
+        from json_populate_recordset(null::article, resource->>'relations') rel;
     end if;
 
     select find_article_by_id(new_id) into resource;

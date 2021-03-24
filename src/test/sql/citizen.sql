@@ -4,7 +4,7 @@ declare
     wrong_citizen              json;
     _user_id                   uuid := fixture_user();
     created_citizen            json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel@gmail.com"}';
-    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "plain_password": "azerty", "roles": ["ROLE_USER"]}}';
+    created_citizen_with_user  json := '{"name": {"first_name":"George", "last_name":"MICHEL"}, "birthday": "2001-01-01", "email":"george.michel2@gmail.com", "user":{"username": "george junior", "password": "azerty", "roles": ["ROLE_USER"]}}';
     selected_citizen           json;
 begin
     created_citizen := jsonb_set(created_citizen::jsonb, '{user}'::text[], jsonb_build_object('id', _user_id::text), true)::json;
@@ -35,9 +35,17 @@ begin
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
 
+    -- get citizen by username and check the first name
+    select find_citizen_by_username(created_citizen#>>'{user, username}') into selected_citizen;
+    assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
+
+    -- get citizen by name and check the first name
+    select find_citizen_by_name(created_citizen->'name') into selected_citizen;
+    assert selected_citizen#>>'{name, first_name}' = 'George', format('first name must be George, %s', selected_citizen#>>'{name, first_name}');
+
     rollback;
 
-    -- check if fint by id return null if citizen not exist
+    -- check if find by id return null if citizen not exist
     select find_citizen_by_user_id((created_citizen->>'user_id')::uuid) into selected_citizen;
     assert selected_citizen is null, format('citizen must be null if not exist, %s', selected_citizen);
 

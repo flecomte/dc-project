@@ -1,8 +1,8 @@
 do
 $$
 declare
-    created_user     json  := '{"username": "george", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
-    created_user2    json  := '{"username": "george2", "plain_password": "azerty", "roles": ["ROLE_USER"]}';
+    created_user     json  := '{"username": "george", "password": "azerty", "roles": ["ROLE_USER"]}';
+    created_user2    json  := '{"username": "george2", "password": "azerty", "roles": ["ROLE_USER"]}';
     _citizen_id      uuid;
     _citizen_id2     uuid;
     created_citizen json := $json$

@@ -6,7 +6,16 @@ begin
     select to_json(t)
     from (
         select
-            a.*,
+            a.id,
+            a.version_number,
+            a.version_id,
+            a.title,
+            a.anonymous,
+            a.content,
+            a.description,
+            a.tags,
+            a.draft,
+            a.last_version,
             find_citizen_by_id_with_user(a.created_by_id) as created_by,
             find_workgroup_by_id(a.workgroup_id) as workgroup,
             count_vote(a.id) as votes,

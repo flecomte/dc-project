@@ -2,7 +2,7 @@ create or replace function change_user_password(resource json) returns void lang
 $$
 begin
     update "user"
-    set password = crypt(resource->>'plain_password', gen_salt('bf', 8))
+    set password = crypt(resource->>'password', gen_salt('bf', 8))
     where id = (resource->>'id')::uuid;
 
     return;
