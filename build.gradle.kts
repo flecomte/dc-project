@@ -41,6 +41,7 @@ plugins {
     id("net.nemerosa.versioning") version "2.14.0"
     id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
     id("com.avast.gradle.docker-compose") version "0.14.0"
+    id("com.github.kt3k.coveralls") version "2.8.4"
 }
 
 application {
@@ -59,6 +60,9 @@ buildscript {
         classpath("com.github.flecomte:postgres-json:2.1.2")
     }
 }
+
+tasks.distZip.configure { enabled = false }
+tasks.distTar.configure { enabled = false }
 
 tasks.withType<KotlinCompile> {
     kotlinOptions {
@@ -191,8 +195,18 @@ tasks.test {
     useJUnitPlatform()
     systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
-    finalizedBy(tasks.ktlintCheck)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
+}
+
+coveralls {
+    sourceDirs.add("src/main/kotlin")
+}
+
+tasks.register("testAll") {
+    group = "verification"
+    dependsOn(testSql)
+    dependsOn(tasks.test)
+    dependsOn(tasks.ktlintCheck)
 }
 
 apply(plugin = "docker-compose")
