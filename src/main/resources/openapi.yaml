@@ -108,6 +108,18 @@ paths:
                     type: integer
         401:
           $ref: '#/components/responses/401'
+        403:
+          description: Forbiden
+          content:
+            application/json:
+              schema:
+                description: Forbiden
+                properties:
+                  statusCode:
+                    type: integer
+                  title:
+                    type: string
+
   /articles/{article}:
     parameters:
       - $ref: '#/components/parameters/article'

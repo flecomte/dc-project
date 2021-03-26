@@ -12,11 +12,13 @@ import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain pattern`
+import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`And the response should not contain`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.`whish contains`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -101,6 +103,32 @@ class `Article routes` : BaseTest() {
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And have property`("$.versionId") `whish contains` "09c418b6-63ba-448b-b38b-502b41cd500e"
+            }
+        }
+    }
+
+    @Test
+    fun `I cannot create an article if I'm not connected`() {
+        withIntegrationApplication {
+            `When I send a POST request`("/articles") {
+                `with body`(
+                    """
+                    {
+                      "versionId": "e3c7ce42-241c-4caf-9a59-aba4e466440e",
+                      "title": "title2",
+                      "anonymous": false,
+                      "content": "content2",
+                      "description": "description2",
+                      "tags": [
+                          "green"
+                      ]
+                    }
+                    """
+                )
+            } `Then the response should be` Forbidden and {
+                `And the response should not be null`()
+                `And the response should contain`("$.statusCode", 403)
+                `And the response should contain`("$.title", "No User Connected")
             }
         }
     }
