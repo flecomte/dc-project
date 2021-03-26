@@ -121,8 +121,8 @@ val testSql by tasks.registering {
     group = "verification"
     dependsOn(tasks.named("processResources"))
     dependsOn(tasks.named("processTestResources"))
-    dependsOn(tasks.named("testComposeUp"))
-    finalizedBy(tasks.named("testComposeDown"))
+    dependsOn(tasks.named("testSqlComposeUp"))
+    finalizedBy(tasks.named("testSqlComposeDown"))
 
     doLast {
         val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
@@ -218,13 +218,22 @@ dockerCompose {
     removeVolumes = false
     removeContainers = false
     isRequiredBy(project.tasks.run)
+
+    createNested("testSql").apply {
+        projectName = "dc-project_test"
+        useComposeFiles = listOf("docker-compose-test.yml")
+        startedServices = listOf("db", "elasticsearch")
+        stopContainers = false
+        isRequiredBy(project.tasks.named("testSql"))
+    }
+
     createNested("test").apply {
         projectName = "dc-project_test"
         useComposeFiles = listOf("docker-compose-test.yml")
         stopContainers = false
         isRequiredBy(project.tasks.test)
-        isRequiredBy(project.tasks.named("testSql"))
     }
+
     createNested("sonarqube").apply {
         projectName = "dc-project"
         useComposeFiles = listOf("docker-compose-sonar.yml")
