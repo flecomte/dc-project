@@ -63,8 +63,9 @@ fun TestApplicationResponse.`And the schema response body must be valid`(content
             val schema = response.getContentMediaType(contentType.toString())?.schema
 
             if (content != null) {
+                val httpMethod = call.request.httpMethod.value
                 schema?.validate(api, responseContent)
-                    ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$this $uri".""")
+                    ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$httpMethod $uri".""")
             }
         }
     }
