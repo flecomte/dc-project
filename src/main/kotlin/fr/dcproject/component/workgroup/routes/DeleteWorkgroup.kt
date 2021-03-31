@@ -2,6 +2,7 @@ package fr.dcproject.component.workgroup.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
 import io.ktor.application.call
@@ -20,6 +21,7 @@ object DeleteWorkgroup {
 
     fun Route.deleteWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         delete<DeleteWorkgroupRequest> {
+            mustBeAuth()
             repo.findById(it.workgroupId)?.let { workgroup ->
                 ac.assert { canDelete(workgroup, citizenOrNull) }
                 repo.delete(workgroup)

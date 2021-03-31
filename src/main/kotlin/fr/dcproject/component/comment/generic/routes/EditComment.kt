@@ -4,6 +4,7 @@ import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.database.CommentRef
 import fr.dcproject.component.comment.generic.database.CommentRepository
@@ -28,6 +29,7 @@ object EditComment {
 
     fun Route.editComment(repo: CommentRepository, ac: CommentAccessControl) {
         put<EditCommentRequest> {
+            mustBeAuth()
             val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
             ac.assert { canUpdate(comment, citizenOrNull) }
 

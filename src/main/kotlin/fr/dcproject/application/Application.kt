@@ -6,17 +6,14 @@ import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.datatype.joda.JodaModule
-import com.github.jasync.sql.db.postgresql.exceptions.GenericDatabaseException
 import fr.dcproject.application.Env.PROD
 import fr.dcproject.application.Env.TEST
-import fr.dcproject.common.security.AccessDeniedException
+import fr.dcproject.application.http.statusPagesInstallation
 import fr.dcproject.component.article.articleKoinModule
 import fr.dcproject.component.article.routes.installArticleRoutes
-import fr.dcproject.component.auth.ForbiddenException
 import fr.dcproject.component.auth.authKoinModule
 import fr.dcproject.component.auth.jwt.jwtInstallation
 import fr.dcproject.component.auth.routes.installAuthRoutes
-import fr.dcproject.component.auth.user
 import fr.dcproject.component.citizen.citizenKoinModule
 import fr.dcproject.component.citizen.routes.installCitizenRoutes
 import fr.dcproject.component.comment.article.routes.installCommentArticleRoutes
@@ -41,7 +38,6 @@ import fr.dcproject.component.workgroup.workgroupKoinModule
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
 import io.ktor.application.ApplicationStopped
-import io.ktor.application.call
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.client.HttpClient
@@ -51,17 +47,14 @@ import io.ktor.features.CORS
 import io.ktor.features.CallLogging
 import io.ktor.features.ContentNegotiation
 import io.ktor.features.DataConversion
-import io.ktor.features.NotFoundException
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpHeaders
 import io.ktor.http.HttpMethod
-import io.ktor.http.HttpStatusCode
 import io.ktor.http.cio.websocket.pingPeriod
 import io.ktor.http.cio.websocket.timeout
 import io.ktor.jackson.jackson
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
-import io.ktor.response.respond
 import io.ktor.routing.Routing
 import io.ktor.server.jetty.EngineMain
 import io.ktor.util.KtorExperimentalAPI
@@ -73,7 +66,6 @@ import org.koin.ktor.ext.Koin
 import org.koin.ktor.ext.get
 import org.slf4j.event.Level
 import java.time.Duration
-import java.util.concurrent.CompletionException
 
 fun main(args: Array<String>): Unit = EngineMain.main(args)
 
@@ -171,26 +163,7 @@ fun Application.module(env: Env = PROD) {
         installDocRoutes()
     }
 
-    install(StatusPages) {
-        exception<CompletionException> { e ->
-            val parent = e.cause?.cause
-            if (parent is GenericDatabaseException) {
-                call.respond(HttpStatusCode.BadRequest, parent.errorMessage.message!!)
-            } else {
-                throw e
-            }
-        }
-        exception<NotFoundException> { e ->
-            call.respond(HttpStatusCode.NotFound, e.message!!)
-        }
-        exception<AccessDeniedException> {
-            if (call.user == null) call.respond(HttpStatusCode.Unauthorized)
-            else call.respond(HttpStatusCode.Forbidden)
-        }
-        exception<ForbiddenException> {
-            call.respond(HttpStatusCode.Forbidden)
-        }
-    }
+    install(StatusPages, statusPagesInstallation())
 
     install(CORS) {
         method(HttpMethod.Options)

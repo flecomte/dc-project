@@ -26,7 +26,21 @@ val ApplicationCall.citizenOrNull: CitizenEntity?
         GlobalContext.get().koin.get<CitizenRepository>().findByUser(it)
     }
 
+val ApplicationCall.isAuth: Boolean
+    get() = citizenOrNull == null
+
+fun ApplicationCall.mustBeAuth() {
+    citizenOrNull ?: throw ForbiddenException("No User Connected")
+}
+
 val PipelineContext<Unit, ApplicationCall>.citizen get() = context.citizen
 val PipelineContext<Unit, ApplicationCall>.citizenOrNull get() = context.citizenOrNull
 
 val ApplicationCall.user get() = authentication.principal<User>()
+
+val PipelineContext<Unit, ApplicationCall>.isAuth: Boolean
+    get() = citizenOrNull == null
+
+fun PipelineContext<Unit, ApplicationCall>.mustBeAuth() {
+    citizenOrNull ?: throw ForbiddenException("No User Connected")
+}

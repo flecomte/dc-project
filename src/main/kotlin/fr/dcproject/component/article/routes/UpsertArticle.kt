@@ -8,6 +8,7 @@ import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.Input
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.notification.ArticleUpdateNotification
 import fr.dcproject.component.notification.Publisher
 import fr.dcproject.component.workgroup.database.WorkgroupRef
@@ -54,6 +55,7 @@ object UpsertArticle {
         }
 
         post<UpsertArticleRequest> {
+            mustBeAuth()
             val article = call.convertRequestToEntity()
             ac.assert { canUpsert(article, citizenOrNull) }
             repo.upsert(article)?.let { a ->

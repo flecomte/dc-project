@@ -3,6 +3,7 @@ package fr.dcproject.component.workgroup.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupForUpdate
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
@@ -31,6 +32,7 @@ object EditWorkgroup {
 
     fun Route.editWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         put<PutWorkgroupRequest> {
+            mustBeAuth()
             repo.findById(it.workgroupId)?.let { old ->
                 call.receiveOrBadRequest<Input>().run {
                     WorkgroupForUpdate(

@@ -3,6 +3,7 @@ package fr.dcproject.component.follow.routes.constitution
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.constitution.database.ConstitutionRef
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.database.FollowConstitutionRepository
@@ -25,6 +26,7 @@ object UnfollowConstitution {
 
     fun Route.unfollowConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
         delete<ConstitutionUnfollowRequest> {
+            mustBeAuth()
             val follow = FollowForUpdate(target = it.constitution, createdBy = this.citizen)
             ac.assert { canDelete(follow, citizenOrNull) }
             repo.unfollow(follow)

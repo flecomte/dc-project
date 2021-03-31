@@ -3,6 +3,7 @@ package fr.dcproject.component.workgroup.routes.members
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
@@ -42,6 +43,7 @@ object UpdateMemberOfWorkgroup {
     fun Route.updateMemberOfWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         /* Update members of workgroup */
         put<WorkgroupsMembersRequest> {
+            mustBeAuth()
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
                     ac.assert { canUpdateMembers(workgroup, citizenOrNull) }

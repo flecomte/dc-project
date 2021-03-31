@@ -5,6 +5,7 @@ import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.database.Opinion
@@ -37,6 +38,7 @@ object GetMyOpinionsArticle {
 
     fun Route.getMyOpinionsArticle(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         get<CitizenOpinionsArticleRequest> {
+            mustBeAuth()
             val opinions: Paginated<Opinion<TargetRef>> = repo.findCitizenOpinions(citizen, it.page, it.limit)
             ac.assert { canView(opinions.result, citizenOrNull) }
             call.respond(

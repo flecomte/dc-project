@@ -6,6 +6,7 @@ import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.Citizen
 import fr.dcproject.component.citizen.database.CitizenWithUserI
 import fr.dcproject.component.constitution.ConstitutionAccessControl
@@ -68,6 +69,7 @@ object CreateConstitution {
 
     fun Route.createConstitution(repo: ConstitutionRepository, ac: ConstitutionAccessControl) {
         post<PostConstitutionRequest> {
+            mustBeAuth()
             getNewConstitution(call.receiveOrBadRequest(), citizen).let {
                 ac.assert { canCreate(it, citizenOrNull) }
                 val c = repo.upsert(it) ?: error("Unable to create Constitution")

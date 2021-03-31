@@ -4,6 +4,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.constitution.database.ConstitutionRef
 import fr.dcproject.component.constitution.database.ConstitutionRepository
 import fr.dcproject.component.vote.VoteAccessControl
@@ -30,6 +31,7 @@ object PutVoteOnConstitution {
 
     fun Route.voteConstitution(repo: VoteConstitutionRepository, ac: VoteAccessControl, constitutionRepo: ConstitutionRepository) {
         put<ConstitutionVoteRequest> {
+            mustBeAuth()
             val constitution = constitutionRepo.findById(it.constitution.id) ?: throw NotFoundException("Unable to find constitution ${it.constitution.id}")
             val content = call.receiveOrBadRequest<Input>()
             val vote = VoteForUpdate(

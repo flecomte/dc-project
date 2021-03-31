@@ -5,6 +5,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupForUpdate
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
@@ -33,6 +34,7 @@ object CreateWorkgroup {
 
     fun Route.createWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         post<PostWorkgroupRequest> {
+            mustBeAuth()
             call.receiveOrBadRequest<Input>().run {
                 WorkgroupForUpdate(
                     id ?: UUID.randomUUID(),

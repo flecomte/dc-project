@@ -6,6 +6,7 @@ import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.database.OpinionChoiceRef
 import fr.dcproject.component.opinion.database.OpinionForUpdate
@@ -34,6 +35,7 @@ object OpinionArticle {
 
     fun Route.setOpinionOnArticle(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         put<ArticleOpinion> {
+            mustBeAuth()
             call.receiveOrBadRequest<ArticleOpinion.Body>().ids.map { id ->
                 OpinionForUpdate(
                     choice = OpinionChoiceRef(id),

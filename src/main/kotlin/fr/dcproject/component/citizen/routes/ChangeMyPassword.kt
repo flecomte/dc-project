@@ -6,6 +6,7 @@ import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.auth.database.UserRepository
 import fr.dcproject.component.auth.database.UserWithPassword
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.database.CitizenRef
 import io.ktor.application.call
@@ -29,6 +30,7 @@ object ChangeMyPassword {
 
     fun Route.changeMyPassword(ac: CitizenAccessControl, userRepository: UserRepository) {
         put<ChangePasswordCitizenRequest> {
+            mustBeAuth()
             ac.assert { canChangePassword(it.citizen, citizenOrNull) }
             val content = call.receiveOrBadRequest<ChangePasswordCitizenRequest.Input>()
             userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword)) ?: throw BadRequestException("Bad Password")

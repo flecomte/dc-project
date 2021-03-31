@@ -4,6 +4,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.database.FollowArticleRepository
 import fr.dcproject.component.follow.database.FollowForUpdate
@@ -25,6 +26,7 @@ object UnfollowArticle {
 
     fun Route.unfollowArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         delete<ArticleFollowRequest> {
+            mustBeAuth()
             val follow = FollowForUpdate(target = it.article, createdBy = this.citizen)
             ac.assert { canDelete(follow, citizenOrNull) }
             repo.unfollow(follow)

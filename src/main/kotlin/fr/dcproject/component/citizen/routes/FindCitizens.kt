@@ -3,6 +3,7 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenRepository
@@ -30,6 +31,7 @@ object FindCitizens {
 
     fun Route.findCitizen(ac: CitizenAccessControl, repo: CitizenRepository) {
         get<CitizensRequest> {
+            mustBeAuth()
             val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
             ac.assert { canView(citizens.result, citizenOrNull) }
             call.respond(
