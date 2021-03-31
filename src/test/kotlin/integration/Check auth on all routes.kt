@@ -84,64 +84,65 @@ class `Check auth on all routes` : BaseTest() {
             return """HttpStatus ${statusCode.value} for: ${method.value.padStart(6, ' ')} $uri"""
         }
     }
-}
 
-private fun Path.buildUrl(path: String, methodName: String, context: OAIContext): String {
-    val urlReplaced = this.getParametersIn(context, "path")
-        .fold(path) { pathToReplace: String, parameter: Parameter ->
-            """\{${parameter.name}}""".toRegex().replace(
-                pathToReplace,
-                parameter.generateFakeValue()
-            )
-        }
-
-    val rootQueryParameters = this.getParametersIn(context, "query")
-        .filter { it.isRequired }
-        .map { parameter ->
-            parameter
-                .generateFakeArray()
-                .joinToString("&") { "${parameter.name}=$it" }
-        }
-
-    val queryParameters = this.getOperation(methodName).getParametersIn(context, "query")
-        .filter { it.isRequired }
-        .map { parameter ->
-            parameter
-                .generateFakeArray()
-                .joinToString("&") { "${parameter.name}=$it" }
-        }
-    val allParameters: String = (rootQueryParameters + queryParameters)
-        .joinToString("&")
-        .let {
-            if (it.isNotEmpty()) {
-                "?$it"
-            } else {
-                it
+    private fun Path.buildUrl(path: String, methodName: String, context: OAIContext): String {
+        val urlReplaced = this.getParametersIn(context, "path")
+            .fold(path) { pathToReplace: String, parameter: Parameter ->
+                """\{${parameter.name}}""".toRegex().replace(
+                    pathToReplace,
+                    parameter.generateFakeValue()
+                )
             }
+
+        val rootQueryParameters = this.getParametersIn(context, "query")
+            .filter { it.isRequired }
+            .map { parameter ->
+                parameter
+                    .generateFakeArray()
+                    .joinToString("&") { "${parameter.name}=$it" }
+            }
+
+        val queryParameters = this.getOperation(methodName).getParametersIn(context, "query")
+            .filter { it.isRequired }
+            .map { parameter ->
+                parameter
+                    .generateFakeArray()
+                    .joinToString("&") { "${parameter.name}=$it" }
+            }
+        val allParameters: String = (rootQueryParameters + queryParameters)
+            .joinToString("&")
+            .let {
+                if (it.isNotEmpty()) {
+                    "?$it"
+                } else {
+                    it
+                }
+            }
+
+        return "$urlReplaced$allParameters"
+    }
+
+    private fun Parameter.generateFakeValue(): String {
+        return if (example != null) {
+            example.toString()
+        } else if (schema.type == "string" && schema.format == "uuid") {
+            UUID.randomUUID().toString()
+        } else {
+            "example123"
         }
-
-    return "$urlReplaced$allParameters"
-}
-
-private fun Parameter.generateFakeValue(): String {
-    return if (example != null) {
-        example.toString()
-    } else if (schema.type == "string" && schema.format == "uuid") {
-        UUID.randomUUID().toString()
-    } else {
-        "example123"
     }
-}
 
-private fun Parameter.generateFakeArray(): List<String> {
-    if (schema.type != "array") {
-        error("Parameter is not an array")
+    private fun Parameter.generateFakeArray(): List<String> {
+        if (schema.type != "array") {
+            error("Parameter is not an array")
+        }
+        return if (example != null && example is Iterable<*>) {
+            (example as Iterable<*>).map { it.toString() }
+        } else if (schema.itemsSchema.type == "string" && schema.itemsSchema.format == "uuid") {
+            listOf(UUID.randomUUID().toString())
+        } else {
+            listOf("example123")
+        }
     }
-    return if (example != null && example is Iterable<*>) {
-        (example as Iterable<*>).map { it.toString() }
-    } else if (schema.itemsSchema.type == "string" && schema.itemsSchema.format == "uuid") {
-        listOf(UUID.randomUUID().toString())
-    } else {
-        listOf("example123")
-    }
+
 }
