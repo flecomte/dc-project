@@ -15,10 +15,11 @@ fun TestApplicationRequest.`authenticated as`(
     val username = "$firstName-$lastName".toLowerCase()
     val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
     val citizen = repo.findByUsername(username) ?: error("Citizen not exist with username $username")
+    val algorithm = GlobalContext.get().koin.get<JwtConfig>().algorithm
     val jwtAsString: String = JWT.create()
         .withIssuer("dc-project.fr")
         .withClaim("id", citizen.user.id.toString())
-        .sign(JwtConfig.algorithm)
+        .sign(algorithm)
 
     addHeader(HttpHeaders.Authorization, "Bearer $jwtAsString")
 

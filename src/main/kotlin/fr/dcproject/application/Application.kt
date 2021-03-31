@@ -124,7 +124,7 @@ fun Application.module(env: Env = PROD) {
         }
     }
 
-    install(Authentication, jwtInstallation(get()))
+    install(Authentication, jwtInstallation(get(), get()))
 
     install(AutoHeadResponse)
 
