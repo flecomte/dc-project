@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.common.email.Mailer
+import fr.dcproject.component.auth.jwt.JwtConfig
 import fr.dcproject.component.notification.NotificationConsumer
 import fr.dcproject.component.notification.NotificationEmailSender
 import fr.dcproject.component.notification.NotificationsPush
@@ -25,6 +26,19 @@ import org.koin.dsl.module
 
 @KtorExperimentalAPI
 val KoinModule = module {
+    // JWT
+    single {
+        val config: Configuration = get()
+        JwtConfig(
+            config.jwt.secret,
+            config.jwt.issuer,
+            config.jwt.validityInMs,
+        )
+    }
+    // JWT Verifier
+    single {
+        get<JwtConfig>().verifier
+    }
     // SQL connection
     single {
         val config: Configuration = get()

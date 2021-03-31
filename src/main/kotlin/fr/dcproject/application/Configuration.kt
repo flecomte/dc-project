@@ -43,4 +43,15 @@ class Configuration(val config: Config) {
     val rabbitmq: String = config.getString("rabbitmq.connection")
     val exchangeNotificationName = "notification"
     val sendGridKey: String = config.getString("mail.sendGrid.key")
+
+    interface Jwt {
+        val secret: String
+        val issuer: String
+        val validityInMs: Int
+    }
+    val jwt = object : Jwt {
+        override val secret = config.getString("jwt.secret")
+        override val issuer = config.getString("jwt.issuer")
+        override val validityInMs = config.getInt("jwt.validity")
+    }
 }

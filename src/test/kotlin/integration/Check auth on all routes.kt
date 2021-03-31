@@ -144,5 +144,4 @@ class `Check auth on all routes` : BaseTest() {
             listOf("example123")
         }
     }
-
 }
