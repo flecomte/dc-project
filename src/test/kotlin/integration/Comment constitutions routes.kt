@@ -50,6 +50,7 @@ class `Comment constitutions routes` : BaseTest() {
             `Given I have constitution`(id = "34ddd50a-da00-4a90-a869-08baa2a121be", createdBy = Name("Charles", "Darwin"))
             `Given I have comment on constitution`(constitution = "34ddd50a-da00-4a90-a869-08baa2a121be", createdBy = Name("Charles", "Darwin"))
             `When I send a GET request`("/citizens/46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5/comments/constitutions") {
+                `authenticated as`("Charles", "Darwin")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain`("$.currentPage", 1)

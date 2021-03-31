@@ -3,6 +3,7 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.CitizenAccessControl
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
@@ -22,6 +23,7 @@ object GetCurrentCitizen {
 
     fun Route.getCurrentCitizen(ac: CitizenAccessControl) {
         get<CurrentCitizenRequest> {
+            mustBeAuth()
             val currentUser = citizenOrNull
             if (currentUser === null) {
                 call.respond(HttpStatusCode.Unauthorized)

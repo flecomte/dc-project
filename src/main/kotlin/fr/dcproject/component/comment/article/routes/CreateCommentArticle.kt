@@ -6,6 +6,7 @@ import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.article.routes.CreateCommentArticle.PostArticleCommentRequest.Input
 import fr.dcproject.component.comment.generic.CommentAccessControl
@@ -30,6 +31,7 @@ object CreateCommentArticle {
 
     fun Route.createCommentArticle(repo: CommentArticleRepository, ac: CommentAccessControl) {
         post<PostArticleCommentRequest> {
+            mustBeAuth()
             call.receiveOrBadRequest<Input>().run {
                 CommentForUpdate(
                     target = it.article,

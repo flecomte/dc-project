@@ -4,6 +4,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.comment.generic.CommentAccessControl
 import fr.dcproject.component.comment.generic.database.CommentForUpdate
 import fr.dcproject.component.comment.generic.database.CommentRef
@@ -29,6 +30,7 @@ object CreateCommentChildren {
 
     fun Route.createCommentChildren(repo: CommentRepository, ac: CommentAccessControl) {
         post<CreateCommentChildrenRequest> {
+            mustBeAuth()
             val parent = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
             val newComment = CommentForUpdate(
                 content = call.receiveOrBadRequest<CreateCommentChildrenRequest.Input>().content,

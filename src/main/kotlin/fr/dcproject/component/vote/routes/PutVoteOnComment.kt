@@ -4,6 +4,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.comment.generic.database.CommentRepository
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteCommentRepository
@@ -26,6 +27,7 @@ object PutVoteOnComment {
 
     fun Route.putVoteOnComment(voteCommentRepo: VoteCommentRepository, commentRepo: CommentRepository, ac: VoteAccessControl) {
         put<CommentVoteRequest> {
+            mustBeAuth()
             val comment = commentRepo.findById(it.comment)!!
             val content = call.receiveOrBadRequest<CommentVoteRequest.Content>()
             val vote = VoteForUpdate(

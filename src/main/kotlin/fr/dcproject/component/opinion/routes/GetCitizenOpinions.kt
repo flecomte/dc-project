@@ -5,6 +5,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.opinion.OpinionAccessControl
 import fr.dcproject.component.opinion.database.Opinion
@@ -31,6 +32,7 @@ object GetCitizenOpinions {
 
     fun Route.getCitizenOpinions(repo: OpinionArticleRepository, ac: OpinionAccessControl) {
         get<CitizenOpinions> {
+            mustBeAuth()
             val opinionsEntities: List<Opinion<ArticleRef>> = repo.findCitizenOpinionsByTargets(it.citizen, it.id)
             ac.assert { canView(opinionsEntities, citizenOrNull) }
 

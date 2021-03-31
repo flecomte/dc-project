@@ -6,6 +6,7 @@ import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteArticleRepository
 import fr.dcproject.component.vote.database.VoteForUpdate
@@ -29,6 +30,7 @@ object PutVoteOnArticle {
 
     fun Route.putVoteOnArticle(repo: VoteArticleRepository, ac: VoteAccessControl, articleRepo: ArticleRepository) {
         put<ArticleVoteRequest> {
+            mustBeAuth()
             val input = call.receiveOrBadRequest<ArticleVoteRequest.Input>()
             val article = articleRepo.findById(it.article.id) ?: throw NotFoundException("Article ${it.article.id} not found")
             val vote = VoteForUpdate(

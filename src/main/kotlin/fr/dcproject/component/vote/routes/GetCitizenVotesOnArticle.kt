@@ -3,6 +3,7 @@ package fr.dcproject.component.vote.routes
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteArticleRepository
@@ -31,6 +32,7 @@ object GetCitizenVotesOnArticle {
 
     fun Route.getCitizenVotesOnArticle(repo: VoteArticleRepository, ac: VoteAccessControl) {
         get<CitizenVoteArticleRequest> {
+            mustBeAuth()
             val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
             ac.assert { canView(votes.result, citizenOrNull) }
 

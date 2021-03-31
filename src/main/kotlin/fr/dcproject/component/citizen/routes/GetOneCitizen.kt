@@ -3,6 +3,7 @@ package fr.dcproject.component.citizen.routes
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.CitizenAccessControl
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.citizen.database.CitizenRepository
@@ -26,6 +27,7 @@ object GetOneCitizen {
 
     fun Route.getOneCitizen(ac: CitizenAccessControl, citizenRepository: CitizenRepository) {
         get<CitizenRequest> {
+            mustBeAuth()
             val citizen = citizenRepository.findById(it.citizen.id) ?: throw NotFoundException("Citizen not found ${it.citizen.id}")
             ac.assert { canView(citizen, citizenOrNull) }
 

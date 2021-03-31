@@ -84,6 +84,7 @@ class `Comment articles routes` : BaseTest() {
             `Given I have article`(id = "17df7fb9-b388-4e20-ab19-29c29972da01", createdBy = Name("Erwin", "Schrodinger"))
             `Given I have comment on article`(article = "17df7fb9-b388-4e20-ab19-29c29972da01", createdBy = Name("Erwin", "Schrodinger"))
             `When I send a GET request`("/citizens/292a20cc-4a60-489e-9866-a95d38ffaf47/comments/articles") {
+                `authenticated as`("Erwin", "Schrodinger")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain`("$.currentPage", 1)

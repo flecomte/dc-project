@@ -3,6 +3,7 @@ package fr.dcproject.component.follow.routes.article
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
 import fr.dcproject.component.follow.database.FollowArticleRepository
@@ -25,6 +26,7 @@ object GetMyFollowsArticle {
 
     fun Route.getMyFollowsArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         get<CitizenFollowArticleRequest> {
+            mustBeAuth()
             val follows = repo.findByCitizen(it.citizen)
             ac.assert { canView(follows.result, citizenOrNull) }
             call.respond(

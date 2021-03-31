@@ -5,6 +5,7 @@ import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.comment.constitution.database.CommentConstitutionRepository
 import fr.dcproject.component.comment.constitution.routes.CreateConstitutionComment.CreateConstitutionCommentRequest.Input
 import fr.dcproject.component.comment.generic.CommentAccessControl
@@ -30,6 +31,7 @@ object CreateConstitutionComment {
 
     fun Route.createConstitutionComment(repo: CommentConstitutionRepository, ac: CommentAccessControl) {
         post<CreateConstitutionCommentRequest> {
+            mustBeAuth()
             call.receiveOrBadRequest<Input>().run {
                 CommentForUpdate(
                     target = it.constitution,

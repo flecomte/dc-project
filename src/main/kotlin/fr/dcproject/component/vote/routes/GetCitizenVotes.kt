@@ -4,6 +4,7 @@ import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.vote.VoteAccessControl
 import fr.dcproject.component.vote.database.VoteRepository
@@ -26,6 +27,7 @@ object GetCitizenVotes {
 
     fun Route.getCitizenVote(repo: VoteRepository, ac: VoteAccessControl) {
         get<CitizenVotesRequest> {
+            mustBeAuth()
             val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
             if (votes.isNotEmpty()) {
                 ac.assert { canView(votes, citizenOrNull) }

@@ -3,6 +3,7 @@ package fr.dcproject.component.comment.article.routes
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.component.auth.mustBeAuth
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.generic.CommentAccessControl
@@ -25,6 +26,7 @@ object GetCitizenArticleComments {
 
     fun Route.getCitizenArticleComments(repo: CommentArticleRepository, ac: CommentAccessControl) {
         get<CitizenCommentArticleRequest> {
+            mustBeAuth()
             repo.findByCitizen(it.citizen).let { comments ->
                 ac.assert { canView(comments.result, citizenOrNull) }
                 call.respond(
