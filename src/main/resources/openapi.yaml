@@ -124,8 +124,6 @@ paths:
     parameters:
       - $ref: '#/components/parameters/article'
     get:
-      security:
-        - JWTAuth: []
       summary: Get one article
       tags:
         - article
@@ -1138,8 +1136,6 @@ paths:
   /workgroups:
     get:
       summary: Get all Workgroup (Paginated)
-      security:
-        - JWTAuth: [ ]
       tags:
         - workgroup
       parameters:
@@ -1206,8 +1202,6 @@ paths:
       - $ref: '#/components/parameters/workgroup'
     get:
       summary: Get one workgroup by ID
-      security:
-        - JWTAuth: [ ]
       tags:
         - workgroup
       responses:
