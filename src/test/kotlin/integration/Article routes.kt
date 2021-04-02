@@ -1,5 +1,7 @@
 package integration
 
+import fr.dcproject.common.utils.toUUID
+import integration.steps.`when`.Validate
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
@@ -18,6 +20,7 @@ import integration.steps.then.`And the response should not contain`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.`whish contains`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -32,14 +35,21 @@ class `Article routes` : BaseTest() {
     fun `I can get article list`() {
         withIntegrationApplication {
             `Given I have articles`(3)
-            `When I send a GET request`("/articles") `Then the response should be` OK and {
+            `Given I have article`(createdBy = "ddb17f17-e8ab-4ada-bdf7-bfd6b0f1b5ed".toUUID())
+            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=ddb17f17-e8ab-4ada-bdf7-bfd6b0f1b5ed") `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain pattern`("$.result[0].createdBy.name.firstName", "firstName.+")
-                `And the response should contain pattern`("$.result[1].createdBy.name.firstName", "firstName.+")
-                `And the response should contain pattern`("$.result[2].createdBy.name.firstName", "firstName.+")
-                `And the response should not contain`("$.result[3]")
-                `And the response should contain list`("$.result", 3)
+                `And the response should not contain`("$.result[1]")
+                `And the response should contain list`("$.result", 1)
             }
+        }
+    }
+
+    @Test
+    fun `I cannot get article list`() {
+        withIntegrationApplication {
+            `Given I have articles`(3)
+            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=hello", Validate.ALL - Validate.REQUEST_PARAM) `Then the response should be` BadRequest
         }
     }
 

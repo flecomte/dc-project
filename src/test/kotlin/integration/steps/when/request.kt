@@ -40,7 +40,7 @@ fun TestApplicationCall.valid(validate: BitMaskI): TestApplicationCall {
     return this
 }
 
-fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Get
         if (uri != null) {
@@ -74,7 +74,7 @@ fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, valid
     }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Delete
         if (uri != null) {
