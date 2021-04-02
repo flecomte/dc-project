@@ -23,7 +23,7 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("security"), Tag("unit"), Tag("follow"))
 internal class `Follow Access Control` {
     private val tesla = CitizenCreator(
         user = UserCreator(

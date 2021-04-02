@@ -8,7 +8,7 @@ import org.junit.jupiter.api.TestInstance
 import kotlin.test.assertEquals
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("functional"))
+@Tags(Tag("functional"), Tag("utils"))
 class ResourcesKtTest {
     @Test
     fun readResource() {

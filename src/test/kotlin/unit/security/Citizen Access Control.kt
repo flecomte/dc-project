@@ -18,7 +18,7 @@ import org.junit.jupiter.api.parallel.ExecutionMode.CONCURRENT
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("security"), Tag("unit"), Tag("citizen"))
 internal class `Citizen Access Control` {
     private val tesla = CitizenCart(
         user = User(

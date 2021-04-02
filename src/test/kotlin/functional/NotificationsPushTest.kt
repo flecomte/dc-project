@@ -24,7 +24,7 @@ import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import kotlin.test.assertEquals
 
-@Tags(Tag("functional"))
+@Tags(Tag("functional"), Tag("notification"))
 internal class NotificationsPushTest {
     companion object {
         @BeforeAll

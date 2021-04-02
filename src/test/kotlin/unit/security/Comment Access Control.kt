@@ -25,7 +25,7 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("security"), Tag("unit"), Tag("comment"))
 internal class `Comment Access Control` {
     private val tesla = Citizen(
         user = User(

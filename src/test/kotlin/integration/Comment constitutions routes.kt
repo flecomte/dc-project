@@ -57,7 +57,7 @@ class `Comment constitutions routes` : BaseTest() {
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.result[0].createdBy.id", "46e0bda9-ca6a-4c65-a58b-7e7267a0bbc5")
                 `And the response should contain`("$.result[0].target.id", "34ddd50a-da00-4a90-a869-08baa2a121be")
-                `And the response should contain list`("$.result[*]", 1, 1)
+                `And the response should contain list`("$.result[*]", 1)
             }
         }
     }
