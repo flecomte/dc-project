@@ -24,7 +24,7 @@ import java.util.UUID
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("security"), Tag("unit"), Tag("vote"))
 internal class `Vote Access Control` {
     private val tesla = Citizen(
         id = UUID.fromString("a1e35c99-9d33-4fb4-9201-58d7071243bb"),

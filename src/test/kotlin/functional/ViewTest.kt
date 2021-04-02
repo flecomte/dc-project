@@ -25,7 +25,7 @@ import java.util.UUID
 @KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 @TestInstance(PER_CLASS)
-@Tags(Tag("functional"))
+@Tags(Tag("functional"), Tag("view"))
 class ViewTest {
     @Test
     fun `test View Article`() {

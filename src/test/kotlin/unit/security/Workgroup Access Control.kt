@@ -20,7 +20,7 @@ import fr.dcproject.component.workgroup.database.WorkgroupForView as WorkgroupEn
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Execution(CONCURRENT)
-@Tags(Tag("security"), Tag("unit"))
+@Tags(Tag("security"), Tag("unit"), Tag("workgroup"))
 internal class `Workgroup Access Control` {
     private val tesla = CitizenCreator(
         user = UserCreator(

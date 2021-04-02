@@ -22,7 +22,7 @@ import org.koin.test.get
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("functional"))
+@Tags(Tag("functional"), Tag("mail"))
 class MailerTest : KoinTest, AutoCloseKoinTest() {
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi

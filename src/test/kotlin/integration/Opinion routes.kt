@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-@Tags(Tag("integration"), Tag("article"), Tag("opinion"))
+@Tags(Tag("integration"), Tag("opinion"))
 class `Opinion routes` : BaseTest() {
     @Test
     fun `I can get all opinion choices`() {
@@ -48,6 +48,7 @@ class `Opinion routes` : BaseTest() {
     }
 
     @Test
+    @Tag("article")
     fun `I can create opinion on article`() {
         withIntegrationApplication {
             `Given I have citizen`("Isaac", "Newton", id = "2f414045-95d9-42ca-a3a9-8cdde52ad253")
@@ -89,6 +90,7 @@ class `Opinion routes` : BaseTest() {
     }
 
     @Test
+    @Tag("article")
     fun `I can receive opinion aggregation with article`() {
         withIntegrationApplication {
             `Given I have an opinion choice`("Opinion6")
@@ -120,6 +122,7 @@ class `Opinion routes` : BaseTest() {
     }
 
     @Test
+    @Tag("article")
     fun `I can get all my opinion of one article`() {
         withIntegrationApplication {
             `Given I have citizen`("Albert", "Einstein", id = "c1542096-3431-432d-8e35-9dc071d4c818")

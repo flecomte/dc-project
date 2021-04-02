@@ -33,7 +33,7 @@ import org.junit.jupiter.api.TestInstance
 import org.slf4j.LoggerFactory
 
 @TestInstance(TestInstance.Lifecycle.PER_METHOD)
-@Tags(Tag("functional"))
+@Tags(Tag("functional"), Tag("notification"))
 class NotificationConsumerTest {
     companion object {
         @BeforeAll
