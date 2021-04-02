@@ -327,8 +327,9 @@ dependencyCheck {
 repositories {
     mavenLocal()
     jcenter()
-    maven { url = uri("https://kotlin.bintray.com/ktor") }
-    maven { url = uri("https://jitpack.io") }
+    maven("https://kotlin.bintray.com/ktor")
+    maven("https://jitpack.io")
+    maven("https://dl.bintray.com/konform-kt/konform")
 }
 
 dependencies {
@@ -359,6 +360,7 @@ dependencies {
     implementation("org.elasticsearch.client:elasticsearch-rest-client:6.7.1")
     implementation("com.jayway.jsonpath:json-path:2.5.0")
     implementation("com.avast.gradle:gradle-docker-compose-plugin:0.14.0")
+    implementation("io.konform:konform-jvm:0.2.0")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")

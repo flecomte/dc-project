@@ -2,6 +2,7 @@ package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
+import fr.dcproject.common.validation.isUuid
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForListing
 import fr.dcproject.component.article.database.ArticleRepository
@@ -10,7 +11,12 @@ import fr.dcproject.routes.PaginatedRequest
 import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.repository.RepositoryI
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.enum
+import io.konform.validation.jsonschema.maximum
+import io.konform.validation.jsonschema.minimum
 import io.ktor.application.call
+import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
@@ -28,7 +34,32 @@ object FindArticles {
         val search: String? = null,
         val createdBy: String? = null,
         val workgroup: String? = null
-    ) : PaginatedRequestI by PaginatedRequest(page, limit)
+    ) : PaginatedRequestI by PaginatedRequest(page, limit) {
+        fun validate() = Validation<ArticlesRequest> {
+            ArticlesRequest::page {
+                minimum(1)
+                maximum(100)
+            }
+            ArticlesRequest::limit {
+                minimum(1)
+                maximum(50)
+            }
+            ArticlesRequest::sort ifPresent {
+                enum(
+                    "title",
+                    "createdAt",
+                    "vote",
+                    "popularity",
+                )
+            }
+            ArticlesRequest::createdBy ifPresent {
+                isUuid()
+            }
+            ArticlesRequest::workgroup ifPresent {
+                isUuid()
+            }
+        }.validate(this)
+    }
 
     private fun ArticleRepository.findArticles(request: ArticlesRequest): Paginated<ArticleForListing> {
         return find(
@@ -43,6 +74,11 @@ object FindArticles {
 
     fun Route.findArticles(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticlesRequest> {
+            if (it.validate().errors.size > 0) {
+                call.respond(HttpStatusCode.BadRequest)
+                return@get
+            }
+
             repo.findArticles(it)
                 .apply { ac.assert { canView(result, citizenOrNull) } }
                 .let {

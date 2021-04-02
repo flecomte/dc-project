@@ -41,6 +41,8 @@ paths:
                         maxItems: 50
                         items:
                           $ref: '#/components/schemas/ArticleListingResponse'
+        400:
+          $ref: '#/components/responses/400'
     post:
       security:
         - JWTAuth: []
