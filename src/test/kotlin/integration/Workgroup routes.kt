@@ -119,7 +119,7 @@ class `Workgroup routes` : BaseTest() {
                 `And the response should contain`("$.description", "Une petite souris")
 
                 `And have property`("$.members")
-                `And the response should contain list`("$.members", 3, 3)
+                `And the response should contain list`("$.members", 3)
                 `And the response should contain`("$.members.[1]citizen.id", "94f92424-c257-4582-907c-98564a8c4ac9")
                 `And the response should contain`("$.members.[2]citizen.id", "87909ba3-2069-431c-9924-219fd8411cf2")
             }
@@ -215,7 +215,7 @@ class `Workgroup routes` : BaseTest() {
                 ]
                 """
             } `Then the response should be` OK and {
-                `And the response should contain list`("$", 2, 2)
+                `And the response should contain list`("$", 2)
                 `And the response should contain`("$.[0]citizen.id", "94f92424-c257-4582-907c-98564a8c4ac9")
                 `And the response should contain`("$.[1]citizen.id", "1baf48bb-02bc-4d8f-ac86-33335354f5e7")
             }
@@ -252,7 +252,7 @@ class `Workgroup routes` : BaseTest() {
                     """
                 )
             } `Then the response should be` OK and {
-                `And the response should contain list`("$", 2, 2)
+                `And the response should contain list`("$", 2)
                 `And the response should contain`("$.[0]citizen.id", "be3b0926-8628-4426-804a-75188a6eb315")
                 `And the response should contain`("$.[1]citizen.id", "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1")
             }

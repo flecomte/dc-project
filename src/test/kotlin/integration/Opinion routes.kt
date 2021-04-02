@@ -137,7 +137,7 @@ class `Opinion routes` : BaseTest() {
                 `authenticated as`("Albert", "Einstein")
             } `Then the response should be` OK and {
                 `And the response should contain`("$.result[0].name", "Opinion9")
-                `And the response should contain list`("$.result[*]", 1, 1)
+                `And the response should contain list`("$.result[*]", 1)
             }
         }
     }

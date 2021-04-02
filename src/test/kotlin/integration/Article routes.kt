@@ -38,7 +38,7 @@ class `Article routes` : BaseTest() {
                 `And the response should contain pattern`("$.result[1].createdBy.name.firstName", "firstName.+")
                 `And the response should contain pattern`("$.result[2].createdBy.name.firstName", "firstName.+")
                 `And the response should not contain`("$.result[3]")
-                `And the response should contain list`("$.result", 3, 3)
+                `And the response should contain list`("$.result", 3)
             }
         }
     }

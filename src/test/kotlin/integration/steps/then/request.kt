@@ -1,7 +1,6 @@
 package integration.steps.then
 
-import assert.assertGreaterThan
-import assert.assertLessThan
+import assert.assertContain
 import com.jayway.jsonpath.JsonPath
 import com.jayway.jsonpath.PathNotFoundException
 import io.ktor.http.HttpStatusCode
@@ -85,15 +84,13 @@ fun TestApplicationResponse.`And the response should contain pattern`(path: Stri
     }
 }
 
-fun TestApplicationResponse.`And the response should contain list`(path: String, min: Int? = null, max: Int? = null) {
+fun TestApplicationResponse.`And the response should contain list`(path: String, exactCount: Int) =
+    `And the response should contain list`(path, IntRange(exactCount, exactCount))
+
+fun TestApplicationResponse.`And the response should contain list`(path: String, range: IntRange) {
     JsonPath.read<JSONArray?>(content, path).also {
         assertNotNull(it)
-        if (min != null) {
-            it.size assertGreaterThan min
-        }
-        if (max != null) {
-            it.size assertLessThan max
-        }
+        range assertContain it.size
     }
 }
 
