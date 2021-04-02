@@ -1,15 +1,13 @@
-package fr.dcproject.component.article
+package fr.dcproject.component.article.database
 
 import fr.dcproject.common.entity.VersionableId
 import fr.dcproject.common.utils.contentToString
 import fr.dcproject.common.utils.getJsonField
 import fr.dcproject.common.utils.toIso
-import fr.dcproject.component.article.database.ArticleI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.views.ViewManager
+import fr.dcproject.component.views.ViewRepository
 import fr.dcproject.component.views.entity.ViewAggregation
 import org.elasticsearch.client.Request
-import org.elasticsearch.client.Response
 import org.elasticsearch.client.RestClient
 import org.joda.time.DateTime
 import java.util.UUID
@@ -17,11 +15,11 @@ import java.util.UUID
 /**
  * Wrapper for manage views with elasticsearch
  */
-class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<A> where A : VersionableId, A : ArticleI {
+class ArticleViewRepository <A> (private val restClient: RestClient) : ViewRepository<A> where A : VersionableId, A : ArticleI {
     /**
      * Add view on article to elasticsearch
      */
-    override fun addView(ip: String, entity: A, citizen: CitizenI?, dateTime: DateTime): Response? {
+    override fun addView(ip: String, entity: A, citizen: CitizenI?, dateTime: DateTime) {
         val isLogged = (citizen != null).toString()
         val ref = citizen?.id ?: UUID.nameUUIDFromBytes(ip.toByteArray())!!
         val request = Request(
@@ -45,7 +43,7 @@ class ArticleViewManager <A> (private val restClient: RestClient) : ViewManager<
             )
         }
 
-        return restClient.performRequest(request)
+        restClient.performRequest(request)
     }
 
     /**
