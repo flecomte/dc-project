@@ -2,7 +2,7 @@ package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
-import fr.dcproject.component.article.ArticleViewManager
+import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.article.database.ArticleRepository
@@ -24,7 +24,7 @@ object GetOneArticle {
         val article = ArticleRef(article)
     }
 
-    fun Route.getOneArticle(viewManager: ArticleViewManager<ArticleForView>, ac: ArticleAccessControl, repo: ArticleRepository) {
+    fun Route.getOneArticle(viewRepository: ArticleViewRepository<ArticleForView>, ac: ArticleAccessControl, repo: ArticleRepository) {
         get<ArticleRequest> {
             val article: ArticleForView = repo.findById(it.article.id) ?: throw NotFoundException("Article ${it.article.id} not found")
             ac.assert { canView(article, citizenOrNull) }
@@ -64,7 +64,7 @@ object GetOneArticle {
                             val total: Int = a.votes.total
                             val score: Int = a.votes.score
                         }
-                        val views: Any = viewManager.getViewsCount(article).let { v ->
+                        val views: Any = viewRepository.getViewsCount(article).let { v ->
                             object {
                                 val total = v.total
                                 val unique = v.unique
@@ -76,7 +76,7 @@ object GetOneArticle {
             )
 
             launch {
-                viewManager.addView(call.request.local.remoteHost, article, citizenOrNull)
+                viewRepository.addView(call.request.local.remoteHost, article, citizenOrNull)
             }
         }
     }

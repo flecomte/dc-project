@@ -2,7 +2,7 @@ package functional
 
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
-import fr.dcproject.component.article.ArticleViewManager
+import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.citizen.database.CitizenCreator
@@ -44,33 +44,33 @@ class ViewTest {
         val citizenRef = CitizenRef()
 
         withTestApplication({ module(TEST) }) {
-            val viewManager: ArticleViewManager<ArticleForView> = application.get()
+            val viewRepository: ArticleViewRepository<ArticleForView> = application.get()
 
             /* Get view before */
-            val startView = viewManager.getViewsCount(article)
+            val startView = viewRepository.getViewsCount(article)
 
             /* Add View */
-            viewManager.addView(
+            viewRepository.addView(
                 "1.2.3.4",
                 article,
                 citizenRef
             )
 
             /* Add View */
-            viewManager.addView(
+            viewRepository.addView(
                 "10.10.10.10",
                 article,
                 citizenRef
             )
 
             /* Add View */
-            viewManager.addView(
+            viewRepository.addView(
                 "8.8.8.8",
                 article
             )
 
             /* Add View */
-            viewManager.addView(
+            viewRepository.addView(
                 "1.1.1.1",
                 article
             )
@@ -79,7 +79,7 @@ class ViewTest {
             Thread.sleep(1000)
 
             /* Get view */
-            val afterView = viewManager.getViewsCount(article)
+            val afterView = viewRepository.getViewsCount(article)
 
             /* Check if view has increment */
             afterView.total `should be equal to` startView.total + 4

@@ -1,7 +1,7 @@
 package fr.dcproject.component.views
 
 import fr.dcproject.application.Configuration
-import fr.dcproject.component.article.ArticleViewManager
+import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
@@ -17,6 +17,6 @@ val viewKoinModule = module {
         ).build().apply {
             createEsIndexForViews()
         }
-        ArticleViewManager<ArticleForView>(esClient)
+        ArticleViewRepository<ArticleForView>(esClient)
     }
 }
