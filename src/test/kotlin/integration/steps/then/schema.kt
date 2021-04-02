@@ -2,8 +2,12 @@ package integration.steps.then
 
 import com.fasterxml.jackson.databind.JsonNode
 import com.fasterxml.jackson.databind.ObjectMapper
+import com.fasterxml.jackson.databind.node.BooleanNode
+import com.fasterxml.jackson.databind.node.IntNode
 import com.fasterxml.jackson.databind.node.TextNode
 import fr.dcproject.common.utils.getResource
+import fr.dcproject.common.utils.isBool
+import fr.dcproject.common.utils.isInt
 import io.ktor.http.ContentType
 import io.ktor.http.Url
 import io.ktor.request.contentType
@@ -55,15 +59,15 @@ fun TestApplicationResponse.`And the schema response body must be valid`(content
         /* Validate Response */
         this.apply {
             val status = call.response.status()
+            val httpMethod = call.request.httpMethod.value.toUpperCase()
             val responseContent: JsonNode = if (content != null)
                 ObjectMapper().readTree(content)
             else TextNode("")
 
-            val response = getResponse(status?.value?.toString() ?: error("HttpStatus not found")) ?: fail("""No Status "${status.value}" found for "$this $uri".""")
+            val response = getResponse(status?.value?.toString() ?: error("HttpStatus not found")) ?: fail("""No Status "${status.value}" found for "$httpMethod $uri".""")
             val schema = response.getContentMediaType(contentType.toString())?.schema
 
             if (content != null) {
-                val httpMethod = call.request.httpMethod.value
                 schema?.validate(api, responseContent)
                     ?: fail("""No Status "${status.value}" found with media type "$contentType" for "$httpMethod $uri".""")
             }
@@ -75,13 +79,18 @@ fun TestApplicationResponse.`And the schema parameters must be valid`() {
     operation { api, uri ->
         /* Validate Request URL */
         this.apply {
+            val methodName = call.request.httpMethod.value.toUpperCase()
             Url(call.request.uri).parameters.forEach { parameter: String, values: List<String> ->
                 val schema = getParametersIn(api.context, "query")
                     ?.firstOrNull { it.name == parameter }?.schema
-                    ?: error("""No parameter found ($parameter) for "$this $uri".""")
+                    ?: error("""No parameter found ($parameter) for "$methodName $uri".""")
 
                 if (schema.type == "array") {
                     schema.validate(api, ObjectMapper().valueToTree(values))
+                } else if (schema.type == "integer" && values.first().isInt()) {
+                    schema.validate(api, IntNode(values.first().toInt()))
+                } else if (schema.type == "boolean" && values.first().isBool()) {
+                    schema.validate(api, BooleanNode.valueOf(values.first().toBoolean()))
                 } else {
                     schema.validate(api, TextNode(values.first()))
                 }
