@@ -1,8 +1,8 @@
 package fr.dcproject.component.views
 
 import fr.dcproject.application.Configuration
-import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleViewRepository
 import org.apache.http.HttpHost
 import org.elasticsearch.client.RestClient
 import org.koin.dsl.module

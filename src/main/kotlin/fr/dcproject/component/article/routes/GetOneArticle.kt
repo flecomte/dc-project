@@ -2,10 +2,10 @@ package fr.dcproject.component.article.routes
 
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.article.ArticleAccessControl
-import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.article.database.ArticleRepository
+import fr.dcproject.component.article.database.ArticleViewRepository
 import fr.dcproject.component.auth.citizenOrNull
 import io.ktor.application.call
 import io.ktor.features.NotFoundException

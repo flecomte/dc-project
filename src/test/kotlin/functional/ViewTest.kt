@@ -2,8 +2,8 @@ package functional
 
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
-import fr.dcproject.component.article.ArticleViewRepository
 import fr.dcproject.component.article.database.ArticleForView
+import fr.dcproject.component.article.database.ArticleViewRepository
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
