@@ -320,6 +320,13 @@ tasks.named("testComposeUp").configure {
     }
 }
 
+tasks.register("testArticles", Test::class) {
+    group = "tests"
+    useJUnitPlatform {
+        includeTags("article")
+    }
+}
+
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
 }
