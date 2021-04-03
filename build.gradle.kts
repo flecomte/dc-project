@@ -182,7 +182,11 @@ tasks.named<ShadowJar>("shadowJar") {
     archiveFileName.set("${archiveBaseName.get()}-latest-all.${archiveExtension.get()}")
 }
 
-tasks.sonarqube.configure { dependsOn(tasks.jacocoTestReport) }
+tasks.sonarqube.configure {
+    dependsOn(tasks.test)
+    dependsOn(tasks.detekt)
+    dependsOn(tasks.jacocoTestReport)
+}
 
 val sourcesJar by tasks.registering(Jar::class) {
     group = "build"
@@ -233,17 +237,7 @@ dockerCompose {
         stopContainers = false
         isRequiredBy(project.tasks.test)
     }
-
-    createNested("sonarqube").apply {
-        projectName = "dc-project"
-        useComposeFiles = listOf("docker-compose-sonar.yml")
-        stopContainers = false
-        removeVolumes = false
-        removeContainers = false
-//        isRequiredBy(project.tasks.sonarqube)
-    }
 }
-tasks.sonarqube.configure { dependsOn(tasks.named("sonarqubeComposeUp")) }
 
 publishing {
     if (versioning.info.dirty == false) {
