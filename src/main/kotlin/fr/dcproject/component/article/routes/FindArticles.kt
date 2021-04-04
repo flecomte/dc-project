@@ -1,5 +1,6 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.application.http.respondIfNotValid
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.validation.isUuid
@@ -16,7 +17,6 @@ import io.konform.validation.jsonschema.enum
 import io.konform.validation.jsonschema.maximum
 import io.konform.validation.jsonschema.minimum
 import io.ktor.application.call
-import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
@@ -74,10 +74,7 @@ object FindArticles {
 
     fun Route.findArticles(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticlesRequest> {
-            if (it.validate().errors.size > 0) {
-                call.respond(HttpStatusCode.BadRequest)
-                return@get
-            }
+            respondIfNotValid(it.validate())?.apply { return@get }
 
             repo.findArticles(it)
                 .apply { ac.assert { canView(result, citizenOrNull) } }

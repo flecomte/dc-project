@@ -49,7 +49,10 @@ class `Article routes` : BaseTest() {
     fun `I cannot get article list`() {
         withIntegrationApplication {
             `Given I have articles`(3)
-            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=hello", Validate.ALL - Validate.REQUEST_PARAM) `Then the response should be` BadRequest
+            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=hello", Validate.ALL - Validate.REQUEST_PARAM) `Then the response should be` BadRequest and {
+                `And the response should contain`("$.invalidParams[*].name", ".createdBy")
+                `And the response should contain`("$.invalidParams[*].reason", "must be UUID")
+            }
         }
     }
 
