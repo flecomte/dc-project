@@ -134,6 +134,12 @@ paths:
       tags:
         - article
       operationId: getArticle
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
       responses:
         200:
           description: The Article objects
@@ -149,6 +155,12 @@ paths:
       tags:
         - article
       operationId: getArticleVersions
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
       responses:
         200:
           description: The versions of Article
@@ -2224,20 +2236,8 @@ components:
       properties:
         statusCode:
           type: integer
-        type:
-          type: string
-          nullable: true
         title:
           type: string
-        detail:
-          type: string
-          nullable: true
-        cause:
-          type: string
-          nullable: true
-        stackTrace:
-          type: string
-          nullable: true
         invalidParams:
           type: array
           items:

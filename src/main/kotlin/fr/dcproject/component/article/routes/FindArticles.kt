@@ -1,6 +1,6 @@
 package fr.dcproject.component.article.routes
 
-import fr.dcproject.application.http.respondIfNotValid
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.validation.isUuid
@@ -74,7 +74,7 @@ object FindArticles {
 
     fun Route.findArticles(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticlesRequest> {
-            respondIfNotValid(it.validate())?.apply { return@get }
+            it.validate().badRequestIfNotValid()
 
             repo.findArticles(it)
                 .apply { ac.assert { canView(result, citizenOrNull) } }
