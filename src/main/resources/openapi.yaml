@@ -42,7 +42,11 @@ paths:
                         items:
                           $ref: '#/components/schemas/ArticleListingResponse'
         400:
-          $ref: '#/components/responses/400'
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: []
@@ -2210,6 +2214,41 @@ components:
                 - EDITOR
                 - REPORTER
               example: MASTER
+
+    400:
+      description: noting
+      required:
+        - title
+        - invalidParams
+      additionalProperties: false
+      properties:
+        statusCode:
+          type: integer
+        type:
+          type: string
+          nullable: true
+        title:
+          type: string
+        detail:
+          type: string
+          nullable: true
+        cause:
+          type: string
+          nullable: true
+        stackTrace:
+          type: string
+          nullable: true
+        invalidParams:
+          type: array
+          items:
+            required:
+              - name
+              - reason
+            properties:
+              name:
+                type: string
+              reason:
+                type: string
 
   securitySchemes:
     JWTAuth:
