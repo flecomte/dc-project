@@ -9,7 +9,7 @@ import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
-import integration.steps.then.`whish contains`
+import integration.steps.then.`which contains`
 import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -42,7 +42,7 @@ class `Citizen routes` : BaseTest() {
                 `authenticated as`("Linus", "Pauling")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.id") `whish contains` "47a05c0f-7329-46c3-a7d0-325db37e9114"
+                `And have property`("$.id") `which contains` "47a05c0f-7329-46c3-a7d0-325db37e9114"
             }
         }
     }
@@ -55,7 +55,7 @@ class `Citizen routes` : BaseTest() {
                 `authenticated as`("Henri", "Becquerel")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.id") `whish contains` "47356809-c8ef-4649-8b99-1c5cb9886d38"
+                `And have property`("$.id") `which contains` "47356809-c8ef-4649-8b99-1c5cb9886d38"
             }
         }
     }

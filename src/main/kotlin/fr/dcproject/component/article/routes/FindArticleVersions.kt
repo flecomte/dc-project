@@ -1,42 +1,69 @@
 package fr.dcproject.component.article.routes
 
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
+import fr.dcproject.common.utils.toUUID
+import fr.dcproject.common.validation.isUuid
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForListing
-import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.article.database.ArticleRepository
 import fr.dcproject.component.auth.citizenOrNull
+import fr.dcproject.routes.PaginatedRequest
+import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.repository.RepositoryI
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.enum
+import io.konform.validation.jsonschema.maximum
+import io.konform.validation.jsonschema.minimum
 import io.ktor.application.call
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object FindArticleVersions {
     @Location("/articles/{article}/versions")
     class ArticleVersionsRequest(
-        article: UUID,
+        val article: String,
         page: Int = 1,
         limit: Int = 50,
         val sort: String? = null,
         val direction: RepositoryI.Direction? = null,
         val search: String? = null
-    ) {
-        val page: Int = if (page < 1) 1 else page
-        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
-        val article = ArticleRef(article)
+    ) : PaginatedRequestI by PaginatedRequest(page, limit) {
+        fun validate() = Validation<ArticleVersionsRequest> {
+            ArticleVersionsRequest::page {
+                minimum(1)
+                maximum(100)
+            }
+            ArticleVersionsRequest::limit {
+                minimum(1)
+                maximum(50)
+            }
+            ArticleVersionsRequest::sort ifPresent {
+                enum(
+                    "title",
+                    "createdAt",
+                    "vote",
+                    "popularity",
+                )
+            }
+            ArticleVersionsRequest::article {
+                isUuid()
+            }
+        }.validate(this)
     }
 
     private fun ArticleRepository.findVersions(request: ArticleVersionsRequest) =
-        findVersionsById(request.page, request.limit, request.article.id)
+        findVersionsById(request.page, request.limit, request.article.toUUID())
 
     fun Route.findArticleVersions(repo: ArticleRepository, ac: ArticleAccessControl) {
         get<ArticleVersionsRequest> {
+            it.validate().badRequestIfNotValid()
+
             repo.findVersions(it)
                 .apply { ac.assert { canView(result, citizenOrNull) } }
                 .run {

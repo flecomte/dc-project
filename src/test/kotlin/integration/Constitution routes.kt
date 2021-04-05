@@ -11,7 +11,7 @@ import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
-import integration.steps.then.`whish contains`
+import integration.steps.then.`which contains`
 import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
@@ -41,7 +41,7 @@ class `Constitution routes` : BaseTest() {
             `Given I have constitution`("0321c8d1-4ce3-4763-b5f4-a92611d280b4")
             `When I send a GET request`("/constitutions/0321c8d1-4ce3-4763-b5f4-a92611d280b4") `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.id") `whish contains` "0321c8d1-4ce3-4763-b5f4-a92611d280b4"
+                `And have property`("$.id") `which contains` "0321c8d1-4ce3-4763-b5f4-a92611d280b4"
             }
         }
     }
@@ -82,8 +82,8 @@ class `Constitution routes` : BaseTest() {
                 )
             } `Then the response should be` Created and {
                 `And the response should not be null`()
-                `And have property`("$.versionId") `whish contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
-                `And have property`("$.title") `whish contains` "Hello world!"
+                `And have property`("$.versionId") `which contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
+                `And have property`("$.title") `which contains` "Hello world!"
             }
         }
     }

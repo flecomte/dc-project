@@ -211,6 +211,12 @@ paths:
                                   format: uuid
                                 name:
                                   type: string
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
 
   /login:
     post:
