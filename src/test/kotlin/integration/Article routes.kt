@@ -46,7 +46,7 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
-    @Tag("Validation")
+    @Tag("BadRequest")
     fun `I cannot get article list`() {
         withIntegrationApplication {
             `Given I have articles`(3)
@@ -83,6 +83,19 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
+    @Tag("BadRequest")
+    fun `I cannot get article by id with wrong id format`() {
+        withIntegrationApplication {
+            `Given I have article`(id = "65cda9f3-8991-4420-8d41-1da9da72c9bb")
+            `When I send a GET request`("/articles/abcd") `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", "ID")
+                `And the response should contain`("$.invalidParams[0].reason", "must be UUID")
+            }
+        }
+    }
+
+    @Test
     fun `I can get versions of article by the id`() {
         withIntegrationApplication {
             `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
@@ -95,7 +108,7 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
-    @Tag("Validation")
+    @Tag("BadRequest")
     fun `I cannot get versions of article by the id with wrong id`() {
         withIntegrationApplication {
             `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
@@ -108,7 +121,7 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
-    @Tag("Validation")
+    @Tag("BadRequest")
     fun `I cannot get versions of article by the id with wrong request`() {
         withIntegrationApplication {
             `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")

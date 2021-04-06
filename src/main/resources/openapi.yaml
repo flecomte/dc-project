@@ -147,6 +147,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /articles/{article}/versions:
     parameters:
       - $ref: '#/components/parameters/article'

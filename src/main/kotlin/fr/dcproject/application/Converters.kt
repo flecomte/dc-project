@@ -31,7 +31,7 @@ val converters: ConverterDeclaration = {
                         invalidParams = listOf(
                             InvalidParam(
                                 "ID",
-                                "ID must be UUID"
+                                "must be UUID"
                             )
                         )
                     )
