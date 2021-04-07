@@ -14,6 +14,7 @@ import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.setBody
 
 enum class Validate(override val bit: Long) : BitMaskI {
+    NONE(0),
     REQUEST_BODY(1),
     REQUEST_PARAM(2),
     REQUEST_HEADER(4),

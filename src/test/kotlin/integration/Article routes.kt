@@ -145,8 +145,8 @@ class `Article routes` : BaseTest() {
                       "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
                       "title": "title2",
                       "anonymous": false,
-                      "content": "content2",
-                      "description": "description2",
+                      "content": "Sed malesuada ante et sem congue, scelerisque feugiat lorem viverra.",
+                      "description": "Sed vulputate, ligula id porta posuere, sapien lorem mattis arcu, sit amet luctus erat orci sed tellus.",
                       "tags": [
                           "green"
                       ]
@@ -161,6 +161,7 @@ class `Article routes` : BaseTest() {
     }
 
     @Test
+    @Tag("Forbidden")
     fun `I cannot create an article if I'm not connected`() {
         withIntegrationApplication {
             `When I send a POST request`("/articles") {
@@ -170,8 +171,8 @@ class `Article routes` : BaseTest() {
                       "versionId": "e3c7ce42-241c-4caf-9a59-aba4e466440e",
                       "title": "title2",
                       "anonymous": false,
-                      "content": "content2",
-                      "description": "description2",
+                      "content": "Sed malesuada ante et sem congue, scelerisque feugiat lorem viverra.",
+                      "description": "Sed vulputate, ligula id porta posuere, sapien lorem mattis arcu, sit amet luctus erat orci sed tellus.",
                       "tags": [
                           "green"
                       ]
@@ -182,6 +183,37 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And the response should contain`("$.statusCode", 403)
                 `And the response should contain`("$.title", "No User Connected")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot create an article with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("John", "Doe")
+            `When I send a POST request`("/articles", Validate.NONE) {
+                `authenticated as`("John", "Doe")
+                `with body`(
+                    """
+                    {
+                      "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
+                      "title": "title2",
+                      "anonymous": false,
+                      "content": "content2",
+                      "description": "description2",
+                      "tags": [
+                          "green"
+                      ]
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".content")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
             }
         }
     }

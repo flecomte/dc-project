@@ -38,7 +38,6 @@ object FindArticles {
         fun validate() = Validation<ArticlesRequest> {
             ArticlesRequest::page {
                 minimum(1)
-                maximum(100)
             }
             ArticlesRequest::limit {
                 minimum(1)

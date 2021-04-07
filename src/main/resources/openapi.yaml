@@ -71,16 +71,21 @@ paths:
                     Limit power of press
                 content:
                   type: string
+                  minLength: 50
+                  maxLength: 6000
                   example:
                     Lorem upsum...
                 description:
                   type: string
+                  minLength: 50
+                  maxLength: 6000
                   example:
                     I think is the bether choice
                 tags:
                   type: array
                   items:
                     type: string
+                    maxItems: 15
                   default: [ ]
                   example: [ power, press ]
                 anonymous:
@@ -112,6 +117,12 @@ paths:
                     format: uuid
                   versionNumber:
                     type: integer
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
         403:
