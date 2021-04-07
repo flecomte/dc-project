@@ -89,6 +89,7 @@ class `Constitution routes` : BaseTest() {
     }
 
     @Test
+    @Tag("BadRequest")
     fun `I cannot create an constitution if bad request`() {
         withIntegrationApplication {
             `Given I have citizen`("Henri", "Poincaré")

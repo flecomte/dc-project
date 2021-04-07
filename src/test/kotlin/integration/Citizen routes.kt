@@ -79,6 +79,7 @@ class `Citizen routes` : BaseTest() {
     }
 
     @Test
+    @Tag("BadRequest")
     fun `I cannot change my password if request is bad formatted`() {
         withIntegrationApplication {
             `Given I have citizen`("Louis", "Breguet", id = "6cf2a19d-d15d-4ee5-b2a9-907afd26b525")
