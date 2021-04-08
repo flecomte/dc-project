@@ -23,7 +23,7 @@ fun TestApplicationEngine.`Given I have citizen`(
     val user = UserForCreate(
         id = id.toUUID(),
         username = "$firstName-$lastName".toLowerCase(),
-        password = "azerty",
+        password = "Azerty123!",
     )
     val citizen = CitizenForCreate(
         id = id.toUUID(),
@@ -53,7 +53,7 @@ fun createCitizen(name: CitizenI.Name? = null, id: UUID = UUID.randomUUID()): Ci
                 last
             ),
             email = "$first@fakeemail.com",
-            user = UserForCreate(username = username, password = "azerty")
+            user = UserForCreate(username = username, password = "Azerty123!")
         ).let {
             citizenRepository.insertWithUser(it) ?: error("Unable to create User")
         }

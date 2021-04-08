@@ -484,6 +484,10 @@ paths:
           description: Password changed
         400:
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
         404:

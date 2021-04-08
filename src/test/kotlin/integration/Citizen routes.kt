@@ -69,8 +69,8 @@ class `Citizen routes` : BaseTest() {
                 `with body`(
                     """
                     {
-                      "oldPassword": "azerty",
-                      "newPassword": "qwerty"
+                      "oldPassword": "Azerty123!",
+                      "newPassword": "Qwerty123!"
                     }
                     """
                 )

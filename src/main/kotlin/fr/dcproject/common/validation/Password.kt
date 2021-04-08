@@ -10,7 +10,7 @@ fun ValidationBuilder<String>.passwordScore(minScore: Int) =
 fun String.passwordScore(): Int {
     var score: Int = length
     val alphaNum = ('a'..'z').toList() + ('A'..'Z').toList() + ('0'..'9').toList()
-    val specialCount = (length - toList().intersect(alphaNum).size)
+    val specialCount = length - toList().intersect(alphaNum).size
     score += specialCount.let { if (it > 3) 3 else it }
 
     val hasAlphaLower = toList().intersect(('a'..'z').toList()).size.let { if (it > 2) 2 else it }
