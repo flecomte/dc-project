@@ -563,6 +563,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /comments/{comment}:
