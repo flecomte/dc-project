@@ -29,7 +29,7 @@ class `Register routes` : BaseTest() {
                       "birthday": "2001-01-01",
                       "user":{
                         "username": "george-junior",
-                        "password": "azerty"
+                        "password": "Azerty123!"
                       },
                       "email": "george-junior@gmail.com"
                     }

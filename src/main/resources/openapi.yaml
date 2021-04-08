@@ -351,7 +351,7 @@ paths:
           content:
             application/json:
               schema:
-                description: sdf
+                $ref: '#/components/schemas/400'
   /auth/passwordless:
     post:
       summary: Send a connexion link by email
