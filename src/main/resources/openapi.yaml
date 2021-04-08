@@ -395,7 +395,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/citizenSort'
         - $ref: '#/components/parameters/direction'
         - $ref: '#/components/parameters/search'
       responses:
@@ -412,6 +412,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CitizenListResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /citizens/current:
@@ -1418,6 +1424,17 @@ components:
           - createdAt
           - vote
           - popularity
+    citizenSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - title
+          - createdAt
     workgroupSort:
       name: sort
       in: query

@@ -26,9 +26,22 @@ class `Citizen routes` : BaseTest() {
     fun `I can get Citizens information`() {
         withIntegrationApplication {
             `Given I have citizen`("Jean", "Perrin", id = "5267a5c6-af42-4a02-aa2b-6b71d2e43973")
-            `When I send a GET request`("/citizens") {
+            `When I send a GET request`("/citizens?page=1&limit=5&sort=createdAt") {
                 `authenticated as`("Jean", "Perrin")
             } `Then the response should be` OK and {
+                `And the response should not be null`()
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get Citizens information with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Jean", "Perrin", id = "5267a5c6-af42-4a02-aa2b-6b71d2e43973")
+            `When I send a GET request`("/citizens?page=1&limit=5&sort=created_at", Validate.ALL - Validate.REQUEST_PARAM) {
+                `authenticated as`("Jean", "Perrin")
+            } `Then the response should be` BadRequest and {
                 `And the response should not be null`()
             }
         }
