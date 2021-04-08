@@ -197,7 +197,7 @@ val sourcesJar by tasks.registering(Jar::class) {
 tasks.test {
     useJUnit()
     useJUnitPlatform()
-    systemProperty("junit.jupiter.execution.parallel.enabled", true)
+    // systemProperty("junit.jupiter.execution.parallel.enabled", true)
     dependsOn(testSql)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
