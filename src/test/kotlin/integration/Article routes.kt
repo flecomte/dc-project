@@ -22,6 +22,7 @@ import integration.steps.then.`which contains`
 import integration.steps.then.and
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
+import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -78,6 +79,17 @@ class `Article routes` : BaseTest() {
             `When I send a GET request`("/articles/65cda9f3-8991-4420-8d41-1da9da72c9bb") `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And have property`("$.id") `which contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
+            }
+        }
+    }
+
+    @Test
+    fun `I cannot get article with id doesn't exist`() {
+        withIntegrationApplication {
+            `When I send a GET request`("/articles/635fe2e8-2dbc-4c80-b306-101d38a4ab23") `Then the response should be` NotFound and {
+                `And the response should not be null`()
+                `And the response should contain`("$.title", "Article 635fe2e8-2dbc-4c80-b306-101d38a4ab23 not found")
+                `And the response should contain`("$.statusCode", 404)
             }
         }
     }

@@ -14,10 +14,8 @@ import java.util.concurrent.CompletionException
 
 class HttpError(
     statusCode: HttpStatusCode,
-    val cause: Throwable? = null,
-    val type: String? = null,
+    cause: Throwable? = null,
     val title: String = cause?.message ?: statusCode.description,
-    val detail: String? = null,
 ) {
     val statusCode: Int = statusCode.value
 }

@@ -164,6 +164,13 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/400'
+        404:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+
   /articles/{article}/versions:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -2278,7 +2285,7 @@ components:
               example: MASTER
 
     400:
-      description: noting
+      description: Bad Request
       required:
         - title
         - invalidParams
@@ -2303,6 +2310,20 @@ components:
               reason:
                 type: string
                 example: 'Cannot be null'
+
+    404:
+      description: Not Found
+      required:
+        - title
+        - statusCode
+      additionalProperties: false
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        title:
+          type: string
+          example: Bad Request
 
   securitySchemes:
     JWTAuth:
