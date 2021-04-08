@@ -27,6 +27,7 @@ internal class `Password Validation` {
         "12abCD-+".passwordScore() `should be equal to` 18
         "Abcde12!".passwordScore() `should be equal to` 15
         "Hello world".passwordScore() `should be equal to` 16
+        "hello WORLD".passwordScore() `should be equal to` 17
     }
 
     @Test
