@@ -6,7 +6,6 @@ import integration.steps.`when`.Validate.REQUEST_BODY
 import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
-import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
@@ -134,47 +133,6 @@ class `Comment articles routes` : BaseTest() {
                 `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.result[0]createdBy.id", "292a20cc-4a60-489e-9866-a95d38ffaf47")
-            }
-        }
-    }
-
-    @Test
-    fun `I can edit comment`() {
-        withIntegrationApplication {
-            `Given I have citizen`("Hubert", "Reeves")
-            `Given I have article`(id = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1")
-            `Given I have comment on article`(article = "bb05e4a3-55a1-4088-85e7-8d8c23be29b1", createdBy = Name("Hubert", "Reeves"), id = "fd30d20f-656c-42c6-8955-f61c04537464")
-            `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464") {
-                `authenticated as`("Hubert", "Reeves")
-                `with body`(
-                    """
-                    {
-                      "content": "Hello boy"
-                    }
-                    """
-                )
-            } `Then the response should be` OK and {
-                `And the response should not be null`()
-                `And the response should contain`("$.content", "Hello boy")
-            }
-        }
-    }
-
-    @Test
-    fun `I can get comment by its ID`() {
-        withIntegrationApplication {
-            `Given I have citizen`("Alfred", "Kastler")
-            `Given I have article`(id = "3897465b-19d2-43a0-86ea-1e29dbb11ec9")
-            `Given I have comment on article`(
-                article = "3897465b-19d2-43a0-86ea-1e29dbb11ec9",
-                createdBy = Name("Alfred", "Kastler"),
-                id = "edd296a8-fc7a-4717-a2bb-9f035ceca3c2",
-                content = "Hello boy"
-            )
-            `When I send a GET request`("/comments/edd296a8-fc7a-4717-a2bb-9f035ceca3c2") {
-            } `Then the response should be` OK and {
-                `And the response should not be null`()
-                `And the response should contain`("$.content", "Hello boy")
             }
         }
     }
