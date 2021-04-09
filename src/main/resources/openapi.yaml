@@ -522,13 +522,13 @@ paths:
           in: query
           required: false
           example:
-            - created_at
+            - createdAt
             - votes
           schema:
             type: string
-            default: created_at
+            default: createdAt
             enum:
-              - created_at
+              - createdAt
               - votes
       responses:
         200:
@@ -707,13 +707,42 @@ paths:
       tags:
         - comment
         - constitution
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/search'
+        - name: sort
+          in: query
+          required: false
+          example:
+            - createdAt
+            - votes
+          schema:
+            type: string
+            default: createdAt
+            enum:
+              - createdAt
+              - votes
       responses:
         200:
           description: Return Comment and children
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: []
@@ -739,6 +768,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
 
