@@ -6,7 +6,6 @@ import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
@@ -49,7 +48,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         target: EntityI,
         page: Int = 1,
         limit: Int = 50,
-        sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.CREATED_AT
+        sort: String = "createdAt"
     ): Paginated<CommentForView<T, CitizenCreatorI>> {
         return findByTarget(target.id, page, limit, sort)
     }
@@ -58,7 +57,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         targetId: UUID,
         page: Int = 1,
         limit: Int = 50,
-        sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.CREATED_AT
+        sort: String = "createdAt"
     ): Paginated<CommentForView<T, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_target")
@@ -66,7 +65,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
                     page,
                     limit,
                     "target_id" to targetId,
-                    "sort" to sort.sql
+                    "sort" to sort
                 )
                 as Paginated<CommentForView<T, CitizenCreatorI>>
         }

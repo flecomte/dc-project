@@ -41,7 +41,7 @@ class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<Arti
         target: EntityI,
         page: Int,
         limit: Int,
-        sort: Sort
+        sort: String
     ): Paginated<CommentForView<ArticleForView, CitizenCreatorI>> {
         return requester
             .getFunction("find_comments_by_target")
@@ -49,18 +49,7 @@ class CommentArticleRepository(requester: Requester) : CommentRepositoryAbs<Arti
                 page,
                 limit,
                 "target_id" to target.id,
-                "sort" to sort.sql
+                "sort" to sort
             ) as Paginated<CommentForView<ArticleForView, CitizenCreatorI>>
-    }
-
-    enum class Sort(val sql: String) {
-        CREATED_AT("created_at"),
-        VOTES("votes");
-
-        companion object {
-            fun fromString(string: String): Sort? {
-                return values().firstOrNull { it.sql == string }
-            }
-        }
     }
 }

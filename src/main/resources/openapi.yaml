@@ -544,6 +544,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: [ ]

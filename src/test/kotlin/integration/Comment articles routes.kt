@@ -3,6 +3,7 @@ package integration
 import fr.dcproject.component.citizen.database.CitizenI.Name
 import integration.steps.`when`.Validate.ALL
 import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`When I send a PUT request`
@@ -78,11 +79,28 @@ class `Comment articles routes` : BaseTest() {
             `Given I have citizen`("Enrico", "Fermi")
             `Given I have article`(id = "6166c078-ca97-4366-b0aa-2a5cd558c78a")
             `Given I have comment on article`(article = "6166c078-ca97-4366-b0aa-2a5cd558c78a", createdBy = Name("Enrico", "Fermi"))
-            `When I send a GET request`("/articles/6166c078-ca97-4366-b0aa-2a5cd558c78a/comments") {
+            `When I send a GET request`("/articles/6166c078-ca97-4366-b0aa-2a5cd558c78a/comments?page=1&limit=40&sort=votes") {
                 `authenticated as`("Enrico", "Fermi")
             } `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain`("$.result[0].target.id", "6166c078-ca97-4366-b0aa-2a5cd558c78a")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get all comment on article with wrong parameters`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Enrico", "Fermi")
+            `Given I have article`(id = "6166c078-ca97-4366-b0aa-2a5cd558c78a")
+            `Given I have comment on article`(article = "6166c078-ca97-4366-b0aa-2a5cd558c78a", createdBy = Name("Enrico", "Fermi"))
+            `When I send a GET request`("/articles/6166c078-ca97-4366-b0aa-2a5cd558c78a/comments?page=1&limit=40&sort=wrong", ALL - REQUEST_PARAM) {
+                `authenticated as`("Enrico", "Fermi")
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[*].name", ".sort")
+                `And the response should contain`("$.invalidParams[*].reason", "must be one of: 'votes', 'createdAt'")
             }
         }
     }
