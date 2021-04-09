@@ -1,6 +1,6 @@
 package fr.dcproject.component.comment.generic.routes
 
-import fr.dcproject.component.comment.generic.routes.CreateCommentChildren.createCommentChildren
+import fr.dcproject.component.comment.generic.routes.CreateComment.createCommentChildren
 import fr.dcproject.component.comment.generic.routes.EditComment.editComment
 import fr.dcproject.component.comment.generic.routes.GetCommentChildren.getChildrenComments
 import fr.dcproject.component.comment.generic.routes.GetOneComment.getOneComment

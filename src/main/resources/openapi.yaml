@@ -598,6 +598,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: create comment
+      tags:
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  example:
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      responses:
+        201:
+          description: Return updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          description: No comment found
     put:
       security:
         - JWTAuth: []
@@ -614,7 +648,7 @@ paths:
                 content:
                   type: string
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
         200:
           description: Return updated comment
@@ -622,6 +656,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /comments/{comment}/children:

@@ -1,4 +1,4 @@
-create or replace function comment(reference regclass, resource json, out _id uuid)
+create or replace function comment(reference regclass, inout resource json)
     language plpgsql as
 $$
 declare
@@ -17,7 +17,8 @@ begin
     else
         raise exception 'comment with target as "%", is not implemented', reference::text;
     end if;
-    _id = _new_id;
+
+    select find_comment_by_id(_new_id) into resource;
 end;
 $$;
 
