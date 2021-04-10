@@ -567,8 +567,10 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum...
       responses:
         201:
           description: Return created Comment
@@ -613,6 +615,8 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
@@ -647,6 +651,8 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
@@ -799,8 +805,10 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
         201:
           description: Return created comment

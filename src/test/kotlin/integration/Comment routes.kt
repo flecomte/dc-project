@@ -1,6 +1,8 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_BODY
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`When I send a PUT request`
@@ -66,7 +68,7 @@ class `Comment routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Hubert", "Reeves")
             `Given I have comment on comment`(id = "49933147-fc0f-4e5c-aa8d-f77fa0d88fa6")
-            `When I send a POST request`("/comments/49933147-fc0f-4e5c-aa8d-f77fa0d88fa6") {
+            `When I send a POST request`("/comments/49933147-fc0f-4e5c-aa8d-f77fa0d88fa6", ALL - REQUEST_BODY) {
                 `authenticated as`("Hubert", "Reeves")
                 `with body`(
                     """
@@ -125,7 +127,7 @@ class `Comment routes` : BaseTest() {
                 ),
                 id = "fd30d20f-656c-42c6-8955-f61c04537464"
             )
-            `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464") {
+            `When I send a PUT request`("/comments/fd30d20f-656c-42c6-8955-f61c04537464", ALL - REQUEST_BODY) {
                 `authenticated as`("Hubert", "Reeves")
                 `with body`(
                     """
