@@ -1,6 +1,8 @@
 package integration
 
-import integration.steps.`when`.Validate
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
@@ -9,6 +11,7 @@ import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`Given I have constitutions`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
+import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.`which contains`
@@ -28,8 +31,21 @@ class `Constitution routes` : BaseTest() {
     fun `I can get constitution list`() {
         withIntegrationApplication {
             `Given I have constitutions`(3)
-            `When I send a GET request`("/constitutions") `Then the response should be` OK and {
+            `When I send a GET request`("/constitutions?page=1&limit=10&sort=title&direction=desc") `Then the response should be` OK and {
                 `And the response should not be null`()
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get constitution list with wrong request`() {
+        withIntegrationApplication {
+            `Given I have constitutions`(3)
+            `When I send a GET request`("/constitutions?page=1&limit=5000&sort=title&direction=desc", ALL - REQUEST_PARAM) `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".limit")
+                `And the response should contain`("$.invalidParams[0].reason", "must be at most '50'")
             }
         }
     }
@@ -70,11 +86,11 @@ class `Constitution routes` : BaseTest() {
                     """
                     {
                        "versionId":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
-                       "title":"Hello world!",
+                       "title":"Cras sit amet sapien mattis nulla rutrum blandit.",
                        "anonymous":true,
                        "titles":[
                           {
-                             "name":"plop"
+                             "name":"Cras sit amet sapien mattis nulla rutrum blandit."
                           }
                        ]
                     }
@@ -83,7 +99,7 @@ class `Constitution routes` : BaseTest() {
             } `Then the response should be` Created and {
                 `And the response should not be null`()
                 `And have property`("$.versionId") `which contains` "15814bb6-8d90-4c6a-a456-c3939a8ec75e"
-                `And have property`("$.title") `which contains` "Hello world!"
+                `And have property`("$.title") `which contains` "Cras sit amet sapien mattis nulla rutrum blandit."
             }
         }
     }
@@ -93,7 +109,7 @@ class `Constitution routes` : BaseTest() {
     fun `I cannot create an constitution if bad request`() {
         withIntegrationApplication {
             `Given I have citizen`("Henri", "Poincaré")
-            `When I send a POST request`("/constitutions", Validate.ALL - Validate.REQUEST_BODY) {
+            `When I send a POST request`("/constitutions", ALL - REQUEST_BODY) {
                 `authenticated as`("Henri", "Poincaré")
                 `with body`(
                     """
@@ -111,6 +127,36 @@ class `Constitution routes` : BaseTest() {
                     """
                 )
             } `Then the response should be` BadRequest
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot create an constitution if request is not valid`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Henri", "Poincaré")
+            `When I send a POST request`("/constitutions", ALL - REQUEST_BODY) {
+                `authenticated as`("Henri", "Poincaré")
+                `with body`(
+                    """
+                    {
+                       "versionId":"15814bb6-8d90-4c6a-a456-c3939a8ec75e",
+                       "title":"too small",
+                       "anonymous":true,
+                       "titles":[
+                          {
+                             "name":"too small"
+                          }
+                       ]
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should contain`("$.invalidParams[0].name", ".title")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 10 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".titles[0].name")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 10 characters")
+            }
         }
     }
 }

@@ -851,6 +851,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/ConstitutionListingResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: [ ]
@@ -875,7 +881,11 @@ paths:
         401:
           $ref: '#/components/responses/401'
         400:
-          $ref: '#/components/responses/400'
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /constitutions/{constitution}:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -2019,6 +2029,8 @@ components:
           $ref: '#/components/schemas/UUID'
         title:
           type: string
+          minLength: 10
+          maxLength: 80
           example:
             Constitution for the liberty
         titles:
@@ -2034,6 +2046,8 @@ components:
                 $ref: '#/components/schemas/UUID'
               name:
                 type: string
+                minLength: 10
+                maxLength: 80
                 example:
                   The liberties
               articles:
