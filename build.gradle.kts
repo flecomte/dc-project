@@ -344,6 +344,12 @@ tasks.register("testConstitutions", Test::class) {
         includeTags("constitution")
     }
 }
+tasks.register("testFollows", Test::class) {
+    group = "tests"
+    useJUnitPlatform {
+        includeTags("follow")
+    }
+}
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
