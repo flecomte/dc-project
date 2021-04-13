@@ -28,12 +28,12 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
-class NotificationsPush private constructor(
+class NotificationsPush(
     private val redis: RedisAsyncCommands<String, String>,
     private val redisConnectionPubSub: StatefulRedisPubSubConnection<String, String>,
     citizen: CitizenI,
     incoming: Flow<Notification>,
-    onRecieve: suspend (Notification) -> Unit,
+    onReceive: suspend (Notification) -> Unit,
 ) {
     class Builder(val redisClient: RedisClient) {
         private val redisConnection = redisClient.connect() ?: error("Unable to connect to redis")
@@ -43,8 +43,8 @@ class NotificationsPush private constructor(
         fun build(
             citizen: CitizenI,
             incoming: Flow<Notification>,
-            onRecieve: suspend (Notification) -> Unit,
-        ): NotificationsPush = NotificationsPush(redis, redisConnectionPubSub, citizen, incoming, onRecieve)
+            onReceive: suspend (Notification) -> Unit,
+        ): NotificationsPush = NotificationsPush(redis, redisConnectionPubSub, citizen, incoming, onReceive)
 
         @ExperimentalCoroutinesApi
         fun build(ws: DefaultWebSocketServerSession): NotificationsPush {
@@ -69,7 +69,7 @@ class NotificationsPush private constructor(
         override fun message(pattern: String?, channel: String?, message: String?) {
             runBlocking {
                 getNotifications().collect {
-                    onRecieve(it)
+                    onReceive(it)
                 }
             }
         }
@@ -85,10 +85,12 @@ class NotificationsPush private constructor(
 
         /* Get old notification and sent it to websocket */
         runBlocking {
-            getNotifications().collect { onRecieve(it) }
+            getNotifications().collect {
+                onReceive(it)
+            }
         }
 
-        /* Lisen redis event, and sent the new notification into websocket */
+        /* Listen redis event, and sent the new notification into websocket */
         redisConnectionPubSub.run {
             addListener(listener)
 
