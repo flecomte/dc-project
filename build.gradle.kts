@@ -356,6 +356,12 @@ tasks.register("testNotifications", Test::class) {
         includeTags("notification")
     }
 }
+tasks.register("testOpinions", Test::class) {
+    group = "tests"
+    useJUnitPlatform {
+        includeTags("opinion")
+    }
+}
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)

@@ -1118,6 +1118,9 @@ paths:
       tags:
         - opinion
         - citizen
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
       responses:
         200:
           description: Opinions
@@ -1132,6 +1135,13 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Opinion'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+
   /articles/{article}/opinions:
     parameters:
       - $ref: '#/components/parameters/article'
