@@ -1,6 +1,9 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
@@ -12,8 +15,10 @@ import integration.steps.given.`Given I have vote +1 on article`
 import integration.steps.given.`Given I have vote -1 on article`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -66,13 +71,30 @@ class `Vote routes` : BaseTest() {
             `Given I have citizen`("Carl", "Gauss", id = "c044823d-e778-4256-9016-b1334bf933d3")
             `Given I have article`("7c9286db-470d-448c-aab1-3f0b072213b1")
             `Given I have vote +1 on article`("7c9286db-470d-448c-aab1-3f0b072213b1", Name("Carl", "Gauss"))
-            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles") {
+            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles?page=1&limit=50") {
                 `authenticated as`("Carl", "Gauss")
             } `Then the response should be` OK and {
                 `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.total", 1)
                 `And the response should contain`("$.result[0].note", 1)
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get votes of current citizen with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Carl", "Gauss", id = "c044823d-e778-4256-9016-b1334bf933d3")
+            `Given I have article`("7c9286db-470d-448c-aab1-3f0b072213b1")
+            `Given I have vote +1 on article`("7c9286db-470d-448c-aab1-3f0b072213b1", Name("Carl", "Gauss"))
+            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles?page=1&limit=60", ALL - REQUEST_PARAM) {
+                `authenticated as`("Carl", "Gauss")
+            } `Then the response should be` HttpStatusCode.BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".limit")
+                `And the response should contain`("$.invalidParams[0].reason", "must be at most '50'")
             }
         }
     }

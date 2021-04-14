@@ -1265,6 +1265,9 @@ paths:
         - vote
         - article
         - citizen
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
       responses:
         200:
           description: Votes
@@ -1279,6 +1282,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/VoteResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /articles/{article}/vote:
