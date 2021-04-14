@@ -11,6 +11,8 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.readValue
 import fr.dcproject.common.entity.Entity
 import fr.dcproject.component.article.database.ArticleForView
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.enum
 import org.joda.time.DateTime
 import java.util.concurrent.atomic.AtomicInteger
 
@@ -49,6 +51,14 @@ open class Notification(
         }
 
         inline fun <reified T : Notification> fromString(raw: String): T = mapper.readValue(raw)
+    }
+
+    fun getValidation() = Validation<Notification> {
+        Notification::type {
+            enum(
+                "article"
+            )
+        }
     }
 }
 

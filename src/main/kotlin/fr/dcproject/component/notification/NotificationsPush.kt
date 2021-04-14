@@ -1,6 +1,7 @@
 package fr.dcproject.component.notification
 
 import com.fasterxml.jackson.core.JsonProcessingException
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.citizen.database.CitizenI
 import io.ktor.http.cio.websocket.Frame
@@ -28,7 +29,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
-class NotificationsPush(
+class NotificationsPush (
     private val redis: RedisAsyncCommands<String, String>,
     private val redisConnectionPubSub: StatefulRedisPubSubConnection<String, String>,
     citizen: CitizenI,
@@ -52,7 +53,10 @@ class NotificationsPush(
             val incomingFlow: Flow<Notification> = ws.incoming.consumeAsFlow()
                 .mapNotNull<Frame, Text> { it as? Frame.Text }
                 .map { it.readText() }
-                .map { Notification.fromString(it) }
+                .map {
+                    Notification.fromString<Notification>(it)
+                        .apply { getValidation().validate(this).badRequestIfNotValid() }
+                }
 
             return build(ws.call.citizen, incomingFlow) {
                 ws.outgoing.send(Text(it.toString()))
