@@ -4,6 +4,7 @@ import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.comment.generic.CommentAccessControl
+import fr.dcproject.component.comment.generic.database.CommentRef
 import fr.dcproject.component.comment.generic.database.CommentRepository
 import fr.dcproject.component.comment.toOutput
 import fr.dcproject.routes.PaginatedRequest
@@ -21,11 +22,13 @@ import java.util.UUID
 object GetCommentChildren {
     @Location("/comments/{comment}/children")
     class CommentChildrenRequest(
-        val comment: UUID,
+        comment: UUID,
         page: Int = 1,
         limit: Int = 50,
         val search: String? = null
-    ) : PaginatedRequestI by PaginatedRequest(page, limit)
+    ) : PaginatedRequestI by PaginatedRequest(page, limit) {
+        val comment = CommentRef(comment)
+    }
 
     fun Route.getChildrenComments(repo: CommentRepository, ac: CommentAccessControl) {
         get<CommentChildrenRequest> {

@@ -21,7 +21,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
     ): Paginated<CommentForView<T, CitizenCreatorI>>
 
     open fun findByParent(
-        parent: CommentForView<T, CitizenCreatorI>,
+        parent: CommentI,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<CommentForView<T, CitizenCreatorI>> {
