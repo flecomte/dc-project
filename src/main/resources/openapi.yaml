@@ -1252,6 +1252,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoteAggregation'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /citizens/{citizen}/votes/articles:
