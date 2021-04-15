@@ -1,6 +1,7 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate.REQUEST_BODY
 import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
@@ -112,14 +113,15 @@ class `Workgroup routes` : BaseTest() {
                     """
                     {
                         "name":"La ratatouille",
-                        "description":"Une petite souris"
+                        "description":"Une petite souris avec un chapeau et qui aime la cuisine",
+                        "logo": "http://sdf@exemple.com/sdfsd?sdf=sss"
                     }
                     """
                 )
             } `Then the response should be` OK and {
                 `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
                 `And the response should contain`("$.name", "La ratatouille")
-                `And the response should contain`("$.description", "Une petite souris")
+                `And the response should contain`("$.description", "Une petite souris avec un chapeau et qui aime la cuisine")
 
                 `And have property`("$.members")
                 `And the response should contain list`("$.members", 3)
@@ -132,7 +134,43 @@ class `Workgroup routes` : BaseTest() {
             } `Then the response should be` OK and {
                 `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
                 `And the response should contain`("$.name", "La ratatouille")
-                `And the response should contain`("$.description", "Une petite souris")
+                `And the response should contain`("$.description", "Une petite souris avec un chapeau et qui aime la cuisine")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot edit a workgroup with bad request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("John", "Wheeler")
+            `Given I have citizen`("Heinrich", "Hertz", id = "94f92424-c257-4582-907c-98564a8c4ac9")
+            `Given I have citizen`("William", "Thomson", id = "87909ba3-2069-431c-9924-219fd8411cf2")
+            `Given I have workgroup`("aa875a24-0050-4252-9130-d37391714e26", createdBy = Name("John", "Wheeler")) {
+                `With members`(
+                    Name("Heinrich", "Hertz"),
+                    Name("William", "Thomson"),
+                )
+            }
+            `When I send a PUT request`("/workgroups/aa875a24-0050-4252-9130-d37391714e26", -REQUEST_BODY) {
+                `authenticated as`("John", "Wheeler")
+                `with body`(
+                    """
+                    {
+                        "name":"sm",
+                        "description":"small2",
+                        "logo": "ws://sdfs.sdok"
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".name")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 5 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[2].name", ".logo")
+                `And the response should contain`("$.invalidParams[2].reason", "is not url")
             }
         }
     }

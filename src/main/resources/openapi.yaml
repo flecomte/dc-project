@@ -1451,6 +1451,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workgroup'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     delete:
       summary: Delete one workgroup
       security:
