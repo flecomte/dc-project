@@ -1,6 +1,7 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
@@ -15,8 +16,10 @@ import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should be null`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -157,11 +160,25 @@ class `Workgroup routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Max", "Planck")
             `Given I have workgroup`("3fd8edb6-c4b4-4c94-bc75-ddd9b290d32c")
-            `When I send a GET request`("/workgroups") {
+            `When I send a GET request`("/workgroups?page=1&limit=10&sort=createdAt") {
                 `authenticated as`("Max", "Planck")
                 `with no content`()
             } `Then the response should be` OK and {
                 `And the response should contain`("$.result[0].id", "3fd8edb6-c4b4-4c94-bc75-ddd9b290d32c")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get workgroups list with wrong request`() {
+        withIntegrationApplication {
+            `Given I have workgroup`("3fd8edb6-c4b4-4c94-bc75-ddd9b290d32c")
+            `When I send a GET request`("/workgroups?sort=plop", -REQUEST_PARAM) {
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".sort")
+                `And the response should contain`("$.invalidParams[0].reason", "must be one of: 'name', 'createdAt'")
             }
         }
     }

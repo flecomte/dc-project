@@ -1,5 +1,6 @@
 package integration.steps.`when`
 
+import fr.dcproject.common.BitMask
 import fr.dcproject.common.BitMaskI
 import integration.steps.then.`And the schema parameters must be valid`
 import integration.steps.then.`And the schema request body must be valid`
@@ -23,6 +24,8 @@ enum class Validate(override val bit: Long) : BitMaskI {
     RESPONSE_HEADER(16),
     RESPONSE(8 + 16),
     ALL((1 + 2 + 4) + (8 + 16));
+
+    operator fun unaryMinus(): BitMaskI = ALL - BitMask(this.bit)
 }
 
 fun TestApplicationCall.valid(validate: BitMaskI): TestApplicationCall {
