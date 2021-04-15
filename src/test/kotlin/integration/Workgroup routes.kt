@@ -77,7 +77,7 @@ class `Workgroup routes` : BaseTest() {
                     {
                         "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
                         "name":"Les Bouffons",
-                        "description":"La vie est belle",
+                        "description":"Pellentesque eleifend malesuada aliquam. Maecenas et urna quis nunc lacinia scelerisque.",
                         "anonymous":false
                     }
                     """
@@ -85,13 +85,43 @@ class `Workgroup routes` : BaseTest() {
             } `Then the response should be` Created and {
                 `And the response should contain`("$.id", "f496d86d-6654-4068-91ff-90e1dbcc5f38")
                 `And the response should contain`("$.name", "Les Bouffons")
-                `And the response should contain`("$.description", "La vie est belle")
+                `And the response should contain`("$.description", "Pellentesque eleifend malesuada aliquam. Maecenas et urna quis nunc lacinia scelerisque.")
                 `And the response should contain`("$.anonymous", false)
             }
 
             `When I send a GET request`("/workgroups/f496d86d-6654-4068-91ff-90e1dbcc5f38") {
                 `authenticated as`("Werner", "Heisenberg")
             } `Then the response should be` OK
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot create a workgroup with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Werner", "Heisenberg")
+            `When I send a POST request`("/workgroups") {
+                `authenticated as`("Werner", "Heisenberg")
+                `with body`(
+                    """
+                    {
+                        "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
+                        "name":"sm",
+                        "description":"small",
+                        "anonymous":false,
+                        "logo": "www.plop.com"
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".name")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 5 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[2].name", ".logo")
+                `And the response should contain`("$.invalidParams[2].reason", "is not url")
+            }
         }
     }
 

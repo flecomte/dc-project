@@ -1403,6 +1403,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workgroup'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /workgroups/{workgroup}:
     parameters:
       - $ref: '#/components/parameters/workgroup'
