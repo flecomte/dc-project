@@ -88,21 +88,60 @@ class `Vote routes` : BaseTest() {
         }
     }
 
-    @Test
-    fun `I can vote constitution`() {
+    @TestFactory
+    fun `I can vote constitution`(): List<DynamicTest> {
         withIntegrationApplication {
             `Given I have citizen`("Gregor", "Mendel")
             `Given I have constitution`(id = "76e79c89-efc1-492d-9e8f-dc9717363a11")
-            `When I send a PUT request`("/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote") {
-                `authenticated as`("Gregor", "Mendel")
-                `with body`(
-                    """
-                    {
-                      "note": 1
+        }
+        return (-1..1).map { note ->
+            DynamicTest.dynamicTest("""I can vote constitution with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`("/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote") {
+                        `authenticated as`("Gregor", "Mendel")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }²
+                            """
+                        )
+                    } `Then the response should be` Created
+                }
+            }
+        }
+    }
+
+    @TestFactory
+    @Tag("BadRequest")
+    fun `I cannot vote constitution with wrong request`(): List<DynamicTest> {
+        withIntegrationApplication {
+            `Given I have citizen`("Gregor", "Mendel")
+            `Given I have constitution`(id = "76e79c89-efc1-492d-9e8f-dc9717363a11")
+        }
+
+        return listOf(-10, -2, +2, +10).map { note ->
+            DynamicTest.dynamicTest("""I can vote constitution with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`(
+                        "/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote",
+                        ALL - REQUEST_BODY
+                    ) {
+                        `authenticated as`("Gregor", "Mendel")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }
+                            """
+                        )
+                    } `Then the response should be` BadRequest and {
+                        `And the response should not be null`()
+                        `And the response should contain`("$.invalidParams[0].name", ".note")
+                        `And the response should contain`("$.invalidParams[0].reason", if (note > 0) "must be at most '1'" else "must be at least '-1'")
                     }
-                    """
-                )
-            } `Then the response should be` Created
+                }
+            }
         }
     }
 
