@@ -94,7 +94,7 @@ val migration by tasks.registering {
 }
 
 val migrationTest by tasks.registering {
-    group = "verification"
+    group = "tests"
     dependsOn(tasks.named("testComposeUp"))
     finalizedBy(tasks.named("testComposeDown"))
     doLast {
@@ -118,11 +118,9 @@ val migrationTest by tasks.registering {
 }
 
 val testSql by tasks.registering {
-    group = "verification"
+    group = "tests"
     dependsOn(tasks.named("processResources"))
     dependsOn(tasks.named("processTestResources"))
-    dependsOn(tasks.named("testSqlComposeUp"))
-    finalizedBy(tasks.named("testSqlComposeDown"))
 
     doLast {
         val config = ConfigFactory.parseFile(file("$buildDir/resources/test/application-test.conf")).resolve()
@@ -197,20 +195,12 @@ val sourcesJar by tasks.registering(Jar::class) {
 tasks.test {
     useJUnit()
     useJUnitPlatform()
-    // systemProperty("junit.jupiter.execution.parallel.enabled", true)
-    dependsOn(testSql)
+    systemProperty("junit.jupiter.execution.parallel.enabled", true)
     finalizedBy(tasks.jacocoTestReport) // report is always generated after tests run
 }
 
 coveralls {
     sourceDirs.add("src/main/kotlin")
-}
-
-tasks.register("testAll") {
-    group = "verification"
-    dependsOn(testSql)
-    dependsOn(tasks.test)
-    dependsOn(tasks.ktlintCheck)
 }
 
 apply(plugin = "docker-compose")
@@ -228,14 +218,12 @@ dockerCompose {
         useComposeFiles = listOf("docker-compose-test.yml")
         startedServices = listOf("db", "elasticsearch")
         stopContainers = false
-        isRequiredBy(project.tasks.named("testSql"))
     }
 
     createNested("test").apply {
         projectName = "dc-project_test"
         useComposeFiles = listOf("docker-compose-test.yml")
         stopContainers = false
-        isRequiredBy(project.tasks.test)
     }
 }
 
@@ -320,6 +308,12 @@ tasks.named("testComposeUp").configure {
     }
 }
 
+tasks.register("testWithDependencies", Test::class) {
+    group = "tests"
+    dependsOn(tasks.named("testComposeUp"))
+    dependsOn(tasks.ktlintCheck)
+    dependsOn(testSql)
+}
 tasks.register("testArticles", Test::class) {
     group = "tests"
     useJUnitPlatform {
@@ -368,7 +362,7 @@ tasks.register("testVotes", Test::class) {
         includeTags("vote")
     }
 }
-tasks.register("testWorkgroup", Test::class) {
+tasks.register("testWorkgroups", Test::class) {
     group = "tests"
     useJUnitPlatform {
         includeTags("workgroup")
