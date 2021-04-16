@@ -43,7 +43,7 @@ fun <A : ArticleRef> createComment(
     createdBy: Name? = null,
     content: String? = null
 ): CommentForView<TargetRef, CitizenCreator> {
-    val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
+    val articleRepository: ArticleRepository by lazy { GlobalContext.get().get() }
     return createCommentOnTarget(
         id,
         article?.id?.let { articleRepository.findById(article.id) } ?: createArticle(article?.id),
@@ -67,7 +67,7 @@ fun <C : ConstitutionRef> createComment(
     createdBy: Name? = null,
     content: String? = null
 ): CommentForView<TargetRef, CitizenCreator> {
-    val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().koin.get() }
+    val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().get() }
     return createCommentOnTarget(
         id,
         constitution?.id?.let { constitutionRepository.findById(constitution.id) } ?: createConstitution(constitution?.id),
@@ -82,7 +82,7 @@ fun <T : TargetI> createCommentOnTarget(
     createdBy: Name? = null,
     content: String? = null
 ): CommentForView<TargetRef, CitizenCreator> {
-    val commentRepository: CommentRepository by lazy { GlobalContext.get().koin.get() }
+    val commentRepository: CommentRepository by lazy { GlobalContext.get().get() }
     val creator = createCitizen(createdBy)
     val comment = CommentForUpdate(
         id = id ?: UUID.randomUUID(),
@@ -114,7 +114,7 @@ fun createCommentOnComment(
     content: String? = null
 ): CommentForView<out TargetRef, CitizenCreator> {
     val creator = createCitizen(createdBy)
-    val commentRepository: CommentRepository by lazy { GlobalContext.get().koin.get() }
+    val commentRepository: CommentRepository by lazy { GlobalContext.get().get() }
     val parentComment = if (parent == null) {
         createComment<ArticleRef>()
     } else {

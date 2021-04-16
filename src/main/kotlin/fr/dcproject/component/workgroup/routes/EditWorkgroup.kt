@@ -20,13 +20,12 @@ import io.ktor.locations.Location
 import io.ktor.locations.put
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.koin.core.KoinComponent
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object EditWorkgroup {
     @Location("/workgroups/{workgroupId}")
-    class PutWorkgroupRequest(val workgroupId: UUID) : KoinComponent {
+    class PutWorkgroupRequest(val workgroupId: UUID) {
         class Input(
             val name: String?,
             val description: String?,

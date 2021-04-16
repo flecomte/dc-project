@@ -34,7 +34,7 @@ jobs:
     - name: Build
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: build -x test -x ktlintKotlinScriptCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x detekt
     - name: Cleanup Gradle Cache
       # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
@@ -46,12 +46,12 @@ jobs:
     - name: processResources
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: processResources
     - name: processTestResources
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: processResources
     - uses: actions/upload-artifact@v2
       with:
@@ -76,13 +76,13 @@ jobs:
     - name: Composer Up
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: testSqlComposeUp
 
     - name: TestSql
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: testSql
 
   test:
@@ -105,19 +105,19 @@ jobs:
     - name: Composer Up
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: testComposeUp
 
     - name: Test
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: test
 
     - name: Coverage
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: coveralls
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -132,7 +132,7 @@ jobs:
     - name: Test
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: test
 
     - name: Build and analyze
@@ -141,7 +141,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: sonarqube --info
 
   lint:
@@ -161,5 +161,5 @@ jobs:
     - name: Lint
       uses: eskatos/gradle-command-action@v1
       with:
-        gradle-version: 6.8
+        gradle-version: '7.0'
         arguments: ktlintCheck

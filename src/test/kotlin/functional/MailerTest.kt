@@ -15,7 +15,6 @@ import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestInstance
-import org.koin.test.AutoCloseKoinTest
 import org.koin.test.KoinTest
 import org.koin.test.get
 
@@ -23,7 +22,7 @@ import org.koin.test.get
 @KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("functional"), Tag("mail"))
-class MailerTest : KoinTest, AutoCloseKoinTest() {
+class MailerTest : KoinTest {
     @InternalCoroutinesApi
     @ExperimentalCoroutinesApi
     @Test

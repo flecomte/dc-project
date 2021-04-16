@@ -23,7 +23,7 @@ fun createOpinionChoice(
     id: UUID? = null,
     name: String,
 ): OpinionChoice {
-    val opinionChoiceRepository: OpinionChoiceRepository by lazy { GlobalContext.get().koin.get() }
+    val opinionChoiceRepository: OpinionChoiceRepository by lazy { GlobalContext.get().get() }
     val opinionChoice = OpinionChoice(
         id = id,
         name = name,
@@ -38,9 +38,9 @@ fun `Given I have opinion on article`(
     citizenName: Name,
     id: String? = null
 ) {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
-    val opinionRepositoryArticle: OpinionRepositoryArticle by lazy { GlobalContext.get().koin.get() }
-    val opinionChoiceRepository: OpinionChoiceRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
+    val opinionRepositoryArticle: OpinionRepositoryArticle by lazy { GlobalContext.get().get() }
+    val opinionChoiceRepository: OpinionChoiceRepository by lazy { GlobalContext.get().get() }
     val opinion = OpinionForUpdate(
         id = id?.toUUID() ?: UUID.randomUUID(),
         choice = opinionChoiceRepository.findOpinionsChoiceByName(name)

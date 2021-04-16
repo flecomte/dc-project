@@ -14,9 +14,9 @@ fun TestApplicationRequest.`authenticated as`(
     lastName: String,
 ): Citizen {
     val username = "$firstName-$lastName".toLowerCase()
-    val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
+    val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().get() }
     val citizen = repo.findByUsername(username) ?: error("Citizen not exist with username $username")
-    val algorithm = GlobalContext.get().koin.get<JwtConfig>().algorithm
+    val algorithm = GlobalContext.get().get<JwtConfig>().algorithm
     val jwtAsString: String = JWT.create()
         .withIssuer("dc-project.fr")
         .withClaim("id", citizen.user.id.toString())
@@ -30,9 +30,9 @@ fun TestApplicationRequest.`authenticated in url as`(
     firstName: String,
     lastName: String,
 ): Citizen {
-    val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().koin.get() }
+    val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().get() }
     val citizen = repo.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist with name $firstName $lastName")
-    val algorithm = GlobalContext.get().koin.get<JwtConfig>().algorithm
+    val algorithm = GlobalContext.get().get<JwtConfig>().algorithm
     val jwtAsString: String = JWT.create()
         .withIssuer("dc-project.fr")
         .withClaim("id", citizen.user.id.toString())

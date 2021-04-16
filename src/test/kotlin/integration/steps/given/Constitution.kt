@@ -44,7 +44,7 @@ fun createConstitution(
     titles: List<TitleForUpdate<ArticleRef>>? = null,
     createdBy: Name? = null
 ): ConstitutionForView {
-    val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().koin.get() }
+    val constitutionRepository: ConstitutionRepository by lazy { GlobalContext.get().get() }
 
     val creator: CitizenWithUserI = createCitizen(createdBy)
 

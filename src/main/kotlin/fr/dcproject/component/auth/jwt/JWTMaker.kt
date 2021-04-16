@@ -7,7 +7,7 @@ import org.koin.core.context.GlobalContext
 /**
  * Produce a token for this combination of User and Account
  */
-fun UserI.makeToken(): String = GlobalContext.get().koin.get<JwtConfig>().run {
+fun UserI.makeToken(): String = GlobalContext.get().get<JwtConfig>().run {
     JWT.create()
         .withSubject("Authentication")
         .withIssuer(issuer)

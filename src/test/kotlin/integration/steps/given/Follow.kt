@@ -30,7 +30,7 @@ fun TestApplicationEngine.`Given I have follow on article`(
     lastName: String,
     article: String,
 ) {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
     val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
     createFollow(citizen, ArticleRef(article.toUUID()))
 }
@@ -40,19 +40,19 @@ fun TestApplicationEngine.`Given I have follow on constitution`(
     lastName: String,
     constitution: String,
 ) {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
     val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
     createFollow(citizen, ArticleRef(constitution.toUUID()))
 }
 
 fun createFollow(citizen: CitizenRef, article: ArticleRef) {
-    val followArticleRepository: FollowArticleRepository by lazy { GlobalContext.get().koin.get() }
+    val followArticleRepository: FollowArticleRepository by lazy { GlobalContext.get().get() }
     val follow = FollowForUpdate(createdBy = citizen, target = article)
     followArticleRepository.follow(follow)
 }
 
 fun createFollow(citizen: CitizenRef, constitution: ConstitutionRef) {
-    val followConstitutionRepository: FollowConstitutionRepository by lazy { GlobalContext.get().koin.get() }
+    val followConstitutionRepository: FollowConstitutionRepository by lazy { GlobalContext.get().get() }
     val follow = FollowForUpdate(createdBy = citizen, target = constitution)
     followConstitutionRepository.follow(follow)
 }

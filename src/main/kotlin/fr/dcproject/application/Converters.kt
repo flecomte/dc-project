@@ -6,17 +6,9 @@ import fr.dcproject.application.http.HttpErrorBadRequest.InvalidParam
 import io.ktor.features.DataConversion
 import io.ktor.http.HttpStatusCode
 import io.ktor.util.KtorExperimentalAPI
-import org.koin.core.context.GlobalContext
-import org.koin.core.parameter.ParametersDefinition
-import org.koin.core.qualifier.Qualifier
 import java.util.UUID
 
 private typealias ConverterDeclaration = DataConversion.Configuration.() -> Unit
-
-private inline fun <reified T> DataConversion.Configuration.get(
-    qualifier: Qualifier? = null,
-    noinline parameters: ParametersDefinition? = null
-): T = GlobalContext.get().koin.rootScope.get(qualifier, parameters)
 
 @KtorExperimentalAPI
 val converters: ConverterDeclaration = {

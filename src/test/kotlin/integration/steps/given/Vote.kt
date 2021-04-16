@@ -33,9 +33,9 @@ fun createVote(
     note: Int,
     id: UUID? = null,
 ): VoteAggregation {
-    val voteArticleRepository: VoteArticleRepository by lazy { GlobalContext.get().koin.get() }
-    val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
+    val voteArticleRepository: VoteArticleRepository by lazy { GlobalContext.get().get() }
+    val articleRepository: ArticleRepository by lazy { GlobalContext.get().get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
     val vote = VoteForUpdate(
         id = id ?: UUID.randomUUID(),
         note = note,

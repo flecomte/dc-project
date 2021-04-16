@@ -17,13 +17,12 @@ import io.ktor.locations.Location
 import io.ktor.locations.put
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.koin.core.KoinComponent
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
 object UpdateMemberOfWorkgroup {
     @Location("/workgroups/{workgroupId}/members")
-    class WorkgroupsMembersRequest(val workgroupId: UUID) : KoinComponent {
+    class WorkgroupsMembersRequest(val workgroupId: UUID) {
         class Input : MutableList<Input.Item> by mutableListOf() {
             class Item(val citizen: CitizenRef, roles: List<String> = emptyList()) {
                 val roles: List<WorkgroupWithMembersI.Member.Role> = roles.map {
