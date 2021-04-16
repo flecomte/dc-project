@@ -28,9 +28,8 @@ version = versioning.info.run {
 plugins {
     jacoco
     application
-    maven
+    `maven-publish`
 
-    id("maven-publish")
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.serialization") version "1.4.30"
 
