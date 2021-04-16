@@ -83,6 +83,7 @@ object FindArticles {
                             object {
                                 val id = it.id
                                 val title = it.title
+                                val createdAt = it.createdAt
                                 val createdBy: Any = it.createdBy.toOutput()
                                 val workgroup = it.workgroup?.let {
                                     object {

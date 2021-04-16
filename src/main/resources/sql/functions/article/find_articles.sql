@@ -23,6 +23,7 @@ begin
         select
             a.id,
             a.title,
+            a.created_at,
             a.deleted_at,
             a.draft,
             find_citizen_by_id_with_user(a.created_by_id) as created_by,

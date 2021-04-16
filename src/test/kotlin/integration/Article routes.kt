@@ -44,6 +44,7 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And the response should contain pattern`("$.result[0].createdBy.name.firstName", "firstName.+")
                 `And the response should not contain`("$.result[1]")
+                `And the response should contain pattern`("$.result[0].createdAt", """[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z""") // 2021-04-16T16:39:06.890Z
                 `And the response should contain list`("$.result", 1)
             }
         }
@@ -82,6 +83,7 @@ class `Article routes` : BaseTest() {
             `When I send a GET request`("/articles/65cda9f3-8991-4420-8d41-1da9da72c9bb") `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And have property`("$.id") `which contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
+                `And the response should contain pattern`("$.createdAt", """[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{3}Z""") // 2021-04-16T16:39:06.890Z
             }
         }
     }

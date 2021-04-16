@@ -87,6 +87,7 @@ class ArticleForListing(
     ArticleRef(id),
     ArticleAuthI<CitizenCartI>,
     Votable by VotableImp(),
+    CreatedAt by CreatedAt.Imp(),
     CreatedBy<CitizenCartI>
 
 interface ArticleForListingI : ArticleWithTitleI, CreatedBy<CitizenCartI> {
