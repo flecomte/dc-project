@@ -3,6 +3,7 @@ package integration.steps.given
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.citizen.database.Citizen
+import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.citizen.database.CitizenRepository
 import fr.dcproject.component.constitution.database.ConstitutionRef
@@ -30,7 +31,7 @@ fun TestApplicationEngine.`Given I have follow on article`(
     article: String,
 ) {
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
-    val citizen = citizenRepository.findByUsername("$firstName-$lastName".toLowerCase()) ?: error("Citizen not exist")
+    val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
     createFollow(citizen, ArticleRef(article.toUUID()))
 }
 
@@ -40,7 +41,7 @@ fun TestApplicationEngine.`Given I have follow on constitution`(
     constitution: String,
 ) {
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
-    val citizen = citizenRepository.findByUsername("$firstName-$lastName".toLowerCase()) ?: error("Citizen not exist")
+    val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
     createFollow(citizen, ArticleRef(constitution.toUUID()))
 }
 

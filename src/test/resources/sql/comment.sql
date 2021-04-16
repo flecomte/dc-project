@@ -22,7 +22,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         resource => _comment
-    ) into _comment_id;
+    )->>'id' into _comment_id;
 
     assert (select count(*) = 1 from "comment"), 'comment must be inserted, "' || (select count(*) from "comment") || '" exist';
     assert (select com.content = 'Ho my god !' from "comment" com), 'the content of comment must be "Ho my god !" instead of "' || (select com.content from "comment" as com) || '"';
@@ -67,7 +67,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         resource => _comment
-    ) into _comment_id_response;
+    )->>'id' into _comment_id_response;
 
 
     _comment = json_build_object(
@@ -80,7 +80,7 @@ begin
     select "comment"(
         reference => 'article'::regclass,
         resource => _comment
-    ) into _comment_id_response2;
+    )->>'id' into _comment_id_response2;
     assert (select count(*) = 3 from "comment"), 'response must be inserted';
     assert (select com.parents_ids @> ARRAY[_comment_id] from "comment" com where id = _comment_id_response), 'parents_ids not contain "' || _comment_id::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response);
     assert (select com.parents_ids @> ARRAY[_comment_id_response] from "comment" com where id = _comment_id_response2), 'parents_ids not contain "' || _comment_id_response::text || '" ' || (select com.parents_ids::text[] from "comment" com where id = _comment_id_response2);

@@ -6,6 +6,7 @@ import fr.dcproject.component.auth.ForbiddenException
 import fr.dcproject.component.auth.user
 import io.ktor.application.call
 import io.ktor.features.NotFoundException
+import io.ktor.features.ParameterConversionException
 import io.ktor.features.StatusPages
 import io.ktor.http.HttpStatusCode
 import io.ktor.response.respond
@@ -13,18 +14,10 @@ import java.util.concurrent.CompletionException
 
 class HttpError(
     statusCode: HttpStatusCode,
-    val cause: Throwable? = null,
-    val type: String? = null,
+    cause: Throwable? = null,
     val title: String = cause?.message ?: statusCode.description,
-    val detail: String? = null,
-    val invalidParams: List<InvalidParam>? = null,
-    val stackTrace: String? = cause?.stackTraceToString()
 ) {
     val statusCode: Int = statusCode.value
-    data class InvalidParam(
-        val name: String,
-        val reason: String
-    )
 }
 
 fun statusPagesInstallation(): StatusPages.Configuration.() -> Unit = {
@@ -77,6 +70,17 @@ fun statusPagesInstallation(): StatusPages.Configuration.() -> Unit = {
             cause = e
         ).let {
             call.respond(HttpStatusCode.Forbidden, it)
+        }
+    }
+    exception<BadRequestException> { e ->
+        call.respond(HttpStatusCode.BadRequest, e.httpError)
+    }
+    exception<ParameterConversionException> { e ->
+        val parent = e.cause
+        if (parent is BadRequestException) {
+            call.respond(HttpStatusCode.BadRequest, parent.httpError)
+        } else {
+            throw e
         }
     }
 }

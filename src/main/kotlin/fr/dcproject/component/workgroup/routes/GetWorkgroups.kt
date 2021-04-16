@@ -1,12 +1,20 @@
 package fr.dcproject.component.workgroup.routes
 
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.toUUID
+import fr.dcproject.common.validation.isUuid
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.workgroup.WorkgroupAccessControl
 import fr.dcproject.component.workgroup.database.WorkgroupRepository
+import fr.dcproject.routes.PaginatedRequest
+import fr.dcproject.routes.PaginatedRequestI
 import fr.postgresjson.repository.RepositoryI
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.enum
+import io.konform.validation.jsonschema.maximum
+import io.konform.validation.jsonschema.minimum
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -27,23 +35,40 @@ object GetWorkgroups {
         val search: String? = null,
         val createdBy: String? = null,
         members: List<String?>? = null
-    ) {
-        val page: Int = if (page < 1) 1 else page
-        val limit: Int = if (limit > 50) 50 else if (limit < 1) 1 else limit
+    ) : PaginatedRequestI by PaginatedRequest(page, limit) {
         val members: List<UUID>? = members?.toUUID()
+        fun validate() = Validation<WorkgroupsRequest> {
+            WorkgroupsRequest::page {
+                minimum(1)
+            }
+            WorkgroupsRequest::limit {
+                minimum(1)
+                maximum(50)
+            }
+            WorkgroupsRequest::sort ifPresent {
+                enum(
+                    "name",
+                    "createdAt",
+                )
+            }
+            WorkgroupsRequest::createdBy ifPresent {
+                isUuid()
+            }
+        }.validate(this)
     }
 
     fun Route.getWorkgroups(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         get<WorkgroupsRequest> {
-            val workgroups =
-                repo.find(
-                    it.page,
-                    it.limit,
-                    it.sort,
-                    it.direction,
-                    it.search,
-                    WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
-                )
+            it.validate().badRequestIfNotValid()
+
+            val workgroups = repo.find(
+                it.page,
+                it.limit,
+                it.sort,
+                it.direction,
+                it.search,
+                WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
+            )
             ac.assert { canView(workgroups.result, citizenOrNull) }
             call.respond(
                 HttpStatusCode.OK,

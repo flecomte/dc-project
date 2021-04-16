@@ -22,14 +22,14 @@ begin
         case direction when 'asc' then
             case sort
                 when 'title' then c.title
-                when 'created_at' then c.created_at::text
+                when 'createdAt' then c.created_at::text
                 else null
             end
         end,
         case direction when 'desc' then
             case sort
                 when 'title' then c.title
-                when 'created_at' then c.created_at::text
+                when 'createdAt' then c.created_at::text
             end
         end
         desc,

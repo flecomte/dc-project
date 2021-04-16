@@ -65,7 +65,7 @@ private fun createWorkgroup(
             .toLowerCase().replace(' ', '-')
         val user = UserForCreate(
             username = username,
-            password = "azerty",
+            password = "Azerty123!",
         )
         CitizenForCreate(
             name = creatorName,

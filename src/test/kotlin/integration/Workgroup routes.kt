@@ -1,6 +1,8 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a DELETE request`
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
@@ -15,8 +17,10 @@ import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should be null`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.NoContent
 import io.ktor.http.HttpStatusCode.Companion.NotFound
@@ -73,7 +77,7 @@ class `Workgroup routes` : BaseTest() {
                     {
                         "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
                         "name":"Les Bouffons",
-                        "description":"La vie est belle",
+                        "description":"Pellentesque eleifend malesuada aliquam. Maecenas et urna quis nunc lacinia scelerisque.",
                         "anonymous":false
                     }
                     """
@@ -81,13 +85,43 @@ class `Workgroup routes` : BaseTest() {
             } `Then the response should be` Created and {
                 `And the response should contain`("$.id", "f496d86d-6654-4068-91ff-90e1dbcc5f38")
                 `And the response should contain`("$.name", "Les Bouffons")
-                `And the response should contain`("$.description", "La vie est belle")
+                `And the response should contain`("$.description", "Pellentesque eleifend malesuada aliquam. Maecenas et urna quis nunc lacinia scelerisque.")
                 `And the response should contain`("$.anonymous", false)
             }
 
             `When I send a GET request`("/workgroups/f496d86d-6654-4068-91ff-90e1dbcc5f38") {
                 `authenticated as`("Werner", "Heisenberg")
             } `Then the response should be` OK
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot create a workgroup with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Werner", "Heisenberg")
+            `When I send a POST request`("/workgroups") {
+                `authenticated as`("Werner", "Heisenberg")
+                `with body`(
+                    """
+                    {
+                        "id":"f496d86d-6654-4068-91ff-90e1dbcc5f38",
+                        "name":"sm",
+                        "description":"small",
+                        "anonymous":false,
+                        "logo": "www.plop.com"
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".name")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 5 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[2].name", ".logo")
+                `And the response should contain`("$.invalidParams[2].reason", "is not url")
+            }
         }
     }
 
@@ -109,14 +143,15 @@ class `Workgroup routes` : BaseTest() {
                     """
                     {
                         "name":"La ratatouille",
-                        "description":"Une petite souris"
+                        "description":"Une petite souris avec un chapeau et qui aime la cuisine",
+                        "logo": "http://sdf@exemple.com/sdfsd?sdf=sss"
                     }
                     """
                 )
             } `Then the response should be` OK and {
                 `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
                 `And the response should contain`("$.name", "La ratatouille")
-                `And the response should contain`("$.description", "Une petite souris")
+                `And the response should contain`("$.description", "Une petite souris avec un chapeau et qui aime la cuisine")
 
                 `And have property`("$.members")
                 `And the response should contain list`("$.members", 3)
@@ -129,7 +164,43 @@ class `Workgroup routes` : BaseTest() {
             } `Then the response should be` OK and {
                 `And the response should contain`("$.id", "aa875a24-0050-4252-9130-d37391714e26")
                 `And the response should contain`("$.name", "La ratatouille")
-                `And the response should contain`("$.description", "Une petite souris")
+                `And the response should contain`("$.description", "Une petite souris avec un chapeau et qui aime la cuisine")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot edit a workgroup with bad request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("John", "Wheeler")
+            `Given I have citizen`("Heinrich", "Hertz", id = "94f92424-c257-4582-907c-98564a8c4ac9")
+            `Given I have citizen`("William", "Thomson", id = "87909ba3-2069-431c-9924-219fd8411cf2")
+            `Given I have workgroup`("aa875a24-0050-4252-9130-d37391714e26", createdBy = Name("John", "Wheeler")) {
+                `With members`(
+                    Name("Heinrich", "Hertz"),
+                    Name("William", "Thomson"),
+                )
+            }
+            `When I send a PUT request`("/workgroups/aa875a24-0050-4252-9130-d37391714e26", -REQUEST_BODY) {
+                `authenticated as`("John", "Wheeler")
+                `with body`(
+                    """
+                    {
+                        "name":"sm",
+                        "description":"small2",
+                        "logo": "ws://sdfs.sdok"
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".name")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 5 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[2].name", ".logo")
+                `And the response should contain`("$.invalidParams[2].reason", "is not url")
             }
         }
     }
@@ -157,7 +228,7 @@ class `Workgroup routes` : BaseTest() {
         withIntegrationApplication {
             `Given I have citizen`("Max", "Planck")
             `Given I have workgroup`("3fd8edb6-c4b4-4c94-bc75-ddd9b290d32c")
-            `When I send a GET request`("/workgroups") {
+            `When I send a GET request`("/workgroups?page=1&limit=10&sort=createdAt") {
                 `authenticated as`("Max", "Planck")
                 `with no content`()
             } `Then the response should be` OK and {
@@ -167,94 +238,15 @@ class `Workgroup routes` : BaseTest() {
     }
 
     @Test
-    fun `I can add member to workgroup`() {
+    @Tag("BadRequest")
+    fun `I cannot get workgroups list with wrong request`() {
         withIntegrationApplication {
-            `Given I have citizen`("Blaise", "Pascal")
-            `Given I have citizen`("Roger", "Penrose", id = "6d883fe7-5fc0-4a50-8858-72230673eba4")
-            `Given I have citizen`("Alessandro", "Volta", id = "b5bac515-45d4-4aeb-9b6d-2627a0bbc419")
-            `Given I have workgroup`("b0ea1922-3bc6-44e2-aa7c-40158998cfbb", createdBy = Name("Blaise", "Pascal"))
-            `When I send a POST request`("/workgroups/b0ea1922-3bc6-44e2-aa7c-40158998cfbb/members") {
-                `authenticated as`("Blaise", "Pascal")
-                `with body`(
-                    """
-                    [
-                        {
-                            "citizen": {"id":"6d883fe7-5fc0-4a50-8858-72230673eba4"},
-                            "roles": ["MASTER"]
-                        },
-                        {
-                            "citizen": {"id":"b5bac515-45d4-4aeb-9b6d-2627a0bbc419"},
-                            "roles": ["MASTER"]
-                        }
-                    ]
-                    """
-                )
-            } `Then the response should be` Created
-        }
-    }
-
-    @Test
-    fun `I can remove member to workgroup`() {
-        withIntegrationApplication {
-            `Given I have citizen`("Heinrich", "Hertz", id = "94f92424-c257-4582-907c-98564a8c4ac9")
-            `Given I have citizen`("William", "Thomson", id = "87909ba3-2069-431c-9924-219fd8411cf2")
-            `Given I have citizen`("Paul", "Dirac", id = "1baf48bb-02bc-4d8f-ac86-33335354f5e7")
-            `Given I have workgroup`("b6c975df-dd44-4e99-adc1-f605746b0e11", createdBy = Name("Heinrich", "Hertz")) {
-                `With members`(
-                    Name("William", "Thomson"),
-                    Name("Paul", "Dirac"),
-                )
-            }
-            `When I send a DELETE request`("/workgroups/b6c975df-dd44-4e99-adc1-f605746b0e11/members") {
-                `authenticated as`("Heinrich", "Hertz")
-                """
-                [
-                  {
-                    "citizen": {"id":"87909ba3-2069-431c-9924-219fd8411cf2"}
-                  }
-                ]
-                """
-            } `Then the response should be` OK and {
-                `And the response should contain list`("$", 2)
-                `And the response should contain`("$.[0]citizen.id", "94f92424-c257-4582-907c-98564a8c4ac9")
-                `And the response should contain`("$.[1]citizen.id", "1baf48bb-02bc-4d8f-ac86-33335354f5e7")
-            }
-        }
-    }
-
-    @Test
-    fun `I can update members on workgroup`() {
-        withIntegrationApplication {
-            `Given I have citizen`("Leon", "Foucault")
-            `Given I have citizen`("Sadi", "Carnot", id = "be3b0926-8628-4426-804a-75188a6eb315")
-            `Given I have citizen`("Joseph", "Fourier", id = "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1")
-            `Given I have citizen`("Georg", "Ohm")
-            `Given I have workgroup`("784fe6bc-7635-4ae2-b080-3a4743b998bf", createdBy = Name("Leon", "Foucault")) {
-                `With members`(
-                    Name("Sadi", "Carnot"),
-                    Name("Joseph", "Fourier"),
-                )
-            }
-            `When I send a PUT request`("/workgroups/784fe6bc-7635-4ae2-b080-3a4743b998bf/members") {
-                `authenticated as`("Leon", "Foucault")
-                `with body`(
-                    """
-                    [
-                      {
-                        "citizen": {"id":"be3b0926-8628-4426-804a-75188a6eb315"},
-                        "roles": ["MASTER"]
-                      },
-                      {
-                        "citizen": {"id":"b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1"},
-                        "roles": ["MASTER"]
-                      }
-                    ]
-                    """
-                )
-            } `Then the response should be` OK and {
-                `And the response should contain list`("$", 2)
-                `And the response should contain`("$.[0]citizen.id", "be3b0926-8628-4426-804a-75188a6eb315")
-                `And the response should contain`("$.[1]citizen.id", "b49e20c1-8393-45d6-a6a0-3fa5c71cbdc1")
+            `Given I have workgroup`("3fd8edb6-c4b4-4c94-bc75-ddd9b290d32c")
+            `When I send a GET request`("/workgroups?sort=plop", -REQUEST_PARAM) {
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".sort")
+                `And the response should contain`("$.invalidParams[0].reason", "must be one of: 'name', 'createdAt'")
             }
         }
     }

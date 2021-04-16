@@ -1,6 +1,8 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
@@ -11,8 +13,10 @@ import integration.steps.given.`Given I have opinion on article`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
@@ -133,11 +137,33 @@ class `Opinion routes` : BaseTest() {
                 article = "8651b530-ac1b-4214-a784-706781371074",
                 Name("Albert", "Einstein")
             )
-            `When I send a GET request`("/citizens/c1542096-3431-432d-8e35-9dc071d4c818/opinions/articles") {
+            `When I send a GET request`("/citizens/c1542096-3431-432d-8e35-9dc071d4c818/opinions/articles?page=1&limit=10") {
                 `authenticated as`("Albert", "Einstein")
             } `Then the response should be` OK and {
                 `And the response should contain`("$.result[0].name", "Opinion9")
                 `And the response should contain list`("$.result[*]", 1)
+            }
+        }
+    }
+
+    @Test
+    @Tags(Tag("article"), Tag("BadRequest"))
+    fun `I cannot get all my opinion of one article with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Albert", "Einstein", id = "c1542096-3431-432d-8e35-9dc071d4c818")
+            `Given I have an opinion choice`("Opinion9")
+            `Given I have article`("8651b530-ac1b-4214-a784-706781371074")
+            `Given I have opinion on article`(
+                "Opinion9",
+                article = "8651b530-ac1b-4214-a784-706781371074",
+                Name("Albert", "Einstein")
+            )
+            `When I send a GET request`("/citizens/c1542096-3431-432d-8e35-9dc071d4c818/opinions/articles?page=1&limit=60", ALL - REQUEST_PARAM) {
+                `authenticated as`("Albert", "Einstein")
+            } `Then the response should be` HttpStatusCode.BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".limit")
+                `And the response should contain`("$.invalidParams[0].reason", "must be at most '50'")
             }
         }
     }

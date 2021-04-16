@@ -41,6 +41,12 @@ paths:
                         maxItems: 50
                         items:
                           $ref: '#/components/schemas/ArticleListingResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: []
@@ -65,16 +71,21 @@ paths:
                     Limit power of press
                 content:
                   type: string
+                  minLength: 50
+                  maxLength: 6000
                   example:
                     Lorem upsum...
                 description:
                   type: string
+                  minLength: 50
+                  maxLength: 6000
                   example:
                     I think is the bether choice
                 tags:
                   type: array
                   items:
                     type: string
+                    maxItems: 15
                   default: [ ]
                   example: [ power, press ]
                 anonymous:
@@ -106,6 +117,12 @@ paths:
                     format: uuid
                   versionNumber:
                     type: integer
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
         403:
@@ -128,6 +145,12 @@ paths:
       tags:
         - article
       operationId: getArticle
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
       responses:
         200:
           description: The Article objects
@@ -135,6 +158,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ArticleResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        404:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+
   /articles/{article}/versions:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -143,6 +179,12 @@ paths:
       tags:
         - article
       operationId: getArticleVersions
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/direction'
+        - $ref: '#/components/parameters/search'
       responses:
         200:
           description: The versions of Article
@@ -193,6 +235,12 @@ paths:
                                   format: uuid
                                 name:
                                   type: string
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
 
   /login:
     post:
@@ -310,7 +358,7 @@ paths:
           content:
             application/json:
               schema:
-                description: sdf
+                $ref: '#/components/schemas/400'
   /auth/passwordless:
     post:
       summary: Send a connexion link by email
@@ -354,7 +402,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/page'
         - $ref: '#/components/parameters/limit'
-        - $ref: '#/components/parameters/sort'
+        - $ref: '#/components/parameters/citizenSort'
         - $ref: '#/components/parameters/direction'
         - $ref: '#/components/parameters/search'
       responses:
@@ -371,6 +419,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CitizenListResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /citizens/current:
@@ -443,6 +497,10 @@ paths:
           description: Password changed
         400:
           description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
         404:
@@ -464,13 +522,13 @@ paths:
           in: query
           required: false
           example:
-            - created_at
+            - createdAt
             - votes
           schema:
             type: string
-            default: created_at
+            default: createdAt
             enum:
-              - created_at
+              - createdAt
               - votes
       responses:
         200:
@@ -486,6 +544,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: [ ]
@@ -503,8 +567,10 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.Lorem ipsum...
       responses:
         201:
           description: Return created Comment
@@ -512,6 +578,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /comments/{comment}:
@@ -528,6 +600,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+    post:
+      security:
+        - JWTAuth: []
+      summary: create comment
+      tags:
+        - comment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              required:
+                - content
+              properties:
+                content:
+                  type: string
+                  minLength: 20
+                  maxLength: 6000
+                  example:
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+      responses:
+        201:
+          description: Return updated comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          description: No comment found
     put:
       security:
         - JWTAuth: []
@@ -543,8 +651,10 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
         200:
           description: Return updated comment
@@ -552,6 +662,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /comments/{comment}/children:
@@ -637,13 +753,42 @@ paths:
       tags:
         - comment
         - constitution
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
+        - $ref: '#/components/parameters/search'
+        - name: sort
+          in: query
+          required: false
+          example:
+            - createdAt
+            - votes
+          schema:
+            type: string
+            default: createdAt
+            enum:
+              - createdAt
+              - votes
       responses:
         200:
           description: Return Comment and children
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/CommentResponse'
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: []
@@ -660,8 +805,10 @@ paths:
               properties:
                 content:
                   type: string
+                  minLength: 20
+                  maxLength: 6000
                   example:
-                    Lorem ipsum...
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit.
       responses:
         201:
           description: Return created comment
@@ -669,6 +816,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CommentResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
 
@@ -698,6 +851,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/ConstitutionListingResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       security:
         - JWTAuth: [ ]
@@ -722,7 +881,11 @@ paths:
         401:
           $ref: '#/components/responses/401'
         400:
-          $ref: '#/components/responses/400'
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /constitutions/{constitution}:
     parameters:
       - $ref: '#/components/parameters/constitution'
@@ -955,6 +1118,9 @@ paths:
       tags:
         - opinion
         - citizen
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
       responses:
         200:
           description: Opinions
@@ -969,6 +1135,13 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/Opinion'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
+
   /articles/{article}/opinions:
     parameters:
       - $ref: '#/components/parameters/article'
@@ -1021,6 +1194,12 @@ paths:
       responses:
         201:
           description: Return only http status 201 on success
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /citizens/{citizen}/votes:
     parameters:
       - $ref: '#/components/parameters/citizen'
@@ -1079,6 +1258,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoteAggregation'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /citizens/{citizen}/votes/articles:
@@ -1092,6 +1277,9 @@ paths:
         - vote
         - article
         - citizen
+      parameters:
+        - $ref: '#/components/parameters/page'
+        - $ref: '#/components/parameters/limit'
       responses:
         200:
           description: Votes
@@ -1106,6 +1294,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/VoteResponse'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
   /articles/{article}/vote:
@@ -1130,6 +1324,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/VoteAggregation'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
         401:
           $ref: '#/components/responses/401'
 
@@ -1159,6 +1359,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/WorkgroupListing'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     post:
       summary: Create new Workgroup
       security:
@@ -1197,6 +1403,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workgroup'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
   /workgroups/{workgroup}:
     parameters:
       - $ref: '#/components/parameters/workgroup'
@@ -1245,6 +1457,12 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/Workgroup'
+        400:
+          description: BadReqest
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/400'
     delete:
       summary: Delete one workgroup
       security:
@@ -1373,6 +1591,17 @@ components:
           - createdAt
           - vote
           - popularity
+    citizenSort:
+      name: sort
+      in: query
+      description: The sort field name
+      example: createdAt
+      required: false
+      schema:
+        type: string
+        enum:
+          - title
+          - createdAt
     workgroupSort:
       name: sort
       in: query
@@ -1855,6 +2084,8 @@ components:
           $ref: '#/components/schemas/UUID'
         title:
           type: string
+          minLength: 10
+          maxLength: 80
           example:
             Constitution for the liberty
         titles:
@@ -1870,6 +2101,8 @@ components:
                 $ref: '#/components/schemas/UUID'
               name:
                 type: string
+                minLength: 10
+                maxLength: 80
                 example:
                   The liberties
               articles:
@@ -2208,6 +2441,47 @@ components:
                 - EDITOR
                 - REPORTER
               example: MASTER
+
+    400:
+      description: Bad Request
+      required:
+        - title
+        - invalidParams
+      additionalProperties: false
+      properties:
+        statusCode:
+          type: integer
+          example: 400
+        title:
+          type: string
+          example: Bad Request
+        invalidParams:
+          type: array
+          items:
+            required:
+              - name
+              - reason
+            properties:
+              name:
+                type: string
+                example: '.title'
+              reason:
+                type: string
+                example: 'Cannot be null'
+
+    404:
+      description: Not Found
+      required:
+        - title
+        - statusCode
+      additionalProperties: false
+      properties:
+        statusCode:
+          type: integer
+          example: 404
+        title:
+          type: string
+          example: Bad Request
 
   securitySchemes:
     JWTAuth:

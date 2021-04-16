@@ -21,7 +21,7 @@ begin
             f.created_at,
             f.target_reference,
             json_build_object('id', f.target_id) as target,
-            json_build_object('id', f.created_by_id) as created_by
+            find_citizen_by_id_with_user(f.created_by_id) as created_by
         from follow_article as f
         join article a on f.target_id = a.id
         where a.version_id = _version_id

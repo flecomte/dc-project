@@ -1,7 +1,10 @@
 package fr.dcproject.component.auth.routes
 
 import com.fasterxml.jackson.module.kotlin.MissingKotlinParameterException
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.common.utils.receiveOrBadRequest
+import fr.dcproject.common.validation.email
+import fr.dcproject.common.validation.passwordScore
 import fr.dcproject.component.auth.database.UserForCreate
 import fr.dcproject.component.auth.database.UserI
 import fr.dcproject.component.auth.jwt.makeToken
@@ -9,6 +12,9 @@ import fr.dcproject.component.auth.routes.Register.RegisterRequest.Input
 import fr.dcproject.component.citizen.database.CitizenForCreate
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRepository
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.maxLength
+import io.konform.validation.jsonschema.minLength
 import io.ktor.application.call
 import io.ktor.features.BadRequestException
 import io.ktor.http.ContentType
@@ -43,6 +49,35 @@ object Register {
                 val username: String,
                 val password: String
             )
+
+            fun validate() = Validation<Input> {
+                Input::name {
+                    Name::firstName {
+                        minLength(2)
+                        maxLength(50)
+                    }
+                    Name::lastName {
+                        minLength(2)
+                        maxLength(50)
+                    }
+                    Name::civility ifPresent {
+                        minLength(1)
+                        maxLength(10)
+                    }
+                }
+                Input::user {
+                    User::username {
+                        minLength(7)
+                        maxLength(30)
+                    }
+                    User::password {
+                        passwordScore(15)
+                    }
+                }
+                Input::email {
+                    email()
+                }
+            }.validate(this)
         }
     }
 
@@ -62,7 +97,10 @@ object Register {
 
         post<RegisterRequest> {
             try {
-                val citizen = call.receiveOrBadRequest<Input>().toCitizen()
+                val citizen = call.receiveOrBadRequest<Input>()
+                    .apply { validate().badRequestIfNotValid() }
+                    .toCitizen()
+
                 citizenRepo.insertWithUser(citizen)?.user?.makeToken()?.let { token ->
                     if (call.request.accept() == ContentType.Application.Json.toString()) {
                         call.respond(

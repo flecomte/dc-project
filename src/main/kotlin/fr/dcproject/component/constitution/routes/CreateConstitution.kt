@@ -1,5 +1,6 @@
 package fr.dcproject.component.constitution.routes
 
+import fr.dcproject.application.http.badRequestIfNotValid
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.common.utils.receiveOrBadRequest
@@ -15,6 +16,9 @@ import fr.dcproject.component.constitution.database.ConstitutionForUpdate.TitleF
 import fr.dcproject.component.constitution.database.ConstitutionRepository
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input
 import fr.dcproject.component.constitution.routes.CreateConstitution.PostConstitutionRequest.Input.Title
+import io.konform.validation.Validation
+import io.konform.validation.jsonschema.maxLength
+import io.konform.validation.jsonschema.minLength
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -36,7 +40,6 @@ object CreateConstitution {
             val draft: Boolean = false,
             val versionId: UUID = UUID.randomUUID()
         ) {
-
             class Title(
                 val id: UUID = UUID.randomUUID(),
                 val name: String,
@@ -44,10 +47,25 @@ object CreateConstitution {
             ) {
                 class ArticleRef(val id: UUID)
             }
+
+            fun validate() = Validation<Input> {
+                Input::title {
+                    minLength(10)
+                    maxLength(80)
+                }
+                Input::titles onEach {
+                    Title::name {
+                        minLength(10)
+                        maxLength(80)
+                    }
+                }
+            }.validate(this)
         }
     }
 
     private fun getNewConstitution(input: Input, citizen: Citizen) = input.run {
+        validate().badRequestIfNotValid()
+
         ConstitutionForUpdate<CitizenWithUserI, TitleForUpdate<ArticleRef>>(
             id = UUID.randomUUID(),
             title = title,

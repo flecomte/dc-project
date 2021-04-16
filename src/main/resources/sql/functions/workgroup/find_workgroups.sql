@@ -2,7 +2,7 @@ create or replace function find_workgroups(
     _search text default null,
     _filter json default '{}',
     direction text default 'desc',
-    sort text default 'created_at',
+    sort text default 'createdAt',
     "limit" int default 50,
     "offset" int default 0,
     out resource json,
@@ -41,14 +41,14 @@ begin
         case direction when 'asc' then
             case sort
                 when 'name' then w.name
-                when 'created_at' then w.created_at::text
+                when 'createdAt' then w.created_at::text
                 else null
             end
         end,
         case direction when 'desc' then
             case sort
                 when 'name' then w.name
-                when 'created_at' then w.created_at::text
+                when 'createdAt' then w.created_at::text
             end
         end
         desc,

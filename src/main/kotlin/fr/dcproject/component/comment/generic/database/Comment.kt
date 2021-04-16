@@ -63,12 +63,14 @@ open class CommentForUpdate<T : TargetI, C : CitizenI>(
     constructor(
         createdBy: C,
         parent: CommentParent<T>,
-        content: String
+        content: String,
+        id: UUID? = null,
     ) : this(
         createdBy = createdBy,
         parent = parent,
         target = parent.target,
-        content = content
+        content = content,
+        id = id ?: UUID.randomUUID(),
     )
 }
 

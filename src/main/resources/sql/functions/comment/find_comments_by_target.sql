@@ -26,7 +26,7 @@ begin
                 else null
             end desc,
             case sort
-                when 'created_at' then com.created_at::text
+                when 'createdAt' then com.created_at::text
                 else null
             end desc,
         com.created_at desc

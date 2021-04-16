@@ -5,7 +5,6 @@ import fr.dcproject.common.entity.TargetI
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.dcproject.component.comment.generic.database.CommentForView
 import fr.dcproject.component.comment.generic.database.CommentRepositoryAbs
 import fr.dcproject.component.constitution.database.ConstitutionRef
@@ -41,7 +40,7 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
         target: EntityI,
         page: Int,
         limit: Int,
-        sort: CommentArticleRepository.Sort
+        sort: String
     ): Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>> {
         return requester.run {
             getFunction("find_comments_by_target")
@@ -49,7 +48,7 @@ class CommentConstitutionRepository(requester: Requester) : CommentRepositoryAbs
                     page,
                     limit,
                     "target_id" to target.id,
-                    "sort" to sort.sql
+                    "sort" to sort
                 )
                 as Paginated<CommentForView<ConstitutionRef, CitizenCreatorI>>
         }

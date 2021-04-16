@@ -6,7 +6,6 @@ import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.comment.article.database.CommentArticleRepository
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.repository.RepositoryI
@@ -22,7 +21,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
     ): Paginated<CommentForView<T, CitizenCreatorI>>
 
     open fun findByParent(
-        parent: CommentForView<T, CitizenCreatorI>,
+        parent: CommentI,
         page: Int = 1,
         limit: Int = 50
     ): Paginated<CommentForView<T, CitizenCreatorI>> {
@@ -49,7 +48,7 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         target: EntityI,
         page: Int = 1,
         limit: Int = 50,
-        sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.CREATED_AT
+        sort: String = "createdAt"
     ): Paginated<CommentForView<T, CitizenCreatorI>> {
         return findByTarget(target.id, page, limit, sort)
     }
@@ -58,36 +57,30 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         targetId: UUID,
         page: Int = 1,
         limit: Int = 50,
-        sort: CommentArticleRepository.Sort = CommentArticleRepository.Sort.CREATED_AT
-    ): Paginated<CommentForView<T, CitizenCreatorI>> {
-        return requester.run {
-            getFunction("find_comments_by_target")
-                .select<CommentForView<T, CitizenCreator>>(
-                    page,
-                    limit,
-                    "target_id" to targetId,
-                    "sort" to sort.sql
-                )
-                as Paginated<CommentForView<T, CitizenCreatorI>>
-        }
-    }
+        sort: String = "createdAt"
+    ): Paginated<CommentForView<T, CitizenCreatorI>> = requester
+        .getFunction("find_comments_by_target")
+        .select<CommentForView<T, CitizenCreator>>(
+            page,
+            limit,
+            "target_id" to targetId,
+            "sort" to sort
+        ) as Paginated<CommentForView<T, CitizenCreatorI>>
 
-    fun <I : TargetI, C : CitizenCreatorI> comment(comment: CommentForUpdate<I, C>) {
-        requester
-            .getFunction("comment")
-            .sendQuery(
-                "reference" to comment.target.reference,
-                "resource" to comment
-            )
-    }
+    fun <I : TargetI, C : CitizenCreatorI> comment(comment: CommentForUpdate<I, C>): CommentForView<TargetRef, CitizenCreator> = requester
+        .getFunction("comment")
+        .selectOne(
+            "reference" to comment.target.reference,
+            "resource" to comment
+        )!!
 
-    fun <I : T> edit(comment: CommentForUpdate<I, CitizenCreatorI>) {
-        requester
+    fun <I : T> edit(comment: CommentForUpdate<I, CitizenCreatorI>): CommentForView<TargetRef, CitizenCreator> {
+        return requester
             .getFunction("edit_comment")
-            .sendQuery(
+            .selectOne(
                 "id" to comment.id,
                 "content" to comment.content
-            )
+            )!!
     }
 }
 

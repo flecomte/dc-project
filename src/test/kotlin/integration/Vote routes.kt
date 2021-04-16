@@ -1,6 +1,9 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI.Name
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.Validate.REQUEST_PARAM
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a PUT request`
 import integration.steps.`when`.`with body`
@@ -12,51 +15,133 @@ import integration.steps.given.`Given I have vote +1 on article`
 import integration.steps.given.`Given I have vote -1 on article`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And the response should contain`
+import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
+import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 import org.junit.jupiter.api.TestInstance
 
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("integration"), Tag("vote"))
 class `Vote routes` : BaseTest() {
-    @Test
-    fun `I can vote article`() {
+    @TestFactory
+    fun `I can vote article`(): List<DynamicTest> {
         withIntegrationApplication {
             `Given I have citizen`("Thalès", "Milet")
             `Given I have article`(id = "835c5101-ca39-4038-a4e6-da6ee62ca6d5")
-            `When I send a PUT request`("/articles/835c5101-ca39-4038-a4e6-da6ee62ca6d5/vote") {
-                `authenticated as`("Thalès", "Milet")
-                `with body`(
-                    """
-                    {
-                      "note": 1
-                    }
-                    """
-                )
-            } `Then the response should be` Created
+        }
+        return (-1..1).map { note ->
+            DynamicTest.dynamicTest("""I can vote article with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`("/articles/835c5101-ca39-4038-a4e6-da6ee62ca6d5/vote") {
+                        `authenticated as`("Thalès", "Milet")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }
+                            """
+                        )
+                    } `Then the response should be` Created
+                }
+            }
         }
     }
 
-    @Test
-    fun `I can vote constitution`() {
+    @TestFactory
+    @Tag("BadRequest")
+    fun `I cannot vote article with wrong request`(): List<DynamicTest> {
+        withIntegrationApplication {
+            `Given I have citizen`("Thalès", "Milet")
+            `Given I have article`(id = "835c5101-ca39-4038-a4e6-da6ee62ca6d5")
+        }
+
+        return listOf(-10, -2, +2, +10).map { note ->
+            DynamicTest.dynamicTest("""I can vote article with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`(
+                        "/articles/835c5101-ca39-4038-a4e6-da6ee62ca6d5/vote",
+                        ALL - REQUEST_BODY
+                    ) {
+                        `authenticated as`("Thalès", "Milet")
+                        `with body`(
+                            """
+                    {
+                      "note": $note
+                    }
+                    """
+                        )
+                    } `Then the response should be` BadRequest and {
+                        `And the response should not be null`()
+                        `And the response should contain`("$.invalidParams[0].name", ".note")
+                        `And the response should contain`("$.invalidParams[0].reason", if (note > 0) "must be at most '1'" else "must be at least '-1'")
+                    }
+                }
+            }
+        }
+    }
+
+    @TestFactory
+    fun `I can vote constitution`(): List<DynamicTest> {
         withIntegrationApplication {
             `Given I have citizen`("Gregor", "Mendel")
             `Given I have constitution`(id = "76e79c89-efc1-492d-9e8f-dc9717363a11")
-            `When I send a PUT request`("/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote") {
-                `authenticated as`("Gregor", "Mendel")
-                `with body`(
-                    """
-                    {
-                      "note": 1
+        }
+        return (-1..1).map { note ->
+            DynamicTest.dynamicTest("""I can vote constitution with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`("/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote") {
+                        `authenticated as`("Gregor", "Mendel")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }²
+                            """
+                        )
+                    } `Then the response should be` Created
+                }
+            }
+        }
+    }
+
+    @TestFactory
+    @Tag("BadRequest")
+    fun `I cannot vote constitution with wrong request`(): List<DynamicTest> {
+        withIntegrationApplication {
+            `Given I have citizen`("Gregor", "Mendel")
+            `Given I have constitution`(id = "76e79c89-efc1-492d-9e8f-dc9717363a11")
+        }
+
+        return listOf(-10, -2, +2, +10).map { note ->
+            DynamicTest.dynamicTest("""I can vote constitution with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`(
+                        "/constitutions/76e79c89-efc1-492d-9e8f-dc9717363a11/vote",
+                        ALL - REQUEST_BODY
+                    ) {
+                        `authenticated as`("Gregor", "Mendel")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }
+                            """
+                        )
+                    } `Then the response should be` BadRequest and {
+                        `And the response should not be null`()
+                        `And the response should contain`("$.invalidParams[0].name", ".note")
+                        `And the response should contain`("$.invalidParams[0].reason", if (note > 0) "must be at most '1'" else "must be at least '-1'")
                     }
-                    """
-                )
-            } `Then the response should be` Created
+                }
+            }
         }
     }
 
@@ -66,13 +151,30 @@ class `Vote routes` : BaseTest() {
             `Given I have citizen`("Carl", "Gauss", id = "c044823d-e778-4256-9016-b1334bf933d3")
             `Given I have article`("7c9286db-470d-448c-aab1-3f0b072213b1")
             `Given I have vote +1 on article`("7c9286db-470d-448c-aab1-3f0b072213b1", Name("Carl", "Gauss"))
-            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles") {
+            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles?page=1&limit=50") {
                 `authenticated as`("Carl", "Gauss")
             } `Then the response should be` OK and {
                 `And the response should contain`("$.currentPage", 1)
                 `And the response should contain`("$.limit", 50)
                 `And the response should contain`("$.total", 1)
                 `And the response should contain`("$.result[0].note", 1)
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get votes of current citizen with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Carl", "Gauss", id = "c044823d-e778-4256-9016-b1334bf933d3")
+            `Given I have article`("7c9286db-470d-448c-aab1-3f0b072213b1")
+            `Given I have vote +1 on article`("7c9286db-470d-448c-aab1-3f0b072213b1", Name("Carl", "Gauss"))
+            `When I send a GET request`("/citizens/c044823d-e778-4256-9016-b1334bf933d3/votes/articles?page=1&limit=60", ALL - REQUEST_PARAM) {
+                `authenticated as`("Carl", "Gauss")
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".limit")
+                `And the response should contain`("$.invalidParams[0].reason", "must be at most '50'")
             }
         }
     }
@@ -115,6 +217,41 @@ class `Vote routes` : BaseTest() {
                 )
             } `Then the response should be` Created and {
                 `And the response should contain`("$.down", 1)
+            }
+        }
+    }
+
+    @TestFactory
+    @Tag("BadRequest")
+    fun `I cannot vote comment with wrong request`(): List<DynamicTest> {
+        withIntegrationApplication {
+            `Given I have citizen`("Antoine", "Lavoisier")
+            `Given I have article`(id = "835c5101-ca39-4038-a4e6-da6ee62ca6d5")
+            `Given I have comment on article`(
+                createdBy = Name("Antoine", "Lavoisier"),
+                article = "835c5101-ca39-4038-a4e6-da6ee62ca6d5",
+                id = "e793eccc-456b-4450-a292-46d592229b74",
+            )
+        }
+
+        return listOf(-10, -2, +2, +10).map { note ->
+            DynamicTest.dynamicTest("""I can vote comment with note "$note"""") {
+                withIntegrationApplication {
+                    `When I send a PUT request`("/comments/e793eccc-456b-4450-a292-46d592229b74/vote", ALL - REQUEST_BODY) {
+                        `authenticated as`("Antoine", "Lavoisier")
+                        `with body`(
+                            """
+                            {
+                              "note": $note
+                            }
+                            """
+                        )
+                    } `Then the response should be` BadRequest and {
+                        `And the response should not be null`()
+                        `And the response should contain`("$.invalidParams[0].name", ".note")
+                        `And the response should contain`("$.invalidParams[0].reason", if (note > 0) "must be at most '1'" else "must be at least '-1'")
+                    }
+                }
             }
         }
     }

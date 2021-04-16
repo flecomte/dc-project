@@ -1,5 +1,7 @@
 package fr.dcproject.component.notification
 
+import com.fasterxml.jackson.annotation.JsonSubTypes
+import com.fasterxml.jackson.annotation.JsonTypeInfo
 import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.PropertyNamingStrategies
 import com.fasterxml.jackson.databind.SerializationFeature
@@ -12,6 +14,10 @@ import fr.dcproject.component.article.database.ArticleForView
 import org.joda.time.DateTime
 import java.util.concurrent.atomic.AtomicInteger
 
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
+@JsonSubTypes(
+    JsonSubTypes.Type(value = ArticleUpdateNotification::class, name = "article")
+)
 open class Notification(
     val type: String,
     val createdAt: DateTime = DateTime.now()

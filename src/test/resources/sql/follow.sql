@@ -29,6 +29,9 @@ begin
     assert (select following = true from find_follow(first_article_id, _citizen_id, 'article')), '(v1) find_follow must return the following';
     assert (select following = true from find_follow(first_article_updated_id, _citizen_id, 'article')), '(v2) find_follow must return the following';
 
+    assert (select f.total = 1 from find_follows_article_by_target(first_article_id) as f), 'find_follows_article_by_target must return 1 follow';
+    assert (select (f.resource#>>'{0, created_by, id}')::uuid = _citizen_id from find_follows_article_by_target(first_article_id) as f), 'find_follows_article_by_target must return follows with creator';
+
     perform unfollow('article'::regclass, first_article_id, _citizen_id);
     assert (select count(*) = 0 from follow), 'follow must be deleted after unfollow, event if article is on other version';
 

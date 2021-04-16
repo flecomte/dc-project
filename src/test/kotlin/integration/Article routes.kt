@@ -1,5 +1,7 @@
 package integration
 
+import fr.dcproject.common.utils.toUUID
+import integration.steps.`when`.Validate
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
 import integration.steps.`when`.`with body`
@@ -16,9 +18,11 @@ import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`And the response should not contain`
 import integration.steps.then.`Then the response should be`
-import integration.steps.then.`whish contains`
+import integration.steps.then.`which contains`
 import integration.steps.then.and
+import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
+import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
@@ -32,13 +36,24 @@ class `Article routes` : BaseTest() {
     fun `I can get article list`() {
         withIntegrationApplication {
             `Given I have articles`(3)
-            `When I send a GET request`("/articles") `Then the response should be` OK and {
+            `Given I have article`(createdBy = "ddb17f17-e8ab-4ada-bdf7-bfd6b0f1b5ed".toUUID())
+            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=ddb17f17-e8ab-4ada-bdf7-bfd6b0f1b5ed") `Then the response should be` OK and {
                 `And the response should not be null`()
                 `And the response should contain pattern`("$.result[0].createdBy.name.firstName", "firstName.+")
-                `And the response should contain pattern`("$.result[1].createdBy.name.firstName", "firstName.+")
-                `And the response should contain pattern`("$.result[2].createdBy.name.firstName", "firstName.+")
-                `And the response should not contain`("$.result[3]")
-                `And the response should contain list`("$.result", 3)
+                `And the response should not contain`("$.result[1]")
+                `And the response should contain list`("$.result", 1)
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get article list`() {
+        withIntegrationApplication {
+            `Given I have articles`(3)
+            `When I send a GET request`("/articles?page=1&limit=10&sort=title&createdBy=hello", Validate.ALL - Validate.REQUEST_PARAM) `Then the response should be` BadRequest and {
+                `And the response should contain`("$.invalidParams[*].name", ".createdBy")
+                `And the response should contain`("$.invalidParams[*].reason", "must be UUID")
             }
         }
     }
@@ -51,8 +66,8 @@ class `Article routes` : BaseTest() {
             `Given I have article created by workgroup`("2bccd5a7-9082-4b31-88f8-e25d70b22b12")
             `When I send a GET request`("/articles?workgroup=2bccd5a7-9082-4b31-88f8-e25d70b22b12") `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.total") `whish contains` 1
-                `And have property`("$.result[0]workgroup.name") `whish contains` "Les papy"
+                `And have property`("$.total") `which contains` 1
+                `And have property`("$.result[0]workgroup.name") `which contains` "Les papy"
             }
         }
     }
@@ -63,7 +78,31 @@ class `Article routes` : BaseTest() {
             `Given I have article`(id = "65cda9f3-8991-4420-8d41-1da9da72c9bb")
             `When I send a GET request`("/articles/65cda9f3-8991-4420-8d41-1da9da72c9bb") `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.id") `whish contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
+                `And have property`("$.id") `which contains` "65cda9f3-8991-4420-8d41-1da9da72c9bb"
+            }
+        }
+    }
+
+    @Test
+    fun `I cannot get article with id doesn't exist`() {
+        withIntegrationApplication {
+            `When I send a GET request`("/articles/635fe2e8-2dbc-4c80-b306-101d38a4ab23") `Then the response should be` NotFound and {
+                `And the response should not be null`()
+                `And the response should contain`("$.title", "Article 635fe2e8-2dbc-4c80-b306-101d38a4ab23 not found")
+                `And the response should contain`("$.statusCode", 404)
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get article by id with wrong id format`() {
+        withIntegrationApplication {
+            `Given I have article`(id = "65cda9f3-8991-4420-8d41-1da9da72c9bb")
+            `When I send a GET request`("/articles/abcd") `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", "ID")
+                `And the response should contain`("$.invalidParams[0].reason", "must be UUID")
             }
         }
     }
@@ -72,10 +111,36 @@ class `Article routes` : BaseTest() {
     fun `I can get versions of article by the id`() {
         withIntegrationApplication {
             `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
-            `When I send a GET request`("/articles/13e6091c-8fed-4600-b079-a97a6b7a9800/versions") `Then the response should be` OK and {
+            `When I send a GET request`("/articles/13e6091c-8fed-4600-b079-a97a6b7a9800/versions?page=1&limit=10&sort=title") `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.total") `whish contains` 1
-                `And have property`("$.result[0].id") `whish contains` "13e6091c-8fed-4600-b079-a97a6b7a9800"
+                `And have property`("$.total") `which contains` 1
+                `And have property`("$.result[0].id") `which contains` "13e6091c-8fed-4600-b079-a97a6b7a9800"
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get versions of article by the id with wrong id`() {
+        withIntegrationApplication {
+            `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
+            `When I send a GET request`("/articles/abcd/versions") `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".article")
+                `And the response should contain`("$.invalidParams[0].reason", "must be UUID")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot get versions of article by the id with wrong request`() {
+        withIntegrationApplication {
+            `Given I have article`(id = "13e6091c-8fed-4600-b079-a97a6b7a9800")
+            `When I send a GET request`("/articles/13e6091c-8fed-4600-b079-a97a6b7a9800/versions?page=1&limit=10&sort=wrong") `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".sort")
+                `And the response should contain pattern`("$.invalidParams[0].reason", "must be one of: ('[^']+'(, )?)+")
             }
         }
     }
@@ -92,8 +157,8 @@ class `Article routes` : BaseTest() {
                       "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
                       "title": "title2",
                       "anonymous": false,
-                      "content": "content2",
-                      "description": "description2",
+                      "content": "Sed malesuada ante et sem congue, scelerisque feugiat lorem viverra.",
+                      "description": "Sed vulputate, ligula id porta posuere, sapien lorem mattis arcu, sit amet luctus erat orci sed tellus.",
                       "tags": [
                           "green"
                       ]
@@ -102,12 +167,13 @@ class `Article routes` : BaseTest() {
                 )
             } `Then the response should be` OK and {
                 `And the response should not be null`()
-                `And have property`("$.versionId") `whish contains` "09c418b6-63ba-448b-b38b-502b41cd500e"
+                `And have property`("$.versionId") `which contains` "09c418b6-63ba-448b-b38b-502b41cd500e"
             }
         }
     }
 
     @Test
+    @Tag("Forbidden")
     fun `I cannot create an article if I'm not connected`() {
         withIntegrationApplication {
             `When I send a POST request`("/articles") {
@@ -117,8 +183,8 @@ class `Article routes` : BaseTest() {
                       "versionId": "e3c7ce42-241c-4caf-9a59-aba4e466440e",
                       "title": "title2",
                       "anonymous": false,
-                      "content": "content2",
-                      "description": "description2",
+                      "content": "Sed malesuada ante et sem congue, scelerisque feugiat lorem viverra.",
+                      "description": "Sed vulputate, ligula id porta posuere, sapien lorem mattis arcu, sit amet luctus erat orci sed tellus.",
                       "tags": [
                           "green"
                       ]
@@ -129,6 +195,37 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And the response should contain`("$.statusCode", 403)
                 `And the response should contain`("$.title", "No User Connected")
+            }
+        }
+    }
+
+    @Test
+    @Tag("BadRequest")
+    fun `I cannot create an article with wrong request`() {
+        withIntegrationApplication {
+            `Given I have citizen`("John", "Doe")
+            `When I send a POST request`("/articles", Validate.NONE) {
+                `authenticated as`("John", "Doe")
+                `with body`(
+                    """
+                    {
+                      "versionId": "09c418b6-63ba-448b-b38b-502b41cd500e",
+                      "title": "title2",
+                      "anonymous": false,
+                      "content": "content2",
+                      "description": "description2",
+                      "tags": [
+                          "green"
+                      ]
+                    }
+                    """
+                )
+            } `Then the response should be` BadRequest and {
+                `And the response should not be null`()
+                `And the response should contain`("$.invalidParams[0].name", ".content")
+                `And the response should contain`("$.invalidParams[0].reason", "must have at least 50 characters")
+                `And the response should contain`("$.invalidParams[1].name", ".description")
+                `And the response should contain`("$.invalidParams[1].reason", "must have at least 50 characters")
             }
         }
     }

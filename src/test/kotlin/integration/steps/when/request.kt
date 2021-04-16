@@ -1,5 +1,6 @@
 package integration.steps.`when`
 
+import fr.dcproject.common.BitMask
 import fr.dcproject.common.BitMaskI
 import integration.steps.then.`And the schema parameters must be valid`
 import integration.steps.then.`And the schema request body must be valid`
@@ -14,6 +15,7 @@ import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.setBody
 
 enum class Validate(override val bit: Long) : BitMaskI {
+    NONE(0),
     REQUEST_BODY(1),
     REQUEST_PARAM(2),
     REQUEST_HEADER(4),
@@ -22,6 +24,8 @@ enum class Validate(override val bit: Long) : BitMaskI {
     RESPONSE_HEADER(16),
     RESPONSE(8 + 16),
     ALL((1 + 2 + 4) + (8 + 16));
+
+    operator fun unaryMinus(): BitMaskI = ALL - BitMask(this.bit)
 }
 
 fun TestApplicationCall.valid(validate: BitMaskI): TestApplicationCall {
@@ -40,7 +44,7 @@ fun TestApplicationCall.valid(validate: BitMaskI): TestApplicationCall {
     return this
 }
 
-fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a GET request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> Unit)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Get
         if (uri != null) {
@@ -74,7 +78,7 @@ fun TestApplicationEngine.`When I send a PUT request`(uri: String? = null, valid
     }.valid(validate)
 }
 
-fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: Validate = Validate.ALL, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
+fun TestApplicationEngine.`When I send a DELETE request`(uri: String? = null, validate: BitMaskI = Validate.ALL, setup: (TestApplicationRequest.() -> String?)? = null): TestApplicationCall {
     return handleRequest(true) {
         method = HttpMethod.Delete
         if (uri != null) {

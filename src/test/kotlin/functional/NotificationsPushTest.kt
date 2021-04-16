@@ -30,7 +30,7 @@ internal class NotificationsPushTest {
         @BeforeAll
         @JvmStatic
         fun before() {
-            val config: Configuration = Configuration("application-test.conf")
+            val config = Configuration("application-test.conf")
             RedisClient.create(config.redis).connect().sync().flushall()
 
             /* Purge rabbit notification queues */
@@ -45,7 +45,7 @@ internal class NotificationsPushTest {
 
     @Test
     fun `Notification from redis is well catch and return`() = runBlocking {
-        val config: Configuration = Configuration("application-test.conf")
+        val config = Configuration("application-test.conf")
         /* Redis client for test */
         val redisClientTest = RedisClient.create(config.redis)
 
@@ -74,7 +74,7 @@ internal class NotificationsPushTest {
         }
         val notifAfterSubscribe = ArticleUpdateNotification(article)
 
-        /* init event for emulate incomint message from websocket */
+        /* init event for emulate incoming message from websocket */
         val event = MutableSharedFlow<Notification>()
         val incomingFlow = event.asSharedFlow()
 

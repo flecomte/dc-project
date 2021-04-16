@@ -27,7 +27,7 @@ class `Login routes` : BaseTest() {
                     """
                     {
                       "username": "niels-bohr",
-                      "password": "azerty"
+                      "password": "Azerty123!"
                     }
                     """
                 )

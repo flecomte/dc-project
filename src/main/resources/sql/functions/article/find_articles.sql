@@ -45,7 +45,7 @@ begin
         case direction when 'asc' then
             case sort
                 when 'title' then a.title
-                when 'created_at' then a.created_at::text
+                when 'createdAt' then a.created_at::text
                 when 'vote' then ca.score::text
                 when 'popularity' then ca.total::text
                 else null
@@ -54,7 +54,7 @@ begin
         case direction when 'desc' then
             case sort
                 when 'title' then a.title
-                when 'created_at' then a.created_at::text
+                when 'createdAt' then a.created_at::text
                 when 'vote' then ca.score::text
                 when 'popularity' then ca.total::text
             end

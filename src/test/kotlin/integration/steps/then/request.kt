@@ -46,7 +46,7 @@ infix fun TestApplicationResponse.`And have property`(path: String): Pair<JsonPa
         } ?: throw AssertionError("\"${path}\" element not found on json response")
     }
 
-infix fun Pair<JsonPath, Any>.`whish contains`(expected: Any): Pair<JsonPath, Any> = this.apply {
+infix fun Pair<JsonPath, Any>.`which contains`(expected: Any): Pair<JsonPath, Any> = this.apply {
     second `should be equal to` expected
 }
 
