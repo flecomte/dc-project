@@ -126,11 +126,20 @@ jobs:
         key: ${{ runner.os }}-sonar
         restore-keys: ${{ runner.os }}-sonar
 
+    - name: Test
+      uses: eskatos/gradle-command-action@v1
+      with:
+        gradle-version: 6.8
+        arguments: test
+
     - name: Build and analyze
+      uses: eskatos/gradle-command-action@v1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-      run: ./gradlew build sonarqube --info
+      with:
+        gradle-version: 6.8
+        arguments: sonarqube --info
 
   lint:
     needs: build

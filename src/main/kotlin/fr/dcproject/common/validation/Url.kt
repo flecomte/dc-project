@@ -7,7 +7,7 @@ import java.net.URL
 fun ValidationBuilder<String>.isUrl() =
     addConstraint("is not url") {
         try {
-            val url = URL(it)
+            URL(it)
             true
         } catch (e: MalformedURLException) {
             false

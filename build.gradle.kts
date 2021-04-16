@@ -181,8 +181,6 @@ tasks.named<ShadowJar>("shadowJar") {
 }
 
 tasks.sonarqube.configure {
-    dependsOn(tasks.test)
-    dependsOn(tasks.detekt)
     dependsOn(tasks.jacocoTestReport)
 }
 
@@ -313,6 +311,7 @@ tasks.register("testWithDependencies", Test::class) {
     dependsOn(tasks.named("testComposeUp"))
     dependsOn(tasks.ktlintCheck)
     dependsOn(testSql)
+    finalizedBy(tasks.sonarqube) // report is always generated after tests run
 }
 tasks.register("testArticles", Test::class) {
     group = "tests"
