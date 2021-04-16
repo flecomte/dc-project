@@ -166,6 +166,7 @@ tasks.withType<Jar> {
             )
         )
     }
+    isZip64 = true
 }
 
 tasks.withType<KotlinCompile> {
@@ -179,6 +180,7 @@ tasks.withType<KotlinCompile> {
 tasks.named<ShadowJar>("shadowJar") {
     mergeServiceFiles("META-INF/services")
     archiveFileName.set("${archiveBaseName.get()}-latest-all.${archiveExtension.get()}")
+    isZip64 = true
 }
 
 tasks.sonarqube.configure {
