@@ -43,6 +43,11 @@ plugins {
     id("com.github.kt3k.coveralls") version "2.12.0"
 }
 
+dependencyLocking {
+    lockAllConfigurations()
+    // lockMode.set(LockMode.STRICT)
+}
+
 application {
     mainClassName = "io.ktor.server.jetty.EngineMain"
 }
