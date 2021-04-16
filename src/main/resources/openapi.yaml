@@ -170,6 +170,18 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/404'
+        401:
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/401'
+        403:
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/403'
 
   /articles/{article}/versions:
     parameters:
@@ -2468,7 +2480,20 @@ components:
               reason:
                 type: string
                 example: 'Cannot be null'
-
+    403:
+      description: Forbiden
+      properties:
+        statusCode:
+          type: integer
+        title:
+          type: string
+    401:
+      description: Unauthorized
+      properties:
+        statusCode:
+          type: integer
+        title:
+          type: string
     404:
       description: Not Found
       required:

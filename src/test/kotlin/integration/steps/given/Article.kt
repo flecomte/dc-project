@@ -20,6 +20,14 @@ fun TestApplicationEngine.`Given I have article`(
     createArticle(id?.toUUID(), workgroup, createCitizen(name = createdBy))
 }
 
+fun TestApplicationEngine.`Given I have draft article`(
+    id: String? = null,
+    workgroup: WorkgroupRef? = null,
+    createdBy: Name? = null
+) {
+    createArticle(id?.toUUID(), workgroup, createCitizen(name = createdBy), draft = true)
+}
+
 fun TestApplicationEngine.`Given I have article`(
     id: String? = null,
     workgroup: WorkgroupRef? = null,
@@ -44,7 +52,8 @@ fun TestApplicationEngine.`Given I have article created by workgroup`(
 fun createArticle(
     id: UUID? = null,
     workgroup: WorkgroupRef? = null,
-    createdBy: CitizenRef = createCitizen()
+    createdBy: CitizenRef = createCitizen(),
+    draft: Boolean = false,
 ): ArticleForView {
     val articleRepository: ArticleRepository by lazy { GlobalContext.get().get() }
 
@@ -55,7 +64,8 @@ fun createArticle(
         description = LoremIpsum().getParagraphs(1, 2),
         createdBy = createdBy,
         workgroup = workgroup,
-        versionId = UUID.randomUUID()
+        versionId = UUID.randomUUID(),
+        draft = draft,
     )
     return articleRepository.upsert(article) ?: error("Cannot create article")
 }

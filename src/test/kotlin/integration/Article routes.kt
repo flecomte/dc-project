@@ -1,6 +1,7 @@
 package integration
 
 import fr.dcproject.common.utils.toUUID
+import fr.dcproject.component.citizen.database.CitizenI.Name
 import integration.steps.`when`.Validate
 import integration.steps.`when`.`When I send a GET request`
 import integration.steps.`when`.`When I send a POST request`
@@ -9,6 +10,7 @@ import integration.steps.given.`Given I have article created by workgroup`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have articles`
 import integration.steps.given.`Given I have citizen`
+import integration.steps.given.`Given I have draft article`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
@@ -24,6 +26,7 @@ import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.NotFound
 import io.ktor.http.HttpStatusCode.Companion.OK
+import io.ktor.http.HttpStatusCode.Companion.Unauthorized
 import org.junit.jupiter.api.Tag
 import org.junit.jupiter.api.Tags
 import org.junit.jupiter.api.Test
@@ -90,6 +93,47 @@ class `Article routes` : BaseTest() {
                 `And the response should not be null`()
                 `And the response should contain`("$.title", "Article 635fe2e8-2dbc-4c80-b306-101d38a4ab23 not found")
                 `And the response should contain`("$.statusCode", 404)
+            }
+        }
+    }
+
+    @Test
+    @Tag("draft")
+    fun `I can get my draft article by id`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Neil", "Armstrong")
+            `Given I have draft article`(id = "d946e16f-ca42-4cf9-a711-a0f8cae60a55", createdBy = Name("Neil", "Armstrong"))
+            `When I send a GET request`("/articles/d946e16f-ca42-4cf9-a711-a0f8cae60a55") {
+                `authenticated as`("Neil", "Armstrong")
+            } `Then the response should be` OK and {
+                `And the response should not be null`()
+                `And have property`("$.id") `which contains` "d946e16f-ca42-4cf9-a711-a0f8cae60a55"
+            }
+        }
+    }
+
+    @Test
+    @Tag("draft")
+    fun `I cannot get draft article by id if not owner`() {
+        withIntegrationApplication {
+            `Given I have citizen`("Thomas", "Pesquet")
+            `Given I have citizen`("Youri", "Gagarine")
+            `Given I have draft article`(id = "bf13c84c-609f-49b9-9d1d-e2e9655ed8ad")
+            `When I send a GET request`("/articles/bf13c84c-609f-49b9-9d1d-e2e9655ed8ad") {
+                `authenticated as`("Youri", "Gagarine")
+            } `Then the response should be` Forbidden and {
+                `And the response should not be null`()
+            }
+        }
+    }
+
+    @Test
+    @Tag("draft")
+    fun `I cannot get draft article by id if not connected`() {
+        withIntegrationApplication {
+            `Given I have draft article`(id = "bf13c84c-609f-49b9-9d1d-e2e9655ed8ad")
+            `When I send a GET request`("/articles/bf13c84c-609f-49b9-9d1d-e2e9655ed8ad") `Then the response should be` Unauthorized and {
+                `And the response should not be null`()
             }
         }
     }
