@@ -2,6 +2,7 @@ package fr.dcproject.common.entity
 
 import fr.dcproject.component.article.database.ArticleRef
 import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.comment.generic.database.CommentRef
 import fr.dcproject.component.constitution.database.ConstitutionRef
 import fr.dcproject.component.opinion.database.OpinionRef
@@ -34,7 +35,8 @@ interface TargetI : EntityI {
         Article("article"),
         Constitution("constitution"),
         Comment("comment"),
-        Opinion("opinion")
+        Opinion("opinion"),
+        Citizen("citizen"),
     }
 
     companion object {
@@ -44,6 +46,7 @@ interface TargetI : EntityI {
                 t.isSubclassOf(ConstitutionRef::class) -> TargetName.Constitution.targetReference
                 t.isSubclassOf(CommentRef::class) -> TargetName.Comment.targetReference
                 t.isSubclassOf(OpinionRef::class) -> TargetName.Opinion.targetReference
+                t.isSubclassOf(CitizenRef::class) -> TargetName.Citizen.targetReference
                 else -> throw error("target not implemented: ${t.qualifiedName} \nImplement it or return 'reference' from SQL")
             }
         }

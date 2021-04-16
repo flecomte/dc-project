@@ -92,7 +92,8 @@ class NotificationConsumerTest {
             rabbitFactory = rabbitFactory,
             redisClient = redisClient,
             followArticleRepo = followArticleRepo,
-            followConstitutionRepo = mockk(),
+            followConstitutionRepo = mockk(), // TODO test followConstitution
+            followCitizenRepo = mockk(), // TODO test followCitizen
             notificationEmailSender = emailSender,
             exchangeName = "notification",
         ).apply { start() }

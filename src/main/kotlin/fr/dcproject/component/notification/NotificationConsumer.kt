@@ -8,6 +8,7 @@ import com.rabbitmq.client.DefaultConsumer
 import com.rabbitmq.client.Envelope
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.follow.database.FollowArticleRepository
+import fr.dcproject.component.follow.database.FollowCitizenRepository
 import fr.dcproject.component.follow.database.FollowConstitutionRepository
 import fr.dcproject.component.follow.database.FollowForView
 import io.ktor.utils.io.errors.IOException
@@ -23,6 +24,7 @@ class NotificationConsumer(
     private val redisClient: RedisClient,
     private val followConstitutionRepo: FollowConstitutionRepository,
     private val followArticleRepo: FollowArticleRepository,
+    private val followCitizenRepo: FollowCitizenRepository,
     private val notificationEmailSender: NotificationEmailSender,
     private val exchangeName: String,
 ) {
@@ -98,6 +100,7 @@ class NotificationConsumer(
         val follows = when (notification.type) {
             "article" -> followArticleRepo.findFollowsByTarget(notification.target)
             "constitution" -> followConstitutionRepo.findFollowsByTarget(notification.target)
+            "citizen" -> followCitizenRepo.findFollowsByTarget(notification.target)
             else -> error("event '${notification.type}' not implemented")
         }
 

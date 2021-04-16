@@ -4,7 +4,9 @@ import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.article.database.ArticleRef
+import fr.dcproject.component.citizen.database.Citizen
 import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.constitution.database.ConstitutionForView
 import fr.dcproject.component.constitution.database.ConstitutionRef
 import fr.postgresjson.connexion.Paginated
@@ -141,6 +143,31 @@ class FollowConstitutionRepository(requester: Requester) : FollowRepository<Cons
         page: Int,
         limit: Int
     ): Paginated<FollowForView<ConstitutionRef>> {
+        TODO("Not yet implemented")
+    }
+}
+
+class FollowCitizenRepository(requester: Requester) : FollowRepository<CitizenRef, Citizen>(requester) {
+    override fun findByCitizen(
+        citizenId: UUID,
+        page: Int,
+        limit: Int
+    ): Paginated<FollowForView<Citizen>> {
+        return requester.run {
+            getFunction("find_follows_citizen_by_citizen")
+                .select(
+                    page,
+                    limit,
+                    "created_by_id" to citizenId
+                )
+        }
+    }
+
+    override fun findFollowsByTarget(
+        target: Entity,
+        page: Int,
+        limit: Int
+    ): Paginated<FollowForView<CitizenRef>> {
         TODO("Not yet implemented")
     }
 }

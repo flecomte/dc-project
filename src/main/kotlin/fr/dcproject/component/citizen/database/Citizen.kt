@@ -2,8 +2,9 @@ package fr.dcproject.component.citizen.database
 
 import fr.dcproject.common.entity.CreatedAt
 import fr.dcproject.common.entity.DeletedAt
-import fr.dcproject.common.entity.Entity
 import fr.dcproject.common.entity.EntityI
+import fr.dcproject.common.entity.TargetI
+import fr.dcproject.common.entity.TargetRef
 import fr.dcproject.component.auth.database.User
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.auth.database.UserForCreate
@@ -95,10 +96,10 @@ open class CitizenRefWithUser(
 
 open class CitizenRef(
     id: UUID = UUID.randomUUID()
-) : Entity(id),
+) : TargetRef(id),
     CitizenI
 
-interface CitizenI : EntityI {
+interface CitizenI : EntityI, TargetI {
     data class Name(
         override val firstName: String,
         override val lastName: String,

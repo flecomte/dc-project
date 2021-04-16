@@ -25,6 +25,7 @@ import fr.dcproject.component.constitution.routes.installConstitutionRoutes
 import fr.dcproject.component.doc.routes.installDocRoutes
 import fr.dcproject.component.follow.followKoinModule
 import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
+import fr.dcproject.component.follow.routes.citizen.installFollowCitizenRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
 import fr.dcproject.component.notification.NotificationConsumer
 import fr.dcproject.component.notification.routes.installNotificationsRoutes
@@ -154,6 +155,7 @@ fun Application.module(env: Env = PROD) {
         installCommentRoutes()
         installFollowArticleRoutes()
         installFollowConstitutionRoutes()
+        installFollowCitizenRoutes()
         installWorkgroupRoutes()
         installOpinionRoutes()
         installVoteRoutes()

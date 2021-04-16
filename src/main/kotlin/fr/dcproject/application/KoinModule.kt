@@ -69,7 +69,7 @@ val KoinModule = module {
 
     single {
         val config: Configuration = get()
-        NotificationConsumer(get(), get(), get(), get(), get(), config.exchangeNotificationName)
+        NotificationConsumer(get(), get(), get(), get(), get(), get(), config.exchangeNotificationName)
     }
 
     // RabbitMQ
