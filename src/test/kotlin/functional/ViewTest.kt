@@ -2,6 +2,7 @@ package functional
 
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.module
+import fr.dcproject.common.utils.retry
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.article.database.ArticleViewRepository
 import fr.dcproject.component.auth.database.UserCreator
@@ -20,6 +21,8 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.koin.ktor.ext.get
 import java.util.UUID
+import kotlin.time.ExperimentalTime
+import kotlin.time.seconds
 
 @KtorExperimentalLocationsAPI
 @KtorExperimentalAPI
@@ -27,6 +30,7 @@ import java.util.UUID
 @TestInstance(PER_CLASS)
 @Tags(Tag("functional"), Tag("view"))
 class ViewTest {
+    @ExperimentalTime
     @Test
     fun `test View Article`() {
         val article = ArticleForView(
@@ -75,15 +79,15 @@ class ViewTest {
                 article
             )
 
-            /* Sleep because ES is not sync ! */
-            Thread.sleep(1000)
+            /* Retry because ES is not sync ! */
+            retry(10, 0.3.seconds) {
+                /* Get view */
+                val afterView = viewRepository.getViewsCount(article)
 
-            /* Get view */
-            val afterView = viewRepository.getViewsCount(article)
-
-            /* Check if view has increment */
-            afterView.total `should be equal to` startView.total + 4
-            afterView.unique `should be equal to` startView.unique + 3
+                /* Check if view has increment */
+                afterView.total `should be equal to` startView.total + 4
+                afterView.unique `should be equal to` startView.unique + 3
+            }
         }
     }
 }

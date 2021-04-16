@@ -374,6 +374,12 @@ tasks.register("testWorkgroup", Test::class) {
         includeTags("workgroup")
     }
 }
+tasks.register("testViews", Test::class) {
+    group = "tests"
+    useJUnitPlatform {
+        includeTags("view")
+    }
+}
 
 dependencyCheck {
     formats = listOf(ReportGenerator.Format.HTML, ReportGenerator.Format.XML)
