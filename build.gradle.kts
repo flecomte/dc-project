@@ -33,14 +33,14 @@ plugins {
     kotlin("jvm") version "1.4.30"
     kotlin("plugin.serialization") version "1.4.30"
 
-    id("com.github.johnrengelman.shadow") version "5.2.0"
-    id("org.jlleitschuh.gradle.ktlint") version "9.4.1"
-    id("org.owasp.dependencycheck") version "6.1.1"
+    id("com.github.johnrengelman.shadow") version "6.1.0"
+    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("org.owasp.dependencycheck") version "6.1.5"
     id("org.sonarqube") version "3.1.1"
     id("net.nemerosa.versioning") version "2.14.0"
-    id("io.gitlab.arturbosch.detekt") version "1.16.0-RC1"
-    id("com.avast.gradle.docker-compose") version "0.14.0"
-    id("com.github.kt3k.coveralls") version "2.8.4"
+    id("io.gitlab.arturbosch.detekt") version "1.16.0"
+    id("com.avast.gradle.docker-compose") version "0.14.3"
+    id("com.github.kt3k.coveralls") version "2.12.0"
 }
 
 application {
