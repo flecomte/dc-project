@@ -17,13 +17,13 @@ private val citizenAttributeKey = AttributeKey<CitizenEntity>("CitizenContext")
 val ApplicationCall.citizen: CitizenEntity
     get() = attributes.computeIfAbsent(citizenAttributeKey) {
         val user = authentication.principal<UserI>() ?: throw ForbiddenException("No User Connected")
-        GlobalContext.get().koin.get<CitizenRepository>().findByUser(user)
+        GlobalContext.get().get<CitizenRepository>().findByUser(user)
             ?: throw ForbiddenException("Citizen not found for this user id \"${user.id}\"")
     }
 
 val ApplicationCall.citizenOrNull: CitizenEntity?
     get() = authentication.principal<UserI>()?.let {
-        GlobalContext.get().koin.get<CitizenRepository>().findByUser(it)
+        GlobalContext.get().get<CitizenRepository>().findByUser(it)
     }
 
 val ApplicationCall.isAuth: Boolean

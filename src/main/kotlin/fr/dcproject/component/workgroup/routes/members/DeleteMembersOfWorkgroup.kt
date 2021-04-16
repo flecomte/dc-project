@@ -17,14 +17,13 @@ import io.ktor.locations.Location
 import io.ktor.locations.delete
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.koin.core.KoinComponent
 import java.util.UUID
 import fr.dcproject.component.workgroup.routes.members.DeleteMembersOfWorkgroup.WorkgroupsMembersRequest.Input as Input
 
 @KtorExperimentalLocationsAPI
 object DeleteMembersOfWorkgroup {
     @Location("/workgroups/{workgroupId}/members")
-    class WorkgroupsMembersRequest(val workgroupId: UUID) : KoinComponent {
+    class WorkgroupsMembersRequest(val workgroupId: UUID) {
         class Input : MutableList<Input.Member> by mutableListOf() {
             class Member(val citizen: CitizenRef)
         }

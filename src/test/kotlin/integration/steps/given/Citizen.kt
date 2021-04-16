@@ -18,7 +18,7 @@ fun TestApplicationEngine.`Given I have citizen`(
     id: String = UUID.randomUUID().toString(),
     callback: Citizen.() -> Unit = {}
 ): Citizen? {
-    val repo: CitizenRepository by lazy { GlobalContext.get().koin.get() }
+    val repo: CitizenRepository by lazy { GlobalContext.get().get() }
 
     val user = UserForCreate(
         id = id.toUUID(),
@@ -37,7 +37,7 @@ fun TestApplicationEngine.`Given I have citizen`(
 }
 
 fun createCitizen(name: CitizenI.Name? = null, id: UUID = UUID.randomUUID()): Citizen {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
 
     return if (name != null) {
         citizenRepository.findByName(name) ?: error("Citizen not exist")

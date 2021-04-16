@@ -46,7 +46,7 @@ fun createArticle(
     workgroup: WorkgroupRef? = null,
     createdBy: CitizenRef = createCitizen()
 ): ArticleForView {
-    val articleRepository: ArticleRepository by lazy { GlobalContext.get().koin.get() }
+    val articleRepository: ArticleRepository by lazy { GlobalContext.get().get() }
 
     val article = ArticleForUpdate(
         id = id ?: UUID.randomUUID(),

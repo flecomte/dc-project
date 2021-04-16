@@ -36,8 +36,8 @@ fun WorkgroupForView<CitizenCreator>.`With members`(
 
 @Suppress("UNCHECKED_CAST")
 fun addMemberToWorkgroup(workgroup: WorkgroupForView<CitizenCreator>, vararg membersNames: CitizenI.Name) {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
-    val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
+    val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().get() }
 
     val newMembers: List<Member<CitizenI>> = membersNames.map { memberName ->
         val member: Citizen = citizenRepository.findByName(memberName) ?: error("Citizen not exist")
@@ -56,8 +56,8 @@ private fun createWorkgroup(
     anonymous: Boolean? = null,
     createdBy: CitizenI.Name? = null,
 ): WorkgroupForView<CitizenCreator> {
-    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().koin.get() }
-    val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().koin.get() }
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
+    val workgroupRepository: WorkgroupRepository by lazy { GlobalContext.get().get() }
 
     val creatorName = createdBy ?: CitizenI.Name("Paul", "Langevin")
     val creator = citizenRepository.findByName(creatorName) ?: run {

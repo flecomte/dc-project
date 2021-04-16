@@ -9,12 +9,9 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.owasp.dependencycheck.reporting.ReportGenerator
 import org.slf4j.LoggerFactory
 
-val ktorVersion = "1.5.0"
-val kotlinVersion = "1.4.30"
-val coroutinesVersion = "1.4.3"
-val logbackVersion = "1.2.3"
-val koinVersion = "2.0.1"
-val jacksonVersion = "2.12.1"
+val ktorVersion = "+"
+val kotlinVersion = "1.4.+"
+val coroutinesVersion = "+"
 
 group = "com.github.flecomte"
 version = versioning.info.run {
@@ -30,17 +27,17 @@ plugins {
     application
     `maven-publish`
 
-    kotlin("jvm") version "1.4.30"
-    kotlin("plugin.serialization") version "1.4.30"
+    kotlin("jvm") version "1.4.+"
+    kotlin("plugin.serialization") version "1.4.+"
 
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
-    id("org.owasp.dependencycheck") version "6.1.5"
-    id("org.sonarqube") version "3.1.1"
-    id("net.nemerosa.versioning") version "2.14.0"
-    id("io.gitlab.arturbosch.detekt") version "1.16.0"
-    id("com.avast.gradle.docker-compose") version "0.14.3"
-    id("com.github.kt3k.coveralls") version "2.12.0"
+    id("com.github.johnrengelman.shadow") version "+"
+    id("org.jlleitschuh.gradle.ktlint") version "+"
+    id("org.owasp.dependencycheck") version "+"
+    id("org.sonarqube") version "+"
+    id("net.nemerosa.versioning") version "+"
+    id("io.gitlab.arturbosch.detekt") version "+"
+    id("com.avast.gradle.docker-compose") version "+"
+    id("com.github.kt3k.coveralls") version "+"
 }
 
 dependencyLocking {
@@ -60,8 +57,8 @@ buildscript {
         maven { url = uri("https://jitpack.io") }
     }
     dependencies {
-        classpath("com.typesafe:config:1.4.1")
-        classpath("com.github.flecomte:postgres-json:2.1.2")
+        classpath("com.typesafe:config:+")
+        classpath("com.github.flecomte:postgres-json:+")
     }
 }
 
@@ -315,6 +312,7 @@ tasks.register("testWithDependencies", Test::class) {
     dependsOn(tasks.named("testComposeUp"))
     dependsOn(tasks.ktlintCheck)
     dependsOn(testSql)
+    dependsOn(tasks.jacocoTestReport)
     finalizedBy(tasks.sonarqube) // report is always generated after tests run
 }
 tasks.register("testArticles", Test::class) {
@@ -395,43 +393,43 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlinVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutinesVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-reactor:$coroutinesVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.0.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:+")
     implementation("io.ktor:ktor-server-jetty:$ktorVersion")
     implementation("io.ktor:ktor-client-jetty:$ktorVersion")
-    implementation("ch.qos.logback:logback-classic:$logbackVersion")
+    implementation("ch.qos.logback:logback-classic:+")
     implementation("io.ktor:ktor-server-core:$ktorVersion")
     implementation("io.ktor:ktor-locations:$ktorVersion")
     implementation("io.ktor:ktor-auth:$ktorVersion")
     implementation("io.ktor:ktor-auth-jwt:$ktorVersion")
     implementation("io.ktor:ktor-websockets:$ktorVersion")
-    implementation("org.koin:koin-ktor:$koinVersion")
+    implementation("io.insert-koin:koin-ktor:+")
     implementation("io.ktor:ktor-jackson:$ktorVersion")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:$jacksonVersion")
-    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:$jacksonVersion")
-    implementation("net.pearx.kasechange:kasechange-jvm:1.3.0")
-    implementation("com.auth0:java-jwt:3.12.0")
-    implementation("com.github.jasync-sql:jasync-postgresql:1.1.6")
-    implementation("com.github.flecomte:postgres-json:2.1.2")
-    implementation("com.sendgrid:sendgrid-java:4.7.1")
+    implementation("com.fasterxml.jackson.module:jackson-module-kotlin:+")
+    implementation("com.fasterxml.jackson.datatype:jackson-datatype-joda:+")
+    implementation("net.pearx.kasechange:kasechange-jvm:+")
+    implementation("com.auth0:java-jwt:+")
+    implementation("com.github.jasync-sql:jasync-postgresql:+")
+    implementation("com.github.flecomte:postgres-json:+")
+    implementation("com.sendgrid:sendgrid-java:+")
     implementation("io.lettuce:lettuce-core:5.3.6.RELEASE") // TODO update to 6.0.2
-    implementation("com.rabbitmq:amqp-client:5.10.0")
-    implementation("org.elasticsearch.client:elasticsearch-rest-client:6.7.1")
-    implementation("com.jayway.jsonpath:json-path:2.5.0")
-    implementation("com.avast.gradle:gradle-docker-compose-plugin:0.14.0")
-    implementation("io.konform:konform-jvm:0.2.0")
+    implementation("com.rabbitmq:amqp-client:+")
+    implementation("org.elasticsearch.client:elasticsearch-rest-client:6+")
+    implementation("com.jayway.jsonpath:json-path:+")
+    implementation("com.avast.gradle:gradle-docker-compose-plugin:+")
+    implementation("io.konform:konform-jvm:+")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock-jvm:$ktorVersion")
-    testImplementation("org.koin:koin-test:$koinVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$coroutinesVersion")
-    testImplementation("io.mockk:mockk:1.10.6")
-    testImplementation("org.junit.jupiter:junit-jupiter:5.7.0")
-    testImplementation("org.amshove.kluent:kluent:1.61")
-    testImplementation("io.mockk:mockk-agent-api:1.10.6")
-    testImplementation("io.mockk:mockk-agent-jvm:1.10.6")
+    testImplementation("io.insert-koin:koin-test:+")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:+")
+    testImplementation("io.mockk:mockk:+")
+    testImplementation("org.junit.jupiter:junit-jupiter:+")
+    testImplementation("org.amshove.kluent:kluent:+")
+    testImplementation("io.mockk:mockk-agent-api:+")
+    testImplementation("io.mockk:mockk-agent-jvm:+")
     testImplementation("org.jetbrains.kotlin:kotlin-reflect:$kotlinVersion")
-    testImplementation("com.thedeanda:lorem:2.1")
-    testImplementation("org.openapi4j:openapi-operation-validator:1.0.6")
-    testImplementation("org.openapi4j:openapi-parser:1.0.6")
+    testImplementation("com.thedeanda:lorem:+")
+    testImplementation("org.openapi4j:openapi-operation-validator:+")
+    testImplementation("org.openapi4j:openapi-parser:+")
 }
