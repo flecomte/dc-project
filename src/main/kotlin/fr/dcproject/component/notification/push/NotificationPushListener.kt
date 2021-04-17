@@ -1,8 +1,9 @@
-package fr.dcproject.component.notification
+package fr.dcproject.component.notification.push
 
 import com.fasterxml.jackson.core.JsonProcessingException
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.citizen.database.CitizenI
+import fr.dcproject.component.notification.NotificationMessage
 import io.ktor.http.cio.websocket.Frame
 import io.ktor.http.cio.websocket.Frame.Text
 import io.ktor.http.cio.websocket.readText
@@ -28,31 +29,42 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 
-class NotificationsPush(
+/**
+ * Listen a custom flow to mark as read a message.
+ *
+ * And listen the redis subscription flow and call a callback when a new message arrives
+ */
+class NotificationPushListener(
     private val redis: RedisAsyncCommands<String, String>,
     private val redisConnectionPubSub: StatefulRedisPubSubConnection<String, String>,
     citizen: CitizenI,
-    incoming: Flow<Notification>,
-    onReceive: suspend (Notification) -> Unit,
+    incoming: Flow<NotificationMessage>,
+    onReceive: suspend (NotificationMessage) -> Unit,
 ) {
-    class Builder(val redisClient: RedisClient) {
+    class Builder(redisClient: RedisClient) {
         private val redisConnection = redisClient.connect() ?: error("Unable to connect to redis")
         private val redisConnectionPubSub = redisClient.connectPubSub() ?: error("Unable to connect to redis PubSub")
         private val redis: RedisAsyncCommands<String, String> = redisConnection.async() ?: error("Unable to connect to redis Async")
 
+        /**
+         * Build Listener with citizen, incoming flow and set an outgoing callback
+         */
         fun build(
             citizen: CitizenI,
-            incoming: Flow<Notification>,
-            onReceive: suspend (Notification) -> Unit,
-        ): NotificationsPush = NotificationsPush(redis, redisConnectionPubSub, citizen, incoming, onReceive)
+            incoming: Flow<NotificationMessage>,
+            onReceive: suspend (NotificationMessage) -> Unit,
+        ): NotificationPushListener = NotificationPushListener(redis, redisConnectionPubSub, citizen, incoming, onReceive)
 
+        /**
+         * Build NotificationPush with only a WebSocket session
+         */
         @ExperimentalCoroutinesApi
-        fun build(ws: DefaultWebSocketServerSession): NotificationsPush {
+        fun build(ws: DefaultWebSocketServerSession): NotificationPushListener {
             /* Convert channel of string from websocket, to a flow of Notification object */
-            val incomingFlow: Flow<Notification> = ws.incoming.consumeAsFlow()
+            val incomingFlow: Flow<NotificationMessage> = ws.incoming.consumeAsFlow()
                 .mapNotNull<Frame, Text> { it as? Frame.Text }
                 .map { it.readText() }
-                .map { Notification.fromString(it) }
+                .map { NotificationMessage.fromString(it) }
 
             return build(ws.call.citizen, incomingFlow) {
                 ws.outgoing.send(Text(it.toString()))
@@ -62,30 +74,42 @@ class NotificationsPush(
         }
     }
 
+    /**
+     * The key of the SortedSet in Redis which contains all the messages of a user
+     */
     private val key = "notification:${citizen.id}"
-    private var score: Double = 0.0
+    /**
+     * The last score (a kind of sorted ids) of message
+     */
+    private var lastScore: Double = 0.0
+    /**
+     * Configure the listener to listen all new notifications
+     */
     private val listener = object : RedisPubSubAdapter<String, String>() {
         /* On new key publish */
         override fun message(pattern: String?, channel: String?, message: String?) {
             runBlocking {
-                getNotifications().collect {
+                getNewUnreadNotifications().collect {
                     onReceive(it)
                 }
             }
         }
     }
 
+    /**
+     * Init the listener and the callback
+     */
     init {
         /* Mark as read all incoming notifications */
         GlobalScope.launch {
             incoming.collect {
-                markAsRead(it)
+                it.markAsRead()
             }
         }
 
         /* Get old notification and sent it to websocket */
         runBlocking {
-            getNotifications().collect {
+            getNewUnreadNotifications().collect {
                 onReceive(it)
             }
         }
@@ -99,34 +123,51 @@ class NotificationsPush(
         }
     }
 
+    /**
+     * Close the redis subscription
+     */
     fun close() {
         redisConnectionPubSub.removeListener(listener)
     }
 
-    /* Return flow with all new notifications */
-    private fun getNotifications() = flow<Notification> {
+    /**
+     * Get All new notification from redis and
+     * Return flow with notifications
+     *
+     * On start, on the first call, this method return all unread notification of the user
+     *
+     * Internally this method return all messages that greater of the lastScore,
+     * then define the lastScore with the score of the last message.
+     */
+    private fun getNewUnreadNotifications() = flow<NotificationMessage> {
         redis
             .zrangebyscoreWithScores(
                 key,
                 Range.from(
-                    Boundary.excluding(score),
+                    Boundary.excluding(lastScore),
                     Boundary.including(Double.POSITIVE_INFINITY)
                 ),
                 Limit.from(100)
             )
             .get().forEach {
-                emit(Notification.fromString(it.value))
-                if (it.score > score) score = it.score
+                /* Build message object from raw string and return it */
+                emit(NotificationMessage.fromString(it.value))
+                if (it.score > lastScore) lastScore = it.score
             }
     }
 
-    private suspend fun markAsRead(notificationMessage: Notification) = coroutineScope {
+    /**
+     * Mark one notification as read.
+     *
+     * Internally, this method remove the message of the SortedSet in redis
+     */
+    private suspend fun NotificationMessage.markAsRead() = coroutineScope {
         try {
             redis.zremrangebyscore(
                 key,
                 Range.from(
-                    Boundary.including(notificationMessage.id),
-                    Boundary.including(notificationMessage.id)
+                    Boundary.including(id),
+                    Boundary.including(id)
                 )
             )
         } catch (e: JsonProcessingException) {

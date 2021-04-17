@@ -6,9 +6,9 @@ import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.auth.database.UserCreator
 import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
-import fr.dcproject.component.notification.ArticleUpdateNotification
-import fr.dcproject.component.notification.Notification
-import fr.dcproject.component.notification.NotificationsPush
+import fr.dcproject.component.notification.ArticleUpdateNotificationMessage
+import fr.dcproject.component.notification.NotificationMessage
+import fr.dcproject.component.notification.push.NotificationPushListener
 import io.lettuce.core.RedisClient
 import io.mockk.every
 import io.mockk.spyk
@@ -68,14 +68,14 @@ internal class NotificationsPushTest {
             title = "Super Title",
         )
         /* Init two notification, one called before subscription, and the other after */
-        val notifBeforeSubscribe = ArticleUpdateNotification(article)
+        val notifBeforeSubscribe = ArticleUpdateNotificationMessage(article)
         runBlocking {
             delay(100)
         }
-        val notifAfterSubscribe = ArticleUpdateNotification(article)
+        val notifAfterSubscribe = ArticleUpdateNotificationMessage(article)
 
         /* init event for emulate incoming message from websocket */
-        val event = MutableSharedFlow<Notification>()
+        val event = MutableSharedFlow<NotificationMessage>()
         val incomingFlow = event.asSharedFlow()
 
         spyk(object { var counter = 0 }).run { /* Counter for count the callback of notification */
@@ -90,7 +90,7 @@ internal class NotificationsPushTest {
             }
 
             /* Init NotificationPush system, and set assertion in callback */
-            val notificationPush = NotificationsPush.Builder(redisClient).build(citizen, incomingFlow) {
+            val notificationPush = NotificationPushListener.Builder(redisClient).build(citizen, incomingFlow) {
                 counter++
                 if (counter == 1) it.id `should be equal to` notifBeforeSubscribe.id
                 else it.id `should be equal to` notifAfterSubscribe.id
