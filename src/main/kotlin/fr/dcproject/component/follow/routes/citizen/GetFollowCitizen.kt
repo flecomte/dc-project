@@ -14,7 +14,6 @@ import io.ktor.locations.Location
 import io.ktor.locations.get
 import io.ktor.response.respond
 import io.ktor.routing.Route
-import org.joda.time.DateTime
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
@@ -30,19 +29,7 @@ object GetFollowCitizen {
                 ac.assert { canView(follow, citizenOrNull) }
                 call.respond(
                     HttpStatusCode.OK,
-                    follow.let { f ->
-                        object {
-                            val id: UUID = f.id
-                            val createdBy: Any = f.createdBy.toOutput()
-                            val target: Any = f.target.let { t ->
-                                object {
-                                    val id: UUID = t.id
-                                    val reference: String = f.target.reference
-                                }
-                            }
-                            val createdAt: DateTime = f.createdAt
-                        }
-                    }
+                    follow.toOutput()
                 )
             } ?: call.respond(HttpStatusCode.NoContent)
         }
