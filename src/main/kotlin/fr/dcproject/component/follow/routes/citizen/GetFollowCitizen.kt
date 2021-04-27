@@ -1,13 +1,12 @@
-package fr.dcproject.component.follow.routes.constitution
+package fr.dcproject.component.follow.routes.citizen
 
 import fr.dcproject.common.response.toOutput
 import fr.dcproject.common.security.assert
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
-import fr.dcproject.component.constitution.database.ConstitutionRef
+import fr.dcproject.component.citizen.database.CitizenRef
 import fr.dcproject.component.follow.FollowAccessControl
-import fr.dcproject.component.follow.database.FollowConstitutionRepository
-import fr.dcproject.component.follow.routes.citizen.toOutput
+import fr.dcproject.component.follow.database.FollowCitizenRepository
 import io.ktor.application.call
 import io.ktor.http.HttpStatusCode
 import io.ktor.locations.KtorExperimentalLocationsAPI
@@ -18,21 +17,21 @@ import io.ktor.routing.Route
 import java.util.UUID
 
 @KtorExperimentalLocationsAPI
-object GetFollowConstitution {
-    @Location("/constitutions/{constitution}/follows")
-    class ConstitutionFollowRequest(constitution: UUID) {
-        val constitution = ConstitutionRef(constitution)
+object GetFollowCitizen {
+    @Location("/citizens/{citizen}/follows")
+    class CitizenFollowRequest(citizen: UUID) {
+        val citizen = CitizenRef(citizen)
     }
 
-    fun Route.getFollowConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
-        get<ConstitutionFollowRequest> {
-            repo.findFollow(citizen, it.constitution)?.let { follow ->
+    fun Route.getFollowCitizen(repo: FollowCitizenRepository, ac: FollowAccessControl) {
+        get<CitizenFollowRequest> {
+            repo.findFollow(citizen, it.citizen)?.let { follow ->
                 ac.assert { canView(follow, citizenOrNull) }
                 call.respond(
                     HttpStatusCode.OK,
                     follow.toOutput()
                 )
-            } ?: call.respond(HttpStatusCode.NotFound)
+            } ?: call.respond(HttpStatusCode.NoContent)
         }
     }
 }

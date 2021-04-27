@@ -10,10 +10,11 @@ import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.rabbitmq.client.ConnectionFactory
 import fr.dcproject.common.email.Mailer
 import fr.dcproject.component.auth.jwt.JwtConfig
-import fr.dcproject.component.notification.NotificationConsumer
-import fr.dcproject.component.notification.NotificationEmailSender
-import fr.dcproject.component.notification.NotificationsPush
-import fr.dcproject.component.notification.Publisher
+import fr.dcproject.component.notification.NotificationPublisherAsync
+import fr.dcproject.component.notification.email.NotificationEmailConsumer
+import fr.dcproject.component.notification.email.NotificationEmailSender
+import fr.dcproject.component.notification.push.NotificationPushConsumer
+import fr.dcproject.component.notification.push.NotificationPushListener
 import fr.postgresjson.connexion.Connection
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
@@ -65,11 +66,15 @@ val KoinModule = module {
         }
     }
 
-    single { NotificationsPush.Builder(get()) }
+    single { NotificationPushListener.Builder(get()) }
 
     single {
         val config: Configuration = get()
-        NotificationConsumer(get(), get(), get(), get(), get(), config.exchangeNotificationName)
+        NotificationEmailConsumer(get(), get(), get(), get(), get(), config.exchangeNotificationName)
+    }
+    single {
+        val config: Configuration = get()
+        NotificationPushConsumer(get(), get(), get(), get(), get(), config.exchangeNotificationName)
     }
 
     // RabbitMQ
@@ -114,7 +119,7 @@ val KoinModule = module {
 
     single {
         val config: Configuration = get()
-        Publisher(factory = get(), exchangeName = config.exchangeNotificationName)
+        NotificationPublisherAsync(factory = get(), exchangeName = config.exchangeNotificationName)
     }
 
     single {

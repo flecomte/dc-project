@@ -9,6 +9,7 @@ import com.fasterxml.jackson.datatype.joda.JodaModule
 import fr.dcproject.application.Env.PROD
 import fr.dcproject.application.Env.TEST
 import fr.dcproject.application.http.statusPagesInstallation
+import fr.dcproject.common.utils.onApplicationStopped
 import fr.dcproject.component.article.articleKoinModule
 import fr.dcproject.component.article.routes.installArticleRoutes
 import fr.dcproject.component.auth.authKoinModule
@@ -25,8 +26,10 @@ import fr.dcproject.component.constitution.routes.installConstitutionRoutes
 import fr.dcproject.component.doc.routes.installDocRoutes
 import fr.dcproject.component.follow.followKoinModule
 import fr.dcproject.component.follow.routes.article.installFollowArticleRoutes
+import fr.dcproject.component.follow.routes.citizen.installFollowCitizenRoutes
 import fr.dcproject.component.follow.routes.constitution.installFollowConstitutionRoutes
-import fr.dcproject.component.notification.NotificationConsumer
+import fr.dcproject.component.notification.email.NotificationEmailConsumer
+import fr.dcproject.component.notification.push.NotificationPushConsumer
 import fr.dcproject.component.notification.routes.installNotificationsRoutes
 import fr.dcproject.component.opinion.opinionKoinModule
 import fr.dcproject.component.opinion.routes.installOpinionRoutes
@@ -37,7 +40,6 @@ import fr.dcproject.component.workgroup.routes.installWorkgroupRoutes
 import fr.dcproject.component.workgroup.workgroupKoinModule
 import fr.postgresjson.migration.Migrations
 import io.ktor.application.Application
-import io.ktor.application.ApplicationStopped
 import io.ktor.application.install
 import io.ktor.auth.Authentication
 import io.ktor.client.HttpClient
@@ -117,11 +119,14 @@ fun Application.module(env: Env = PROD) {
         masking = false
     }
 
-    get<NotificationConsumer>().run {
+    get<NotificationEmailConsumer>().run {
         start()
-        environment.monitor.subscribe(ApplicationStopped) {
-            close()
-        }
+        onApplicationStopped { close() }
+    }
+
+    get<NotificationPushConsumer>().run {
+        start()
+        onApplicationStopped { close() }
     }
 
     install(Authentication, jwtInstallation(get(), get()))
@@ -154,6 +159,7 @@ fun Application.module(env: Env = PROD) {
         installCommentRoutes()
         installFollowArticleRoutes()
         installFollowConstitutionRoutes()
+        installFollowCitizenRoutes()
         installWorkgroupRoutes()
         installOpinionRoutes()
         installVoteRoutes()

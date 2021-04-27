@@ -10,8 +10,8 @@ import fr.dcproject.component.article.routes.UpsertArticle.UpsertArticleRequest.
 import fr.dcproject.component.auth.citizen
 import fr.dcproject.component.auth.citizenOrNull
 import fr.dcproject.component.auth.mustBeAuth
-import fr.dcproject.component.notification.ArticleUpdateNotification
-import fr.dcproject.component.notification.Publisher
+import fr.dcproject.component.notification.ArticleUpdateNotificationMessage
+import fr.dcproject.component.notification.NotificationPublisherAsync
 import fr.dcproject.component.workgroup.database.WorkgroupRef
 import io.konform.validation.Validation
 import io.konform.validation.jsonschema.maxItems
@@ -63,7 +63,7 @@ object UpsertArticle {
         }
     }
 
-    fun Route.upsertArticle(repo: ArticleRepository, publisher: Publisher, ac: ArticleAccessControl) {
+    fun Route.upsertArticle(repo: ArticleRepository, notificationPublisher: NotificationPublisherAsync, ac: ArticleAccessControl) {
         suspend fun ApplicationCall.convertRequestToEntity(): ArticleForUpdate = receiveOrBadRequest<Input>().run {
             validate().badRequestIfNotValid()
             ArticleForUpdate(
@@ -92,7 +92,7 @@ object UpsertArticle {
                         val versionNumber = a.versionNumber
                     }
                 )
-                publisher.publish(ArticleUpdateNotification(a))
+                notificationPublisher.publishAsync(ArticleUpdateNotificationMessage(a))
             } ?: error("Article not updated")
         }
     }

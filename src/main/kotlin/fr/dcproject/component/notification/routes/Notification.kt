@@ -1,6 +1,6 @@
 package fr.dcproject.component.notification.routes
 
-import fr.dcproject.component.notification.NotificationsPush
+import fr.dcproject.component.notification.push.NotificationPushListener
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.routing.Route
 import io.ktor.websocket.webSocket
@@ -13,8 +13,8 @@ import kotlinx.coroutines.ExperimentalCoroutinesApi
  */
 @ExperimentalCoroutinesApi
 @KtorExperimentalLocationsAPI
-fun Route.notificationArticle(pushBuilder: NotificationsPush.Builder) {
+fun Route.notificationArticle(pushListenerBuilder: NotificationPushListener.Builder) {
     webSocket("/notifications") {
-        pushBuilder.build(this)
+        pushListenerBuilder.build(this)
     }
 }

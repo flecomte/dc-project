@@ -9,6 +9,9 @@ import java.io.IOException
 class Mailer(
     private val key: String
 ) {
+    /**
+     * Send email via Sendgrid
+     */
     fun sendEmail(action: () -> Mail): Boolean {
         val mail = action()
 

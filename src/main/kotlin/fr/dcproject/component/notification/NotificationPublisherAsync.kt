@@ -7,12 +7,15 @@ import kotlinx.coroutines.coroutineScope
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
-class Publisher(
+class NotificationPublisherAsync(
     private val factory: ConnectionFactory,
-    private val logger: Logger = LoggerFactory.getLogger(Publisher::class.qualifiedName),
+    private val logger: Logger = LoggerFactory.getLogger(NotificationPublisherAsync::class.qualifiedName),
     private val exchangeName: String,
 ) {
-    suspend fun <T : EntityNotification> publish(it: T): Deferred<Unit> = coroutineScope {
+    /**
+     * Publish a new notification message to RabbitMQ
+     */
+    suspend fun <T : EntityNotificationMessage<*>> publishAsync(it: T): Deferred<Unit> = coroutineScope {
         async {
             factory.newConnection().use { connection ->
                 connection.createChannel().use { channel ->

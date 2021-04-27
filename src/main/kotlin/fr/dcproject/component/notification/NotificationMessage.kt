@@ -16,9 +16,9 @@ import java.util.concurrent.atomic.AtomicInteger
 
 @JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.EXISTING_PROPERTY, property = "type", visible = true)
 @JsonSubTypes(
-    JsonSubTypes.Type(value = ArticleUpdateNotification::class, name = "article")
+    JsonSubTypes.Type(value = ArticleUpdateNotificationMessage::class, name = "article")
 )
-open class Notification(
+open class NotificationMessage(
     val type: String,
     val createdAt: DateTime = DateTime.now()
 ) {
@@ -48,16 +48,16 @@ open class Notification(
             configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
         }
 
-        inline fun <reified T : Notification> fromString(raw: String): T = mapper.readValue(raw)
+        inline fun <reified T : NotificationMessage> fromString(raw: String): T = mapper.readValue(raw)
     }
 }
 
-open class EntityNotification(
-    val target: Entity,
+open class EntityNotificationMessage <E : Entity> (
+    val target: E,
     type: String,
     val action: String
-) : Notification(type)
+) : NotificationMessage(type)
 
-class ArticleUpdateNotification(
+class ArticleUpdateNotificationMessage(
     target: ArticleForView
-) : EntityNotification(target, "article", "update")
+) : EntityNotificationMessage<ArticleForView>(target, "article", "update")

@@ -10,10 +10,11 @@ import fr.dcproject.component.citizen.database.CitizenCreator
 import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.follow.database.FollowArticleRepository
 import fr.dcproject.component.follow.database.FollowForView
-import fr.dcproject.component.notification.ArticleUpdateNotification
-import fr.dcproject.component.notification.NotificationConsumer
-import fr.dcproject.component.notification.NotificationEmailSender
-import fr.dcproject.component.notification.Publisher
+import fr.dcproject.component.notification.ArticleUpdateNotificationMessage
+import fr.dcproject.component.notification.NotificationPublisherAsync
+import fr.dcproject.component.notification.email.NotificationEmailConsumer
+import fr.dcproject.component.notification.email.NotificationEmailSender
+import fr.dcproject.component.notification.push.NotificationPushConsumer
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
@@ -65,7 +66,7 @@ class NotificationConsumerTest {
     @KtorExperimentalAPI
     @ExperimentalCoroutinesApi
     @Test
-    fun `can be send notification`() = runBlocking {
+    fun `can be receive article update notification when follow article`() = runBlocking {
         val config: Configuration = Configuration("application-test.conf")
         /* Create mocks and spy's */
         val emailSender = mockk<NotificationEmailSender>() {
@@ -88,21 +89,30 @@ class NotificationConsumerTest {
         }
 
         /* Config consumer */
-        val consumer = NotificationConsumer(
+        val emailConsumer = NotificationEmailConsumer(
             rabbitFactory = rabbitFactory,
-            redisClient = redisClient,
             followArticleRepo = followArticleRepo,
-            followConstitutionRepo = mockk(),
+            followConstitutionRepo = mockk(), // TODO test followConstitution
+            followCitizenRepo = mockk(), // TODO test followCitizen
             notificationEmailSender = emailSender,
             exchangeName = "notification",
         ).apply { start() }
 
+        val pushConsumer = NotificationPushConsumer(
+            rabbitFactory = rabbitFactory,
+            followArticleRepo = followArticleRepo,
+            followConstitutionRepo = mockk(), // TODO test followConstitution
+            followCitizenRepo = mockk(), // TODO test followCitizen
+            redisClient = redisClient,
+            exchangeName = "notification",
+        ).apply { start() }
+
         /* Push message */
-        Publisher(
+        NotificationPublisherAsync(
             factory = rabbitFactory,
             exchangeName = "notification",
-        ).publish(
-            ArticleUpdateNotification(
+        ).publishAsync(
+            ArticleUpdateNotificationMessage(
                 ArticleForView(
                     title = "MyTitle",
                     content = "myContent",
@@ -121,6 +131,7 @@ class NotificationConsumerTest {
         verify(timeout = 2000) { emailSender.sendEmail(any()) }
         verify(timeout = 2000) { asyncCommand.zadd(any<String>(), any<Double>(), any<String>()) }
 
-        consumer.close()
+        emailConsumer.close()
+        pushConsumer.close()
     }
 }

@@ -955,13 +955,105 @@ paths:
           description: Return only http status 204 on success
         401:
           $ref: '#/components/responses/401'
+
+  /citizens/{citizen}/follows:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Return Follows of citizen
+      tags:
+        - follow
+        - citizen
+      responses:
+        200:
+          description: Return follows
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FollowResponse'
+        404:
+          description: Citizen not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+    post:
+      security:
+        - JWTAuth: []
+      summary: Follow citizen
+      description: Follow a citizen to receive notifications of his activity
+      tags:
+        - follow
+        - citizen
+      responses:
+        201:
+          description: Return only http status 201 on success
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          description: Citizen not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+    delete:
+      security:
+        - JWTAuth: [ ]
+      summary: Unfollow one citizen
+      tags:
+        - follow
+        - citizen
+      responses:
+        204:
+          description: Return only http status 204 on success
+        401:
+          $ref: '#/components/responses/401'
+        404:
+          description: Citizen not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+  /citizens/{citizen}/follows/citizens:
+    parameters:
+      - $ref: '#/components/parameters/citizen'
+    get:
+      security:
+        - JWTAuth: [ ]
+      summary: Return citizen Follow of citizen
+      tags:
+        - follow
+        - citizen
+      responses:
+        200:
+          description: Return citizen Follow of citizen
+          content:
+            application/json:
+              schema:
+                allOf:
+                  - $ref: '#/components/schemas/Paginated'
+                  - type: object
+                    properties:
+                      result:
+                        type: array
+                        items:
+                          $ref: '#/components/schemas/FollowResponse'
+        404:
+          description: Citizen not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/404'
+
   /citizens/{citizen}/follows/articles:
     parameters:
       - $ref: '#/components/parameters/citizen'
     get:
       security:
         - JWTAuth: [ ]
-      summary: Return Follow or nothing if you not follow
+      summary: Return article Follow of citizen
       tags:
         - follow
         - article
@@ -1036,7 +1128,7 @@ paths:
         - citizen
       responses:
         200:
-          description: Return your follows
+          description: Return constitution Follow of citizen
           content:
             application/json:
               schema:
