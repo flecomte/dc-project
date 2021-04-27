@@ -66,7 +66,7 @@ class NotificationConsumerTest {
     @KtorExperimentalAPI
     @ExperimentalCoroutinesApi
     @Test
-    fun `can be send notification`() = runBlocking {
+    fun `can be receive article update notification when follow article`() = runBlocking {
         val config: Configuration = Configuration("application-test.conf")
         /* Create mocks and spy's */
         val emailSender = mockk<NotificationEmailSender>() {

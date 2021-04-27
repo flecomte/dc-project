@@ -30,6 +30,13 @@ fun Citizen.`And follow citizen`(
 ) {
     createFollow(this, CitizenRef(citizen.toUUID()))
 }
+fun Citizen.`And follow citizen`(
+    name: CitizenI.Name,
+) {
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
+    val citizen = citizenRepository.findByName(name) ?: error("Citizen not exist")
+    createFollow(this, CitizenRef(citizen.id))
+}
 
 fun TestApplicationEngine.`Given I have follow on article`(
     firstName: String,
@@ -39,6 +46,17 @@ fun TestApplicationEngine.`Given I have follow on article`(
     val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
     val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
     createFollow(citizen, ArticleRef(article.toUUID()))
+}
+
+fun TestApplicationEngine.`Given I have follow on citizen`(
+    firstName: String,
+    lastName: String,
+    target: CitizenI.Name,
+) {
+    val citizenRepository: CitizenRepository by lazy { GlobalContext.get().get() }
+    val citizen = citizenRepository.findByName(CitizenI.Name(firstName, lastName)) ?: error("Citizen not exist")
+    val targetCitizen = citizenRepository.findByName(target) ?: error("Citizen not exist")
+    createFollow(citizen, CitizenRef(targetCitizen.id))
 }
 
 fun TestApplicationEngine.`Given I have follow on constitution`(

@@ -74,21 +74,24 @@ sealed class FollowRepository<IN : TargetRef, OUT : TargetRef>(override var requ
         target: Entity,
         bulkSize: Int = 300
     ): Flow<FollowForView<IN>> = flow {
-        var nextPage = 1
-        do {
-            val paginate = findFollowsByTarget(target, nextPage, bulkSize)
-            paginate.result.forEach {
+        var lastId: UUID? = null
+        while (true) {
+            val result = findFollowsByTarget(target, lastId, bulkSize)
+            if (result.count() == 0) {
+                break
+            }
+            result.forEach {
                 emit(it)
             }
-            nextPage = paginate.currentPage + 1
-        } while (!paginate.isLastPage())
+            lastId = result.last().id
+        }
     }
 
     abstract fun findFollowsByTarget(
         target: Entity,
-        page: Int = 1,
+        lastId: UUID?,
         limit: Int = 300
-    ): Paginated<FollowForView<IN>>
+    ): List<FollowForView<IN>>
 }
 
 class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRef, ArticleForView>(requester) {
@@ -109,14 +112,14 @@ class FollowArticleRepository(requester: Requester) : FollowRepository<ArticleRe
 
     override fun findFollowsByTarget(
         target: Entity,
-        page: Int,
+        lastId: UUID?,
         limit: Int
-    ): Paginated<FollowForView<ArticleRef>> {
+    ): List<FollowForView<ArticleRef>> {
         return requester
             .getFunction("find_follows_article_by_target")
             .select(
-                page,
-                limit,
+                "start_id" to lastId,
+                "limit" to limit,
                 "target_id" to target.id
             )
     }
@@ -140,9 +143,9 @@ class FollowConstitutionRepository(requester: Requester) : FollowRepository<Cons
 
     override fun findFollowsByTarget(
         target: Entity,
-        page: Int,
+        lastId: UUID?,
         limit: Int
-    ): Paginated<FollowForView<ConstitutionRef>> {
+    ): List<FollowForView<ConstitutionRef>> {
         TODO("Not yet implemented")
     }
 }
@@ -165,9 +168,9 @@ class FollowCitizenRepository(requester: Requester) : FollowRepository<CitizenRe
 
     override fun findFollowsByTarget(
         target: Entity,
-        page: Int,
+        lastId: UUID?,
         limit: Int
-    ): Paginated<FollowForView<CitizenRef>> {
+    ): List<FollowForView<CitizenRef>> {
         TODO("Not yet implemented")
     }
 }

@@ -426,7 +426,7 @@ dependencies {
     testImplementation("io.insert-koin:koin-test:+")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:+")
     testImplementation("io.mockk:mockk:+")
-    testImplementation("org.junit.jupiter:junit-jupiter:+")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.7.+")
     testImplementation("org.amshove.kluent:kluent:+")
     testImplementation("io.mockk:mockk-agent-api:+")
     testImplementation("io.mockk:mockk-agent-jvm:+")
