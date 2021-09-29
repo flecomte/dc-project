@@ -1,5 +1,6 @@
 package fr.dcproject.component.article.database
 
+import fr.dcproject.common.entity.VersionableId
 import fr.postgresjson.connexion.Paginated
 import fr.postgresjson.connexion.Requester
 import fr.postgresjson.entity.Parameter
@@ -19,10 +20,10 @@ class ArticleRepository(override var requester: Requester) : RepositoryI {
             .select(page, limit, "id" to id)
     }
 
-    fun findVersionsByVersionId(page: Int = 1, limit: Int = 50, versionId: UUID): Paginated<ArticleForListing> {
+    fun <A> findSiblingVersions(page: Int = 1, limit: Int = 50, article: A): Paginated<ArticleForListing> where A : VersionableId, A : ArticleI {
         return requester
             .getFunction("find_articles_versions_by_version_id")
-            .select(page, limit, "version_id" to versionId)
+            .select(page, limit, "version_id" to article.versionId)
     }
 
     fun find(
