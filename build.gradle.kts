@@ -10,7 +10,7 @@ import org.owasp.dependencycheck.reporting.ReportGenerator
 import org.slf4j.LoggerFactory
 
 val ktorVersion = "+"
-val kotlinVersion = "1.4.+"
+val kotlinVersion = "1.5.+"
 val coroutinesVersion = "+"
 
 group = "com.github.flecomte"
@@ -418,7 +418,7 @@ dependencies {
     implementation("org.elasticsearch.client:elasticsearch-rest-client:6+")
     implementation("com.jayway.jsonpath:json-path:+")
     implementation("com.avast.gradle:gradle-docker-compose-plugin:+")
-    implementation("io.konform:konform-jvm:+")
+    implementation("io.konform:konform:+")
 
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
     testImplementation("io.ktor:ktor-client-mock:$ktorVersion")
