@@ -1,11 +1,5 @@
 package integration
 
-import integration.steps.`when`.Validate.ALL
-import integration.steps.`when`.Validate.REQUEST_BODY
-import integration.steps.`when`.Validate.REQUEST_PARAM
-import integration.steps.`when`.`When I send a GET request`
-import integration.steps.`when`.`When I send a POST request`
-import integration.steps.`when`.`with body`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have constitution`
 import integration.steps.given.`Given I have constitutions`
@@ -14,8 +8,14 @@ import integration.steps.then.`And have property`
 import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
-import integration.steps.then.`which contains`
 import integration.steps.then.and
+import integration.steps.then.`which contains`
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.Validate.REQUEST_PARAM
+import integration.steps.`when`.`When I send a GET request`
+import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`with body`
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
