@@ -37,7 +37,7 @@ class ArticleAccessControl(private val articleRepo: ArticleRepository) : AccessC
         if (subject.createdBy.id == citizen.id) {
             /* The creator must be the same of the creator of preview version of article */
             val lastVersionId = articleRepo
-                .findVersionsByVersionId(1, 1, subject.versionId)
+                .findSiblingVersions(1, 1, subject)
                 .result
                 .firstOrNull()?.createdBy?.id
 

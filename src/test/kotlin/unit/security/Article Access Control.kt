@@ -4,6 +4,7 @@ import fr.dcproject.common.security.AccessDecision.DENIED
 import fr.dcproject.common.security.AccessDecision.GRANTED
 import fr.dcproject.component.article.ArticleAccessControl
 import fr.dcproject.component.article.database.ArticleForListing
+import fr.dcproject.component.article.database.ArticleForUpdate
 import fr.dcproject.component.article.database.ArticleForView
 import fr.dcproject.component.auth.database.User
 import fr.dcproject.component.auth.database.UserCreator
@@ -48,7 +49,7 @@ internal class `Article Access Control` {
     private fun getRepo(article: ArticleForListing): ArticleRepo {
         return mockk {
             every { find(1, 1, any()) } returns Paginated(listOf(article), 0, 1, 1)
-            every { findVersionsByVersionId(1, 1, any()) } returns Paginated(listOf(article), 0, 1, 1)
+            every { findSiblingVersions(1, 1, any<ArticleForUpdate>()) } returns Paginated(listOf(article), 0, 1, 1)
         }
     }
 
