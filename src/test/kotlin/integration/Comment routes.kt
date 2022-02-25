@@ -1,12 +1,6 @@
 package integration
 
 import fr.dcproject.component.citizen.database.CitizenI
-import integration.steps.`when`.Validate.ALL
-import integration.steps.`when`.Validate.REQUEST_BODY
-import integration.steps.`when`.`When I send a GET request`
-import integration.steps.`when`.`When I send a POST request`
-import integration.steps.`when`.`When I send a PUT request`
-import integration.steps.`when`.`with body`
 import integration.steps.given.`Given I have article`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have comment on article`
@@ -16,6 +10,12 @@ import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`Then the response should be`
 import integration.steps.then.and
+import integration.steps.`when`.Validate.ALL
+import integration.steps.`when`.Validate.REQUEST_BODY
+import integration.steps.`when`.`When I send a GET request`
+import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`When I send a PUT request`
+import integration.steps.`when`.`with body`
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Created
 import io.ktor.http.HttpStatusCode.Companion.OK
