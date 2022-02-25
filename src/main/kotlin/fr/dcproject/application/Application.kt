@@ -59,7 +59,6 @@ import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.locations.Locations
 import io.ktor.routing.Routing
 import io.ktor.server.jetty.EngineMain
-import io.ktor.util.KtorExperimentalAPI
 import io.ktor.websocket.WebSockets
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.eclipse.jetty.util.log.Slf4jLog
@@ -74,7 +73,6 @@ fun main(args: Array<String>): Unit = EngineMain.main(args)
 enum class Env { PROD, TEST }
 
 @ExperimentalCoroutinesApi
-@KtorExperimentalAPI
 @KtorExperimentalLocationsAPI
 @Suppress("unused") // Referenced in application.conf
 fun Application.module(env: Env = PROD) {

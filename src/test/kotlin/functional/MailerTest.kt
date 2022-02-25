@@ -8,7 +8,6 @@ import fr.dcproject.application.module
 import fr.dcproject.common.email.Mailer
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.jupiter.api.Tag
@@ -19,7 +18,6 @@ import org.koin.test.KoinTest
 import org.koin.test.get
 
 @KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @Tags(Tag("functional"), Tag("mail"))
 class MailerTest : KoinTest {

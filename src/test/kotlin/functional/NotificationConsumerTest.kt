@@ -16,7 +16,6 @@ import fr.dcproject.component.notification.email.NotificationEmailConsumer
 import fr.dcproject.component.notification.email.NotificationEmailSender
 import fr.dcproject.component.notification.push.NotificationPushConsumer
 import io.ktor.locations.KtorExperimentalLocationsAPI
-import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.mockk.every
 import io.mockk.mockk
@@ -63,7 +62,6 @@ class NotificationConsumerTest {
 
     @InternalCoroutinesApi
     @KtorExperimentalLocationsAPI
-    @KtorExperimentalAPI
     @ExperimentalCoroutinesApi
     @Test
     fun `can be receive article update notification when follow article`() = runBlocking {
