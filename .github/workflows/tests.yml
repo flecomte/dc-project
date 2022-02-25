@@ -21,6 +21,10 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 11
+    - name: Setup Gradle
+      uses: gradle/gradle-build-action@v2
+      with:
+        gradle-version: '7.4'
 
     - name: Cache Gradle packages
       uses: actions/cache@v2
@@ -32,26 +36,17 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-gradle-
     - name: Build
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: build -x test -x ktlintKotlinScriptCheck -x ktlintTestSourceSetCheck -x ktlintMainSourceSetCheck -x detekt
-    - name: Cleanup Gradle Cache
-      # Remove some files from the Gradle cache, so they aren't cached by GitHub Actions.
-      # Restoring these files from a GitHub Actions cache might cause problems for future builds.
-      run: |
-        rm -f ~/.gradle/caches/modules-2/modules-2.lock
-        rm -f ~/.gradle/caches/modules-2/gc.properties
 
     - name: processResources
-      uses: eskatos/gradle-command-action@v1
-      with:
-        gradle-version: '7.2'
-        arguments: processResources
+      run: gradle processResources
     - name: processTestResources
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: processResources
     - uses: actions/upload-artifact@v2
       with:
@@ -74,15 +69,15 @@ jobs:
         path: build
 
     - name: Composer Up
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: testSqlComposeUp
 
     - name: TestSql
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: testSql
 
   test:
@@ -103,21 +98,21 @@ jobs:
         path: build
 
     - name: Composer Up
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: testComposeUp
 
     - name: Test
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: test
 
     - name: Coverage
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: coveralls
       env:
         COVERALLS_REPO_TOKEN: ${{ secrets.COVERALLS_REPO_TOKEN }}
@@ -130,18 +125,18 @@ jobs:
         restore-keys: ${{ runner.os }}-sonar
 
     - name: Test
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: test
 
     - name: Build and analyze
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Needed to get PR information, if any
         SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: sonarqube --info
 
   lint:
@@ -159,7 +154,7 @@ jobs:
         name: Build
         path: build
     - name: Lint
-      uses: eskatos/gradle-command-action@v1
+      uses: gradle/gradle-build-action@v2
       with:
-        gradle-version: '7.2'
+        gradle-version: '7.4'
         arguments: ktlintCheck
