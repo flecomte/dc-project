@@ -20,12 +20,10 @@ import fr.postgresjson.connexion.Requester
 import fr.postgresjson.migration.Migrations
 import io.ktor.client.HttpClient
 import io.ktor.client.features.websocket.WebSockets
-import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
-@KtorExperimentalAPI
 val KoinModule = module {
     // JWT
     single {

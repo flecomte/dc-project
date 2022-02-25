@@ -24,13 +24,9 @@
             <option value="rabbitmq" />
             <option value="redis" />
             <option value="openapi" />
-            <option value="sonarqube" />
-            <option value="sonarqube_db" />
           </list>
         </option>
         <option name="sourceFilePath" value="docker-compose.yml" />
-        <option name="upExitCodeFromService" value="" />
-        <option name="upTimeout" value="" />
       </settings>
     </deployment>
     <method v="2" />

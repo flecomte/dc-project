@@ -11,7 +11,6 @@ import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRef
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.withTestApplication
-import io.ktor.util.KtorExperimentalAPI
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.amshove.kluent.`should be equal to`
 import org.junit.jupiter.api.Tag
@@ -25,7 +24,6 @@ import kotlin.time.ExperimentalTime
 import kotlin.time.seconds
 
 @KtorExperimentalLocationsAPI
-@KtorExperimentalAPI
 @ExperimentalCoroutinesApi
 @TestInstance(PER_CLASS)
 @Tags(Tag("functional"), Tag("view"))

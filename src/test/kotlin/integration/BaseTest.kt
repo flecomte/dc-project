@@ -10,7 +10,6 @@ import fr.postgresjson.migration.Migrations
 import io.ktor.locations.KtorExperimentalLocationsAPI
 import io.ktor.server.testing.TestApplicationEngine
 import io.ktor.server.testing.createTestEnvironment
-import io.ktor.util.KtorExperimentalAPI
 import io.lettuce.core.RedisClient
 import io.lettuce.core.api.sync.RedisCommands
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -41,7 +40,6 @@ abstract class BaseTest : KoinTest {
     }
 
     @ExperimentalCoroutinesApi
-    @KtorExperimentalAPI
     @KtorExperimentalLocationsAPI
     @BeforeAll
     fun before() {

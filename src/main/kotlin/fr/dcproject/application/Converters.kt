@@ -5,12 +5,10 @@ import fr.dcproject.application.http.HttpErrorBadRequest
 import fr.dcproject.application.http.HttpErrorBadRequest.InvalidParam
 import io.ktor.features.DataConversion
 import io.ktor.http.HttpStatusCode
-import io.ktor.util.KtorExperimentalAPI
 import java.util.UUID
 
 private typealias ConverterDeclaration = DataConversion.Configuration.() -> Unit
 
-@KtorExperimentalAPI
 val converters: ConverterDeclaration = {
     convert<UUID> {
         decode { values, _ ->
