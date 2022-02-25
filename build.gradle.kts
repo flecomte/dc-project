@@ -33,13 +33,13 @@ plugins {
     kotlin("jvm") version "1.5.31"
     kotlin("plugin.serialization") version "1.5.31"
 
-    id("com.github.johnrengelman.shadow") version "6.1.0"
-    id("org.jlleitschuh.gradle.ktlint") version "10.0.0"
+    id("com.github.johnrengelman.shadow") version "7.1.2"
+    id("org.jlleitschuh.gradle.ktlint") version "10.2.1"
     id("org.owasp.dependencycheck") version "6.1.5"
-    id("org.sonarqube") version "3.1.1"
-    id("net.nemerosa.versioning") version "2.14.0"
-    id("io.gitlab.arturbosch.detekt") version "1.16.0"
-    id("com.avast.gradle.docker-compose") version "0.14.3"
+    id("org.sonarqube") version "3.3"
+    id("net.nemerosa.versioning") version "2.15.1"
+    id("io.gitlab.arturbosch.detekt") version "1.19.0"
+    id("com.avast.gradle.docker-compose") version "0.15.1"
     id("com.github.kt3k.coveralls") version "2.12.0"
 }
 
@@ -60,7 +60,7 @@ buildscript {
         maven { url = uri("https://jitpack.io") }
     }
     dependencies {
-        classpath("com.typesafe:config:1.4.1")
+        classpath("com.typesafe:config:1.4.2")
         classpath("com.github.flecomte:postgres-json:2.1.2")
     }
 }
