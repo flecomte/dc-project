@@ -2,26 +2,26 @@ package integration
 
 import fr.dcproject.common.utils.toUUID
 import fr.dcproject.component.citizen.database.CitizenI.Name
-import integration.steps.`when`.Validate
-import integration.steps.`when`.`When I send a GET request`
-import integration.steps.`when`.`When I send a POST request`
-import integration.steps.`when`.`with body`
-import integration.steps.given.`Given I have article created by workgroup`
 import integration.steps.given.`Given I have article`
+import integration.steps.given.`Given I have article created by workgroup`
 import integration.steps.given.`Given I have articles`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have draft article`
 import integration.steps.given.`Given I have workgroup`
 import integration.steps.given.`authenticated as`
 import integration.steps.then.`And have property`
+import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should contain list`
 import integration.steps.then.`And the response should contain pattern`
-import integration.steps.then.`And the response should contain`
 import integration.steps.then.`And the response should not be null`
 import integration.steps.then.`And the response should not contain`
 import integration.steps.then.`Then the response should be`
-import integration.steps.then.`which contains`
 import integration.steps.then.and
+import integration.steps.then.`which contains`
+import integration.steps.`when`.Validate
+import integration.steps.`when`.`When I send a GET request`
+import integration.steps.`when`.`When I send a POST request`
+import integration.steps.`when`.`with body`
 import io.ktor.http.HttpStatusCode.Companion.BadRequest
 import io.ktor.http.HttpStatusCode.Companion.Forbidden
 import io.ktor.http.HttpStatusCode.Companion.NotFound

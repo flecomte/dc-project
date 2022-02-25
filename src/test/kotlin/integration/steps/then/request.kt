@@ -7,9 +7,9 @@ import io.ktor.http.HttpStatusCode
 import io.ktor.server.testing.TestApplicationCall
 import io.ktor.server.testing.TestApplicationResponse
 import net.minidev.json.JSONArray
+import org.amshove.kluent.`should be`
 import org.amshove.kluent.`should be equal to`
 import org.amshove.kluent.`should be null`
-import org.amshove.kluent.`should be`
 import org.amshove.kluent.`should not be null`
 import org.amshove.kluent.shouldContain
 import org.junit.jupiter.api.assertThrows

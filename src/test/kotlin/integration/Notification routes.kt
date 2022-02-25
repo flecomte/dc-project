@@ -4,8 +4,8 @@ import fr.dcproject.component.citizen.database.CitizenI.Name
 import fr.dcproject.component.notification.ArticleUpdateNotificationMessage
 import fr.dcproject.component.notification.NotificationMessage
 import integration.steps.given.`And follow citizen`
-import integration.steps.given.`Given I have article update notification`
 import integration.steps.given.`Given I have article`
+import integration.steps.given.`Given I have article update notification`
 import integration.steps.given.`Given I have citizen`
 import integration.steps.given.`Given I have follow on article`
 import integration.steps.given.`authenticated in url as`
