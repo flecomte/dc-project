@@ -20,7 +20,7 @@ object GetOpinionChoices {
     fun Route.getOpinionChoices(repo: OpinionChoiceRepository, ac: OpinionChoiceAccessControl) {
         get<OpinionChoicesRequest> {
             val opinionChoices = repo.findOpinionsChoices(it.targets)
-            ac.assert { canView(opinionChoices, citizenOrNull) }
+            ac.canView(opinionChoices, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

@@ -54,7 +54,7 @@ object FindConstitutions {
         get<FindConstitutionsRequest> {
             it.validate().badRequestIfNotValid()
             val constitutions = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-            ac.assert { canView(constitutions.result, citizenOrNull) }
+            ac.canView(constitutions.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 constitutions.toOutput { c ->

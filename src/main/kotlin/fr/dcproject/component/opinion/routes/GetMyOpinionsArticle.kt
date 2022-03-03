@@ -55,7 +55,7 @@ object GetMyOpinionsArticle {
             it.validate().badRequestIfNotValid()
 
             val opinions: Paginated<Opinion<TargetRef>> = repo.findCitizenOpinions(citizen, it.page, it.limit)
-            ac.assert { canView(opinions.result, citizenOrNull) }
+            ac.canView(opinions.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 opinions.toOutput { it.toOutput() }

@@ -51,7 +51,7 @@ object PutVoteOnConstitution {
                 note = input.note,
                 createdBy = this.citizen
             )
-            ac.assert { canCreate(vote, citizenOrNull) }
+            ac.canCreate(vote, citizenOrNull).assert()
             repo.vote(vote)
             call.respond(HttpStatusCode.Created)
         }

@@ -43,7 +43,7 @@ object OpinionArticle {
                     createdBy = citizen
                 )
             }.let { opinions ->
-                ac.assert { canCreate(opinions, citizenOrNull) }
+                ac.canCreate(opinions, citizenOrNull).assert()
                 repo.updateOpinions(opinions)
             }.let {
                 call.respond(

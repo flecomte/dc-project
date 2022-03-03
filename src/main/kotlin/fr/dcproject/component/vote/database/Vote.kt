@@ -12,8 +12,8 @@ import fr.dcproject.component.citizen.database.CitizenCreatorI
 import fr.dcproject.component.citizen.database.CitizenI
 import java.util.UUID
 
-class VoteForView<T : TargetI>(
-    id: UUID = UUID.randomUUID(),
+data class VoteForView<T : TargetI>(
+    override val id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenCreator,
     override val target: T,
     val note: Int,
@@ -30,7 +30,7 @@ class VoteForView<T : TargetI>(
     }
 }
 
-class VoteForUpdate<T : TargetI, C : CitizenI>(
+data class VoteForUpdate<T : TargetI, C : CitizenI>(
     override val id: UUID = UUID.randomUUID(),
     override val note: Int,
     override val target: T,

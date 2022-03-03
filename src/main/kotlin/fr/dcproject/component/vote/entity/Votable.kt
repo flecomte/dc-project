@@ -4,6 +4,6 @@ interface Votable {
     val votes: VoteAggregation
 }
 
-class VotableImp : Votable {
+data class VotableImp(
     override val votes: VoteAggregation = VoteAggregation()
-}
+) : Votable

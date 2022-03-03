@@ -16,8 +16,8 @@ import fr.dcproject.component.vote.entity.VotableImp
 import org.joda.time.DateTime
 import java.util.UUID
 
-class CommentForView<T : TargetI, C : CitizenCreatorI>(
-    id: UUID = UUID.randomUUID(),
+data class CommentForView<T : TargetI, C : CitizenCreatorI>(
+    override val id: UUID = UUID.randomUUID(),
     override val createdBy: C,
     override val target: T,
     override var content: String,
@@ -30,7 +30,7 @@ class CommentForView<T : TargetI, C : CitizenCreatorI>(
     CommentWithTargetI<T>,
     CreatedBy<C> by CreatedBy.Imp(createdBy),
     UpdatedAt by UpdatedAt.Imp(),
-    DeletedAt by DeletedAt.Imp(),
+    DeletedAt,
     Votable by VotableImp(),
     TargetI {
     constructor(
@@ -50,9 +50,9 @@ open class CommentForUpdate<T : TargetI, C : CitizenI>(
     override val createdBy: C,
     override val target: T,
     open var content: String,
-    override val parent: CommentParent<T>? = null,
+    override val parent: CommentParentI<T>? = null,
     override val deletedAt: DateTime? = null
-) : CommentParent<T>(id, deletedAt, target),
+) : CommentParentI<T> by CommentParent(id, deletedAt, target),
     CommentWithParentI<T>,
     ExtraI<T, C>,
     CommentWithTargetI<T>,
@@ -62,7 +62,7 @@ open class CommentForUpdate<T : TargetI, C : CitizenI>(
     TargetI {
     constructor(
         createdBy: C,
-        parent: CommentParent<T>,
+        parent: CommentParentI<T>,
         content: String,
         id: UUID? = null,
     ) : this(
@@ -74,21 +74,21 @@ open class CommentForUpdate<T : TargetI, C : CitizenI>(
     )
 }
 
-open class CommentParent<T : TargetI>(
+data class CommentParent<T : TargetI>(
     override val id: UUID,
     override val deletedAt: DateTime?,
     override val target: T
 ) : CommentRef(id),
     CommentParentI<T>
 
-interface CommentParentI<T : TargetI> : CommentI, DeletedAt, CommentWithTargetI<T>
+sealed interface CommentParentI<T : TargetI> : CommentI, DeletedAt, CommentWithTargetI<T>
 
 interface CommentWithTargetI<T : TargetI> : CommentI, TargetI, HasTarget<T>
 
 interface CommentWithParentI<T : TargetI> {
-    val parent: CommentParent<T>?
+    val parent: CommentParentI<T>?
 }
 
 open class CommentRef(id: UUID = UUID.randomUUID()) : CommentI, TargetRef(id)
 
-interface CommentI : EntityI
+sealed interface CommentI : EntityI

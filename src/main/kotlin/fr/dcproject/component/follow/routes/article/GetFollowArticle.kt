@@ -27,7 +27,7 @@ object GetFollowArticle {
     fun Route.getFollowArticle(repo: FollowArticleRepository, ac: FollowAccessControl) {
         get<ArticleFollowRequest> {
             repo.findFollow(citizen, it.article)?.let { follow ->
-                ac.assert { canView(follow, citizenOrNull) }
+                ac.canView(follow, citizenOrNull).assert()
                 call.respond(
                     HttpStatusCode.OK,
                     follow.toOutput()

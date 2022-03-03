@@ -14,7 +14,7 @@ import java.util.UUID
 fun TestApplicationEngine.`Given I have citizen`(
     firstName: String,
     lastName: String,
-    email: String = ("$firstName-$lastName".toLowerCase()) + "@dc-project.fr",
+    email: String = ("$firstName-$lastName".lowercase()) + "@dc-project.fr",
     id: String = UUID.randomUUID().toString(),
     callback: Citizen.() -> Unit = {}
 ): Citizen? {
@@ -22,7 +22,7 @@ fun TestApplicationEngine.`Given I have citizen`(
 
     val user = UserForCreate(
         id = id.toUUID(),
-        username = "$firstName-$lastName".toLowerCase(),
+        username = "$firstName-$lastName".lowercase(),
         password = "Azerty123!",
     )
     val citizen = CitizenForCreate(

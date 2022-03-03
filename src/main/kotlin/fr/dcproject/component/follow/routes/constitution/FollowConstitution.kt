@@ -28,7 +28,7 @@ object FollowConstitution {
         post<ConstitutionFollowRequest> {
             mustBeAuth()
             val follow = FollowForUpdate(target = it.constitution, createdBy = this.citizen)
-            ac.assert { canCreate(follow, citizenOrNull) }
+            ac.canCreate(follow, citizenOrNull).assert()
             repo.follow(follow)
             call.respond(HttpStatusCode.Created)
         }

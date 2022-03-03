@@ -27,7 +27,7 @@ object GetConstitution {
     fun Route.getConstitution(ac: ConstitutionAccessControl, constitutionRepo: ConstitutionRepository) {
         get<GetConstitutionRequest> {
             val constitution = constitutionRepo.findById(it.constitution.id) ?: throw NotFoundException("Unable to find constitution ${it.constitution.id}")
-            ac.assert { canView(constitution, citizenOrNull) }
+            ac.canView(constitution, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 constitution.let { c ->

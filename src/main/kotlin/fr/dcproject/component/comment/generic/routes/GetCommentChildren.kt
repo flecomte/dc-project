@@ -39,7 +39,7 @@ object GetCommentChildren {
                     it.limit
                 )
 
-            ac.assert { canView(comments.result, citizenOrNull) }
+            ac.canView(comments.result, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

@@ -49,7 +49,7 @@ object GetCitizenVotesOnArticle {
             it.validate().badRequestIfNotValid()
 
             val votes = repo.findByCitizen(it.citizen, it.page, it.limit)
-            ac.assert { canView(votes.result, citizenOrNull) }
+            ac.canView(votes.result, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

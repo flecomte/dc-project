@@ -42,7 +42,7 @@ object EditComment {
         put<EditCommentRequest> {
             mustBeAuth()
             val commentOld = repo.findById(it.comment.id) ?: throw NotFoundException("Comment not found")
-            ac.assert { canUpdate(commentOld, citizenOrNull) }
+            ac.canUpdate(commentOld, citizenOrNull).assert()
 
             call.receiveOrBadRequest<EditCommentRequest.Input>()
                 .apply { validate().badRequestIfNotValid() }

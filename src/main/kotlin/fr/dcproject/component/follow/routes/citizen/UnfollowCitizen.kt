@@ -28,7 +28,7 @@ object UnfollowCitizen {
         delete<CitizenFollowRequest> {
             mustBeAuth()
             val follow = FollowForUpdate(target = it.citizen, createdBy = this.citizen)
-            ac.assert { canDelete(follow, citizenOrNull) }
+            ac.canDelete(follow, citizenOrNull).assert()
             repo.unfollow(follow)
             call.respond(HttpStatusCode.NoContent)
         }

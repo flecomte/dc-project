@@ -3,7 +3,7 @@ package fr.dcproject.component.views.entity
 import fr.dcproject.common.entity.UpdatedAt
 import fr.postgresjson.entity.EntityI
 
-class ViewAggregation(
+data class ViewAggregation(
     val total: Int,
     val unique: Int
 ) : EntityI,

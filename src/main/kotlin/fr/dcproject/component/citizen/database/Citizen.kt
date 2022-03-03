@@ -17,19 +17,19 @@ import fr.postgresjson.entity.Serializable
 import org.joda.time.DateTime
 import java.util.UUID
 
-class CitizenForCreate(
+data class CitizenForCreate(
     val name: Name,
     val email: String,
     val birthday: DateTime,
     val voteAnonymous: Boolean = true,
     val followAnonymous: Boolean = true,
     override val user: UserForCreate,
-    id: UUID = UUID.randomUUID(),
+    override val id: UUID = UUID.randomUUID(),
 ) : CitizenI,
-    CitizenRefWithUser(id, user),
+    CitizenWithUserI by CitizenRefWithUser(id, user),
     CreatedAt by CreatedAt.Imp()
 
-class Citizen(
+data class Citizen(
     override val id: UUID = UUID.randomUUID(),
     override val name: Name,
     override val email: String,
@@ -37,7 +37,7 @@ class Citizen(
     override val voteAnonymous: Boolean = true,
     override val followAnonymous: Boolean = true,
     override val user: User,
-    deletedAt: DateTime? = null
+    override val deletedAt: DateTime? = null
 ) : CitizenWithEmail,
     CitizenCreatorI,
     CitizenWithUserI,
@@ -62,10 +62,11 @@ data class CitizenCreator(
     override val user: UserCreator,
     override val deletedAt: DateTime? = null
 ) : CitizenCreatorI,
-    CitizenRefWithUser(id, user),
+    CitizenI,
+    CitizenWithUserI by CitizenRefWithUser(id, user),
     DeletedAt by DeletedAt.Imp(deletedAt)
 
-interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, DeletedAt {
+sealed interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, DeletedAt {
     override val id: UUID
     override val name: Name
     override val email: String
@@ -75,8 +76,8 @@ interface CitizenCreatorI : CitizenWithUserI, CitizenWithEmail, CitizenCartI, De
     override val deletedAt: DateTime?
 }
 
-class CitizenCart(
-    id: UUID = UUID.randomUUID(),
+data class CitizenCart(
+    override val id: UUID = UUID.randomUUID(),
     override val name: Name,
     override val user: UserRef,
     override val deletedAt: DateTime? = null,
@@ -84,13 +85,13 @@ class CitizenCart(
     CitizenCartI,
     DeletedAt by DeletedAt.Imp(deletedAt)
 
-interface CitizenCartI : CitizenI, CitizenWithUserI {
+sealed interface CitizenCartI : CitizenI, CitizenWithUserI {
     val name: Name
 }
 
-open class CitizenRefWithUser(
-    id: UUID = UUID.randomUUID(),
-    override val user: UserRef
+data class CitizenRefWithUser(
+    override val id: UUID = UUID.randomUUID(),
+    override val user: UserI
 ) : CitizenWithUserI,
     CitizenRef(id)
 
@@ -99,7 +100,7 @@ open class CitizenRef(
 ) : TargetRef(id),
     CitizenI
 
-interface CitizenI : EntityI, TargetI {
+sealed interface CitizenI : EntityI, TargetI {
     data class Name(
         override val firstName: String,
         override val lastName: String,
@@ -114,10 +115,10 @@ interface CitizenI : EntityI, TargetI {
     }
 }
 
-interface CitizenWithUserI : CitizenI {
+sealed interface CitizenWithUserI : CitizenI {
     val user: UserI
 }
 
-interface CitizenWithEmail : CitizenI {
+sealed interface CitizenWithEmail : CitizenI {
     val email: String
 }

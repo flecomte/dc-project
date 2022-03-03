@@ -23,14 +23,14 @@ internal class `Citizen Access Control` {
     private val tesla = CitizenCart(
         user = User(
             username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         name = CitizenI.Name("Nicolas", "Tesla")
     )
     private val einstein = CitizenCart(
         user = User(
             username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         name = CitizenI.Name("Albert", "Einstein")
     )
@@ -38,7 +38,7 @@ internal class `Citizen Access Control` {
     private val curie = CitizenCart(
         user = User(
             username = "marie-curie",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         name = CitizenI.Name("Marie", "Curie"),
         deletedAt = DateTime.now()

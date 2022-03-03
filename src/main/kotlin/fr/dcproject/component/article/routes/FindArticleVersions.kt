@@ -65,7 +65,7 @@ object FindArticleVersions {
             it.validate().badRequestIfNotValid()
 
             repo.findVersions(it)
-                .apply { ac.assert { canView(result, citizenOrNull) } }
+                .apply { ac.canView(result, citizenOrNull).assert() }
                 .run {
                     call.respond(
                         toOutput { a: ArticleForListing ->

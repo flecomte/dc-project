@@ -76,7 +76,7 @@ object FindArticles {
             it.validate().badRequestIfNotValid()
 
             repo.findArticles(it)
-                .apply { ac.assert { canView(result, citizenOrNull) } }
+                .apply { ac.canView(result, citizenOrNull).assert() }
                 .let {
                     call.respond(
                         it.toOutput {

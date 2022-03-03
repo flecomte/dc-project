@@ -28,7 +28,7 @@ object UnfollowArticle {
         delete<ArticleFollowRequest> {
             mustBeAuth()
             val follow = FollowForUpdate(target = it.article, createdBy = this.citizen)
-            ac.assert { canDelete(follow, citizenOrNull) }
+            ac.canDelete(follow, citizenOrNull).assert()
             repo.unfollow(follow)
             call.respond(HttpStatusCode.NoContent)
         }

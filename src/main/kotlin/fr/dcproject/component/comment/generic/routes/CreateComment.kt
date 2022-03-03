@@ -54,7 +54,7 @@ object CreateComment {
                         parent = parent,
                     )
                 }.let { newComment ->
-                    ac.assert { canCreate(newComment, citizenOrNull) }
+                    ac.canCreate(newComment, citizenOrNull).assert()
                     repo.comment(newComment)
                     call.respond(HttpStatusCode.Created, newComment.toOutput())
                 }

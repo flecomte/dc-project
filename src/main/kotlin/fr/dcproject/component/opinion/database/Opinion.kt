@@ -13,8 +13,8 @@ import fr.dcproject.component.citizen.database.CitizenI
 import fr.dcproject.component.citizen.database.CitizenRef
 import java.util.UUID
 
-open class Opinion<T : TargetI>(
-    id: UUID = UUID.randomUUID(),
+data class Opinion<T : TargetI>(
+    override val id: UUID = UUID.randomUUID(),
     override val createdBy: CitizenCreator,
     override val target: T,
     val choice: OpinionChoice
@@ -39,4 +39,4 @@ open class OpinionRef(
     override val id: UUID
 ) : OpinionI, TargetRef(id)
 
-interface OpinionI : EntityI
+sealed interface OpinionI : EntityI

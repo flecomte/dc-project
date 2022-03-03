@@ -2,7 +2,7 @@ package fr.dcproject.component.views.dto
 
 import fr.dcproject.component.views.entity.ViewAggregation
 
-class ViewAggregation(
+data class ViewAggregation(
     val total: Int,
     val unique: Int
 ) {

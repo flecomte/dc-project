@@ -35,7 +35,7 @@ class `Check auth on all routes` : BaseTest() {
                         /* Send request to check security */
                         sendRequest(
                             path.buildUrl(pathName, methodName, api.context), /* Replace route to real URL */
-                            HttpMethod.parse(methodName.toUpperCase()) /* Convert http method name to enum */
+                            HttpMethod.parse(methodName.lowercase()) /* Convert http method name to enum */
                         )
                     }
             }.let { requests ->

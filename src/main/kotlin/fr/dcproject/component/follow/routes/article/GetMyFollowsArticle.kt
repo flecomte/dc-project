@@ -28,7 +28,7 @@ object GetMyFollowsArticle {
         get<CitizenFollowArticleRequest> {
             mustBeAuth()
             val follows = repo.findByCitizen(it.citizen)
-            ac.assert { canView(follows.result, citizenOrNull) }
+            ac.canView(follows.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 follows.toOutput { f ->

@@ -27,7 +27,7 @@ object GetFollowConstitution {
     fun Route.getFollowConstitution(repo: FollowConstitutionRepository, ac: FollowAccessControl) {
         get<ConstitutionFollowRequest> {
             repo.findFollow(citizen, it.constitution)?.let { follow ->
-                ac.assert { canView(follow, citizenOrNull) }
+                ac.canView(follow, citizenOrNull).assert()
                 call.respond(
                     HttpStatusCode.OK,
                     follow.toOutput()

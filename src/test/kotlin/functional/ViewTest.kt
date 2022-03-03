@@ -20,8 +20,8 @@ import org.junit.jupiter.api.TestInstance
 import org.junit.jupiter.api.TestInstance.Lifecycle.PER_CLASS
 import org.koin.ktor.ext.get
 import java.util.UUID
+import kotlin.time.Duration.Companion.seconds
 import kotlin.time.ExperimentalTime
-import kotlin.time.seconds
 
 @KtorExperimentalLocationsAPI
 @ExperimentalCoroutinesApi
@@ -78,7 +78,7 @@ class ViewTest {
             )
 
             /* Retry because ES is not sync ! */
-            retry(10, 0.3.seconds) {
+            retry(10, seconds(0.3)) {
                 /* Get view */
                 val afterView = viewRepository.getViewsCount(article)
 

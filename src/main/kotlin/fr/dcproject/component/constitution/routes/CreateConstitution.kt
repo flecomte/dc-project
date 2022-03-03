@@ -89,7 +89,7 @@ object CreateConstitution {
         post<PostConstitutionRequest> {
             mustBeAuth()
             getNewConstitution(call.receiveOrBadRequest(), citizen).let {
-                ac.assert { canCreate(it, citizenOrNull) }
+                ac.canCreate(it, citizenOrNull).assert()
                 val c = repo.upsert(it) ?: error("Unable to create Constitution")
                 call.respond(
                     HttpStatusCode.Created,

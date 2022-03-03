@@ -48,7 +48,7 @@ data class ArticleForView(
     val lastVersion: Boolean = false
 }
 
-interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, VersionableId, TargetI, CreatedBy<C> {
+sealed interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, VersionableId, TargetI, CreatedBy<C> {
     val anonymous: Boolean
     val content: String
     val description: String
@@ -56,13 +56,13 @@ interface ArticleForUpdateI<C : CitizenRef> : ArticleI, ArticleWithTitleI, Versi
     val workgroup: WorkgroupRef?
 }
 
-class ArticleForUpdate(
+data class ArticleForUpdate(
     override val id: UUID = UUID.randomUUID(),
     override val title: String,
     override val anonymous: Boolean = true,
     override val content: String,
     override val description: String,
-    tags: List<String> = emptyList(),
+    val tags: Set<String> = emptySet(),
     override val draft: Boolean = false,
     override val createdBy: CitizenRef,
     override val workgroup: WorkgroupRef? = null,
@@ -71,12 +71,10 @@ class ArticleForUpdate(
 ) : ArticleRef(id),
     ArticleForUpdateI<CitizenRef>,
     ArticleAuthI<CitizenRef>,
-    VersionableId {
-    val tags: List<String> = tags.distinct()
-}
+    VersionableId
 
-class ArticleForListing(
-    id: UUID? = null,
+data class ArticleForListing(
+    override val id: UUID = UUID.randomUUID(),
     override val title: String,
     override val createdBy: CitizenCreator,
     override val workgroup: WorkgroupCart? = null,
@@ -90,7 +88,7 @@ class ArticleForListing(
     CreatedAt by CreatedAt.Imp(),
     CreatedBy<CitizenCartI>
 
-interface ArticleForListingI : ArticleWithTitleI, CreatedBy<CitizenCartI> {
+sealed interface ArticleForListingI : ArticleWithTitleI, CreatedBy<CitizenCartI> {
     val workgroup: WorkgroupCartI?
 }
 
@@ -98,13 +96,13 @@ open class ArticleRef(
     id: UUID? = null
 ) : ArticleI, TargetRef(id)
 
-interface ArticleI : EntityI, TargetI
+sealed interface ArticleI : EntityI, TargetI
 
-interface ArticleWithTitleI : ArticleI {
+sealed interface ArticleWithTitleI : ArticleI {
     val title: String
 }
 
-interface ArticleAuthI<U : CitizenI> :
+sealed interface ArticleAuthI<U : CitizenI> :
     ArticleI,
     CreatedBy<U>,
     DeletedAt {

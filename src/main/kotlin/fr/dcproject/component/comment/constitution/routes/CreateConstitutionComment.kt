@@ -53,7 +53,7 @@ object CreateConstitutionComment {
                         content = content
                     )
                 }.let { comment ->
-                    ac.assert { canCreate(comment, citizenOrNull) }
+                    ac.canCreate(comment, citizenOrNull).assert()
                     repo.comment(comment)
 
                     call.respond(

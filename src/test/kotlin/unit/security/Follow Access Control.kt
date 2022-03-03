@@ -36,7 +36,7 @@ internal class `Follow Access Control` {
     private val tesla2 = Citizen(
         user = User(
             username = "nicolas-tesla",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         birthday = DateTime.now(),
         email = "tesla@best.com",
@@ -67,7 +67,7 @@ internal class `Follow Access Control` {
         id = UUID.fromString("319f1226-8f47-4df3-babd-2c7671ad0fbc"),
         user = User(
             username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         birthday = DateTime.now(),
         email = "einstein@best.com",

@@ -55,7 +55,7 @@ object FindCitizens {
             mustBeAuth()
             it.validate().badRequestIfNotValid()
             val citizens = repo.find(it.page, it.limit, it.sort, it.direction, it.search)
-            ac.assert { canView(citizens.result, citizenOrNull) }
+            ac.canView(citizens.result, citizenOrNull).assert()
             call.respond(
                 citizens.toOutput { c: CitizenCreator ->
                     object {

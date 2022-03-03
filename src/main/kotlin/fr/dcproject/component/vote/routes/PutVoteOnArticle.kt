@@ -51,7 +51,7 @@ object PutVoteOnArticle {
                 note = input.note,
                 createdBy = this.citizen
             )
-            ac.assert { canCreate(vote, citizenOrNull) }
+            ac.canCreate(vote, citizenOrNull).assert()
             val votes = repo.vote(vote)
             call.respond(
                 HttpStatusCode.Created,

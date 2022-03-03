@@ -57,7 +57,7 @@ object GetConstitutionComment {
             it.validate().badRequestIfNotValid()
 
             val comments = repo.findByTarget(it.constitution)
-            ac.assert { canView(comments.result, citizenOrNull) }
+            ac.canView(comments.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 comments.toOutput { comment ->

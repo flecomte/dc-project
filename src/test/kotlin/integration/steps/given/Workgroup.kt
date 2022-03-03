@@ -62,7 +62,7 @@ private fun createWorkgroup(
     val creatorName = createdBy ?: CitizenI.Name("Paul", "Langevin")
     val creator = citizenRepository.findByName(creatorName) ?: run {
         val username = ("username" + UUID.randomUUID().toString())
-            .toLowerCase().replace(' ', '-')
+            .lowercase().replace(' ', '-')
         val user = UserForCreate(
             username = username,
             password = "Azerty123!",

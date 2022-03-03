@@ -29,7 +29,7 @@ object GetOneCitizen {
         get<CitizenRequest> {
             mustBeAuth()
             val citizen = citizenRepository.findById(it.citizen.id) ?: throw NotFoundException("Citizen not found ${it.citizen.id}")
-            ac.assert { canView(citizen, citizenOrNull) }
+            ac.canView(citizen, citizenOrNull).assert()
 
             call.respond(
                 object {

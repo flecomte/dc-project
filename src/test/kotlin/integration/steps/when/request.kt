@@ -15,15 +15,15 @@ import io.ktor.server.testing.TestApplicationRequest
 import io.ktor.server.testing.setBody
 
 enum class Validate(override val bit: Long) : BitMaskI {
-    NONE(0),
-    REQUEST_BODY(1),
-    REQUEST_PARAM(2),
-    REQUEST_HEADER(4),
-    REQUEST(1 + 2 + 4),
-    RESPONSE_BODY(8),
-    RESPONSE_HEADER(16),
-    RESPONSE(8 + 16),
-    ALL((1 + 2 + 4) + (8 + 16));
+    NONE(0L),
+    REQUEST_BODY(1L),
+    REQUEST_PARAM(2L),
+    REQUEST_HEADER(4L),
+    REQUEST(1L + 2L + 4L),
+    RESPONSE_BODY(8L),
+    RESPONSE_HEADER(16L),
+    RESPONSE(8L + 16L),
+    ALL((1L + 2L + 4L) + (8L + 16L));
 
     operator fun unaryMinus(): BitMaskI = ALL - BitMask(this.bit)
 }

@@ -41,7 +41,7 @@ internal class `Article Access Control` {
     private val einstein = CitizenCart(
         user = User(
             username = "albert-einstein",
-            roles = listOf(UserI.Roles.ROLE_USER)
+            roles = setOf(UserI.Roles.ROLE_USER)
         ),
         name = CitizenI.Name("Albert", "Einstein")
     )

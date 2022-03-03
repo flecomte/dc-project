@@ -34,7 +34,7 @@ object GetCitizenOpinions {
         get<CitizenOpinions> {
             mustBeAuth()
             val opinionsEntities: List<Opinion<ArticleRef>> = repo.findCitizenOpinionsByTargets(it.citizen, it.id)
-            ac.assert { canView(opinionsEntities, citizenOrNull) }
+            ac.canView(opinionsEntities, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

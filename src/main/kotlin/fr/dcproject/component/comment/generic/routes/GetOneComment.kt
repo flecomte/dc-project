@@ -27,7 +27,7 @@ object GetOneComment {
     fun Route.getOneComment(repo: CommentRepository, ac: CommentAccessControl) {
         get<CommentRequest> {
             val comment = repo.findById(it.comment.id) ?: throw NotFoundException("Comment ${it.comment.id} not found")
-            ac.assert { canView(comment, citizenOrNull) }
+            ac.canView(comment, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

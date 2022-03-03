@@ -53,11 +53,11 @@ open class NotificationMessage(
 }
 
 open class EntityNotificationMessage <E : Entity> (
-    val target: E,
+    open val target: E,
     type: String,
     val action: String
 ) : NotificationMessage(type)
 
-class ArticleUpdateNotificationMessage(
-    target: ArticleForView
+data class ArticleUpdateNotificationMessage(
+    override val target: ArticleForView
 ) : EntityNotificationMessage<ArticleForView>(target, "article", "update")

@@ -9,35 +9,45 @@ import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.UUID
 
-class UserForCreate(
-    id: UUID = UUID.randomUUID(),
-    username: String,
+data class UserForCreate(
+    override val id: UUID = UUID.randomUUID(),
+    override val username: String,
     override val password: String,
-    blockedAt: DateTime? = null,
-    roles: List<Roles> = emptyList()
-) : User(id, username, blockedAt, roles),
-    UserWithPasswordI
+    override val blockedAt: DateTime? = null,
+    override val roles: Set<Roles> = emptySet()
+) : UserForViewI,
+    UserWithPasswordI,
+    CreatedAt by CreatedAt.Imp(),
+    UpdatedAt by UpdatedAt.Imp()
 
-open class User(
-    id: UUID = UUID.randomUUID(),
-    override var username: String,
-    var blockedAt: DateTime? = null,
-    var roles: List<Roles> = emptyList()
+data class User(
+    override val id: UUID = UUID.randomUUID(),
+    override val username: String,
+    override val blockedAt: DateTime? = null,
+    override val roles: Set<Roles> = emptySet()
 ) : UserRef(id),
+    UserForViewI,
     UserWithUsername,
     CreatedAt by CreatedAt.Imp(),
     UpdatedAt by UpdatedAt.Imp()
+
+sealed interface UserForViewI :
+    UserI,
+    UserWithUsername,
+    UserForAuthI,
+    CreatedAt,
+    UpdatedAt
 
 class UserCreator(
     id: UUID = UUID.randomUUID(),
     override val username: String,
 ) : UserRef(id), UserWithUsername
 
-interface UserWithUsername : UserI {
+sealed interface UserWithUsername : UserI {
     val username: String
 }
 
-interface UserWithPasswordI : UserI {
+sealed interface UserWithPasswordI : UserI {
     val password: String
 }
 
@@ -51,11 +61,11 @@ open class UserRef(
     id: UUID = UUID.randomUUID()
 ) : UserI, Entity(id)
 
-interface UserI : EntityI, Principal {
+sealed interface UserI : EntityI, Principal {
     enum class Roles { ROLE_USER, ROLE_ADMIN }
 }
 
-interface UserForAuthI : UserI {
-    var roles: List<Roles>
-    var blockedAt: DateTime?
+sealed interface UserForAuthI : UserI {
+    val roles: Set<Roles>
+    val blockedAt: DateTime?
 }

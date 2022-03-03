@@ -32,26 +32,21 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
         parentId: UUID,
         page: Int = 1,
         limit: Int = 50
-    ): Paginated<CommentForView<T, CitizenCreatorI>> {
-        return requester.run {
-            getFunction("find_comments_by_parent")
-                .select<CommentForView<T, CitizenCreator>>(
-                    page,
-                    limit,
-                    "parent_id" to parentId
-                )
-                as Paginated<CommentForView<T, CitizenCreatorI>>
-        }
-    }
+    ): Paginated<CommentForView<T, CitizenCreatorI>> = requester
+        .getFunction("find_comments_by_parent")
+        .select<CommentForView<T, CitizenCreator>>(
+            page,
+            limit,
+            "parent_id" to parentId
+        )
+        as Paginated<CommentForView<T, CitizenCreatorI>>
 
     open fun findByTarget(
         target: EntityI,
         page: Int = 1,
         limit: Int = 50,
         sort: String = "createdAt"
-    ): Paginated<CommentForView<T, CitizenCreatorI>> {
-        return findByTarget(target.id, page, limit, sort)
-    }
+    ): Paginated<CommentForView<T, CitizenCreatorI>> = findByTarget(target.id, page, limit, sort)
 
     open fun findByTarget(
         targetId: UUID,
@@ -85,41 +80,33 @@ abstract class CommentRepositoryAbs<T : TargetI>(override var requester: Request
 }
 
 class CommentRepository(requester: Requester) : CommentRepositoryAbs<TargetRef>(requester) {
-    override fun findById(id: UUID): CommentForView<TargetRef, CitizenCreatorI>? {
-        return requester
-            .getFunction("find_comment_by_id")
-            .selectOne<CommentForView<TargetRef, CitizenCreator>>(mapOf("id" to id))
-            as CommentForView<TargetRef, CitizenCreatorI>?
-    }
+    override fun findById(id: UUID): CommentForView<TargetRef, CitizenCreatorI>? = requester
+        .getFunction("find_comment_by_id")
+        .selectOne<CommentForView<TargetRef, CitizenCreator>>(mapOf("id" to id))
+        as CommentForView<TargetRef, CitizenCreatorI>?
 
     override fun findByCitizen(
         citizen: CitizenI,
         page: Int,
         limit: Int
-    ): Paginated<CommentForView<TargetRef, CitizenCreatorI>> {
-        return requester.run {
-            getFunction("find_comments_by_citizen")
-                .select<CommentForView<TargetRef, CitizenCreator>>(
-                    page,
-                    limit,
-                    "created_by_id" to citizen.id
-                ) as Paginated<CommentForView<TargetRef, CitizenCreatorI>>
-        }
-    }
+    ): Paginated<CommentForView<TargetRef, CitizenCreatorI>> = requester
+        .getFunction("find_comments_by_citizen")
+        .select<CommentForView<TargetRef, CitizenCreator>>(
+            page,
+            limit,
+            "created_by_id" to citizen.id
+        ) as Paginated<CommentForView<TargetRef, CitizenCreatorI>>
 
     override fun findByParent(
         parentId: UUID,
         page: Int,
         limit: Int
-    ): Paginated<CommentForView<TargetRef, CitizenCreatorI>> {
-        return requester.run {
-            getFunction("find_comments_by_parent")
-                .select<CommentForView<TargetRef, CitizenCreator>>(
-                    page,
-                    limit,
-                    "parent_id" to parentId
-                )
-                as Paginated<CommentForView<TargetRef, CitizenCreatorI>>
-        }
-    }
+    ): Paginated<CommentForView<TargetRef, CitizenCreatorI>> = requester
+        .getFunction("find_comments_by_parent")
+        .select<CommentForView<TargetRef, CitizenCreator>>(
+            page,
+            limit,
+            "parent_id" to parentId
+        )
+        as Paginated<CommentForView<TargetRef, CitizenCreatorI>>
 }
