@@ -24,7 +24,7 @@ object GetWorkgroup {
     fun Route.getWorkgroup(repo: WorkgroupRepository, ac: WorkgroupAccessControl) {
         get<WorkgroupRequest> {
             repo.findById(it.workgroup.id)?.let { workgroup ->
-                ac.assert { canView(workgroup, citizenOrNull) }
+                ac.canView(workgroup, citizenOrNull).assert()
                 call.respond(
                     HttpStatusCode.OK,
                     workgroup.toOutput()

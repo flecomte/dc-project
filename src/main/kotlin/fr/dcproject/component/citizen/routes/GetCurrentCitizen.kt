@@ -28,7 +28,7 @@ object GetCurrentCitizen {
             if (currentUser === null) {
                 call.respond(HttpStatusCode.Unauthorized)
             } else {
-                ac.assert { canView(currentUser, citizenOrNull) }
+                ac.canView(currentUser, citizenOrNull).assert()
                 call.respond(
                     object {
                         val id: UUID = citizen.id

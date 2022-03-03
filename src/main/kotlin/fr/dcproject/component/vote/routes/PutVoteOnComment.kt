@@ -52,7 +52,7 @@ object PutVoteOnComment {
                 note = input.note,
                 createdBy = this.citizen
             )
-            ac.assert { canCreate(vote, citizenOrNull) }
+            ac.canCreate(vote, citizenOrNull).assert()
             val votes = voteCommentRepo.vote(vote)
             call.respond(
                 HttpStatusCode.Created,

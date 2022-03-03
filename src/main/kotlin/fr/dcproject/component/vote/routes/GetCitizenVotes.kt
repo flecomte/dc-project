@@ -30,7 +30,7 @@ object GetCitizenVotes {
             mustBeAuth()
             val votes = repo.findCitizenVotesByTargets(it.citizen, it.id)
             if (votes.isNotEmpty()) {
-                ac.assert { canView(votes, citizenOrNull) }
+                ac.canView(votes, citizenOrNull).assert()
             }
             call.respond(
                 HttpStatusCode.OK,

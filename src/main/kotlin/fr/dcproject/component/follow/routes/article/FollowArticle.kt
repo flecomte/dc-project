@@ -28,7 +28,7 @@ object FollowArticle {
         post<ArticleFollowRequest> {
             mustBeAuth()
             val follow = FollowForUpdate(target = it.article, createdBy = this.citizen)
-            ac.assert { canCreate(follow, citizenOrNull) }
+            ac.canCreate(follow, citizenOrNull).assert()
             repo.follow(follow)
             call.respond(HttpStatusCode.Created)
         }

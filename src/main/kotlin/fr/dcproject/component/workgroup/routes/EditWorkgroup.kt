@@ -65,7 +65,7 @@ object EditWorkgroup {
                         deletedAt = old.deletedAt,
                         members = old.members,
                     ).let { workgroup ->
-                        ac.assert { canUpdate(workgroup, citizenOrNull) }
+                        ac.canUpdate(workgroup, citizenOrNull).assert()
                         repo.upsert(workgroup)
                     }.let {
                         call.respond(HttpStatusCode.OK, it.toOutput())

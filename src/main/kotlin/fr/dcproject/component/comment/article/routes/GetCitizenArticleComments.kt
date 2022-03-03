@@ -28,7 +28,7 @@ object GetCitizenArticleComments {
         get<CitizenCommentArticleRequest> {
             mustBeAuth()
             repo.findByCitizen(it.citizen).let { comments ->
-                ac.assert { canView(comments.result, citizenOrNull) }
+                ac.canView(comments.result, citizenOrNull).assert()
                 call.respond(
                     HttpStatusCode.OK,
                     comments.toOutput { comment ->

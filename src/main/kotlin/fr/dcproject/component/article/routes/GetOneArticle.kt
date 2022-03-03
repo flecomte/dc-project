@@ -27,7 +27,7 @@ object GetOneArticle {
     fun Route.getOneArticle(viewRepository: ArticleViewRepository<ArticleForView>, ac: ArticleAccessControl, repo: ArticleRepository) {
         get<ArticleRequest> {
             val article: ArticleForView = repo.findById(it.article.id) ?: throw NotFoundException("Article ${it.article.id} not found")
-            ac.assert { canView(article, citizenOrNull) }
+            ac.canView(article, citizenOrNull).assert()
 
             call.respond(
                 article.let { a ->

@@ -25,7 +25,7 @@ object GetOpinionChoice {
     fun Route.getOpinionChoice(ac: OpinionChoiceAccessControl, opinionChoiceRepository: OpinionChoiceRepository) {
         get<OpinionChoiceRequest> {
             val opinionChoice = opinionChoiceRepository.findOpinionChoiceById(it.opinionChoice.id) ?: throw NotFoundException("OpinionChoice ${it.opinionChoice.id} not found")
-            ac.assert { canView(it.opinionChoice, citizenOrNull) }
+            ac.canView(it.opinionChoice, citizenOrNull).assert()
 
             call.respond(
                 HttpStatusCode.OK,

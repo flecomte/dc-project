@@ -39,7 +39,7 @@ object DeleteMembersOfWorkgroup {
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest()
                     .let { members ->
-                        ac.assert { canRemoveMembers(workgroup, citizenOrNull) }
+                        ac.canRemoveMembers(workgroup, citizenOrNull).assert()
                         repo.removeMembers(workgroup, members)
                     }.let { members ->
                         call.respond(

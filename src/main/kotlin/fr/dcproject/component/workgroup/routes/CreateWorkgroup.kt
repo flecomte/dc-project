@@ -66,7 +66,7 @@ object CreateWorkgroup {
                     anonymous ?: true,
                 )
             }.let { workgroup ->
-                ac.assert { canCreate(workgroup, citizenOrNull) }
+                ac.canCreate(workgroup, citizenOrNull).assert()
                 repo.upsert(workgroup)
             }.let { w ->
                 call.respond(

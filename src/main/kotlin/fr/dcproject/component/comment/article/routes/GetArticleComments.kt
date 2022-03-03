@@ -58,7 +58,7 @@ object GetArticleComments {
 
             val comments = repo.findByTarget(it.article, it.page, it.limit, it.sort)
             if (comments.result.isNotEmpty()) {
-                ac.assert { canView(comments.result, citizenOrNull) }
+                ac.canView(comments.result, citizenOrNull).assert()
             }
             call.respond(
                 HttpStatusCode.OK,

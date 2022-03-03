@@ -83,7 +83,7 @@ object UpsertArticle {
         post<UpsertArticleRequest> {
             mustBeAuth()
             val article = call.convertRequestToEntity()
-            ac.assert { canUpsert(article, citizenOrNull) }
+            ac.canUpsert(article, citizenOrNull).assert()
             repo.upsert(article)?.let { a ->
                 call.respond(
                     object {

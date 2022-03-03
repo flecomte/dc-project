@@ -42,7 +42,7 @@ object ChangeMyPassword {
             mustBeAuth()
             val content = call.receiveOrBadRequest<ChangePasswordCitizenRequest.Input>()
                 .apply { validate().badRequestIfNotValid() }
-            ac.assert { canChangePassword(it.citizen, citizenOrNull) }
+            ac.canChangePassword(it.citizen, citizenOrNull).assert()
             userRepository.findByCredentials(UserPasswordCredential(citizen.user.username, content.oldPassword)) ?: throw BadRequestException("Bad Password")
             userRepository.changePassword(
                 UserWithPassword(

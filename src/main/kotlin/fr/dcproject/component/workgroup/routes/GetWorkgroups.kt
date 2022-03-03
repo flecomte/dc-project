@@ -69,7 +69,7 @@ object GetWorkgroups {
                 it.search,
                 WorkgroupRepository.Filter(createdById = it.createdBy, members = it.members)
             )
-            ac.assert { canView(workgroups.result, citizenOrNull) }
+            ac.canView(workgroups.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 workgroups.toOutput { it.toOutputListing() }

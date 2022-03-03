@@ -45,7 +45,7 @@ object UpdateMemberOfWorkgroup {
             mustBeAuth()
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
-                    ac.assert { canUpdateMembers(workgroup, citizenOrNull) }
+                    ac.canUpdateMembers(workgroup, citizenOrNull).assert()
                     repo.updateMembers(workgroup, members)
                 }.let { members ->
                     call.respond(

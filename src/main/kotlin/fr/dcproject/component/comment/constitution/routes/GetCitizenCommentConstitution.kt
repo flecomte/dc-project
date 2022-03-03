@@ -28,7 +28,7 @@ object GetCitizenCommentConstitution {
         get<GetCitizenCommentConstitutionRequest> {
             mustBeAuth()
             val comments = repo.findByCitizen(it.citizen)
-            ac.assert { canView(comments.result, citizenOrNull) }
+            ac.canView(comments.result, citizenOrNull).assert()
             call.respond(
                 HttpStatusCode.OK,
                 comments.toOutput { comment ->

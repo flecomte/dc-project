@@ -47,7 +47,7 @@ object AddMemberToWorkgroup {
             mustBeAuth()
             repo.findById(it.workgroupId)?.let { workgroup ->
                 call.getMembersFromRequest().let { members ->
-                    ac.assert { canAddMembers(workgroup, citizenOrNull) }
+                    ac.canAddMembers(workgroup, citizenOrNull).assert()
                     repo.addMembers(workgroup, members)
                 }.let { members ->
                     call.respond(

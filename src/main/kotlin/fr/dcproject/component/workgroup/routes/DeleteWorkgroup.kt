@@ -23,7 +23,7 @@ object DeleteWorkgroup {
         delete<DeleteWorkgroupRequest> {
             mustBeAuth()
             repo.findById(it.workgroupId)?.let { workgroup ->
-                ac.assert { canDelete(workgroup, citizenOrNull) }
+                ac.canDelete(workgroup, citizenOrNull).assert()
                 repo.delete(workgroup)
                 call.respond(HttpStatusCode.NoContent)
             } ?: call.respond(HttpStatusCode.NotFound)
