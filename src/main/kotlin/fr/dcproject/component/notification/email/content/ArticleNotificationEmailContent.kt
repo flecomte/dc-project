@@ -3,7 +3,7 @@ package fr.dcproject.component.notification.email.content
 import fr.dcproject.component.article.database.ArticleWithTitleI
 import fr.dcproject.component.citizen.database.Citizen
 
-class ArticleNotificationEmailContent(
+data class ArticleNotificationEmailContent(
     private val citizen: Citizen,
     private val target: ArticleWithTitleI,
     private val domain: String,

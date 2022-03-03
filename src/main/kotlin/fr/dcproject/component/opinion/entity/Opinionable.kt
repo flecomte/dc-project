@@ -7,6 +7,4 @@ interface Opinionable {
     val opinions: Opinions
 }
 
-class OpinionableImp : Opinionable {
-    override var opinions: OpinionsMutable = mutableMapOf()
-}
+data class OpinionableImp(override var opinions: OpinionsMutable = mutableMapOf()) : Opinionable

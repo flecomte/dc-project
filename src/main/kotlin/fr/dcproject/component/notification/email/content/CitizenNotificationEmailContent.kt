@@ -2,7 +2,7 @@ package fr.dcproject.component.notification.email.content
 
 import fr.dcproject.component.citizen.database.Citizen
 
-class CitizenNotificationEmailContent(
+data class CitizenNotificationEmailContent(
     private val citizen: Citizen,
     private val target: Citizen,
     private val domain: String,

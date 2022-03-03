@@ -91,7 +91,7 @@ object Register {
             user = UserForCreate(
                 username = user.username,
                 password = user.password,
-                roles = listOf(UserI.Roles.ROLE_USER)
+                roles = setOf(UserI.Roles.ROLE_USER)
             )
         )
 

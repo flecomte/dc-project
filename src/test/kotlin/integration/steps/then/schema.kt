@@ -46,7 +46,7 @@ fun TestApplicationResponse.operation(route: String? = null, callback: Operation
             .firstOrNull { uri.matches(it.replace("""\{[^{}]+}""".toRegex(), "[^/]+").toRegex()) }
 
         api.getPath(path)
-            ?.getOperation(httpMethod.value.toLowerCase())
+            ?.getOperation(httpMethod.value.lowercase())
             ?.apply {
                 this.callback(api, uri)
             }
@@ -59,7 +59,7 @@ fun TestApplicationResponse.`And the schema response body must be valid`(content
         /* Validate Response */
         this.apply {
             val status = call.response.status()
-            val httpMethod = call.request.httpMethod.value.toUpperCase()
+            val httpMethod = call.request.httpMethod.value.lowercase()
             val responseContent: JsonNode = if (content != null)
                 ObjectMapper().readTree(content)
             else TextNode("")
@@ -79,7 +79,7 @@ fun TestApplicationResponse.`And the schema parameters must be valid`() {
     operation { api, uri ->
         /* Validate Request URL */
         this.apply {
-            val methodName = call.request.httpMethod.value.toUpperCase()
+            val methodName = call.request.httpMethod.value.lowercase()
             Url(call.request.uri).parameters.forEach { parameter: String, values: List<String> ->
                 val schema = getParametersIn(api.context, "query")
                     ?.firstOrNull { it.name == parameter }?.schema
@@ -103,7 +103,7 @@ fun TestApplicationResponse.`And the schema parameters must be valid`() {
  * Validate request body
  */
 fun TestApplicationResponse.`And the schema request body must be valid`(body: String) {
-    operation { api, uri ->
+    operation { api, _ ->
         requestBody
             .getContentMediaType(call.request.contentType().toString())
             .schema

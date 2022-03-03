@@ -13,7 +13,7 @@ fun TestApplicationRequest.`authenticated as`(
     firstName: String,
     lastName: String,
 ): Citizen {
-    val username = "$firstName-$lastName".toLowerCase()
+    val username = "$firstName-$lastName".lowercase()
     val repo: CitizenRepository by lazy<CitizenRepository> { GlobalContext.get().get() }
     val citizen = repo.findByUsername(username) ?: error("Citizen not exist with username $username")
     val algorithm = GlobalContext.get().get<JwtConfig>().algorithm

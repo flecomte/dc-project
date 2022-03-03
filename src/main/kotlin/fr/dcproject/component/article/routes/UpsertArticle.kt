@@ -37,7 +37,7 @@ object UpsertArticle {
             val anonymous: Boolean = true,
             val content: String,
             val description: String,
-            val tags: List<String> = emptyList(),
+            val tags: Set<String> = emptySet(),
             val draft: Boolean = false,
             val versionId: UUID,
             val workgroup: WorkgroupRef? = null,
